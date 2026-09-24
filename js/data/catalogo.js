@@ -1,0 +1,16 @@
+'use strict';
+SIAB.solutions = {
+  hcl: { name: 'Ácido clorídrico', formula: 'HCl', kind: 'strongAcid', label: 'Ácido forte' },
+  acetic: { name: 'Ácido acético', formula: 'CH₃COOH', kind: 'weakAcid', ka: 1.8e-5, label: 'Ácido fraco' },
+  naoh: { name: 'Hidróxido de sódio', formula: 'NaOH', kind: 'strongBase', label: 'Base forte' },
+  ammonia: { name: 'Amônia em água', formula: 'NH₃', kind: 'weakBase', ka: 1e-14 / 1.8e-5, label: 'Base fraca' },
+  water: { name: 'Água pura', formula: 'H₂O', kind: 'water', label: 'Referência neutra' }
+};
+SIAB.indicators = {
+  btb: { name: 'Azul de bromotimol', short: 'Bromotimol', low: 6, high: 7.6, acid: [246,205,35], middle: [69,171,79], base: [38,103,210], acidName: 'amarelo', middleName: 'verde', baseName: 'azul' },
+  phenol: { name: 'Fenolftaleína', short: 'Fenolftaleína', low: 8.2, high: 10, acid: [233,237,243], middle: [244,159,207], base: [219,37,146], acidName: 'incolor', middleName: 'rosa claro', baseName: 'rosa' },
+  methyl: { name: 'Alaranjado de metila', short: 'Alaranjado de metila', low: 3.1, high: 4.4, acid: [220,48,48], middle: [244,134,38], base: [246,211,43], acidName: 'vermelho', middleName: 'laranja', baseName: 'amarelo' },
+  litmus: { name: 'Tornassol', short: 'Tornassol', low: 4.5, high: 8.3, acid: [217,55,76], middle: [153,83,182], base: [53,98,200], acidName: 'vermelho', middleName: 'violeta', baseName: 'azul' },
+  universal: { name: 'Indicador universal', short: 'Universal', low: 1, high: 14 },
+  none: { name: 'Sem indicador', short: 'Sem indicador' }
+};

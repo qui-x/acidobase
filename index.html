@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#0c1520">
+  <meta name="description" content="SIAB — A química das cores. Explore ácidos, bases e indicadores em uma bancada de tubos de ensaio.">
+  <title>SIAB — A química das cores</title>
+  <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
+  <link rel="stylesheet" href="css/stylesiab.css">
+  <script src="a11y.js"></script>
+</head>
+<body>
+  <svg width="0" height="0" class="svg-defs" aria-hidden="true"><defs>
+    <filter id="f-protanopia"><feColorMatrix type="matrix" values="0.567 0.433 0 0 0 0.558 0.442 0 0 0 0 0.242 0.758 0 0 0 0 0 1 0"/></filter>
+    <filter id="f-deuteranopia"><feColorMatrix type="matrix" values="0.625 0.375 0 0 0 0.7 0.3 0 0 0 0 0.3 0.7 0 0 0 0 0 1 0"/></filter>
+    <filter id="f-tritanopia"><feColorMatrix type="matrix" values="0.95 0.05 0 0 0 0 0.433 0.567 0 0 0 0.475 0.525 0 0 0 0 0 1 0"/></filter>
+    <filter id="f-acromatopsia"><feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0 0 0 1 0"/></filter>
+  </defs></svg>
+  <div id="colorblindOverlay" aria-hidden="true"></div>
+  <a class="skip-link" href="#experiment">Ir para a bancada</a>
+  <header class="app-header">
+    <div class="header-brand"><img src="assets/siab-icone.svg" alt="" width="34" height="34"><div><strong>SIAB</strong><span>A química das cores</span></div></div>
+    <div class="header-actions"><button class="icon-btn" id="about-btn" aria-label="Sobre o simulador"><span aria-hidden="true">?</span></button><button id="access-btn" class="text-btn">Acessibilidade</button></div>
+  </header>
+
+  <section id="start-screen" class="start-screen" aria-labelledby="welcome-title">
+    <div class="start-card"><img class="start-icon" src="assets/siab-icone.svg" alt="" width="88" height="88"><p class="eyebrow">SIMULADOR INTERATIVO DE ÁCIDOS E BASES</p><h1 id="welcome-title">A química<br><span>das cores</span></h1><p>Uma gota, novas descobertas.<br>Observe a mesma solução pelos olhos de diferentes indicadores.</p><button id="start-btn" class="primary-btn">Começar <span aria-hidden="true">→</span></button><span class="start-note">Prepare. Observe. Compare.</span></div>
+  </section>
+
+  <div id="workspace" class="workspace" hidden>
+    <aside id="bench-sidebar" class="bench-sidebar" aria-label="Tubos da bancada">
+      <div class="sidebar-heading"><span class="eyebrow">BANCADA</span><span id="tube-count" class="count"></span></div>
+      <div id="tube-list" class="tube-list"></div>
+      <button class="secondary-btn" data-action="add">＋ Novo tubo</button>
+      <div class="sidebar-bottom"><span class="brand-line"></span><p>Vermelho ao roxo.<br>Uma química de possibilidades.</p><span class="small">SIAB · 0.1</span></div>
+    </aside>
+
+    <main id="experiment" class="experiment">
+      <nav class="view-tabs" aria-label="Visualização da bancada">
+        <button id="focus-tab" aria-pressed="true">Tubo em foco</button><button id="overview-tab" aria-pressed="false">Visão geral <span id="overview-count"></span></button>
+        <button class="mobile-add" data-action="add" aria-label="Adicionar tubo">＋</button>
+      </nav>
+      <section id="focus-view" class="focus-view" aria-label="Edição do tubo selecionado">
+        <div class="focus-heading"><div><p class="eyebrow" id="tube-index"></p><div class="name-row"><h1 id="tube-name"></h1><button id="rename-btn" class="icon-btn" aria-label="Renomear tubo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l4-1L20 7a2 2 0 0 0-3-3L5 16l-1 4Z"/></svg></button></div><p id="sample-summary" class="small"></p></div><button id="prepare-btn" class="secondary-btn mobile-control">Preparar</button></div>
+        <div id="group-notice" class="group-notice" hidden></div>
+        <div class="tube-stage"><div class="stage-stats"><span class="eyebrow">LEITURA</span><div class="ph-readout"><span>pH</span><strong id="ph-value"></strong></div><span id="ph-phase" class="phase"></span><button id="ph-toggle" class="quiet-btn" aria-pressed="true">Ocultar pH</button></div><div id="large-tube" class="large-tube"></div><div class="volume-readout"><span class="eyebrow">VOLUME</span><strong id="volume-value"></strong><span class="small">mL</span><span class="small capacity">capacidade<br>5,00 mL</span></div></div>
+        <div class="color-reading"><span id="color-swatch" class="color-swatch" aria-hidden="true"></span><div><strong id="color-name"></strong><span id="indicator-name" class="small"></span></div></div>
+        <p id="equivalence-note" class="equivalence-note" aria-live="polite"></p>
+        <div class="dose-area"><div class="dose-info"><span id="titrant-label"></span><span id="dose-summary"></span></div><div class="dose-actions"><button id="undo-btn" class="secondary-btn" aria-label="Desfazer última gota">↶ <span>Desfazer</span></button><button id="drop-btn" class="primary-btn">＋ Adicionar 1 gota</button></div><span id="dose-target" class="dose-target"></span></div>
+        <nav class="tube-navigation" aria-label="Navegar entre tubos"><button id="previous-btn" aria-label="Tubo anterior">← <span>Anterior</span></button><button id="all-tubes-btn" class="tube-position"></button><button id="next-btn" aria-label="Próximo tubo"><span>Próximo</span> →</button></nav>
+      </section>
+      <section id="overview-view" class="overview-view" aria-labelledby="overview-title" hidden><div class="overview-heading"><h1 id="overview-title">Sua bancada</h1><p>Toque em um tubo para editar.</p></div><div id="overview-grid" class="overview-grid"></div></section>
+    </main>
+
+    <aside id="controls" class="controls" aria-label="Preparar tubo">
+      <div class="sheet-handle" aria-hidden="true"></div><div class="controls-heading"><h2>Preparar tubo</h2><button id="close-controls" class="icon-btn mobile-control" aria-label="Fechar preparação">×</button></div>
+      <label class="field">Indicador<select id="indicator-select"></select></label><p id="indicator-range" class="field-hint"></p>
+      <form id="prepare-form"><fieldset><legend>Solução inicial</legend><label class="field">Substância<select id="solution-select"></select></label><div class="field-pair"><label class="field">Concentração <span class="unit">mol/L</span><input id="concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required></label><label class="field">Volume <span class="unit">mL</span><input id="initial-volume" type="number" inputmode="decimal" min="0.1" max="4" step="any" required></label></div></fieldset>
+        <fieldset><legend>Conta-gotas</legend><label class="field">Solução adicionada<select id="titrant-select"></select></label><div class="field-pair"><label class="field">Concentração <span class="unit">mol/L</span><input id="titrant-concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required></label><label class="field">Gota <span class="unit">mL</span><select id="drop-volume"><option value="0.01">0,01</option><option value="0.02">0,02</option><option value="0.05">0,05</option><option value="0.1">0,10</option></select></label></div></fieldset>
+        <p class="field-hint">Aplicar o preparo recomeça a titulação do tubo ou do grupo vinculado.</p><button class="primary-btn full-width" type="submit">Aplicar preparo</button>
+      </form>
+      <div class="panel-actions"><button id="compare-btn" class="secondary-btn">Comparar indicadores</button><button id="unlink-btn" class="quiet-btn" hidden>Desvincular este tubo</button><button id="restart-btn" class="quiet-btn">Recomeçar titulação</button><button id="remove-btn" class="quiet-btn danger">Remover tubo</button></div>
+      <details id="history-details"><summary>Histórico de adições</summary><div id="history-table"></div></details>
+    </aside>
+  </div>
+  <button id="sheet-backdrop" class="sheet-backdrop" aria-label="Fechar preparação" hidden></button>
+
+  <dialog id="rename-dialog"><form id="rename-form"><div class="dialog-heading"><h2>Renomear tubo</h2><button type="button" class="icon-btn" data-close="rename-dialog" aria-label="Fechar renomeação">×</button></div><label class="field">Nome do tubo<input id="new-name" maxlength="40" required autocomplete="off"></label><p class="field-hint">Até 40 caracteres. O preparo e as leituras são preservados.</p><div class="dialog-actions"><button type="button" class="secondary-btn" data-close="rename-dialog">Cancelar</button><button type="submit" class="primary-btn">Salvar nome</button></div></form></dialog>
+  <dialog id="confirm-dialog"><div class="dialog-heading"><h2 id="confirm-title"></h2><button type="button" class="icon-btn" data-close="confirm-dialog" aria-label="Fechar confirmação">×</button></div><p id="confirm-text"></p><div class="dialog-actions"><button class="secondary-btn" data-close="confirm-dialog">Cancelar</button><button id="confirm-yes" class="primary-btn">Confirmar</button></div></dialog>
+  <dialog id="access-dialog"><div class="dialog-heading"><h2>Acessibilidade</h2><button class="icon-btn" data-close="access-dialog" aria-label="Fechar acessibilidade">×</button></div><label class="field">Tema<select id="theme-select"><option value="dark">Escuro</option><option value="light">Claro</option><option value="contrast">Alto contraste</option></select></label><div class="font-controls"><span>Tamanho do texto</span><div><button id="font-minus" class="secondary-btn" aria-label="Diminuir fonte">A−</button><output id="font-output"></output><button id="font-plus" class="secondary-btn" aria-label="Aumentar fonte">A＋</button></div></div><label class="check-row"><input type="checkbox" id="motion-check">Reduzir animações</label><p class="field-hint">A cor observada também é descrita em texto em todos os tubos.</p><details><summary>Simulação da percepção de cores</summary><label class="field">Filtro de simulação<select id="cvd-select"><option value="none">Sem filtro</option><option value="protanopia">Protanopia</option><option value="deuteranopia">Deuteranopia</option><option value="tritanopia">Tritanopia</option><option value="acromatopsia">Acromatopsia</option></select></label><p class="field-hint">Estes filtros simulam diferenças de percepção. Não são correções para daltonismo.</p></details></dialog>
+  <dialog id="about-dialog"><div class="dialog-heading"><h2>A química das cores</h2><button class="icon-btn" data-close="about-dialog" aria-label="Fechar informações">×</button></div><p><strong>SIAB — Simulador Interativo de Ácidos e Bases</strong></p><p>Explore os tubos individualmente ou acompanhe toda a bancada na visão geral. “Comparar indicadores” cria três cópias vinculadas: cada gota alcança igualmente os três tubos.</p><h3>Como interpretar</h3><p>O ponto de equivalência depende das quantidades de ácido e base. A viragem depende do indicador. Eles podem ocorrer em momentos diferentes.</p><h3>Condições desta experiência</h3><p>Soluções ideais a 25 °C, volumes aditivos e mistura imediata. Indicadores em quantidade traço, com efeito sobre o pH desconsiderado. As tonalidades são representações didáticas; a cor do indicador universal varia conforme a formulação.</p><p>A fenolftaleína usa sua faixa de viragem usual. O desbotamento lento em meio muito alcalino não é representado.</p><p>Gota calibrada para a simulação. A graduação do desenho acompanha o volume calculado.</p><p class="small">Versão de teste 0.1 · As experiências permanecem enquanto esta página estiver aberta. Recarregar inicia uma nova bancada.</p><h3>Referências</h3><ul><li><a href="https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations" target="_blank" rel="noopener">OpenStax — Titulações ácido-base</a></li><li><a href="https://goldbook.iupac.org/terms/view/09042" target="_blank" rel="noopener">IUPAC — Ponto de equivalência</a></li></ul></dialog>
+  <div id="toast" role="status" aria-live="polite" hidden></div><div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+  <script src="js/core/namespace.js"></script><script src="js/data/catalogo.js"></script><script src="js/simulation/quimica.js"></script><script src="js/core/estado.js"></script><script src="js/ui/render.js"></script><script src="js/a11y/preferencias.js"></script><script src="js/init/app.js"></script>
+</body>
+</html>
