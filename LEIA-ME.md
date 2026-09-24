@@ -1,4 +1,4 @@
-# SIAB — A química das cores · versão de teste 0.1
+# SIAB — A química das cores · versão de teste 0.2
 
 Extraia o ZIP inteiro e abra `siab/index.html` em um navegador.
 O pacote contém apenas os arquivos do SIAB, com HTML, CSS, JavaScript e SVG
@@ -8,7 +8,37 @@ ser hospedada em um diretório independente ou colocada na raiz do laboratório.
 Nome: **SIAB — Simulador Interativo de Ácidos e Bases**.
 Nome fantasia: **A química das cores**.
 
-## Primeiro teste
+## Novidades: cotidiano e caixas de diálogo
+
+- 15 amostras novas: limão, laranja, abacaxi, maçã, morango, tomate, vinagre,
+  café, leite, iogurte, refrigerante tipo cola, bicarbonato, sal, açúcar e sabão.
+- Grupos no catálogo e seleção com busca por nome, inclusive sem acentos.
+- Diluição própria para amostras; molaridade ajustável para reagentes puros.
+- Extrato de repolho roxo, cores próprias dos alimentos e opção de realçar
+  apenas a cor do indicador, sem alterar o cálculo do pH.
+- Botão **Explorar o cotidiano** na tela inicial e ideias de atividades para aula.
+- Diálogos de renomeação, confirmação, acessibilidade, informações, atividades
+  e escolha com estilos próprios. Seletores e mensagens de validação seguem
+  os temas do SIAB e aceitam navegação por teclado.
+
+O pH e a resposta às gotas nas amostras do cotidiano são estimativas didáticas.
+Uma fruta ou produto real pode apresentar resultados diferentes. Veja
+`docs/cotidiano.md` para os parâmetros usados e suas limitações.
+
+## Testar o cotidiano
+
+1. Na tela inicial, toque em **Explorar o cotidiano**.
+2. Observe limão diluído, água e bicarbonato com indicador de repolho roxo.
+3. Em **Preparar**, toque no nome da solução e busque **café** ou **laranja**.
+4. Escolha a diluição e aplique o preparo. Teste **Realçar indicador**.
+5. Compare indicadores e navegue pelos tubos. As cópias conservam a diluição.
+6. Abra **Ideias para uma aula acessível** para explorar atividades.
+
+Nos menus: setas percorrem as opções, Home/End vão aos extremos, Enter ou
+Espaço confirmam, Esc cancela e Tab percorre os controles. A busca permite
+digitar nomes sem acentos. Há botão visível para fechar cada diálogo.
+
+## Testar a titulação de laboratório
 
 1. Toque em **Começar**. Há três tubos independentes com HCl, 0,01 mol/L, 1 mL.
 2. No primeiro tubo, adicione 20 gotas de NaOH, 0,01 mol/L, com 0,05 mL por gota.
@@ -42,8 +72,9 @@ navegador permite. Não há contas nem envio de dados.
   filtros de simulação da percepção. VLibras não foi incorporado ao pacote offline.
 
 Veja `docs/modelo-quimico.md` para condições e limites do modelo.
-Os ensaios numéricos podem ser repetidos com `node tests/quimica.test.cjs`.
-O teste de interação DOM requer jsdom 26.1.0.
+Os ensaios numéricos podem ser repetidos com `node tests/quimica.test.cjs` e
+`node tests/cotidiano.test.cjs`. Os testes `interface.test.cjs` e
+`dialogos-cotidiano.test.cjs`, na pasta `tests/`, requerem jsdom 26.1.0.
 
 ## Validação e próximos ajustes
 

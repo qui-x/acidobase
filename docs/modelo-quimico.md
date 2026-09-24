@@ -1,4 +1,4 @@
-# SIAB — modelo da versão 0.1
+# SIAB — modelo da versão 0.2
 
 Soluções aquosas ideais a 25 °C. Volumes aditivos; mistura e equilíbrio imediatos.
 HCl e NaOH são tratados como totalmente dissociados. Para ácido acético,
@@ -23,8 +23,13 @@ carta representativa, dependente da formulação. Fenolftaleína: não inclui o
 desbotamento lento em meio fortemente alcalino. O tema visual não muda o pH
 nem a cor calculada do indicador; os filtros de percepção afetam a exibição.
 
-Catálogo inicial: HCl, CH₃COOH, NaOH, NH₃ e água. Interface: 0,0001 a 0,1 mol/L,
+Catálogo de laboratório: HCl, CH₃COOH, NaOH, NH₃ e água. Interface: 0,0001 a 0,1 mol/L,
 0,1 a 4 mL iniciais, gotas de 0,01 / 0,02 / 0,05 / 0,10 mL.
+
+A versão 0.2 acrescenta 15 amostras do cotidiano, diluições e o indicador de
+repolho roxo. Elas usam sistemas representativos e apresentam resultados
+aproximados. Constantes, parâmetros escolhidos, cores naturais e limites das
+titulações dessas misturas estão descritos em `cotidiano.md`.
 
 ## Referências
 

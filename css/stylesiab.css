@@ -17,3 +17,42 @@ dialog{color:var(--text);background:var(--panel);border:1px solid var(--border);
 @media(max-height:600px) and (max-width:900px){.tube-stage{min-height:160px}.tube-svg{max-height:190px}.focus-view{min-height:0}.equivalence-note{margin:4px 0}.start-screen{padding:18px}.start-icon{height:60px;width:60px;margin-bottom:12px}.start-card h1{font-size:2.5rem}.start-card .primary-btn{margin-top:20px}.controls{max-height:90dvh}}
 @media(pointer:coarse){.icon-btn,.text-btn{min-height:44px;min-width:44px}.view-tabs button,.quiet-btn{min-height:44px}.field input,.field select{font-size:max(16px,1rem)}}
 :root[data-contrast=on] .primary-btn{background:#ff0;color:#000;border-color:#ff0}:root[data-contrast=on] .color-swatch{border-color:#fff}:root[data-motion=on] *,body.reduce-motion *{animation:none!important;transition:none!important}@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* Amostras e controles seguem a identidade do SIAB em todos os temas. */
+.start-card>.secondary-btn{display:flex;margin:0 auto 18px;min-width:190px}.start-note{max-width:340px;margin-inline:auto}
+.sample-card{font-size:.76rem;line-height:1.55;color:var(--secondary);border:1px solid var(--border);border-left:3px solid var(--accent);border-radius:6px;background:var(--panel2);padding:10px 12px;margin:0 0 14px;overflow-wrap:anywhere}
+.sample-model-note{font-size:.73rem;color:var(--secondary);line-height:1.45;border-left:2px solid var(--accent);padding:7px 10px;margin-top:12px;background:var(--panel)}
+.indicator-mode{display:grid;grid-template-columns:20px 1fr;gap:3px 10px;font-size:.8rem;margin:16px 0}.indicator-mode input{grid-row:1/3}.indicator-mode .small{grid-column:2;font-size:.7rem}
+.overview-sample{margin:5px 0 2px;overflow-wrap:anywhere}.color-reading{max-width:100%;text-align:left}.color-reading>div{min-width:0}.color-reading .small{overflow-wrap:anywhere;max-width:370px}
+.themed-select{width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--border);border-radius:6px;padding:10px 11px;background:var(--bg);color:var(--text);text-align:left;font:inherit;font-size:.875rem;line-height:1.4}
+.themed-select>span{min-width:0;overflow-wrap:anywhere}.themed-select>svg{width:18px;height:18px;flex-shrink:0}.themed-select:hover:not(:disabled),.themed-select[aria-expanded=true]{border-color:var(--accent);background:var(--panel2)}
+input[type=number]{appearance:textfield;-moz-appearance:textfield}input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[aria-invalid=true],button[aria-invalid=true]{border-color:#e35777;box-shadow:0 0 0 1px #e35777}.form-error{padding:10px 12px;border:1px solid #e35777;border-radius:6px;background:var(--panel2);color:var(--text);font-size:.8rem;line-height:1.5;margin:12px 0}
+.check-row input[type=checkbox]{appearance:none;-webkit-appearance:none;display:grid;place-content:center;flex:none;width:20px;height:20px;min-height:20px;padding:0;border:1px solid var(--border);border-radius:4px;background:var(--bg);margin:0}
+.check-row input[type=checkbox]:checked{background:var(--accent);border-color:var(--accent)}.check-row input[type=checkbox]:checked::after{content:'✓';font-weight:800;font-size:15px;line-height:1;color:var(--bg)}
+summary{list-style:none;display:flex;justify-content:space-between;gap:12px}summary::-webkit-details-marker{display:none}summary::after{content:'＋';color:var(--accent);flex:none}details[open]>summary::after{content:'−'}
+
+/* Diálogos próprios: edição, confirmação, preferências, leitura e seleção. */
+.siab-dialog{border-radius:14px;border-color:var(--border);background:var(--panel);color:var(--text);padding:24px;box-shadow:0 24px 80px #0008;scrollbar-width:thin;scrollbar-color:var(--border) var(--panel);overscroll-behavior:contain}
+.siab-dialog::before{content:'';position:absolute;left:0;right:0;top:0;height:4px;background:var(--brand)}
+.siab-dialog::backdrop{background:#050a14b8;backdrop-filter:blur(5px)}
+.siab-dialog .dialog-heading{border-bottom:1px solid var(--border);padding-bottom:16px;margin-bottom:18px;align-items:flex-start}.siab-dialog .dialog-heading h2{font-size:1.15rem;line-height:1.35;padding-top:5px}
+.siab-dialog .dialog-heading>.icon-btn{flex-shrink:0;background:var(--panel2);border-radius:7px;min-width:40px;min-height:40px}
+.siab-dialog .dialog-actions{border-top:1px solid var(--border);padding-top:16px;margin-top:20px}.siab-dialog .dialog-actions>button{min-width:105px}
+.siab-dialog p.dialog-kicker{font-size:.64rem;letter-spacing:.1em;line-height:1.4;color:var(--accent);font-weight:700;margin:0 0 4px}
+.dialog-rename{width:min(420px,calc(100vw - 28px))}.dialog-rename input{font-size:1rem;min-height:48px}.dialog-rename .field-hint{font-size:.75rem}
+.dialog-confirm{width:min(440px,calc(100vw - 28px))}.dialog-confirm #confirm-text{padding:12px 14px;background:var(--panel2);border-radius:8px;line-height:1.65;color:var(--text)}
+.dialog-confirm[data-intent=danger]::before{background:#df4769}.dialog-confirm[data-intent=danger] #confirm-yes{background:#b5284b;color:#fff}
+.dialog-access{width:min(490px,calc(100vw - 28px))}.dialog-access .font-controls{padding:14px;border:1px solid var(--border);border-radius:8px;background:var(--panel2)}
+.dialog-about,.dialog-guide{width:min(600px,calc(100vw - 28px))}.dialog-about h3{color:var(--accent);border-bottom:1px solid var(--border);padding-bottom:7px}.dialog-about ul{padding-left:20px}.dialog-about li+li{margin-top:8px}
+.activity-list{padding-left:23px;margin:20px 0}.activity-list>li{padding:0 0 15px 6px}.activity-list>li::marker{color:var(--accent);font-weight:700}.activity-list strong{color:var(--text)}.activity-list p{margin-top:5px}
+.guide-note{padding:15px;border:1px solid var(--border);border-radius:8px;background:var(--panel2);font-size:.875rem}.guide-note>strong{color:var(--accent)}.guide-note p{margin-top:7px}
+.dialog-choice{width:min(540px,calc(100vw - 28px));max-height:88vh;max-height:88dvh}.dialog-choice[open]{display:flex;flex-direction:column}.dialog-choice .dialog-heading{margin-bottom:10px;flex:none}.dialog-choice .field{margin:7px 0}.dialog-choice #choice-count{margin:7px 0 12px;font-size:.73rem;flex:none}
+.choice-options{min-height:52px;max-height:44vh;max-height:44dvh;overflow-y:auto;border:1px solid var(--border);border-radius:8px;background:var(--bg);padding:5px;scrollbar-width:thin;scrollbar-color:var(--border) var(--bg);overscroll-behavior:contain}
+.choice-group{padding:13px 10px 6px;font-size:.66rem;font-weight:700;letter-spacing:.05em;color:var(--accent);text-transform:uppercase}.choice-option{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:46px;padding:10px 12px;border:1px solid transparent;border-radius:6px;color:var(--text);font-size:.875rem;line-height:1.4;cursor:pointer;overflow-wrap:anywhere}
+.choice-option:hover,.choice-option[data-active=true]{border-color:var(--accent);background:var(--panel2)}.choice-option[aria-selected=true]{color:var(--accent);font-weight:600}.choice-check{width:18px;flex:none;text-align:center}
+.empty-choice{padding:18px;text-align:center;color:var(--secondary)}.dialog-choice .dialog-actions{flex:none;margin-top:14px;padding-top:12px}.choice-search input{min-height:44px}
+:root[data-contrast=on] .siab-dialog::before{background:var(--accent)}:root[data-contrast=on] .dialog-confirm[data-intent=danger] #confirm-yes{background:#ff0;color:#000}:root[data-contrast=on] .form-error,:root[data-contrast=on] [aria-invalid=true]{border-color:var(--accent)}
+@media(max-width:900px){.controls .themed-select{font-size:1rem;min-height:46px}.sample-card{font-size:.8rem}.siab-dialog{padding:20px}.siab-dialog .dialog-heading h2{font-size:1.05rem}.sample-model-note{font-size:.72rem}.color-reading .small{max-width:260px}}
+@media(max-width:480px){.dialog-choice{width:calc(100vw - 16px);max-height:90dvh;padding:18px}.choice-options{max-height:48dvh}.choice-option{min-height:48px}.siab-dialog .dialog-actions{gap:8px}.siab-dialog .dialog-actions>button{flex:1;min-width:0}.dialog-access .font-controls{padding:12px}}
+@media(pointer:coarse){.themed-select,.siab-dialog .icon-btn{min-height:44px}.choice-search input{font-size:1rem}}
