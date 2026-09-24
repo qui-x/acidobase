@@ -1,4 +1,4 @@
-# Validação da versão 0.2 — 24/09/2026
+# Validação da versão 0.2.1 — 24/09/2026
 
 ## Cálculo: aprovado
 
@@ -27,7 +27,8 @@ abertura/fechamento do painel, cópias vinculadas e gotas em grupo, pH oculto,
 repreparo de grupo, rejeição de volume negativo, mudança de modo mobile/desktop,
 temas, fonte de 200%, limite de dez tubos e remoção do tubo ativo.
 
-Adicionalmente: entrada do cotidiano; diluição preservada nas cópias;
+Adicionalmente: entrada única pelo botão Começar, catálogo completo de amostras
+e reagentes e preparo de uma titulação de laboratório na mesma bancada; diluição preservada nas cópias;
 aplicação de novas amostras ao grupo; busca por nome sem acentos; seleção com
 teclado; retorno de foco; seleção de tema dentro de outro diálogo; rótulos dos
 diálogos; pH aproximado/oculto; realce de cores sem alterar pH; erros de nome

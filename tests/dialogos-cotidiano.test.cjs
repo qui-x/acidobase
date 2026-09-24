@@ -28,7 +28,10 @@ try {
     assert.ok(dialog.classList.contains('siab-dialog'));
     assert.ok($(dialog.getAttribute('aria-labelledby')));
   }
-  click('everyday-start-btn');
+  assert.equal(doc.querySelectorAll('#start-screen button').length, 1);
+  click('start-btn');
+  assert.ok([...$('solution-select').options].some(option => option.value === 'hcl'));
+  assert.ok([...$('solution-select').options].some(option => option.value === 'lemon'));
   const api = w.SIAB, s = api.state;
   assert.equal(s.tubes.length, 3); assert.equal(api.current().solution, 'lemon');
   assert.equal(api.current().dilution, 10); assert.equal(api.current().indicator, 'cabbage');

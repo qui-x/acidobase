@@ -17,7 +17,16 @@ try{
   for(const el of doc.querySelectorAll('script[src]'))w.eval(fs.readFileSync(path.join(root,el.getAttribute('src')),'utf8'));
   const s=w.SIAB.state;
   assert.equal(s.tubes.length,3);assert.equal($('workspace').hidden,true);
-  click('start-btn');assert.equal($('workspace').hidden,false);assert.equal($('ph-value').textContent,'2,00');
+  click('start-btn');assert.equal($('workspace').hidden,false);
+  // Prepare a laboratory titration using the same bench and complete catalog.
+  for(const indicator of ['btb','phenol','universal']){
+    click('prepare-btn');change('solution-select','hcl');change('titrant-select','naoh');
+    $('concentration').value='.01';$('titrant-concentration').value='.01';
+    $('initial-volume').value='1';change('drop-volume','0.05');change('indicator-select',indicator);
+    submit('prepare-form');
+    if(indicator!=='universal')click('next-btn');
+  }
+  click('previous-btn');click('previous-btn');assert.equal($('ph-value').textContent,'2,00');
   for(let i=0;i<20;i++)click('drop-btn');
   assert.equal($('ph-value').textContent,'7,00');assert.equal($('color-name').textContent,'verde');assert.match($('equivalence-note').textContent,/equivalência/);
   click('rename-btn');$('new-name').value='Amostra <ácido> & teste';submit('rename-form');

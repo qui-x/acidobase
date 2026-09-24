@@ -1,4 +1,4 @@
-# SIAB — A química das cores · versão de teste 0.2
+# SIAB — A química das cores · versão de teste 0.2.1
 
 Extraia o ZIP inteiro e abra `siab/index.html` em um navegador.
 O pacote contém apenas os arquivos do SIAB, com HTML, CSS, JavaScript e SVG
@@ -16,7 +16,8 @@ Nome fantasia: **A química das cores**.
 - Diluição própria para amostras; molaridade ajustável para reagentes puros.
 - Extrato de repolho roxo, cores próprias dos alimentos e opção de realçar
   apenas a cor do indicador, sem alterar o cálculo do pH.
-- Botão **Explorar o cotidiano** na tela inicial e ideias de atividades para aula.
+- Uma entrada **Começar**, com todas as amostras e reagentes no mesmo catálogo.
+- Ideias de atividades acessíveis disponíveis dentro da bancada.
 - Diálogos de renomeação, confirmação, acessibilidade, informações, atividades
   e escolha com estilos próprios. Seletores e mensagens de validação seguem
   os temas do SIAB e aceitam navegação por teclado.
@@ -27,7 +28,7 @@ Uma fruta ou produto real pode apresentar resultados diferentes. Veja
 
 ## Testar o cotidiano
 
-1. Na tela inicial, toque em **Explorar o cotidiano**.
+1. Na tela inicial, toque em **Começar** para abrir a bancada única.
 2. Observe limão diluído, água e bicarbonato com indicador de repolho roxo.
 3. Em **Preparar**, toque no nome da solução e busque **café** ou **laranja**.
 4. Escolha a diluição e aplique o preparo. Teste **Realçar indicador**.
@@ -40,7 +41,9 @@ digitar nomes sem acentos. Há botão visível para fechar cada diálogo.
 
 ## Testar a titulação de laboratório
 
-1. Toque em **Começar**. Há três tubos independentes com HCl, 0,01 mol/L, 1 mL.
+1. Na mesma bancada, abra **Preparar** e escolha HCl, 0,01 mol/L, 1 mL.
+   Selecione bromotimol e, no conta-gotas, NaOH, 0,01 mol/L, gota de 0,05 mL.
+   Toque em **Aplicar preparo**.
 2. No primeiro tubo, adicione 20 gotas de NaOH, 0,01 mol/L, com 0,05 mL por gota.
    O pH calculado chega a 7,00 e o bromotimol fica verde.
 3. Renomeie o tubo. Vá ao próximo e volte: o preparo, o nome e as gotas permanecem.

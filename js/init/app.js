@@ -16,14 +16,6 @@
   $('solution-select').innerHTML=options; $('titrant-select').innerHTML=options;
   $('indicator-select').innerHTML=Object.entries(SIAB.indicators).map(([id,x])=>`<option value="${id}">${x.name}</option>`).join('');
   $('start-btn').addEventListener('click',()=>{s.started=true;$('start-screen').hidden=true;$('workspace').hidden=false;SIAB.render(true);responsive();$('focus-tab').focus();});
-  $('everyday-start-btn').addEventListener('click',()=>{
-    if(s.started)return;
-    s.tubes=[];s.nextId=1;s.nextGroup=1;
-    SIAB.newTube({name:'Limão diluído',solution:'lemon',dilution:10,titrant:'bicarbonate',indicator:'cabbage'});
-    SIAB.newTube({name:'Água pura',solution:'water',titrant:'lemon',titrantDilution:10,indicator:'cabbage'});
-    SIAB.newTube({name:'Bicarbonato',solution:'bicarbonate',titrant:'vinegar',titrantDilution:10,indicator:'cabbage'});
-    s.activeId=s.tubes[0].id;$('start-btn').click();
-  });
   $('focus-tab').addEventListener('click',()=>showView('focus'));
   $('overview-tab').addEventListener('click',()=>showView('overview'));
   $('all-tubes-btn').addEventListener('click',()=>showView('overview'));

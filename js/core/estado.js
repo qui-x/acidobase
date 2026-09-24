@@ -11,7 +11,7 @@ SIAB.newTube = (options = {}) => {
   SIAB.state.tubes.push(tube);
   return tube;
 };
-SIAB.newTube({ indicator: 'btb' });
-SIAB.newTube({ indicator: 'phenol' });
-SIAB.newTube({ indicator: 'universal' });
+SIAB.newTube({ name: 'Limão diluído', solution: 'lemon', dilution: 10, titrant: 'bicarbonate', indicator: 'cabbage' });
+SIAB.newTube({ name: 'Água pura', solution: 'water', titrant: 'lemon', titrantDilution: 10, indicator: 'cabbage' });
+SIAB.newTube({ name: 'Bicarbonato', solution: 'bicarbonate', titrant: 'vinegar', titrantDilution: 10, indicator: 'cabbage' });
 SIAB.state.activeId = 1;
