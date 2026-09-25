@@ -2,8 +2,8 @@
    Ao publicar uma versão nova, mude VERSAO (igual a SIAB.version e ao ?v= do
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
-   página (o teste tests/pwa.test.cjs confere isso). */
-const VERSAO = 'siab-0.5.5';
+   página. */
+const VERSAO = 'siab-0.5.6';
 const ARQUIVOS = [
   './',
   './index.html',

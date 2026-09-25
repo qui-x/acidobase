@@ -163,6 +163,11 @@ td { font-family: Consolas, monospace; }
 .segmented label:first-of-type { border-radius: 6px 0 0 6px; margin-left: 0; }
 .segmented label:last-of-type { border-radius: 0 6px 6px 0; }
 .segmented[role=group] { display: flex; gap: 6px; margin: 12px 0; }
+/* Previsão: as quantidades de gotas mudam com a capacidade; fora do tubo, os mL aparecem embaixo. */
+.poe-gotas-opcoes { display: flex; width: 100%; }
+.poe-gotas-opcoes label { flex-direction: column; gap: 0; line-height: 1.2; }
+.poe-gotas-opcoes label > span { display: flex; flex-direction: column; align-items: center; }
+.poe-gotas-opcoes small { display: block; font-size: .68rem; font-weight: 400; color: var(--secondary); white-space: nowrap; }
 
 /* 4. CABEÇALHO E NAVEGAÇÃO ------------------------------------------- */
 /* Barra compacta no estilo do Laboratório Virtual: menu ☰, marca com o

@@ -42,11 +42,11 @@ SIAB.TUBE_DEFAULTS = {
 // tamanhos comuns de laboratório escolar.
 SIAB.VIDRARIAS = {
   tubo: { nome: 'Tubo de ensaio', curto: 'Tubo', capacidades: [5],
-    dica: 'Tubo de ensaio: o clássico dos testes rápidos com poucas gotas.' },
+    dica: 'Microescala (5 mL): o clássico dos testes rápidos com poucas gotas.' },
   bequer: { nome: 'Béquer', curto: 'Béquer', capacidades: [10, 25, 50, 100, 250],
-    dica: 'Béquer: boca larga, para misturar e aquecer. Suas marcas de volume são aproximadas.' },
+    dica: 'Boca larga, para misturar e aquecer. Marcas aproximadas (± 5 %).' },
   erlenmeyer: { nome: 'Erlenmeyer', curto: 'Erlenmeyer', capacidades: [25, 50, 125, 250],
-    dica: 'Erlenmeyer: o frasco das titulações; a boca estreita evita respingos ao agitar. Por ser cônico, as marcas se afastam perto do gargalo.' }
+    dica: 'O frasco das titulações: a boca estreita evita respingos. Cônico, com marcas aproximadas (± 5 %).' }
 };
 
 // Capacidade (mL) da vidraria em uso numa bancada.
@@ -54,6 +54,28 @@ SIAB.capacidadeDaBancada = (bench = SIAB.state) =>
   (bench?.vidraria && bench.vidraria !== 'tubo' ? bench.capacidades?.[bench.vidraria] : null) || SIAB.CAPACITY_ML;
 // Volume inicial de um recipiente novo: 20 % da capacidade (1 mL no tubo de ensaio).
 SIAB.volumePadrao = (bench = SIAB.state) => Math.round(SIAB.capacidadeDaBancada(bench) * .2 * 100) / 100;
+
+// Escala do recipiente: o que acompanha a capacidade escolhida.
+// - casas: casas decimais do volume DENTRO do recipiente. As marcas de béquer
+//   e erlenmeyer são aproximadas (incerteza de cerca de 5 % da capacidade):
+//   mostrar centésimos de mL num béquer de 250 mL seria uma precisão que o
+//   vidro não tem. O volume que SAI do conta-gotas, contado gota a gota,
+//   continua com 2 casas.
+// - atalhos: volumes dos botões "+… mL", perto de 1/10 da capacidade e um
+//   passo menor, para encher um recipiente grande sem centenas de toques.
+// - previsao: gotas oferecidas em "Prever e gotejar", de cerca de 1 % a 10 %
+//   da capacidade (com gota de 0,05 mL): num béquer grande, 20 gotas quase
+//   não mudam o pH, e a previsão ficaria sem graça.
+SIAB.ESCALAS = [
+  { ate: 5, casas: 2, atalhos: [1], previsao: [1, 5, 10, 20] },
+  { ate: 10, casas: 1, atalhos: [1], previsao: [5, 10, 20, 40] },
+  { ate: 50, casas: 1, atalhos: [1, 5], previsao: [10, 20, 50, 100] },
+  { ate: 125, casas: 1, atalhos: [5, 10], previsao: [20, 50, 100, 200] },
+  { ate: Infinity, casas: 0, atalhos: [10, 25], previsao: [50, 100, 200, 500] }
+];
+SIAB.escala = (capacidade = SIAB.capacidadeDaBancada()) => SIAB.ESCALAS.find(e => capacidade <= e.ate);
+// Volume dentro de um recipiente, com as casas da escala dele ("10,3 mL").
+SIAB.volumeTexto = (volume, capacidade) => SIAB.format(volume, SIAB.escala(capacidade).casas);
 
 SIAB.newTube = (options = {}, bench = SIAB.state) => {
   const id = bench.nextId++;

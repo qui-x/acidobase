@@ -4,7 +4,7 @@
    cargas (eletroneutralidade), com balanços de massa, diluição e autoionização
    da água. A temperatura padrão é 25 °C; só a missão "Neutro nem sempre é 7"
    altera Kw. Amostras do cotidiano usam equilíbrios representativos.
-   Fontes e limites: docs/modelo-quimico.md e docs/cotidiano.md. */
+   Fontes: "Sobre o SIAB" → Referências. Limites: seção "Limites do modelo" do manual. */
 SIAB.chem = (() => {
   const KW = 1e-14;
 

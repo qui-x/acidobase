@@ -159,6 +159,12 @@ SIAB.bancada = (() => {
     const r = SIAB.chem.solve(SIAB.current());
     const casas = r.approximate ? 1 : 2;
     const diferenca = depois - antes;
+    // Variação que some no arredondamento ("+0,0") não diz nada: o chip não aparece.
+    // Acontece muito em recipientes grandes, onde poucas gotas quase não mudam o pH.
+    if (s.showPH && Math.abs(diferenca) < .5 * 10 ** -casas) {
+      chip.hidden = true;
+      return;
+    }
     chip.textContent = s.showPH
       ? `${SIAB.format(antes, casas)} → ${SIAB.format(depois, casas)} (${diferenca >= 0 ? '+' : '−'}${SIAB.format(Math.abs(diferenca), casas)})`
       : `+${n} ${n === 1 ? 'gota' : 'gotas'}`;
@@ -420,7 +426,13 @@ SIAB.bancada = (() => {
     const cores = t.indicator === 'none' ? [] : SIAB.chem.colorNames(t.indicator);
     $('poe-cor-grupo').hidden = !cores.length;
     $('poe-cores').innerHTML = [...cores, 'não sei'].map((nome, n) => `<label class="chip"><input type="radio" name="poe-cor" value="${SIAB.escape(nome)}" ${n === cores.length ? 'checked' : ''}><span>${SIAB.escape(nome)}</span></label>`).join('');
-    const livre = (SIAB.capacidade(t) - SIAB.chem.solve(t).volume) / t.dropVolume;
+    // Quantidades de gotas conforme a capacidade (SIAB.ESCALAS): num béquer
+    // grande, 20 gotas quase não mudam o pH. Fora do tubo, mostra também os mL.
+    const cap = SIAB.capacidade(t);
+    const opcoes = SIAB.escala(cap).previsao;
+    const marcada = Number(document.querySelector('input[name="poe-gotas"]:checked')?.value);
+    $('poe-gotas-opcoes').innerHTML = opcoes.map((n, k) => `<label><input type="radio" name="poe-gotas" value="${n}"${(opcoes.includes(marcada) ? n === marcada : k === 2) ? ' checked' : ''}><span>${n}${cap > SIAB.CAPACITY_ML ? `<small>${(Math.round(n * t.dropVolume * 100) / 100).toLocaleString('pt-BR')} mL</small>` : ''}</span></label>`).join('');
+    const livre = (cap - SIAB.chem.solve(t).volume) / t.dropVolume;
     document.querySelectorAll('input[name="poe-gotas"]').forEach(x => {
       x.disabled = Number(x.value) > livre + 1e-9;
       if (x.disabled && x.checked) x.checked = false;
@@ -444,7 +456,7 @@ SIAB.bancada = (() => {
     const meio = document.querySelector('input[name="poe-meio"]:checked')?.value;
     const cor = document.querySelector('input[name="poe-cor"]:checked')?.value || 'não sei';
     if (!gotas || !meio) {
-      $('poe-erro').textContent = !gotas ? 'Não cabem mais gotas neste tubo.' : 'Escolha se a solução ficará ácida, neutra ou básica.';
+      $('poe-erro').textContent = !gotas ? 'Não cabem mais gotas neste recipiente.' : 'Escolha se a solução ficará ácida, neutra ou básica.';
       $('poe-erro').hidden = false;
       return;
     }
@@ -502,8 +514,9 @@ SIAB.bancada = (() => {
       fim: fimSequencia
     });
     $('drop5-btn').addEventListener('click', () => gotejar(5));
-    $('drop1ml-btn').addEventListener('click', () => gotejar(Math.round(1 / SIAB.current().dropVolume)));
-    $('drop5ml-btn').addEventListener('click', () => gotejar(Math.round(5 / SIAB.current().dropVolume)));
+    // Os atalhos em mL mudam com a capacidade (data-ml, escrito por render.js).
+    $('drop1ml-btn').addEventListener('click', evento => gotejar(Math.round(Number(evento.currentTarget.dataset.ml || 1) / SIAB.current().dropVolume)));
+    $('drop5ml-btn').addEventListener('click', evento => gotejar(Math.round(Number(evento.currentTarget.dataset.ml || 5) / SIAB.current().dropVolume)));
     $('poe-btn').addEventListener('click', abrirPrevisao);
     $('poe-form').addEventListener('submit', conferirPrevisao);
     $('poe-resultado').addEventListener('submit', salvarExplicacao);

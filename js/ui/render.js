@@ -16,9 +16,17 @@ SIAB.nomeIndicador = (t, curto = false) => {
 };
 
 // Resumo do que há no recipiente (uma solução ou a mistura de vários tubos).
-SIAB.resumoConteudo = t => (t.componentes?.length
-  ? `Mistura de ${t.componentes.length} ${t.componentes.length === 1 ? 'componente' : 'componentes'} · ${SIAB.format(SIAB.chem.base(t).reduce((s, x) => s + x.volume, 0))} mL`
-  : `${SIAB.solutionSummary(t.solution, t.concentration, t.dilution)} · ${SIAB.format(t.initialVolume)} mL iniciais`);
+// O volume usa as casas da escala do recipiente; amostra como preparada mostra
+// só o nome (a diluição aparece quando existe).
+SIAB.resumoConteudo = t => {
+  const cap = SIAB.capacidade(t);
+  if (t.componentes?.length) {
+    return `Mistura de ${t.componentes.length} ${t.componentes.length === 1 ? 'componente' : 'componentes'} · ${SIAB.volumeTexto(SIAB.chem.base(t).reduce((s, x) => s + x.volume, 0), cap)} mL`;
+  }
+  const x = SIAB.solutions[t.solution];
+  const conteudo = x.kind === 'sample' && (t.dilution || 1) === 1 ? x.name : SIAB.solutionSummary(t.solution, t.concentration, t.dilution);
+  return `${conteudo} · ${SIAB.volumeTexto(t.initialVolume, cap)} mL iniciais`;
+};
 
 
 SIAB.render = (syncForm = false) => {
@@ -56,8 +64,9 @@ SIAB.render = (syncForm = false) => {
   // Cabeçalho do tubo.
   const vidro = SIAB.VIDRARIAS[t.vidraria || s.vidraria] || SIAB.VIDRARIAS.tubo;
   const capacidade = SIAB.capacidade(t);
-  const tamanho = (t.vidraria || s.vidraria) === 'tubo' ? '' : ` DE ${SIAB.format(capacidade, 0)} mL`;
-  $('tube-index').textContent = `${vidro.curto.toUpperCase()}${tamanho} · ${i + 1} DE ${s.tubes.length}`;
+  const escala = SIAB.escala(capacidade);
+  // A capacidade aparece uma vez só, junto do volume ("10,3 mL de 50 mL").
+  $('tube-index').textContent = `${vidro.curto.toUpperCase()} · ${i + 1} DE ${s.tubes.length}`;
   $('tube-name').textContent = t.name;
   $('sample-summary').textContent = SIAB.resumoConteudo(t);
   $('sample-model-note').hidden = !r.approximate;
@@ -70,7 +79,7 @@ SIAB.render = (syncForm = false) => {
   $('ph-toggle').setAttribute('aria-pressed', String(s.showPH));
   $('ph-toggle').hidden = !pode('ph');
   $('ph-ruler').innerHTML = SIAB.regua.svg(s.showPH ? r.pH : null, { neutro: r.neutralPH });
-  $('volume-value').textContent = SIAB.format(r.volume);
+  $('volume-value').textContent = SIAB.format(r.volume, escala.casas);
   $('temperature-value').hidden = r.temperature === 25;
   $('temperature-value').textContent = `${SIAB.format(r.temperature, 0)} °C`;
   // Atualiza (não recria) o desenho: o nível e a cor mudam com movimento.
@@ -80,7 +89,7 @@ SIAB.render = (syncForm = false) => {
   $('color-swatch').style.opacity = c.opacity;
   const nomeInd = SIAB.nomeIndicador(t);
   $('indicator-name').textContent = c.masked ? `${nomeInd}: ${c.indicatorName} + amostra ${c.pigmentName}` : nomeInd;
-  $('capacity-value').textContent = SIAB.format(SIAB.capacidade(t));
+  $('capacity-value').textContent = SIAB.format(capacidade, 0);
 
   // Conta-gotas.
   const cheio = targets.some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.capacidade(x) + 1e-9);
@@ -92,20 +101,29 @@ SIAB.render = (syncForm = false) => {
   $('drop-btn').disabled = cheio;
   $('drop5-btn').disabled = cheio;
   $('drop1ml-btn').disabled = cheio;
+  // Atalhos em mL conforme a capacidade (ver SIAB.ESCALAS em estado.js).
+  const [atalho1, atalho2] = escala.atalhos;
+  const rotuloMl = ml => `+${SIAB.format(ml, 0)} mL`;
+  $('drop1ml-btn').dataset.ml = atalho1;
+  $('drop1ml-btn').textContent = rotuloMl(atalho1);
   $('poe-btn').disabled = cheio;
   $('dose-shortcuts').hidden = !pode('atalhos') && !pode('poe');
   $('drop5-btn').hidden = !pode('atalhos');
   $('drop1ml-btn').hidden = !pode('atalhos');
-  // Recipientes grandes: +5 mL (encher 25 mL de gota em gota levaria minutos).
-  $('drop5ml-btn').hidden = !pode('atalhos') || capacidade < 25;
+  // Segundo atalho: só nos recipientes maiores (encher 25 mL de gota em gota levaria minutos).
+  $('drop5ml-btn').hidden = !pode('atalhos') || !atalho2;
   $('drop5ml-btn').disabled = cheio;
+  if (atalho2) {
+    $('drop5ml-btn').dataset.ml = atalho2;
+    $('drop5ml-btn').textContent = rotuloMl(atalho2);
+  }
   $('poe-btn').hidden = !pode('poe');
   const ultima = s.history.at(-1);
   $('undo-btn').disabled = !ultima;
   $('undo-btn').title = ultima ? `Desfazer: ${ultima.descricao}` : 'Nada para desfazer';
   $('equivalence-note').textContent = r.atEquivalence && s.showPH
     ? 'Ponto de equivalência · quantidades estequiométricas'
-    : cheio ? 'Capacidade do tubo atingida.' : '';
+    : cheio ? `${vidro.curto} cheio: ${SIAB.format(capacidade, 0)} mL.` : '';
   $('group-notice').hidden = !t.group;
   $('group-notice').textContent = t.group ? `Adições vinculadas · ${targets.length} tubos recebem as mesmas gotas.` : '';
 
@@ -122,7 +140,7 @@ SIAB.render = (syncForm = false) => {
   if (s.view === 'overview') {
     $('overview-grid').innerHTML = s.tubes.map(x => {
       const v = SIAB.chem.solve(x), cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}">${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.format(v.volume)} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? '<span class="small">Adições vinculadas</span>' : ''}</button>`;
+      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}">${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? '<span class="small">Adições vinculadas</span>' : ''}</button>`;
     }).join('');
   }
 
@@ -194,9 +212,8 @@ SIAB.renderVidraria = () => {
     $('capacidade-opcoes').innerHTML = opcoes.map(ml => `<label><input type="radio" name="capacidade" value="${ml}"><span>${ml}</span></label>`).join('');
   }
   document.querySelectorAll('input[name="capacidade"]').forEach(x => { x.checked = Number(x.value) === capacidade; });
-  $('vidraria-dica').textContent = v === 'tubo'
-    ? `${SIAB.VIDRARIAS[v].dica} Capacidade: 5 mL (microescala).`
-    : `${SIAB.VIDRARIAS[v].dica} Capacidade: ${capacidade} mL. Ao trocar, o volume inicial acompanha (${SIAB.format(SIAB.volumePadrao(s))} mL num recipiente novo) e as gotas recomeçam.`;
+  // Uma frase curta; o resto (volume inicial, atalhos, precisão) está no manual.
+  $('vidraria-dica').textContent = SIAB.VIDRARIAS[v].dica;
   // O volume inicial pode ir até 80 % da capacidade.
   $('initial-volume').max = String(Math.round(capacidade * .8 * 100) / 100);
 };

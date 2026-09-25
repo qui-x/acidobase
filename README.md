@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.5
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.6
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.5`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.6`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -45,6 +45,13 @@ frasco da prateleira e ele vira o "Tubo 1".
   da escolha; os grupos de frascos também se recolhem, e a busca abre os que
   têm resultado. Com isso a prateleira ficou cerca de 63 % mais curta
   (de 3.281 para 1.208 px no computador).
+- **Escala do recipiente:** os números acompanham a capacidade escolhida. O
+  volume aparece com a precisão que o vidro permite (centésimos no tubo de
+  5 mL, décimos de 10 a 125 mL, mL inteiros em 250 mL, já que as marcas de
+  béquer e erlenmeyer têm cerca de ± 5 % de incerteza). Os atalhos em mL ficam
+  perto de 1/10 da capacidade (+1 mL no tubo; +10 e +25 mL no béquer de
+  250 mL), e "Prever e gotejar" oferece de 1 % a 10 % da capacidade em gotas.
+  A capacidade aparece uma vez só ("10,3 mL de 50 mL").
 - **Gotas com movimento:** o conta-gotas aparece sobre a vidraria, a gota se
   forma na ponta, cai e, ao chegar, faz ondas, respingos e espalha a nova cor;
   o nível sobe nesse momento. Na viragem, a cor se espalha mais.
@@ -135,7 +142,7 @@ Acessibilidade: veja o painel acima. A cor é sempre descrita em texto, todos os
 controles funcionam pelo teclado, e o som do pH (tom mais agudo com pH maior)
 e a vibração na viragem são opcionais.
 
-## Mapa das mecânicas (propostas em `docs/`)
+## Mapa das mecânicas
 
 | Mecânica | Onde está |
 | --- | --- |
@@ -155,23 +162,19 @@ e a vibração na viragem são opcionais.
 | M14 Caderno de laboratório | Caderno; Histórico → CSV |
 | M15 Neutro nem sempre é 7 | Missão "Neutro nem sempre é 7" |
 
-## Testes
-
-```
-npm test            # química, sais, missões e PWA, sem navegador
-npm install         # uma vez, para os testes no navegador
-npx playwright install chromium
-npm run test:e2e    # 113 testes no Chromium: bancada, vidraria, menu, modos, painéis, tour, abertura, segredos, celular, sem internet e atualização
-```
-
-Resultados da última validação: `tests/RESULTADOS.md`.
-
 ## Documentação
 
-- `docs/arquitetura.md` — como o código está organizado e como criar missões, frascos e desafios.
-- `docs/modelo-quimico.md` — equações, constantes, fontes e limites do modelo.
-- `docs/cotidiano.md` — amostras do cotidiano e seus parâmetros.
-- `docs/proposta-conteudo-e-mecanicas.md` e `docs/proposta-ui-ux.md` — propostas que deram origem a esta versão.
+- **Manual** (no próprio programa, aba "Manual"): cada parte da bancada, os
+  módulos, a vidraria, os roteiros de teste e os limites do modelo.
+- **Referências** das constantes e equações: Menu ☰ → Aplicativo → Sobre o SIAB.
+
+## Para quem vai mexer no código
+
+- Ao publicar uma versão nova, troque o número nos três lugares: `version` em
+  `js/core/namespace.js`, o final `?v=…` de cada arquivo em `index.html` e
+  `VERSAO` em `sw.js`. Assim o navegador não mistura arquivos novos e antigos.
+- Arquivo `.js` novo? Inclua também na lista de arquivos do `sw.js`, para ele
+  funcionar sem internet.
 
 ## Limites
 

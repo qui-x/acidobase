@@ -32,7 +32,7 @@ SIAB.demo = {
   }
 };
 
-// Concepções alternativas que as missões confrontam (ver docs/proposta-conteudo-e-mecanicas.md).
+// Concepções alternativas que as missões confrontam.
 SIAB.concepcoes = {
   C1: 'Ácido forte é o mesmo que ácido concentrado.',
   C2: 'Neutralização sempre dá pH 7.',

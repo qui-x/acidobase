@@ -11,8 +11,8 @@
      { teclas: [[tecla, ação]] }
      { faq: [[pergunta, resposta]] }
      { gerado }       conteúdo montado pelo programa: diagrama, roteiros, frascos, indicadores
-   Para mudar um texto, edite aqui; o teste tests/manual.test.cjs confere se os
-   alvos existem na página. */
+   Para mudar um texto, edite aqui. O "alvo" precisa existir no index.html,
+   senão "Mostrar na bancada" não encontra a parte. */
 SIAB.manual = [
   {
     id: 'comecar', titulo: 'Primeiros passos',
@@ -90,15 +90,21 @@ SIAB.manual = [
     blocos: [
       { p: 'Na prateleira, “Vidraria” troca o recipiente de todos os tubos da bancada. O SIAB sempre abre com o tubo de ensaio.' },
       { lista: [
-        'Tubo de ensaio: o clássico dos testes rápidos com poucas gotas.',
-        'Béquer: boca larga, usado para misturar, aquecer e transferir. As marcas de volume de um béquer são aproximadas.',
+        'Tubo de ensaio: microescala (5 mL), o clássico dos testes rápidos com poucas gotas.',
+        'Béquer: boca larga, usado para misturar, aquecer e transferir. As marcas de volume de um béquer são aproximadas (cerca de ± 5 % da capacidade).',
         'Erlenmeyer: o frasco das titulações. A boca estreita evita respingos quando se agita a mistura. Como ele é cônico, 1 mL a mais sobe pouco perto do fundo largo e sobe mais perto do gargalo: por isso as marcas ficam cada vez mais afastadas.'
       ] },
       { lista: [
         'Capacidade: o tubo de ensaio tem sempre 5 mL. O béquer pode ter 10, 25, 50, 100 ou 250 mL (começa com 50) e o erlenmeyer 25, 50, 125 ou 250 mL (começa com 125, o tamanho clássico das titulações).',
         'Ao trocar a vidraria ou a capacidade, o volume inicial acompanha: o líquido continua na mesma altura (1 mL no tubo vira 10 mL no béquer de 50 mL e 25 mL no erlenmeyer de 125 mL). As gotas recomeçam, e “Desfazer” volta tudo, inclusive a vidraria.',
         'Num recipiente novo, o volume inicial é 20 % da capacidade. No módulo Medir, “Volume inicial” vai até 80 % dela.',
-        'A partir de 25 mL aparece o atalho “+5 mL”, para não precisar de centenas de gotas.'
+      ] },
+      { p: 'A escala da bancada acompanha a capacidade escolhida:' },
+      { lista: [
+        'Precisão do volume: centésimos de mL no tubo de 5 mL, décimos de 10 a 125 mL e mL inteiros em 250 mL. Béquer e erlenmeyer têm marcas com incerteza de cerca de 5 % da capacidade: mostrar “50,25 mL” num béquer de 250 mL seria uma precisão que o vidro não tem. O que sai do conta-gotas continua contado em centésimos, gota a gota.',
+        'Atalhos em mL, perto de 1/10 da capacidade: +1 mL no tubo e no béquer de 10 mL; +1 e +5 mL em 25 e 50 mL; +5 e +10 mL em 100 e 125 mL; +10 e +25 mL em 250 mL.',
+        'Prever e gotejar: as gotas oferecidas vão de cerca de 1 % a 10 % da capacidade (de 1 a 20 gotas no tubo, de 50 a 500 no recipiente de 250 mL), para a previsão ter efeito visível.',
+        'A capacidade aparece uma vez só, ao lado do volume (“10,3 mL de 50 mL”).'
       ] },
       { dica: 'A concentração não muda com a vidraria: o pH e a cor de cada frasco são os mesmos. O que muda com o volume é quanto é preciso gotejar para neutralizar (mais amostra pede mais gotas).' },
       { p: 'Os nomes que o programa dá (“Tubo 2”) acompanham a troca (“Béquer 2”). Nomes escolhidos por você não mudam.' }
@@ -160,11 +166,10 @@ SIAB.manual = [
     blocos: [
       { lista: [
         'Segure para gotejar: enquanto o botão estiver pressionado, cai uma gota a cada quarto de segundo; depois de 8 gotas, o ritmo acelera. Um toque rápido adiciona 1 gota.',
-        '+5 gotas e +1 mL: atalhos para ir mais rápido.',
+        '+5 gotas e os atalhos em mL: para ir mais rápido. Os mL acompanham a capacidade (+1 mL no tubo; +10 e +25 mL no béquer de 250 mL; veja “Vidraria”).',
         'Desfazer: desfaz a última ação inteira (uma sequência de gotas, a troca de frasco, as medidas, a remoção de um tubo…).',
         'Linha acima do botão: o que está no conta-gotas, quantas gotas já caíram, o volume e o tamanho de cada gota.',
         'Capacidade: quando o recipiente fica cheio, os botões de gotejar ficam desativados.',
-        '+5 mL: aparece nos recipientes de 25 mL ou mais.',
         'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas e espalha a nova cor; o nível sobe nesse momento. Na viragem do indicador, a cor se espalha mais e o contorno pisca. “Reduzir animações” desliga esse movimento.'
       ] },
       { teclas: [['Enter', 'adiciona 1 gota'], ['Espaço (segurar)', 'goteja sem parar até soltar'], ['Tab', 'passa para o próximo controle']] },
@@ -178,7 +183,7 @@ SIAB.manual = [
       { p: 'Serve para testar uma hipótese: prever → observar → explicar. Tudo fica registrado no caderno.' },
       { passos: [
         'Toque em “Prever e gotejar”, abaixo do botão de gotejar.',
-        'Escolha quantas gotas (1, 5, 10 ou 20), se a solução ficará ácida, neutra ou básica e, se quiser, a cor esperada.',
+        'Escolha quantas gotas (no tubo, 1, 5, 10 ou 20; em recipientes maiores, mais gotas, com o volume em mL embaixo), se a solução ficará ácida, neutra ou básica e, se quiser, a cor esperada.',
         'Toque em “Gotejar e conferir”: as gotas caem e aparece a comparação com ✓ ou ✗.',
         'Escreva a explicação e toque em “Salvar no caderno”.'
       ] },
@@ -301,7 +306,7 @@ SIAB.manual = [
         ['Posso mudar a temperatura?', 'Na bancada, não: tudo está a 25 °C. A temperatura só muda na missão “Neutro nem sempre é 7”, no modo completo.'],
         ['Antiácidos: posso usar isso para saber a dose?', 'Não. É uma atividade didática, não uma orientação de saúde.']
       ] },
-      { p: 'Detalhes das equações, constantes e fontes: docs/modelo-quimico.md, na pasta do projeto.' }
+      { p: 'Fontes das constantes e equações: Menu ☰ → Aplicativo → Sobre o SIAB (OpenStax, Chemistry 2e).' }
     ]
   }
 ];
