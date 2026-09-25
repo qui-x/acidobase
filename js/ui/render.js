@@ -75,10 +75,10 @@ SIAB.render = (syncForm = false) => {
   // Leitura.
   $('ph-value').textContent = s.showPH ? SIAB.phFormat(r) : '—';
   $('ph-phase').textContent = s.showPH ? r.phase : 'Leitura oculta';
-  $('ph-toggle').textContent = s.showPH ? 'Ocultar pH' : 'Mostrar pH';
+  // Olho: botão de alternar "Mostrar pH" (pressionado = pH à vista); a dica diz a ação.
   $('ph-toggle').setAttribute('aria-pressed', String(s.showPH));
+  $('ph-toggle').title = s.showPH ? 'Ocultar pH' : 'Mostrar pH';
   $('ph-toggle').hidden = !pode('ph');
-  $('ph-ruler').innerHTML = SIAB.regua.svg(s.showPH ? r.pH : null, { neutro: r.neutralPH });
   $('volume-value').textContent = SIAB.format(r.volume, escala.casas);
   $('temperature-value').hidden = r.temperature === 25;
   $('temperature-value').textContent = `${SIAB.format(r.temperature, 0)} °C`;
@@ -96,7 +96,9 @@ SIAB.render = (syncForm = false) => {
   $('dose-area').hidden = !pode('gotas');
   $('titrant-label').textContent = `Conta-gotas: ${SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)}`;
   // Uma linha só: quantas gotas, quanto volume e o tamanho da gota.
-  $('dose-summary').textContent = `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL · gota de ${SIAB.format(t.dropVolume)} mL${t.group ? ` · em cada um dos ${targets.length} tubos vinculados` : ''}`;
+  // O tamanho da gota só aparece nos módulos em que ele pode ser ajustado (Medir e Calcular).
+  const nivelDose = cfg.modo === 'missao' ? cfg.nivel : s.level;
+  $('dose-summary').textContent = `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL${nivelDose !== 'explorar' ? ` · gota de ${SIAB.format(t.dropVolume)} mL` : ''}${t.group ? ` · em cada um dos ${targets.length} tubos vinculados` : ''}`;
   $('drop-btn').textContent = t.group ? '＋ Segure: gotas em cada tubo' : '＋ Segure para gotejar';
   $('drop-btn').disabled = cheio;
   $('drop5-btn').disabled = cheio;
@@ -244,9 +246,11 @@ SIAB.renderVer = () => {
   });
   $('ver-conteudo').setAttribute('aria-labelledby', `tab-${s.verTab}`);
   if (!t) {
+    $('ver-regua').hidden = true;
     $('ver-conteudo').innerHTML = '<p class="ver-oculto">Coloque um frasco num tubo para ver o gráfico, as partículas, a equação e o histórico.</p>';
     return;
   }
+  SIAB.renderRegua(t);
   // Atalhos do VER na barra de chips (celular e tablet).
   document.querySelectorAll('[data-ir-ver]').forEach(chip => {
     chip.hidden = !disponiveis.includes(chip.dataset.irVer);
@@ -271,6 +275,21 @@ SIAB.renderVer = () => {
   if (s.verTab === 'equacao') conteudo = SIAB.equacao.html(t, { nivel, result: r });
   if (s.verTab === 'historico') conteudo = SIAB.historicoHTML(t);
   $('ver-conteudo').innerHTML = conteudo;
+};
+
+// Escala de pH no topo do painel VER: leitura, marcador, neutro e faixa de
+// viragem do indicador. Com o pH oculto, some junto com o número e o gráfico.
+SIAB.renderRegua = t => {
+  const box = SIAB.$('ver-regua'), s = SIAB.state;
+  box.hidden = !s.showPH;
+  if (!s.showPH) { box.innerHTML = ''; return; }
+  const r = SIAB.chem.solve(t);
+  const ind = SIAB.indicators[t.indicator];
+  const mistura = (t.indicadores || []).filter(x => x.id !== 'none').length > 1;
+  const faixa = !mistura && ind?.acid && Number.isFinite(ind.low) ? { low: ind.low, high: ind.high, nome: ind.name } : null;
+  box.innerHTML = `<p class="ver-regua-titulo"><span>Escala de pH</span><strong>${SIAB.phFormat(r)} · ${r.phase.toLowerCase()}</strong></p>
+    ${SIAB.regua.svg(r.pH, { neutro: r.neutralPH, faixa, rotulo: 'Escala de pH' })}
+    ${faixa ? `<p class="ver-regua-faixa"><span class="regua-faixa-amostra" aria-hidden="true"></span>Viragem ${SIAB.escape(ind.short)}: pH ${SIAB.format(ind.low, 1)} a ${SIAB.format(ind.high, 1)}</p>` : ''}`;
 };
 
 SIAB.historicoHTML = tube => {

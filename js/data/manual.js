@@ -146,14 +146,14 @@ SIAB.manual = [
   },
   {
     id: 'leitura', titulo: 'Leitura do tubo', alvo: '.stage-stats',
-    resumo: 'pH, régua, variação, volume, cor e equivalência.',
+    resumo: 'pH, olho, variação, volume, cor e equivalência.',
     blocos: [
       { lista: [
         'pH: duas casas decimais para reagentes; “≈” e uma casa para amostras do cotidiano e da chuva, que são estimativas.',
         'Ácida, Neutra ou Básica: comparação com o pH neutro (7 a 25 °C).',
         'Variação: depois das gotas, aparece por alguns segundos, por exemplo “3,59 → 7,00 (+3,41)”.',
-        'Régua de pH: o triângulo marca o pH na escala de 0 a 14; o tracejado marca o neutro.',
-        'Ocultar pH: esconde o número, a régua e o gráfico. Use para prever antes de ver.',
+        'Olho, ao lado de “pH”: oculta o pH (o número, a escala e o gráfico) e mostra de novo. Use para prever antes de ver.',
+        'Escala de pH: fica no painel VER, acima das abas (veja “Painel VER”).',
         'Volume: quanto líquido há no recipiente e a capacidade dele (5 mL no tubo de ensaio).',
         'Cor: nome da cor e do indicador, abaixo do tubo.',
         'Ponto de equivalência: aviso que aparece quando uma gota atinge exatamente a quantidade de base que reage com todo o ácido (ou o contrário).'
@@ -193,8 +193,9 @@ SIAB.manual = [
   },
   {
     id: 'ver', titulo: 'Painel VER', alvo: '#ver-panel',
-    resumo: 'Gráfico, partículas, equação e histórico do tubo selecionado.',
+    resumo: 'Escala de pH, gráfico, partículas, equação e histórico do tubo selecionado.',
     blocos: [
+      { p: 'No alto do painel fica a Escala de pH: o triângulo marca o pH na escala de 0 a 14, o tracejado marca o neutro e o colchete embaixo mostra a faixa de viragem do indicador (onde ele muda de cor). Com o pH oculto, a escala some junto com o número e o gráfico.' },
       { lista: [
         'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência. Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca). Tracejado horizontal: pH neutro.',
         'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece.',

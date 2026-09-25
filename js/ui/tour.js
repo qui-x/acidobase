@@ -11,7 +11,7 @@ SIAB.tour = (() => {
     { alvo: '#menu-btn', titulo: 'Menu ☰', texto: 'Roteiros de teste prontos, modos (missões, desafios e professor) e acessibilidade ficam aqui.' },
     { alvo: '#controls', alvoCelular: '#prepare-btn', titulo: 'Prateleira', texto: 'Escolha o módulo (Explorar, Medir ou Calcular), a vidraria e, nos menus Tubo e Conta-gotas, os frascos. Depois, o indicador.' },
     { alvo: '#bancada-vazia', titulo: 'Comece por aqui', texto: 'A bancada começa vazia. Toque num frasco da prateleira e ele vira o Tubo 1. Depois escolha o indicador.' },
-    { alvo: '.stage-stats', titulo: 'Leitura', texto: 'pH, régua de cores e volume do tubo em foco. A cor observada também aparece escrita.' },
+    { alvo: '.stage-stats', titulo: 'Leitura', texto: 'pH e volume do tubo em foco; o olho oculta o pH para prever antes de ver. A cor observada aparece escrita embaixo, e a escala de pH fica no painel VER.' },
     { alvo: '#drop-btn', titulo: 'Conta-gotas', texto: 'Segure para gotejar e solte para parar. Um toque põe 1 gota. “Desfazer” volta qualquer ação.' },
     { alvo: '#ver-panel', alvoCelular: '.view-tabs', titulo: 'Painel VER', texto: 'Gráfico da titulação, partículas, equação e histórico mudam a cada gota.' },
     { alvo: '.tube-strip', titulo: 'Tubos da bancada', texto: 'Até 10 tubos. Toque em um para colocá-lo em foco. “Visão geral” mostra todos lado a lado.' },

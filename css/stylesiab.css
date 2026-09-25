@@ -720,12 +720,29 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .ph-readout strong { font-size: 2rem; font-weight: 500; font-family: Consolas, monospace; letter-spacing: -.05em; }
 .phase { font-size: .85rem; color: var(--secondary); }
 .ph-delta { align-self: flex-start; font-family: Consolas, monospace; font-size: .75rem; padding: 2px 8px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--accent); color: var(--accent); margin-top: 4px; }
-.ph-ruler { margin-top: 6px; width: 100%; }
+.ph-rotulo { display: flex; align-items: center; gap: 6px; }
+.ph-rotulo .ajuda-link { margin-left: 0; }
+/* Olho: mostra ou oculta o pH (a leitura, a escala e o gráfico). */
+.olho-btn { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; padding: 0; border: 1px solid var(--border); border-radius: 50%; background: var(--panel2); color: var(--secondary); }
+.olho-btn:hover { color: var(--text); border-color: var(--accent); }
+.olho-btn svg { width: 16px; height: 16px; }
+.olho-btn[aria-pressed="true"] .olho-fechado, .olho-btn[aria-pressed="false"] .olho-aberto { display: none; }
+.olho-btn[aria-pressed="false"] { color: var(--accent); border-color: var(--accent); }
+/* Escala de pH no painel VER. */
+.ver-regua { margin: 0 0 12px; padding: 8px 10px 6px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel2); }
+.ver-regua-titulo { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: .74rem; color: var(--muted); font-weight: 700; letter-spacing: .03em; }
+.ver-regua-titulo strong { font-size: .85rem; color: var(--text); letter-spacing: 0; text-transform: none; font-family: Consolas, monospace; }
+.ver-regua .regua-svg { margin-top: 2px; }
+.ver-regua-faixa { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: var(--secondary); margin: 0; }
+.regua-faixa { fill: none; stroke: var(--text); stroke-width: 1.4; }
+.regua-faixa-amostra { width: 16px; height: 6px; border: 1.4px solid var(--text); border-top: 0; }
 .regua-svg { width: 100%; height: auto; overflow: visible; }
 .regua-svg text { fill: var(--muted); font: 10px Consolas, monospace; }
 .regua-marcador { fill: var(--text); stroke: var(--bg); stroke-width: 1.5; transition: transform .25s; }
 .regua-neutro { stroke: var(--text); stroke-width: 1; opacity: .7; }
 .stage-stats .quiet-btn { align-self: flex-start; padding-left: 0; font-size: .72rem; }
+.stage-stats { max-width: 190px; }
+#poe-btn { gap: 0; }
 .large-tube { align-self: stretch; display: flex; justify-content: center; align-items: center; min-width: 0; position: relative; }
 .tube-svg { width: 100%; height: auto; max-height: 340px; color: var(--secondary); overflow: visible; }
 .tube-outline { stroke: var(--muted); fill: color-mix(in srgb, var(--text) 2%, transparent); }

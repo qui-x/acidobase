@@ -13,8 +13,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
   <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.8">
-  <script src="a11y.js?v=0.5.8"></script>
+  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.9">
+  <script src="a11y.js?v=0.5.9"></script>
   <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
   <script>try { if (localStorage.getItem('siab_abertura') === 'off') document.documentElement.dataset.abertura = 'off'; } catch (erro) { }</script>
 </head>
@@ -389,15 +389,13 @@
 
           <div class="tube-stage">
             <div class="stage-stats">
-              <span class="eyebrow">pH <a class="ajuda-link" href="#/manual/leitura" aria-label="Ajuda: leitura do tubo" title="Ajuda: leitura do tubo">?</a></span>
+              <div class="ph-rotulo"><span class="eyebrow">pH</span><a class="ajuda-link" href="#/manual/leitura" aria-label="Ajuda: leitura do tubo" title="Ajuda: leitura do tubo">?</a><button id="ph-toggle" type="button" class="olho-btn" aria-pressed="true" aria-label="Mostrar pH" title="Ocultar pH"><svg class="olho-aberto" viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg><svg class="olho-fechado" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 3l18 18M10.6 5.1A10.5 10.5 0 0 1 12 5c6.4 0 10 7 10 7a17 17 0 0 1-3.2 4.2M6.6 6.6C3.8 8.4 2 12 2 12s3.6 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg></button></div>
               <div class="ph-readout"><strong id="ph-value"></strong><span id="ph-phase" class="phase"></span></div>
               <span id="ph-delta" class="ph-delta" aria-hidden="true" hidden></span>
-              <div id="ph-ruler" class="ph-ruler"></div>
-              <button id="ph-toggle" type="button" class="quiet-btn" aria-pressed="true">Ocultar pH</button>
             </div>
             <div id="large-tube" class="large-tube"></div>
             <div class="volume-readout">
-              <span class="eyebrow">VOLUME</span>
+              <span class="eyebrow">Volume</span>
               <strong><span id="volume-value"></span> <small>mL</small></strong>
               <span class="small capacity">de <span id="capacity-value">5,00</span> mL</span>
               <span id="temperature-value" class="temperature-readout" hidden></span>
@@ -420,7 +418,7 @@
               <button id="drop5-btn" type="button" class="secondary-btn">+5 gotas</button>
               <button id="drop1ml-btn" type="button" class="secondary-btn">+1 mL</button>
               <button id="drop5ml-btn" type="button" class="secondary-btn" hidden>+5 mL</button>
-              <button id="poe-btn" type="button" class="secondary-btn">Prever<span class="poe-longo"> e gotejar</span></button>
+              <button id="poe-btn" type="button" class="secondary-btn">Prever<span class="poe-longo">&nbsp;e gotejar</span></button>
             </div>
             </div>
           </div>
@@ -451,6 +449,8 @@
         <div class="trilho" id="trilho-ver" aria-label="Painel VER recolhido" role="group" hidden></div>
         <div class="painel-conteudo">
           <div class="ver-cabecalho"><button type="button" class="recolher-btn" data-recolher="ver-panel" aria-controls="ver-panel" aria-expanded="true" aria-label="Recolher painel VER" title="Recolher painel VER"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M5 6v12"/></svg></button><h2 id="ver-title" class="eyebrow">VER</h2><a class="ajuda-link" href="#/manual/ver" aria-label="Ajuda: painel VER" title="Ajuda: painel VER">?</a><button type="button" class="fechar-flutuante" aria-label="Fechar cartão" title="Fechar (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+          <!-- Escala de pH (saiu do centro da bancada): marcador no pH e faixa de viragem do indicador. -->
+          <div id="ver-regua" class="ver-regua" hidden></div>
           <div id="ver-tabs" class="ver-tabs" role="tablist" aria-labelledby="ver-title">
             <button type="button" role="tab" id="tab-grafico" data-ver="grafico" aria-controls="ver-conteudo">Gráfico</button>
             <button type="button" role="tab" id="tab-particulas" data-ver="particulas" aria-controls="ver-conteudo">Partículas</button>
@@ -709,55 +709,55 @@
   <div id="toast" role="status" aria-live="polite" hidden></div>
   <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="js/core/namespace.js?v=0.5.8"></script>
-  <script src="js/core/util.js?v=0.5.8"></script>
-  <script src="js/data/catalogo.js?v=0.5.8"></script>
-  <script src="js/data/cotidiano.js?v=0.5.8"></script>
-  <script src="js/data/sais.js?v=0.5.8"></script>
-  <script src="js/data/ambiente-saude.js?v=0.5.8"></script>
-  <script src="js/data/funcoes.js?v=0.5.8"></script>
-  <script src="js/simulation/quimica.js?v=0.5.8"></script>
-  <script src="js/core/estado.js?v=0.5.8"></script>
-  <script src="js/ui/abertura.js?v=0.5.8"></script>
-  <script src="js/core/loja.js?v=0.5.8"></script>
-  <script src="js/core/progresso.js?v=0.5.8"></script>
-  <script src="js/core/roteador.js?v=0.5.8"></script>
-  <script src="js/data/missoes.js?v=0.5.8"></script>
-  <script src="js/data/trilhas.js?v=0.5.8"></script>
-  <script src="js/data/manual.js?v=0.5.8"></script>
-  <script src="js/simulation/motor-missoes.js?v=0.5.8"></script>
-  <script src="js/ui/tubo.js?v=0.5.8"></script>
-  <script src="js/ui/regua-ph.js?v=0.5.8"></script>
-  <script src="js/ui/grafico.js?v=0.5.8"></script>
-  <script src="js/ui/lupa.js?v=0.5.8"></script>
-  <script src="js/ui/equacao.js?v=0.5.8"></script>
-  <script src="js/ui/som.js?v=0.5.8"></script>
-  <script src="js/ui/conta-gotas.js?v=0.5.8"></script>
-  <script src="js/ui/seletores.js?v=0.5.8"></script>
-  <script src="js/ui/prateleira.js?v=0.5.8"></script>
-  <script src="js/ui/modulos.js?v=0.5.8"></script>
-  <script src="js/ui/render.js?v=0.5.8"></script>
-  <script src="js/ui/gaveta.js?v=0.5.8"></script>
-  <script src="js/ui/trilho.js?v=0.5.8"></script>
-  <script src="js/ui/tour.js?v=0.5.8"></script>
-  <script src="js/ui/segredo.js?v=0.5.8"></script>
-  <script src="js/ui/impressao.js?v=0.5.8"></script>
-  <script src="js/telas/bancada.js?v=0.5.8"></script>
-  <script src="js/telas/laboratorio.js?v=0.5.8"></script>
-  <script src="js/telas/missao.js?v=0.5.8"></script>
-  <script src="js/telas/inicio.js?v=0.5.8"></script>
-  <script src="js/telas/aprender.js?v=0.5.8"></script>
-  <script src="js/telas/desafios.js?v=0.5.8"></script>
-  <script src="js/telas/detetive.js?v=0.5.8"></script>
-  <script src="js/telas/titulacao.js?v=0.5.8"></script>
-  <script src="js/telas/trunfo.js?v=0.5.8"></script>
-  <script src="js/telas/regua.js?v=0.5.8"></script>
-  <script src="js/telas/construtor.js?v=0.5.8"></script>
-  <script src="js/telas/professor.js?v=0.5.8"></script>
-  <script src="js/telas/caderno.js?v=0.5.8"></script>
-  <script src="js/telas/manual.js?v=0.5.8"></script>
-  <script src="js/a11y/preferencias.js?v=0.5.8"></script>
-  <script src="js/init/pwa.js?v=0.5.8"></script>
-  <script src="js/init/app.js?v=0.5.8"></script>
+  <script src="js/core/namespace.js?v=0.5.9"></script>
+  <script src="js/core/util.js?v=0.5.9"></script>
+  <script src="js/data/catalogo.js?v=0.5.9"></script>
+  <script src="js/data/cotidiano.js?v=0.5.9"></script>
+  <script src="js/data/sais.js?v=0.5.9"></script>
+  <script src="js/data/ambiente-saude.js?v=0.5.9"></script>
+  <script src="js/data/funcoes.js?v=0.5.9"></script>
+  <script src="js/simulation/quimica.js?v=0.5.9"></script>
+  <script src="js/core/estado.js?v=0.5.9"></script>
+  <script src="js/ui/abertura.js?v=0.5.9"></script>
+  <script src="js/core/loja.js?v=0.5.9"></script>
+  <script src="js/core/progresso.js?v=0.5.9"></script>
+  <script src="js/core/roteador.js?v=0.5.9"></script>
+  <script src="js/data/missoes.js?v=0.5.9"></script>
+  <script src="js/data/trilhas.js?v=0.5.9"></script>
+  <script src="js/data/manual.js?v=0.5.9"></script>
+  <script src="js/simulation/motor-missoes.js?v=0.5.9"></script>
+  <script src="js/ui/tubo.js?v=0.5.9"></script>
+  <script src="js/ui/regua-ph.js?v=0.5.9"></script>
+  <script src="js/ui/grafico.js?v=0.5.9"></script>
+  <script src="js/ui/lupa.js?v=0.5.9"></script>
+  <script src="js/ui/equacao.js?v=0.5.9"></script>
+  <script src="js/ui/som.js?v=0.5.9"></script>
+  <script src="js/ui/conta-gotas.js?v=0.5.9"></script>
+  <script src="js/ui/seletores.js?v=0.5.9"></script>
+  <script src="js/ui/prateleira.js?v=0.5.9"></script>
+  <script src="js/ui/modulos.js?v=0.5.9"></script>
+  <script src="js/ui/render.js?v=0.5.9"></script>
+  <script src="js/ui/gaveta.js?v=0.5.9"></script>
+  <script src="js/ui/trilho.js?v=0.5.9"></script>
+  <script src="js/ui/tour.js?v=0.5.9"></script>
+  <script src="js/ui/segredo.js?v=0.5.9"></script>
+  <script src="js/ui/impressao.js?v=0.5.9"></script>
+  <script src="js/telas/bancada.js?v=0.5.9"></script>
+  <script src="js/telas/laboratorio.js?v=0.5.9"></script>
+  <script src="js/telas/missao.js?v=0.5.9"></script>
+  <script src="js/telas/inicio.js?v=0.5.9"></script>
+  <script src="js/telas/aprender.js?v=0.5.9"></script>
+  <script src="js/telas/desafios.js?v=0.5.9"></script>
+  <script src="js/telas/detetive.js?v=0.5.9"></script>
+  <script src="js/telas/titulacao.js?v=0.5.9"></script>
+  <script src="js/telas/trunfo.js?v=0.5.9"></script>
+  <script src="js/telas/regua.js?v=0.5.9"></script>
+  <script src="js/telas/construtor.js?v=0.5.9"></script>
+  <script src="js/telas/professor.js?v=0.5.9"></script>
+  <script src="js/telas/caderno.js?v=0.5.9"></script>
+  <script src="js/telas/manual.js?v=0.5.9"></script>
+  <script src="js/a11y/preferencias.js?v=0.5.9"></script>
+  <script src="js/init/pwa.js?v=0.5.9"></script>
+  <script src="js/init/app.js?v=0.5.9"></script>
 </body>
 </html>

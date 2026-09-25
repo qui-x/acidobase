@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.8
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.9
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.8`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.9`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -53,6 +53,10 @@ frasco da prateleira e ele vira o "Tubo 1".
 - **Responsivo de 320 px a 2K:** em telas grandes a letra cresce um pouco, os
   painéis alargam e leitura, vidraria e conta-gotas ficam juntos no centro; no
   celular, os atalhos cabem numa linha e o manual não passa da tela.
+- **Centro da bancada mais limpo:** a escala de pH saiu do centro e foi para o
+  topo do painel VER, com a leitura e a faixa de viragem do indicador; "Ocultar
+  pH" virou um botão de olho ao lado de "pH"; o tamanho da gota só aparece nos
+  módulos Medir e Calcular.
 - **Impressão de verdade:** "Imprimir relatório" (ou Ctrl+P na bancada) gera
   um relatório A4 com cabeçalho (logotipo, título, data, Nome e Turma),
   tabela dos recipientes, o recipiente em foco (desenho, preparo, leitura,
