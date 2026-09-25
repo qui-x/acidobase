@@ -22,8 +22,8 @@ SIAB.manual = [
       { gerado: 'diagrama' },
       { p: 'A bancada começa vazia: nenhum tubo, nenhuma amostra. Você monta o teste do zero.' },
       { passos: [
-        'Na Prateleira (1), deixe “Tubo” selecionado e toque em um frasco: ele vira o “Tubo 1”.',
-        'Troque para “Conta-gotas” e toque no frasco que vai gotejar.',
+        'Na Prateleira (1), abra o menu “Tubo” e toque em um frasco: ele vira o “Tubo 1”.',
+        'Abra o menu “Conta-gotas” e toque no frasco que vai gotejar.',
         'Escolha um indicador, logo abaixo dos frascos.',
         'Segure o botão “Segure para gotejar” (3) e observe a leitura (2) e o painel VER (4).',
         'Se algo sair diferente do que queria, toque em “Desfazer”.'
@@ -99,6 +99,7 @@ SIAB.manual = [
         'Ao trocar a vidraria ou a capacidade, o volume inicial acompanha: o líquido continua na mesma altura (1 mL no tubo vira 10 mL no béquer de 50 mL e 25 mL no erlenmeyer de 125 mL). As gotas recomeçam, e “Desfazer” volta tudo, inclusive a vidraria.',
         'Num recipiente novo, o volume inicial é 20 % da capacidade. No módulo Medir, “Volume inicial” vai até 80 % dela.',
       ] },
+      { p: 'Tamanho de verdade: na bancada, cada recipiente aparece com as medidas reais de catálogo e todos na mesma escala, apoiados na mesma linha. O tubo de 5 mL tem 12 × 75 mm; o béquer de 50 mL, 42 × 60 mm (mais baixo e bem mais largo que o tubo); o erlenmeyer de 250 mL, 85 × 145 mm (quase o dobro da altura do tubo). A marca da capacidade fica a cerca de 2/3 da altura do béquer e perto da metade do erlenmeyer, porque vidraria de verdade tem folga acima da capacidade. Béqueres seguem a norma ISO 3819 e erlenmeyers a ISO 1773.' },
       { p: 'A escala da bancada acompanha a capacidade escolhida:' },
       { lista: [
         'Precisão do volume: centésimos de mL no tubo de 5 mL, décimos de 10 a 125 mL e mL inteiros em 250 mL. Béquer e erlenmeyer têm marcas com incerteza de cerca de 5 % da capacidade: mostrar “50,25 mL” num béquer de 250 mL seria uma precisão que o vidro não tem. O que sai do conta-gotas continua contado em centésimos, gota a gota.',

@@ -1,48 +1,102 @@
 'use strict';
 /* Desenho da vidraria em SVG (tubo de ensaio, béquer ou erlenmeyer), com o
    líquido na cor calculada pelo motor.
-   Todas usam a mesma caixa (160 × 360) para o layout não mudar ao trocar.
-   A altura do líquido segue o volume de verdade de cada forma:
-     - tubo e béquer são cilindros: altura proporcional ao volume;
-     - o erlenmeyer é um cone: a mesma quantidade sobe mais perto do gargalo,
-       por isso as marcas de 1 a 5 mL ficam cada vez mais afastadas. */
-SIAB.VIDRO = (() => {
-  // Cone do erlenmeyer: meia-largura interna em cada altura y (gargalo 9, base 52,5).
-  const ERL = { gargalo: 129, base: 313, fundo: 326, marca5: 168 };
-  const meiaErl = y => (y <= ERL.gargalo ? 9 : y >= ERL.base ? 52.5 : 9 + (y - ERL.gargalo) * (43.5 / (ERL.base - ERL.gargalo)));
-  // Volume acumulado do fundo até cada altura (fatias de 1 unidade, sólido de revolução).
-  const acumulado = [];
-  for (let y = ERL.fundo, v = 0; y >= 30; y--) {
-    acumulado[y] = v;
-    v += Math.PI * meiaErl(y - .5) ** 2;
-  }
-  const alturaErl = fracao => {
-    const alvo = fracao * acumulado[ERL.marca5];
-    let y = ERL.fundo;
-    while (y > ERL.marca5 && acumulado[y - 1] <= alvo) y--;
-    const a = acumulado[y], b = acumulado[y - 1];
-    return y - (b > a ? (alvo - a) / (b - a) : 0);
-  };
 
-  return {
-    tubo: {
-      contorno: 'M43 30v263a37 37 0 0 0 74 0V30', borda: 'M39 29h82',
-      interno: 'M48 31h64v262a32 32 0 0 1-64 0Z', reflexo: 'M54 46v243a26 26 0 0 0 5 15',
-      liquido: [48, 64], sombra: 39,
-      altura: f => 325 - 280 * f, meia: () => 32
-    },
-    bequer: {
-      contorno: 'M20 58c6 2 10 7 10 16v246a10 10 0 0 0 10 10h80a10 10 0 0 0 10-10V64h5', borda: 'M17 57h4',
-      interno: 'M34 66v253a7 7 0 0 0 7 7h78a7 7 0 0 0 7-7V66Z', reflexo: 'M42 88v214',
-      liquido: [34, 92], sombra: 56,
-      altura: f => 326 - 220 * f, meia: () => 46
-    },
-    erlenmeyer: {
-      contorno: 'M64 40h4v88L24 314q-4 16 14 16h84q18 0 14-16L92 128V40h4', borda: 'M62 40h36',
-      interno: 'M71 42v87L27.5 313q-3 13 11 13h83q14 0 11-13L89 129V42Z', reflexo: 'M40 298 72 140',
-      liquido: [24, 112], sombra: 58,
-      altura: alturaErl, meia: meiaErl
+   Tamanho de verdade: cada recipiente é desenhado com as medidas reais de
+   catálogo (diâmetro D e altura H, em mm), todos na MESMA escala e apoiados na
+   mesma linha da bancada. Assim o béquer de 50 mL aparece mais baixo e bem
+   mais largo que o tubo de ensaio, e o erlenmeyer de 250 mL quase o dobro da
+   altura do tubo, como no laboratório.
+   - Tubo de ensaio 12 × 75 mm: o tubo "de 5 mL" de catálogo.
+   - Béquer forma baixa (Griffin), medidas da norma ISO 3819.
+   - Erlenmeyer de gargalo estreito, medidas da norma ISO 1773 (o de 125 mL
+     não está na norma: medidas aproximadas de catálogo).
+   A altura do líquido vem do volume dentro da forma real (sólido de
+   revolução, somado em fatias finas): no tubo e no béquer ela cresce por igual;
+   no erlenmeyer, que é um cone, a mesma quantidade sobe mais perto do gargalo.
+   Por isso a marca da capacidade fica a cerca de 2/3 da altura do béquer e na
+   metade do erlenmeyer: vidraria de verdade tem folga acima da capacidade. */
+SIAB.MEDIDAS_VIDRO = {
+  tubo: { 5: { D: 12, H: 75 } },
+  bequer: { 10: { D: 26, H: 35 }, 25: { D: 34, H: 50 }, 50: { D: 42, H: 60 }, 100: { D: 50, H: 70 }, 250: { D: 70, H: 95 }, 500: { D: 85, H: 120 }, 1000: { D: 105, H: 145 } },
+  erlenmeyer: { 25: { D: 42, H: 75, d: 22 }, 50: { D: 51, H: 80, d: 22 }, 125: { D: 64, H: 120, d: 26 }, 250: { D: 85, H: 145, d: 34 } }
+};
+
+SIAB.formaVidro = (() => {
+  const S = 2.4;          // unidades do desenho por mm
+  const BASE = 350;       // linha da bancada (fundo de fora do recipiente)
+  const ALTO = 145;       // o recipiente mais alto (erlenmeyer de 250 mL), em mm
+  const TOPO = BASE - ALTO * S - 30;   // topo da cena: cabe o mais alto e o conta-gotas
+  const ROTULOS = 34;     // espaço à direita para os números da escala
+  const cache = new Map();
+
+  // Medidas da capacidade pedida (ou da maior que existir, se não houver).
+  function medidas(tipo, capacidade) {
+    const tabela = SIAB.MEDIDAS_VIDRO[tipo] || SIAB.MEDIDAS_VIDRO.tubo;
+    if (tabela[capacidade]) return tabela[capacidade];
+    const lista = Object.keys(tabela).map(Number).sort((x, y) => x - y);
+    return tabela[lista.find(c => c >= capacidade) || lista.at(-1)];
+  }
+
+  function criar(tipo, capacidade) {
+    const m = medidas(tipo, capacidade);
+    const ro = m.D / 2 * S, alto = m.H * S, yt = BASE - alto;
+    const parede = (tipo === 'tubo' ? .8 : 1) * S, fundo = (tipo === 'tubo' ? .8 : 1.5) * S;
+    const ri = ro - parede, yib = BASE - fundo;
+    const bico = tipo === 'bequer' ? Math.min(3 * S, ro * .2) : 0;
+    const largura = Math.max(100, 2 * (ro + bico + ROTULOS)), cx = largura / 2;
+    const f = n => n.toFixed(1);
+    let raio, contorno, interno, borda, reflexo, gargalo = 0;
+    if (tipo === 'erlenmeyer') {
+      const rno = m.d / 2 * S, rni = rno - parede, yn = yt + .2 * alto, rc = Math.min(4 * S, ro * .2);
+      const hc = yib - yn;
+      gargalo = rni;
+      raio = z => (z <= hc ? ri - (ri - rni) * z / hc : rni);
+      contorno = `M${f(cx - rno - 3)} ${f(yt)}h3V${f(yn)}L${f(cx - ro)} ${f(BASE - rc)}q-1 ${f(rc)} ${f(rc)} ${f(rc)}H${f(cx + ro - rc)}q${f(rc + 1)} 0 ${f(rc)} ${f(-rc)}L${f(cx + rno)} ${f(yn)}V${f(yt)}h3`;
+      interno = `M${f(cx - rni)} ${f(yt + 1)}V${f(yn + 1)}L${f(cx - ri)} ${f(yib - rc * .8)}q-1 ${f(rc * .8)} ${f(rc * .8)} ${f(rc * .8)}H${f(cx + ri - rc * .8)}q${f(rc * .8 + 1)} 0 ${f(rc * .8)} ${f(-rc * .8)}L${f(cx + rni)} ${f(yn + 1)}V${f(yt + 1)}Z`;
+      borda = `M${f(cx - rno - 3)} ${f(yt)}h${f(2 * rno + 6)}`;
+      reflexo = `M${f(cx - ri * .72)} ${f(yib - 8)}L${f(cx - rni * .6)} ${f(yn + 12)}`;
+    } else if (tipo === 'bequer') {
+      const rc = Math.min(3 * S, ro * .25);
+      raio = () => ri;
+      contorno = `M${f(cx - ro - bico)} ${f(yt)}c${f(bico * .6)} ${f(bico * .4)} ${f(bico)} ${f(bico * 1.2)} ${f(bico)} ${f(bico * 2.4)}V${f(BASE - rc)}a${f(rc)} ${f(rc)} 0 0 0 ${f(rc)} ${f(rc)}H${f(cx + ro - rc)}a${f(rc)} ${f(rc)} 0 0 0 ${f(rc)} ${f(-rc)}V${f(yt)}h3`;
+      interno = `M${f(cx - ri)} ${f(yt + 2)}V${f(yib - rc * .7)}a${f(rc * .7)} ${f(rc * .7)} 0 0 0 ${f(rc * .7)} ${f(rc * .7)}H${f(cx + ri - rc * .7)}a${f(rc * .7)} ${f(rc * .7)} 0 0 0 ${f(rc * .7)} ${f(-rc * .7)}V${f(yt + 2)}Z`;
+      borda = `M${f(cx - ro - bico - 2)} ${f(yt)}h4`;
+      reflexo = `M${f(cx - ri + 6)} ${f(yt + alto * .2)}V${f(yib - alto * .12)}`;
+    } else {
+      raio = z => (z < ri ? Math.sqrt(Math.max(0, ri * ri - (ri - z) ** 2)) : ri);
+      contorno = `M${f(cx - ro)} ${f(yt)}V${f(BASE - ro)}A${f(ro)} ${f(ro)} 0 0 0 ${f(cx + ro)} ${f(BASE - ro)}V${f(yt)}`;
+      interno = `M${f(cx - ri)} ${f(yt + 1)}V${f(yib - ri)}A${f(ri)} ${f(ri)} 0 0 0 ${f(cx + ri)} ${f(yib - ri)}V${f(yt + 1)}Z`;
+      borda = `M${f(cx - ro - 3)} ${f(yt)}h${f(2 * ro + 6)}`;
+      reflexo = `M${f(cx - ri * .55)} ${f(yt + 10)}V${f(yib - ri)}`;
     }
+    // Volume acumulado do fundo de dentro até cada altura z (fatias de 0,5 unidade).
+    const passo = .5, acumulado = [0];
+    for (let z = 0; z < yib - yt; z += passo) acumulado.push(acumulado.at(-1) + Math.PI * raio(z + passo / 2) ** 2 * passo);
+    const mL = 1000 * S ** 3;   // 1 mL = 1000 mm³, em unidades do desenho
+    // Altura (y) da superfície para uma fração da capacidade.
+    const altura = fracao => {
+      const alvo = Math.max(0, fracao) * capacidade * mL;
+      let i = 1;
+      while (i < acumulado.length - 1 && acumulado[i] < alvo) i++;
+      const a = acumulado[i - 1], b = acumulado[i];
+      return yib - ((i - 1) + (b > a ? Math.min(1, (alvo - a) / (b - a)) : 0)) * passo;
+    };
+    return {
+      tipo, capacidade, S, BASE, TOPO, cx, largura, yt, ro, ri, bico, gargalo,
+      contorno, interno, borda, reflexo,
+      liquido: [cx - ri - 2, 2 * ri + 4],
+      sombra: ro + 4,
+      altura, meia: y => (y > yib ? 0 : raio(yib - y)),
+      // Ponta do conta-gotas: um pouco acima da boca (no mais alto, entra no gargalo).
+      ponta: Math.max(yt - 12, TOPO + 58)
+    };
+  }
+
+  return (tipo, capacidade) => {
+    const chave = `${tipo}|${capacidade}`;
+    if (!cache.has(chave)) cache.set(chave, criar(tipo, capacidade));
+    return cache.get(chave);
   };
 })();
 
@@ -54,9 +108,9 @@ SIAB.marcasDeVolume = capacidade => {
 
 // Estado visual de um recipiente: altura e cor do líquido, marcas e cor das gotas.
 function estadoDoVidro(tube, vidraria) {
-  const tipo = SIAB.VIDRO[tube.vidraria || vidraria] ? (tube.vidraria || vidraria) : 'tubo';
-  const forma = SIAB.VIDRO[tipo];
+  const tipo = SIAB.MEDIDAS_VIDRO[tube.vidraria || vidraria] ? (tube.vidraria || vidraria) : 'tubo';
   const capacidade = SIAB.capacidade(tube, tipo);
+  const forma = SIAB.formaVidro(tipo, capacidade);
   const r = SIAB.chem.solve(tube);
   const c = SIAB.chem.liquid(tube, SIAB.state.indicatorOnly, r);
   const y = forma.altura(Math.min(1, r.volume / capacidade));
@@ -64,42 +118,51 @@ function estadoDoVidro(tube, vidraria) {
   const natural = SIAB.solutions[tube.titrant]?.natural;
   const corGota = natural && natural.opacity > .05 ? `rgb(${natural.rgb.join(',')})` : 'rgba(214, 232, 255, .92)';
   const nome = SIAB.VIDRARIAS?.[tipo]?.nome || 'Tubo de ensaio';
+  const m = SIAB.MEDIDAS_VIDRO[tipo][capacidade];
   return { tipo, forma, capacidade, r, c, y, meia: forma.meia(y), rgb: `rgb(${c.rgb.join(',')})`, corGota,
-    rotulo: `${tube.name} (${nome.toLowerCase()}): solução ${c.name}, ${SIAB.format(r.volume)} mililitros` };
+    rotulo: `${tube.name} (${nome.toLowerCase()} de ${capacidade} mL${m ? `, ${m.D} × ${m.H} mm` : ''}): solução ${c.name}, ${SIAB.format(r.volume)} mililitros` };
 }
 
-// prefix 'focus' desenha também o conta-gotas acima da boca e a camada de efeitos.
+// prefix 'focus' desenha a cena da bancada: escala única (tamanho de verdade),
+// conta-gotas acima da boca e camada de efeitos. Os outros (visão geral,
+// desafios) enquadram só o recipiente, para caber no cartão.
 SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
   const v = estadoDoVidro(tube, vidraria);
   const { forma, capacidade, y } = v;
   const foco = prefix === 'focus';
   const id = `${prefix}-clip-${tube.id}`;
+  const cx = forma.cx;
   const [x0, largura] = forma.liquido;
   const ticks = SIAB.marcasDeVolume(capacidade).map(vol => {
-    const yy = forma.altura(vol / capacidade), borda = 80 + forma.meia(yy);
-    return `<path class="tube-tick" d="M${(borda - 2).toFixed(1)} ${yy.toFixed(1)}h-8" stroke-width="1"/>${small ? '' : `<text class="tube-graduation" x="${(borda + 12).toFixed(1)}" y="${(yy + 4).toFixed(1)}">${vol}</text>`}`;
+    const yy = forma.altura(vol / capacidade), dentro = cx + forma.meia(yy);
+    const tamanho = Math.min(8, forma.meia(yy) * .6);
+    return `<path class="tube-tick" d="M${(dentro - 1).toFixed(1)} ${yy.toFixed(1)}h-${tamanho.toFixed(1)}" stroke-width="1"/>${small ? '' : `<text class="tube-graduation" x="${(dentro + 3 * forma.S + 6).toFixed(1)}" y="${(yy + 4).toFixed(1)}">${vol}</text>`}`;
   }).join('');
-  const contaGotas = foco ? `<g class="conta-gotas-vidro" aria-hidden="true">
+  const contaGotas = foco ? `<g transform="translate(${(cx - 80).toFixed(1)} ${(forma.ponta - 12).toFixed(1)})"><g class="conta-gotas-vidro" aria-hidden="true">
       <path class="cg-bulbo" d="M70 -22v-11a10 10 0 0 1 20 0v11Z"/>
       <rect class="cg-colar" x="73" y="-23" width="14" height="4" rx="1"/>
       <path class="cg-vidro" d="M75 -19v21l3.4 10h3.2l3.4-10v-21Z"/>
       <path class="cg-liquido" d="M76.4 -8v10l2.6 7.6h2l2.6-7.6v-10Z" style="fill:${v.corGota}"/>
-    </g>` : '';
-  return `<svg class="tube-svg vidro-${v.tipo}${foco ? ' vidro-foco' : ''}" viewBox="0 ${foco ? -44 : 0} 160 ${foco ? 404 : 360}" role="img" aria-label="${SIAB.escape(v.rotulo)}">
-    <defs><clipPath id="${id}"><path d="${forma.interno}"/></clipPath>${foco ? `<clipPath id="${id}-abaixo"><rect x="0" y="0" width="160" height="400"/></clipPath>` : ''}</defs>
+    </g></g>` : '';
+  // Cena da bancada: altura fixa (mesma escala para toda vidraria). Fora dela: só o recipiente.
+  const caixa = foco
+    ? `0 ${forma.TOPO} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - forma.TOPO).toFixed(1)}`
+    : `0 ${(forma.yt - 8).toFixed(1)} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - forma.yt + 8).toFixed(1)}`;
+  return `<svg class="tube-svg vidro-${v.tipo}${foco ? ' vidro-foco' : ''}" viewBox="${caixa}" role="img" aria-label="${SIAB.escape(v.rotulo)}">
+    <defs><clipPath id="${id}"><path d="${forma.interno}"/></clipPath>${foco ? `<clipPath id="${id}-abaixo"><rect x="0" y="0" width="${forma.largura.toFixed(1)}" height="400"/></clipPath>` : ''}</defs>
     ${contaGotas}
     <path class="tube-outline" d="${forma.contorno}" stroke-width="2"/>
     <g clip-path="url(#${id})">
       <g class="liquido" style="transform:translateY(${y.toFixed(1)}px)">
-        <rect class="liquid-body" x="${x0}" y="0" width="${largura}" height="400" style="fill:${v.rgb};fill-opacity:${v.c.opacity}"/>
-        <ellipse class="liquido-superficie" cx="80" cy="0" rx="${v.meia.toFixed(1)}" ry="3" style="fill:${v.rgb};fill-opacity:${Math.min(1, v.c.opacity + .12)}"/>
+        <rect class="liquid-body" x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400" style="fill:${v.rgb};fill-opacity:${v.c.opacity}"/>
+        <ellipse class="liquido-superficie" cx="${cx.toFixed(1)}" cy="0" rx="${v.meia.toFixed(1)}" ry="3" style="fill:${v.rgb};fill-opacity:${Math.min(1, v.c.opacity + .12)}"/>
         ${foco ? `<g class="efeitos-dentro" clip-path="url(#${id}-abaixo)"></g><g class="efeitos-superficie"></g>` : ''}
       </g>
     </g>
     <path d="${forma.borda}" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
     <path class="tube-reflection" d="${forma.reflexo}" stroke-width="3" fill="none" stroke-linecap="round"/>
     ${ticks}
-    <ellipse cx="80" cy="346" rx="${forma.sombra}" ry="4" fill="currentColor" opacity=".08"/>
+    <ellipse cx="${cx.toFixed(1)}" cy="${forma.BASE + 5}" rx="${forma.sombra.toFixed(1)}" ry="4" fill="currentColor" opacity=".08"/>
     ${foco ? '<g class="efeitos"></g>' : ''}
   </svg>`;
 };
@@ -177,7 +240,8 @@ SIAB.vidro = (() => {
     proximaGota = inicio + 70;
     const espera = inicio - agora;
     const v = estadoDoVidro(tube, vidraria);
-    const queda = Math.max(20, v.y - 16);
+    const cx = v.forma.cx, ponta = v.forma.ponta;
+    const queda = Math.max(12, v.y - ponta - 3);
     const formar = 90, cair = Math.round(120 + 14 * Math.sqrt(queda)), total = formar + cair;
     impacto = Math.max(impacto, agora + espera + total);
 
@@ -192,9 +256,9 @@ SIAB.vidro = (() => {
     });
     g.style.opacity = 0;
     sumir(g, g.animate([
-      { transform: 'translate(80px, 12px) scale(.2)', opacity: 1, offset: 0 },
-      { transform: 'translate(80px, 15px) scale(1)', opacity: 1, offset: formar / total, easing: 'cubic-bezier(.55, 0, 1, .55)' },
-      { transform: `translate(80px, ${(15 + queda).toFixed(1)}px) scale(.85, 1.25)`, opacity: 1, offset: 1 }
+      { transform: `translate(${cx}px, ${ponta}px) scale(.2)`, opacity: 1, offset: 0 },
+      { transform: `translate(${cx}px, ${ponta + 3}px) scale(1)`, opacity: 1, offset: formar / total, easing: 'cubic-bezier(.55, 0, 1, .55)' },
+      { transform: `translate(${cx}px, ${(ponta + 3 + queda).toFixed(1)}px) scale(.85, 1.25)`, opacity: 1, offset: 1 }
     ], { duration: total, delay: espera, fill: 'forwards' }));
 
     // Chegada: ondas, respingos, nuvem de cor e a superfície balançando.
@@ -207,24 +271,24 @@ SIAB.vidro = (() => {
       const onda = criar(superficie, 'ellipse', { class: 'onda', cx: 0, cy: 0, rx: w * .9, ry: 3, 'vector-effect': 'non-scaling-stroke', stroke: i ? v.rgb : v.corGota });
       onda.style.opacity = 0;
       sumir(onda, onda.animate([
-        { transform: 'translate(80px, 0) scale(.06, .3)', opacity: .95 },
-        { transform: 'translate(80px, 0) scale(1, 1.3)', opacity: 0 }
+        { transform: `translate(${cx}px, 0) scale(.06, .3)`, opacity: .95 },
+        { transform: `translate(${cx}px, 0) scale(1, 1.3)`, opacity: 0 }
       ], { duration: 520, delay: chegada + atraso, easing: 'cubic-bezier(.2, .7, .3, 1)', fill: 'forwards' }));
     });
     const nuvem = criar(dentro, 'circle', { class: 'nuvem-cor', cx: 0, cy: 0, r: Math.min(w, 34), fill: v.rgb });
     nuvem.style.opacity = 0;
     sumir(nuvem, nuvem.animate([
-      { transform: 'translate(80px, 6px) scale(.08)', opacity: viragem ? .95 : .6 },
-      { transform: `translate(80px, ${viragem ? 40 : 24}px) scale(${viragem ? 2.6 : 1.3})`, opacity: 0 }
+      { transform: `translate(${cx}px, 6px) scale(.08)`, opacity: viragem ? .95 : .6 },
+      { transform: `translate(${cx}px, ${viragem ? 40 : 24}px) scale(${viragem ? 2.6 : 1.3})`, opacity: 0 }
     ], { duration: viragem ? 1100 : 650, delay: chegada, easing: 'ease-out', fill: 'forwards' }));
     [-1, 1, 0].forEach((lado, i) => {
       const pingo = criar(svg.querySelector('.efeitos'), 'circle', { class: 'respingo', cx: 0, cy: 0, r: i === 2 ? 1.3 : 1.7, fill: v.corGota });
       pingo.style.opacity = 0;
       const dx = lado * (6 + i * 2), alto = i === 2 ? 17 : 11;
       sumir(pingo, pingo.animate([
-        { transform: `translate(80px, ${v.y}px)`, opacity: 1 },
-        { transform: `translate(${80 + dx * .6}px, ${v.y - alto}px)`, opacity: 1, offset: .45, easing: 'ease-in' },
-        { transform: `translate(${80 + dx}px, ${v.y - 1}px)`, opacity: 0 }
+        { transform: `translate(${cx}px, ${v.y}px)`, opacity: 1 },
+        { transform: `translate(${cx + dx * .6}px, ${v.y - alto}px)`, opacity: 1, offset: .45, easing: 'ease-in' },
+        { transform: `translate(${cx + dx}px, ${v.y - 1}px)`, opacity: 0 }
       ], { duration: 380, delay: chegada, easing: 'ease-out', fill: 'forwards' }));
     });
     svg.querySelector('.liquido-superficie')?.animate([

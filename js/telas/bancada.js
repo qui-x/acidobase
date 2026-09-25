@@ -296,7 +296,7 @@ SIAB.bancada = (() => {
         if (m) t.name = `${SIAB.VIDRARIAS[estado.vidraria].curto} ${m[2]}`;
         if (depois !== antes) {
           const novo = Math.round(t.initialVolume * depois / antes * 100) / 100;
-          if (!aviso.length) aviso.push(`${SIAB.format(t.initialVolume)} → ${SIAB.format(novo)} mL`);
+          if (!aviso.length) aviso.push(`${SIAB.volumeTexto(t.initialVolume, antes)} → ${SIAB.volumeTexto(novo, depois)} mL`);
           t.initialVolume = Math.min(depois * .8, Math.max(.1, novo));
           t.additions = [];
         }

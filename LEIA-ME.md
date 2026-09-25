@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.6
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.7
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.6`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.7`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -45,6 +45,14 @@ frasco da prateleira e ele vira o "Tubo 1".
   da escolha; os grupos de frascos também se recolhem, e a busca abre os que
   têm resultado. Com isso a prateleira ficou cerca de 63 % mais curta
   (de 3.281 para 1.208 px no computador).
+- **Vidraria em tamanho de verdade:** tubo (12 × 75 mm), béqueres (ISO 3819)
+  e erlenmeyers (ISO 1773) são desenhados com as medidas reais, todos na mesma
+  escala e na mesma linha da bancada: o béquer de 50 mL aparece mais baixo e
+  bem mais largo que o tubo, e o erlenmeyer de 250 mL quase com o dobro da
+  altura. O nível do líquido vem do volume dentro da forma real.
+- **Responsivo de 320 px a 2K:** em telas grandes a letra cresce um pouco, os
+  painéis alargam e leitura, vidraria e conta-gotas ficam juntos no centro; no
+  celular, os atalhos cabem numa linha e o manual não passa da tela.
 - **Escala do recipiente:** os números acompanham a capacidade escolhida. O
   volume aparece com a precisão que o vidro permite (centésimos no tubo de
   5 mL, décimos de 10 a 125 mL, mL inteiros em 250 mL, já que as marcas de
