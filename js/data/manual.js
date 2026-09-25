@@ -139,7 +139,8 @@ SIAB.manual = [
         '+5 gotas e +1 mL: atalhos para ir mais rápido.',
         'Desfazer: desfaz a última ação inteira (uma sequência de gotas, a troca de frasco, as medidas, a remoção de um tubo…).',
         'Linha acima do botão: o que está no conta-gotas e quantas gotas já caíram.',
-        'Capacidade: quando o tubo chega a 5 mL, os botões de gotejar ficam desativados.'
+        'Capacidade: quando o tubo chega a 5 mL, os botões de gotejar ficam desativados.',
+        'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas e espalha a nova cor; o nível sobe nesse momento. Na viragem do indicador, a cor se espalha mais e o contorno pisca. “Reduzir animações” desliga esse movimento.'
       ] },
       { teclas: [['Enter', 'adiciona 1 gota'], ['Espaço (segurar)', 'goteja sem parar até soltar'], ['Tab', 'passa para o próximo controle']] },
       { dica: 'Tubos vinculados (veja “Tubos da bancada”) recebem as mesmas gotas ao mesmo tempo.' }

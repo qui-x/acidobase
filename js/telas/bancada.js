@@ -77,15 +77,6 @@ SIAB.bancada = (() => {
     return !SIAB.targets(SIAB.current()).some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.capacidade(x) + 1e-9);
   }
 
-  function animarGota() {
-    if (window.A11Y?.estado?.motion) return;
-    const gota = document.createElement('span');
-    gota.className = 'falling-drop';
-    gota.setAttribute('aria-hidden', 'true');
-    $('large-tube').append(gota);
-    setTimeout(() => gota.remove(), 450);
-  }
-
   function leitura() {
     const t = SIAB.current(), r = SIAB.chem.solve(t);
     return { pH: r.pH, cor: SIAB.chem.indicatorColor(t, r.pH).name, r };
@@ -96,6 +87,7 @@ SIAB.bancada = (() => {
     if (sequencia) return;
     sequencia = { ...leitura(), n: 0, viragem: null };
     SIAB.registrar('gotas');
+    SIAB.vidro.pingando($('large-tube'), true);
   }
   function gotaDaSequencia() {
     if (!sequencia) iniciarSequencia();
@@ -105,15 +97,19 @@ SIAB.bancada = (() => {
     }
     SIAB.targets(SIAB.current()).forEach(x => x.additions.push(x.dropVolume));
     sequencia.n++;
-    animarGota();
     const agora = leitura();
-    if (SIAB.current().indicator !== 'none' && !sequencia.viragem && agora.cor !== sequencia.cor) {
+    const virou = SIAB.current().indicator !== 'none' && !sequencia.viragem && agora.cor !== sequencia.cor;
+    const chegada = SIAB.vidro.gota($('large-tube'), SIAB.current(), SIAB.state.vidraria, { viragem: virou });
+    if (virou) {
       sequencia.viragem = `${sequencia.cor} → ${agora.cor}`;
-      SIAB.som.vibrar();
-      const tubo = $('large-tube');
-      tubo.classList.remove('viragem');
-      void tubo.offsetWidth;
-      tubo.classList.add('viragem');
+      // O contorno pisca quando a gota da viragem chega ao líquido.
+      setTimeout(() => {
+        SIAB.som.vibrar();
+        const tubo = $('large-tube');
+        tubo.classList.remove('viragem');
+        void tubo.offsetWidth;
+        tubo.classList.add('viragem');
+      }, chegada);
     }
     SIAB.som.tocar(agora.pH);
     SIAB.loja.avisar();
@@ -123,6 +119,7 @@ SIAB.bancada = (() => {
     if (!sequencia) return;
     const feita = sequencia;
     sequencia = null;
+    SIAB.vidro.pingando($('large-tube'), false);
     if (feita.n === 0) {
       SIAB.state.history.pop();
       SIAB.loja.avisar();

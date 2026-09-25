@@ -1,4 +1,4 @@
-# Validação da versão 0.5.1 — 25/09/2026
+# Validação da versão 0.5.2 — 25/09/2026
 
 ## Resumo
 
@@ -11,9 +11,19 @@
 | Manual (`manual.test.cjs`) | 83 verificações de seções, links de ajuda, alvos e roteiros: aprovado |
 | Mistura geral (`mistura.test.cjs`) | 18 verificações: HCl + NaOH = 7,00; diluição 2,30; tampão acetato 4,76; conservação; excesso de base 11,30; indicadores misturados: aprovado |
 | PWA (`pwa.test.cjs`) | 228 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
-| Ponta a ponta no Chromium (`e2e.test.cjs`) | 108 de 108 testes: aprovado |
+| Ponta a ponta no Chromium (`e2e.test.cjs`) | 109 de 109 testes: aprovado |
 | Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados da 0.5.0 (bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura) e em mais 26 da 0.5.1 (frasco secreto, arco-íris, despejo, mistura, erlenmeyer e cartões flutuantes); temas escuro, claro e alto contraste; computador e celular |
 | Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, com a animação de abertura e sem erros no console |
+
+## Novidades da 0.5.2 testadas
+
+- **Movimento das gotas na vidraria:** o conta-gotas aparece sobre a boca do
+  recipiente enquanto se goteja e some depois. A gota cai e os efeitos somem
+  sozinhos. O desenho é atualizado, não recriado, e o nível só muda quando a
+  gota chega. No "+5 gotas" as gotas caem uma depois da outra, e com "Reduzir
+  animações" nenhuma é desenhada. O axe não acusou nada durante o gotejamento.
+- **Defeito corrigido:** até a 0.5.1 a gota animada era apagada pelo
+  redesenho da tela logo depois de criada, e por isso quase não aparecia.
 
 ## Novidades da 0.5.1 testadas
 

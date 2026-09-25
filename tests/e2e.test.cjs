@@ -155,6 +155,35 @@ async function teste(nome, fn) {
     await page.click('#drop1ml-btn');
     assert.equal((await t()).gotas, antes + 25);
   });
+  await teste('gota animada: conta-gotas aparece, a gota cai e some; o desenho é atualizado, não recriado', async () => {
+    // Espera as gotas do teste anterior (+1 mL) terminarem de cair.
+    await page.waitForFunction(() => !document.querySelector('#large-tube .gota-caindo, #large-tube .nuvem-cor') && !document.querySelector('#large-tube').classList.contains('pingando'), null, { timeout: 5000 });
+    await page.waitForTimeout(400);
+    const svg = await page.evaluateHandle(() => document.querySelector('#large-tube svg'));
+    const nivel = () => estado(page, () => getComputedStyle(document.querySelector('#large-tube .liquido')).transform);
+    const antes = await nivel();
+    await page.focus('#drop-btn');
+    await page.keyboard.press('Enter');
+    assert.equal(await estado(page, () => document.querySelector('#large-tube').classList.contains('pingando')), true, 'conta-gotas visível');
+    assert.equal(await estado(page, () => document.querySelectorAll('#large-tube .gota-caindo').length), 1);
+    assert.equal(await page.evaluate(x => x === document.querySelector('#large-tube svg'), svg), true, 'o mesmo desenho continua');
+    // O nível só muda quando a gota chega; depois, os efeitos somem sozinhos.
+    assert.equal(await nivel(), antes);
+    await page.waitForFunction(a => getComputedStyle(document.querySelector('#large-tube .liquido')).transform !== a, antes, { timeout: 2000 });
+    await page.waitForFunction(() => !document.querySelector('#large-tube .gota-caindo, #large-tube .onda, #large-tube .nuvem-cor, #large-tube .respingo'), null, { timeout: 3000 });
+    await page.waitForFunction(() => !document.querySelector('#large-tube').classList.contains('pingando'));
+    // +5 gotas: as gotas caem em sequência, não todas juntas.
+    await page.click('#drop5-btn');
+    const atrasos = await estado(page, () => [...document.querySelectorAll('#large-tube .gota-caindo')].map(g => g.getAnimations()[0]?.effect.getTiming().delay));
+    assert.ok(atrasos.length >= 2 && new Set(atrasos).size === atrasos.length, `atrasos ${atrasos}`);
+    // Com "Reduzir animações", nenhuma gota é desenhada.
+    await page.waitForTimeout(1200);
+    await page.evaluate(() => A11Y.definir('motion', true));
+    await page.focus('#drop-btn');
+    await page.keyboard.press('Enter');
+    assert.equal(await estado(page, () => document.querySelectorAll('#large-tube .gota-caindo').length), 0);
+    await page.evaluate(() => A11Y.definir('motion', false));
+  });
   await teste('chip de variação do pH aparece depois das gotas', async () => {
     assert.equal(await page.isVisible('#ph-delta'), true);
     assert.match(await texto(page, '#ph-delta'), /→/);

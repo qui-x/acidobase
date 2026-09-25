@@ -513,6 +513,7 @@ button.cartao { font: inherit; cursor: pointer; }
 .experiment { scroll-padding-bottom: 100px; }
 @media (max-height: 950px) and (min-width: 901px) {
   .tube-svg { max-height: 280px; }
+  .large-tube .tube-svg { max-height: 314px; }
   .tube-stage { min-height: 200px; }
 }
 .ver-panel { grid-area: ver; border-left: 1px solid var(--border); }
@@ -586,7 +587,20 @@ button.cartao { font: inherit; cursor: pointer; }
 .tube-reflection { stroke: var(--text); opacity: .15; }
 .tube-tick { stroke: var(--muted); opacity: .6; }
 .tube-graduation { fill: var(--muted); font: 10px Consolas, monospace; }
-.liquid-body { transition: fill .25s, fill-opacity .25s; }
+.liquid-body, .liquido-superficie { transition: fill .4s ease, fill-opacity .4s ease; }
+/* Tubo em foco: tem espaço em cima para o conta-gotas (o desenho é 12 % mais alto). */
+.large-tube .tube-svg { max-height: 382px; }
+/* Movimento das gotas (js/ui/tubo.js, SIAB.vidro): o nível sobe e a cor muda suavemente. */
+.liquido { transition: transform .35s cubic-bezier(.3, .9, .4, 1); }
+.liquido-superficie { transform-box: fill-box; transform-origin: center; }
+.conta-gotas-vidro { opacity: 0; transform: translateY(-10px); transition: opacity .25s ease, transform .25s ease; }
+.large-tube.pingando .conta-gotas-vidro { opacity: 1; transform: none; }
+.cg-bulbo { fill: #c2415d; transform-box: fill-box; transform-origin: 50% 100%; }
+.cg-colar { fill: var(--muted); }
+.cg-vidro { fill: color-mix(in srgb, var(--text) 8%, transparent); stroke: var(--muted); stroke-width: 1.2; }
+.gota-caindo { stroke: rgba(255, 255, 255, .6); stroke-width: .6; }
+.onda { fill: none; stroke-width: 1.4; }
+.respingo, .nuvem-cor { pointer-events: none; }
 .volume-readout { justify-self: end; display: flex; flex-direction: column; text-align: right; }
 .volume-readout strong { font-size: 1.25rem; font-family: Consolas, monospace; font-weight: 400; margin-top: 6px; }
 .capacity { margin-top: 12px; font-size: .65rem; }
@@ -978,8 +992,6 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
 .tabela-grupo th { color: var(--accent); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding-top: 14px; }
 
 /* 11. ANIMAÇÕES ------------------------------------------------------- */
-.falling-drop { position: absolute; top: 4%; left: 50%; width: 9px; height: 13px; border-radius: 50% 50% 55% 55%; background: var(--accent); animation: cair .38s ease-in both; pointer-events: none; }
-@keyframes cair { to { transform: translateY(190px); opacity: 0; } }
 .large-tube.viragem .tube-outline { animation: pulsar-tubo .7s ease-out; }
 @keyframes pulsar-tubo { 0% { stroke: var(--accent); stroke-width: 5; } 100% { stroke-width: 2; } }
 .ph-delta.pulsar { animation: aparecer .3s ease-out; }
@@ -1044,6 +1056,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   }
   .tube-stage { grid-template-columns: minmax(110px, 1fr) minmax(100px, 150px) minmax(56px, .6fr); gap: 8px; min-height: 210px; }
   .tube-svg { max-height: 270px; }
+  .large-tube .tube-svg { max-height: 303px; }
   .ph-readout strong { font-size: 1.7rem; }
   .controls {
     position: fixed; left: 0; right: 0; bottom: 0; top: auto; z-index: 1000; border: 1px solid var(--border); border-radius: 16px 16px 0 0;
@@ -1086,6 +1099,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
 @media (max-height: 600px) and (max-width: 900px) {
   .tube-stage { min-height: 160px; }
   .tube-svg { max-height: 180px; }
+  .large-tube .tube-svg { max-height: 202px; }
 }
 @media (pointer: coarse) {
   .icon-btn, .text-btn { min-height: 44px; min-width: 44px; }
@@ -1104,6 +1118,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
 
 /* Modo projetor: mais espaço para a bancada e textos maiores. */
 :root[data-projetor=on] .tube-svg { max-height: 420px; }
+:root[data-projetor=on] .large-tube .tube-svg { max-height: 471px; }
 :root[data-projetor=on] .ph-readout strong { font-size: 2.6rem; }
 
 /* 13. IMPRESSÃO ------------------------------------------------------- */

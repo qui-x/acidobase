@@ -77,7 +77,8 @@ SIAB.render = (syncForm = false) => {
   $('volume-value').textContent = SIAB.format(r.volume);
   $('temperature-value').hidden = r.temperature === 25;
   $('temperature-value').textContent = `${SIAB.format(r.temperature, 0)} °C`;
-  $('large-tube').innerHTML = SIAB.tubeSVG(t, 'focus', false, s.vidraria);
+  // Atualiza (não recria) o desenho: o nível e a cor mudam com movimento.
+  SIAB.vidro.desenhar($('large-tube'), t, s.vidraria);
   $('color-name').textContent = c.name;
   $('color-swatch').style.background = rgb;
   $('color-swatch').style.opacity = c.opacity;
