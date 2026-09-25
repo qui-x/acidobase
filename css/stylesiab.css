@@ -163,6 +163,8 @@ td { font-family: Consolas, monospace; }
 .header-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
 .header-notebook[aria-current=page] { border-color: var(--accent); color: var(--accent); }
 .bottom-nav { display: none; }
+/* Modo bancada: esconde o que só existe no modo completo (missões, desafios, professor). */
+:root[data-modo=bancada] [data-completo] { display: none !important; }
 
 /* 5. TELAS ------------------------------------------------------------ */
 .tela { max-width: 1080px; margin: 0 auto; padding: 28px 20px 48px; }
@@ -250,6 +252,13 @@ button.cartao { font: inherit; cursor: pointer; }
 .controls, .ver-panel { background: var(--panel); padding: 16px; overflow-y: auto; }
 .controls { grid-area: controls; border-right: 1px solid var(--border); }
 .experiment { grid-area: experiment; min-width: 0; display: flex; flex-direction: column; overflow-y: auto; }
+/* A tira de tubos fica fixa embaixo: a rolagem (e o foco do teclado) param antes dela,
+   para ela nunca cobrir o botão de gotejar (WCAG 2.4.11). */
+.experiment { scroll-padding-bottom: 100px; }
+@media (max-height: 950px) and (min-width: 901px) {
+  .tube-svg { max-height: 280px; }
+  .tube-stage { min-height: 200px; }
+}
 .ver-panel { grid-area: ver; border-left: 1px solid var(--border); }
 .controls-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
 .controls h2 { font-size: 1rem; }
@@ -584,6 +593,77 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 }
 #toast .text-btn { margin-left: 8px; }
 
+/* 10b. MANUAL E AJUDA ------------------------------------------------- */
+.ajuda-link {
+  display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; min-width: 26px;
+  margin-left: 6px; border-radius: 50%; border: 1px solid var(--border); background: var(--panel2);
+  color: var(--accent); font-size: .75rem; font-weight: 700; text-decoration: none; vertical-align: middle; letter-spacing: 0;
+}
+.ajuda-link:hover { border-color: var(--accent); }
+.controls-heading .ajuda-link { margin-right: auto; }
+.dose-info .ajuda-link { margin-left: auto; }
+.ver-cabecalho { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
+.ver-cabecalho h2 { margin: 0; }
+.ajuda-destaque { outline: 3px solid var(--accent) !important; outline-offset: 4px; border-radius: 6px; animation: destacar 1.1s ease-in-out 3; }
+@keyframes destacar { 50% { outline-color: transparent; } }
+.boas-vindas { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; margin-top: 10px; padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--panel2); font-size: .82rem; }
+.boas-vindas p { flex: 1 1 260px; }
+.boas-vindas > div { display: flex; gap: 6px; align-items: center; }
+.boas-vindas .secondary-btn { min-height: 36px; padding: 6px 12px; }
+.tela-manual { max-width: 1120px; }
+.manual-acoes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; margin-top: 14px; }
+.manual-busca { flex: 1 1 260px; margin: 0; }
+.manual-grade { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; }
+.manual-indice { position: sticky; top: calc(var(--header-h) + 12px); border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 12px; }
+.manual-indice ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
+.manual-indice a { display: block; padding: 6px 8px; border-radius: 6px; color: var(--secondary); text-decoration: none; font-size: .85rem; }
+.manual-indice a:hover { background: var(--hover); color: var(--text); }
+.manual-conteudo { display: grid; gap: 18px; }
+.manual-secao { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px 20px; scroll-margin-top: calc(var(--header-h) + 12px); }
+.manual-secao > h2 { font-size: 1.25rem; margin-bottom: 4px; }
+.manual-secao > p, .manual-secao li, .manual-secao dd { color: var(--secondary); font-size: .92rem; line-height: 1.6; }
+.manual-secao > p { margin-top: 10px; }
+.manual-resumo { color: var(--muted) !important; font-size: .85rem !important; margin-top: 0 !important; }
+.manual-lista, .manual-passos { padding-left: 22px; margin: 10px 0; display: grid; gap: 6px; }
+.manual-lista strong { color: var(--text); }
+.manual-passos li::marker { color: var(--accent); font-weight: 700; }
+.manual-dica { padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--panel2); border-radius: 4px; }
+.manual-dica strong { color: var(--accent); }
+.manual-teclas { display: grid; gap: 6px; margin: 12px 0; }
+.manual-teclas > div { display: grid; grid-template-columns: minmax(130px, 32%) 1fr; gap: 10px; align-items: center; }
+.manual-teclas dd { margin: 0; }
+kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--bg); color: var(--text); }
+.manual-faq { margin: 12px 0; }
+.manual-faq dt { font-weight: 600; color: var(--text); margin-top: 12px; }
+.manual-faq dd { margin: 4px 0 0; }
+.manual-acoes-secao { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
+.manual-figura { margin: 14px 0; }
+.manual-figura figcaption { font-size: .8rem; color: var(--muted); margin-top: 6px; }
+.diagrama { width: 100%; max-width: 560px; height: auto; }
+.diag-caixa { fill: var(--panel2); stroke: var(--border); stroke-width: 1.2; }
+.diag-bola { fill: var(--accent); }
+.diag-num { fill: var(--bg); font: 700 11px 'Segoe UI', system-ui, sans-serif; }
+.diag-texto { fill: var(--text); font: 600 12px 'Segoe UI', system-ui, sans-serif; }
+.diag-sub { fill: var(--muted); font: 9.5px 'Segoe UI', system-ui, sans-serif; }
+.roteiros { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin-top: 12px; }
+.roteiro { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; display: flex; flex-direction: column; gap: 6px; }
+.roteiro h3 { margin: 0; font-size: 1rem; }
+.roteiro > p:not(.eyebrow) { color: var(--secondary); font-size: .88rem; }
+.roteiro .eyebrow { margin-top: 6px; color: var(--accent); }
+.roteiro .manual-lista, .roteiro .manual-passos { margin: 2px 0; font-size: .82rem; }
+.roteiro-esperado { margin: 0; display: grid; gap: 3px; font-size: .82rem; }
+.roteiro-esperado > div { display: grid; grid-template-columns: minmax(80px, 34%) 1fr; gap: 8px; }
+.roteiro-esperado dt { color: var(--text); font-weight: 600; }
+.roteiro-esperado dd { margin: 0; color: var(--secondary); }
+.roteiro .primary-btn { margin-top: auto; align-self: flex-start; }
+.tabela-rolagem { overflow-x: auto; margin: 10px 0; }
+.manual-tabela { font-size: .82rem; }
+.manual-tabela td { font-family: inherit; vertical-align: top; }
+.manual-tabela td:last-child { font-family: Consolas, monospace; white-space: nowrap; }
+.manual-tabela td.celula-cores { font-family: inherit; white-space: normal; }
+.celula-cores .mini-dot { display: inline-block; vertical-align: middle; margin-right: 2px; }
+.tabela-grupo th { color: var(--accent); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; padding-top: 14px; }
+
 /* 11. ANIMAÇÕES ------------------------------------------------------- */
 .falling-drop { position: absolute; top: 4%; left: 50%; width: 9px; height: 13px; border-radius: 50% 50% 55% 55%; background: var(--accent); animation: cair .38s ease-in both; pointer-events: none; }
 @keyframes cair { to { transform: translateY(190px); opacity: 0; } }
@@ -615,7 +695,7 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
   .main-nav, .header-notebook { display: none; }
   .app-header { padding: 8px 14px; }
   .bottom-nav {
-    display: grid; grid-template-columns: repeat(5, 1fr); position: fixed; left: 0; right: 0; bottom: 0; z-index: 950;
+    display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; position: fixed; left: 0; right: 0; bottom: 0; z-index: 950;
     background: var(--panel); border-top: 1px solid var(--border); padding: 4px 4px env(safe-area-inset-bottom);
   }
   .bottom-nav a { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 54px; font-size: .68rem; font-weight: 600; }
@@ -654,6 +734,10 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
   .detetive-tubo .tube-svg, .titulacao-tubo .tube-svg { max-height: 190px; margin: 0 auto; width: auto; }
   .memoria-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tela { padding: 20px 16px 32px; }
+  .manual-grade { grid-template-columns: 1fr; }
+  .manual-indice { position: static; }
+  .manual-indice ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .manual-secao { padding: 16px 14px; }
   .item-trilha { grid-template-columns: 34px 1fr; }
   .item-status { grid-column: 2; text-align: left; }
 }
@@ -699,6 +783,10 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
   .nota, .trilha, .jogo-painel, .gabarito { break-inside: avoid; border-color: #999; background: #fff; }
   body.imprimindo-roteiro main { display: none !important; }
   body.imprimindo-roteiro .roteiro-impressao { display: block; color: #000; font-size: 11pt; }
+  .manual-acoes, .manual-acoes-secao, .ajuda-link, .roteiro .primary-btn, .manual-indice { display: none !important; }
+  .manual-grade { display: block; }
+  .manual-secao { break-inside: avoid-page; background: #fff; border-color: #999; color: #000; }
+  .manual-secao > p, .manual-secao li, .manual-secao dd, .manual-resumo { color: #222 !important; }
   .roteiro-impressao h1 { font-size: 16pt; }
   .roteiro-impressao h2 { font-size: 13pt; margin-top: 14pt; }
   .roteiro-impressao section { break-inside: avoid; }

@@ -13,8 +13,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
   <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/stylesiab.css?v=0.3.1">
-  <script src="a11y.js?v=0.3.1"></script>
+  <link rel="stylesheet" href="css/stylesiab.css?v=0.4.0">
+  <script src="a11y.js?v=0.4.0"></script>
 </head>
 <body>
   <svg width="0" height="0" class="svg-defs" aria-hidden="true"><defs>
@@ -27,15 +27,16 @@
   <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
 
   <header class="app-header">
-    <a class="header-brand" href="#/inicio" aria-label="SIAB — início">
+    <a class="header-brand" href="#/" aria-label="SIAB — página principal">
       <img src="assets/siab-icone.svg" alt="" width="34" height="34">
       <div><strong>SIAB</strong><span>A química das cores</span></div>
     </a>
     <nav class="main-nav" aria-label="Seções principais">
-      <a href="#/aprender" data-nav="aprender">Aprender</a>
-      <a href="#/desafios" data-nav="desafios">Desafios</a>
-      <a href="#/laboratorio" data-nav="laboratorio">Laboratório</a>
-      <a href="#/professor" data-nav="professor">Professor</a>
+      <a href="#/aprender" data-nav="aprender" data-completo>Aprender</a>
+      <a href="#/desafios" data-nav="desafios" data-completo>Desafios</a>
+      <a href="#/laboratorio" data-nav="laboratorio">Bancada</a>
+      <a href="#/professor" data-nav="professor" data-completo>Professor</a>
+      <a href="#/manual" data-nav="manual">Manual</a>
     </nav>
     <div class="header-actions">
       <button id="install-btn" class="text-btn" type="button" hidden>Instalar app</button>
@@ -167,12 +168,34 @@
       <div id="caderno-lista" class="caderno-lista"></div>
     </section>
 
+    <!-- MANUAL -->
+    <section data-tela="manual" class="tela tela-manual" aria-labelledby="manual-titulo" hidden>
+      <header class="tela-cabecalho">
+        <p class="eyebrow">MANUAL DA BANCADA</p>
+        <h1 id="manual-titulo" data-foco tabindex="-1">Como usar cada parte</h1>
+        <p>Cada seção explica uma parte da bancada. Use “Mostrar na bancada” para ver onde ela fica e “Montar na bancada” para preparar um teste pronto.</p>
+        <div class="manual-acoes">
+          <label class="field manual-busca">Buscar no manual
+            <input id="manual-busca" type="search" autocomplete="off" placeholder="gota, gráfico, indicador…">
+          </label>
+          <button type="button" id="manual-imprimir" class="secondary-btn">Imprimir manual</button>
+          <a class="secondary-btn" href="#/laboratorio">Voltar à bancada</a>
+        </div>
+        <p id="manual-vazio" class="vazio" hidden>Nada encontrado. Tente outra palavra.</p>
+      </header>
+      <div class="manual-grade">
+        <nav class="manual-indice" aria-label="Seções do manual"><ol id="manual-indice"></ol></nav>
+        <div id="manual-conteudo" class="manual-conteudo"></div>
+      </div>
+    </section>
+
     <!-- BANCADA: laboratório livre e missões -->
     <div id="workspace" data-tela="bancada" class="workspace" data-modo="laboratorio" hidden>
       <aside id="controls" class="controls" aria-labelledby="controls-title">
         <div class="sheet-handle" aria-hidden="true"></div>
         <div class="controls-heading">
           <h2 id="controls-title">Prateleira</h2>
+          <a class="ajuda-link" href="#/manual/prateleira" aria-label="Ajuda: prateleira de frascos" title="Ajuda: prateleira de frascos">?</a>
           <button id="close-controls" type="button" class="icon-btn mobile-control" aria-label="Fechar painel">×</button>
         </div>
 
@@ -196,7 +219,7 @@
           <div id="shelf" class="shelf"></div>
 
           <fieldset class="chips" id="indicator-group">
-            <legend>Indicador</legend>
+            <legend>Indicador <a class="ajuda-link" href="#/manual/indicadores" aria-label="Ajuda: indicadores" title="Ajuda: indicadores">?</a></legend>
             <div id="indicator-chips" class="chip-list"></div>
           </fieldset>
           <p id="indicator-range" class="field-hint"></p>
@@ -205,6 +228,7 @@
           <details id="ajustes" class="ajustes" open>
             <summary>Ajustes de medida</summary>
             <form id="prepare-form" novalidate>
+              <p class="field-hint">Números do preparo. <a href="#/manual/medidas">Como usar os ajustes</a></p>
               <div class="field-pair">
                 <label class="field" id="concentration-field">Concentração no tubo <span class="unit">mol/L</span>
                   <input id="concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
@@ -253,6 +277,7 @@
             <button id="unlink-btn" type="button" class="quiet-btn" hidden>Desvincular este tubo</button>
             <button id="restart-btn" type="button" class="quiet-btn">Recomeçar gotas</button>
             <button id="remove-btn" type="button" class="quiet-btn danger">Remover tubo</button>
+            <a class="secondary-btn" href="#/manual/roteiros">Roteiros de teste prontos</a>
             <button id="guide-btn" type="button" class="quiet-btn">Ideias para uma aula acessível</button>
           </div>
         </div>
@@ -281,11 +306,15 @@
           </div>
           <div id="group-notice" class="group-notice" hidden></div>
           <p id="sample-model-note" class="sample-model-note" hidden></p>
+          <div id="boas-vindas" class="boas-vindas" role="note" hidden>
+            <p><strong>Primeira vez aqui?</strong> O manual mostra como usar cada parte e traz testes prontos.</p>
+            <div><a class="secondary-btn" href="#/manual" id="boas-vindas-manual">Abrir o manual</a><button type="button" class="quiet-btn" id="boas-vindas-fechar">Agora não</button></div>
+          </div>
           <button id="mission-bar" type="button" class="mission-bar" hidden></button>
 
           <div class="tube-stage">
             <div class="stage-stats">
-              <span class="eyebrow">LEITURA</span>
+              <span class="eyebrow">LEITURA <a class="ajuda-link" href="#/manual/leitura" aria-label="Ajuda: leitura do tubo" title="Ajuda: leitura do tubo">?</a></span>
               <div class="ph-readout"><span>pH</span><strong id="ph-value"></strong></div>
               <span id="ph-phase" class="phase"></span>
               <span id="ph-delta" class="ph-delta" aria-hidden="true" hidden></span>
@@ -308,7 +337,7 @@
           <p id="equivalence-note" class="equivalence-note" aria-live="polite"></p>
 
           <div id="dose-area" class="dose-area">
-            <div class="dose-info"><span id="titrant-label"></span><span id="dose-summary"></span></div>
+            <div class="dose-info"><span id="titrant-label"></span><span id="dose-summary"></span><a class="ajuda-link" href="#/manual/conta-gotas" aria-label="Ajuda: conta-gotas" title="Ajuda: conta-gotas">?</a></div>
             <div class="dose-actions">
               <button id="undo-btn" type="button" class="secondary-btn" aria-label="Desfazer última ação">↶ <span>Desfazer</span></button>
               <button id="drop-btn" type="button" class="primary-btn drop-btn">＋ Segure para gotejar</button>
@@ -329,7 +358,7 @@
 
         <div class="tube-strip" aria-labelledby="strip-title">
           <div class="strip-heading">
-            <span class="eyebrow" id="strip-title">BANCADA</span>
+            <span class="eyebrow" id="strip-title">BANCADA <a class="ajuda-link" href="#/manual/tubos" aria-label="Ajuda: tubos da bancada" title="Ajuda: tubos da bancada">?</a></span>
             <span id="tube-count" class="count"></span>
           </div>
           <div id="tube-list" class="tube-list"></div>
@@ -338,7 +367,7 @@
       </section>
 
       <aside id="ver-panel" class="ver-panel" aria-labelledby="ver-title">
-        <h2 id="ver-title" class="eyebrow">VER</h2>
+        <div class="ver-cabecalho"><h2 id="ver-title" class="eyebrow">VER</h2><a class="ajuda-link" href="#/manual/ver" aria-label="Ajuda: painel VER" title="Ajuda: painel VER">?</a></div>
         <div id="ver-tabs" class="ver-tabs" role="tablist" aria-labelledby="ver-title">
           <button type="button" role="tab" id="tab-grafico" data-ver="grafico" aria-controls="ver-conteudo">Gráfico</button>
           <button type="button" role="tab" id="tab-particulas" data-ver="particulas" aria-controls="ver-conteudo">Partículas</button>
@@ -351,11 +380,12 @@
   </main>
 
   <nav class="bottom-nav" aria-label="Navegação principal">
-    <a href="#/inicio" data-nav="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v9H4Z"/></svg><span>Início</span></a>
-    <a href="#/aprender" data-nav="aprender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/></svg><span>Aprender</span></a>
-    <a href="#/desafios" data-nav="desafios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/></svg><span>Desafios</span></a>
-    <a href="#/laboratorio" data-nav="laboratorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/></svg><span>Lab</span></a>
+    <a href="#/inicio" data-nav="inicio" data-completo><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v9H4Z"/></svg><span>Início</span></a>
+    <a href="#/aprender" data-nav="aprender" data-completo><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/></svg><span>Aprender</span></a>
+    <a href="#/desafios" data-nav="desafios" data-completo><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/></svg><span>Desafios</span></a>
+    <a href="#/laboratorio" data-nav="laboratorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/></svg><span>Bancada</span></a>
     <a href="#/caderno" data-nav="caderno"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6ZM9 3v18M12 8h3M12 12h3"/></svg><span>Caderno</span></a>
+    <a href="#/manual" data-nav="manual"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM9.5 9a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .9-1 1.6V14M12 17.5v.5"/></svg><span>Manual</span></a>
   </nav>
 
   <button id="sheet-backdrop" type="button" class="sheet-backdrop" aria-label="Fechar painel" hidden></button>
@@ -429,7 +459,7 @@
   <dialog id="about-dialog" class="siab-dialog dialog-about" aria-labelledby="about-title">
     <div class="dialog-heading"><h2 id="about-title">A química das cores</h2><button type="button" class="icon-btn" data-close="about-dialog" aria-label="Fechar informações">×</button></div>
     <p><strong>SIAB — Simulador Interativo de Ácidos e Bases</strong> · versão <span id="about-version"></span></p>
-    <p>Missões guiadas, desafios e uma bancada livre. Tubo, partículas, gráfico e equação mudam juntos a cada gota.</p>
+    <p>Bancada virtual de ácidos e bases: tubo, partículas, gráfico e equação mudam juntos a cada gota. Para saber como usar cada parte, abra o <a href="#/manual" data-close="about-dialog">Manual</a>.</p>
     <h3>Como interpretar</h3>
     <p>O ponto de equivalência depende das quantidades de ácido e base. A viragem depende do indicador. Eles podem ocorrer em momentos diferentes.</p>
     <h3>Condições do modelo</h3>
@@ -477,46 +507,48 @@
   <div id="toast" role="status" aria-live="polite" hidden></div>
   <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="js/core/namespace.js?v=0.3.1"></script>
-  <script src="js/core/util.js?v=0.3.1"></script>
-  <script src="js/data/catalogo.js?v=0.3.1"></script>
-  <script src="js/data/cotidiano.js?v=0.3.1"></script>
-  <script src="js/data/sais.js?v=0.3.1"></script>
-  <script src="js/data/ambiente-saude.js?v=0.3.1"></script>
-  <script src="js/data/funcoes.js?v=0.3.1"></script>
-  <script src="js/simulation/quimica.js?v=0.3.1"></script>
-  <script src="js/core/estado.js?v=0.3.1"></script>
-  <script src="js/core/loja.js?v=0.3.1"></script>
-  <script src="js/core/progresso.js?v=0.3.1"></script>
-  <script src="js/core/roteador.js?v=0.3.1"></script>
-  <script src="js/data/missoes.js?v=0.3.1"></script>
-  <script src="js/data/trilhas.js?v=0.3.1"></script>
-  <script src="js/simulation/motor-missoes.js?v=0.3.1"></script>
-  <script src="js/ui/tubo.js?v=0.3.1"></script>
-  <script src="js/ui/regua-ph.js?v=0.3.1"></script>
-  <script src="js/ui/grafico.js?v=0.3.1"></script>
-  <script src="js/ui/lupa.js?v=0.3.1"></script>
-  <script src="js/ui/equacao.js?v=0.3.1"></script>
-  <script src="js/ui/som.js?v=0.3.1"></script>
-  <script src="js/ui/conta-gotas.js?v=0.3.1"></script>
-  <script src="js/ui/seletores.js?v=0.3.1"></script>
-  <script src="js/ui/prateleira.js?v=0.3.1"></script>
-  <script src="js/ui/render.js?v=0.3.1"></script>
-  <script src="js/telas/bancada.js?v=0.3.1"></script>
-  <script src="js/telas/laboratorio.js?v=0.3.1"></script>
-  <script src="js/telas/missao.js?v=0.3.1"></script>
-  <script src="js/telas/inicio.js?v=0.3.1"></script>
-  <script src="js/telas/aprender.js?v=0.3.1"></script>
-  <script src="js/telas/desafios.js?v=0.3.1"></script>
-  <script src="js/telas/detetive.js?v=0.3.1"></script>
-  <script src="js/telas/titulacao.js?v=0.3.1"></script>
-  <script src="js/telas/trunfo.js?v=0.3.1"></script>
-  <script src="js/telas/regua.js?v=0.3.1"></script>
-  <script src="js/telas/construtor.js?v=0.3.1"></script>
-  <script src="js/telas/professor.js?v=0.3.1"></script>
-  <script src="js/telas/caderno.js?v=0.3.1"></script>
-  <script src="js/a11y/preferencias.js?v=0.3.1"></script>
-  <script src="js/init/pwa.js?v=0.3.1"></script>
-  <script src="js/init/app.js?v=0.3.1"></script>
+  <script src="js/core/namespace.js?v=0.4.0"></script>
+  <script src="js/core/util.js?v=0.4.0"></script>
+  <script src="js/data/catalogo.js?v=0.4.0"></script>
+  <script src="js/data/cotidiano.js?v=0.4.0"></script>
+  <script src="js/data/sais.js?v=0.4.0"></script>
+  <script src="js/data/ambiente-saude.js?v=0.4.0"></script>
+  <script src="js/data/funcoes.js?v=0.4.0"></script>
+  <script src="js/simulation/quimica.js?v=0.4.0"></script>
+  <script src="js/core/estado.js?v=0.4.0"></script>
+  <script src="js/core/loja.js?v=0.4.0"></script>
+  <script src="js/core/progresso.js?v=0.4.0"></script>
+  <script src="js/core/roteador.js?v=0.4.0"></script>
+  <script src="js/data/missoes.js?v=0.4.0"></script>
+  <script src="js/data/trilhas.js?v=0.4.0"></script>
+  <script src="js/data/manual.js?v=0.4.0"></script>
+  <script src="js/simulation/motor-missoes.js?v=0.4.0"></script>
+  <script src="js/ui/tubo.js?v=0.4.0"></script>
+  <script src="js/ui/regua-ph.js?v=0.4.0"></script>
+  <script src="js/ui/grafico.js?v=0.4.0"></script>
+  <script src="js/ui/lupa.js?v=0.4.0"></script>
+  <script src="js/ui/equacao.js?v=0.4.0"></script>
+  <script src="js/ui/som.js?v=0.4.0"></script>
+  <script src="js/ui/conta-gotas.js?v=0.4.0"></script>
+  <script src="js/ui/seletores.js?v=0.4.0"></script>
+  <script src="js/ui/prateleira.js?v=0.4.0"></script>
+  <script src="js/ui/render.js?v=0.4.0"></script>
+  <script src="js/telas/bancada.js?v=0.4.0"></script>
+  <script src="js/telas/laboratorio.js?v=0.4.0"></script>
+  <script src="js/telas/missao.js?v=0.4.0"></script>
+  <script src="js/telas/inicio.js?v=0.4.0"></script>
+  <script src="js/telas/aprender.js?v=0.4.0"></script>
+  <script src="js/telas/desafios.js?v=0.4.0"></script>
+  <script src="js/telas/detetive.js?v=0.4.0"></script>
+  <script src="js/telas/titulacao.js?v=0.4.0"></script>
+  <script src="js/telas/trunfo.js?v=0.4.0"></script>
+  <script src="js/telas/regua.js?v=0.4.0"></script>
+  <script src="js/telas/construtor.js?v=0.4.0"></script>
+  <script src="js/telas/professor.js?v=0.4.0"></script>
+  <script src="js/telas/caderno.js?v=0.4.0"></script>
+  <script src="js/telas/manual.js?v=0.4.0"></script>
+  <script src="js/a11y/preferencias.js?v=0.4.0"></script>
+  <script src="js/init/pwa.js?v=0.4.0"></script>
+  <script src="js/init/app.js?v=0.4.0"></script>
 </body>
 </html>

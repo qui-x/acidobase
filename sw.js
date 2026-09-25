@@ -3,7 +3,7 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página (o teste tests/pwa.test.cjs confere isso). */
-const VERSAO = 'siab-0.3.1';
+const VERSAO = 'siab-0.4.0';
 const ARQUIVOS = [
   './',
   './index.html',
@@ -31,6 +31,7 @@ const ARQUIVOS = [
   './js/core/roteador.js',
   './js/data/missoes.js',
   './js/data/trilhas.js',
+  './js/data/manual.js',
   './js/simulation/motor-missoes.js',
   './js/ui/tubo.js',
   './js/ui/regua-ph.js',
@@ -55,6 +56,7 @@ const ARQUIVOS = [
   './js/telas/construtor.js',
   './js/telas/professor.js',
   './js/telas/caderno.js',
+  './js/telas/manual.js',
   './js/a11y/preferencias.js',
   './js/init/pwa.js',
   './js/init/app.js'

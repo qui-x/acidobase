@@ -29,8 +29,10 @@ async function teste(nome, fn) {
   const BASE = `http://127.0.0.1:${server.address().port}/index.html`;
   const browser = await chromium.launch();
 
-  async function novaPagina(opcoes = {}) {
+  // modo 'completo' liga missões, desafios e professor (o padrão do programa é 'bancada').
+  async function novaPagina(opcoes = {}, modo = 'completo') {
     const context = await browser.newContext({ viewport: { width: 1360, height: 900 }, acceptDownloads: true, ...opcoes });
+    if (modo === 'completo') await context.addInitScript(() => { try { localStorage.setItem('siab_modo', 'completo'); } catch (erro) { /* sem armazenamento */ } });
     const page = await context.newPage();
     page.on('console', m => { if (m.type() === 'error') errosConsole.push(`${m.text()} (${page.url()})`); });
     page.on('pageerror', e => errosConsole.push(`[pageerror] ${e.message}`));
@@ -44,7 +46,7 @@ async function teste(nome, fn) {
   const estado = (page, fn, arg) => page.evaluate(fn, arg);
 
   /* ------------------------------------------------------------------ */
-  console.log('Navegação e telas');
+  console.log('Modo completo · navegação e telas');
   const { context: ctxA, page } = await novaPagina();
 
   await teste('início mostra quatro caminhos e o título correto', async () => {
@@ -92,6 +94,7 @@ async function teste(nome, fn) {
     assert.match(await texto(page, '#ph-value'), /≈ 2,6/);
   });
   await teste('segurar o conta-gotas goteja várias vezes; soltar para', async () => {
+    await page.locator('#drop-btn').scrollIntoViewIfNeeded();
     const box = await page.locator('#drop-btn').boundingBox();
     await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
     await page.mouse.down();
@@ -603,8 +606,146 @@ async function teste(nome, fn) {
   await ctxM.close();
 
   /* ------------------------------------------------------------------ */
-  console.log('PWA e uso sem internet');
-  const { context: ctxP, page: p } = await novaPagina();
+  console.log('Modo bancada (padrão) e manual');
+  const { context: ctxB, page: b } = await novaPagina({}, 'bancada');
+  const naBancada = pg => pg.waitForFunction(() => SIAB.rota.nome === 'laboratorio' && location.hash === '#/laboratorio' || (SIAB.rota.nome === 'laboratorio' && !location.hash));
+  const nomes = pg => pg.evaluate(() => SIAB.state.tubes.map(t => t.name));
+  await teste('abre direto na bancada, com menu de Bancada, Manual e Caderno', async () => {
+    assert.equal(await estado(b, () => SIAB.MODO), 'bancada');
+    assert.equal(await estado(b, () => SIAB.rota.nome), 'laboratorio');
+    for (const nav of ['laboratorio', 'manual']) assert.equal(await b.isVisible(`.main-nav a[data-nav="${nav}"]`), true, nav);
+    for (const nav of ['aprender', 'desafios', 'professor']) assert.equal(await b.isVisible(`.main-nav a[data-nav="${nav}"]`), false, nav);
+    assert.equal(await b.isVisible('.header-notebook'), true);
+  });
+  await teste('endereços do modo completo levam à bancada', async () => {
+    for (const rota of ['#/inicio', '#/aprender', '#/missao/tampao', '#/desafios', '#/desafio/trunfo', '#/professor', '#/aula/missao:tampao']) {
+      await b.evaluate(r => { location.hash = r; }, rota);
+      await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio' && location.hash === '#/laboratorio');
+      assert.equal(await b.locator('main > [data-tela]:not([hidden])').count(), 1, rota);
+    }
+    await ir(b, '#/caderno');
+    await b.click('.header-brand');
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
+  });
+  await teste('aviso de boas-vindas aparece na primeira vez e "Agora não" fica guardado', async () => {
+    assert.equal(await b.isVisible('#boas-vindas'), true);
+    await b.click('#boas-vindas-fechar');
+    assert.equal(await b.isVisible('#boas-vindas'), false);
+    await b.reload();
+    await b.waitForFunction(() => window.SIAB && SIAB.rota.nome);
+    assert.equal(await b.isVisible('#boas-vindas'), false);
+  });
+  await teste('botões "?" da bancada abrem a seção certa do manual', async () => {
+    for (const [seletor, secao] of [['.stage-stats .ajuda-link', 'leitura'], ['#ver-panel .ajuda-link', 'ver'], ['.dose-info .ajuda-link', 'conta-gotas'], ['.strip-heading .ajuda-link', 'tubos'], ['.controls-heading .ajuda-link', 'prateleira']]) {
+      await ir(b, '#/laboratorio');
+      await b.click(seletor);
+      await b.waitForFunction(s => location.hash === `#/manual/${s}`, secao);
+      await b.waitForFunction(s => document.activeElement?.id === `manual-h-${s}`, secao);
+    }
+  });
+  await teste('manual: todas as seções, índice e busca sem acentos', async () => {
+    await ir(b, '#/manual');
+    const total = await estado(b, () => SIAB.manual.length);
+    assert.equal(await b.locator('.manual-secao').count(), total);
+    assert.equal(await b.locator('#manual-indice li').count(), total);
+    await b.fill('#manual-busca', 'fenolftaleina');
+    const visiveis = await b.locator('.manual-secao:not([hidden])').count();
+    assert.ok(visiveis > 0 && visiveis < total, `visíveis: ${visiveis}`);
+    await b.fill('#manual-busca', 'palavra-que-nao-existe');
+    assert.equal(await b.isVisible('#manual-vazio'), true);
+    await b.fill('#manual-busca', '');
+    assert.equal(await b.locator('.manual-secao:not([hidden])').count(), total);
+  });
+  await teste('manual: tabelas de frascos e indicadores geradas do catálogo', async () => {
+    const frascos = await estado(b, () => Object.keys(SIAB.solutions).length);
+    assert.equal(await b.locator('#manual-frascos tbody tr:not(.tabela-grupo)').count(), frascos);
+    const indicadores = await estado(b, () => Object.keys(SIAB.indicators).length - 1);
+    assert.equal(await b.locator('#manual-tabela-indicadores tbody tr').count(), indicadores);
+    assert.match(await texto(b, '#manual-tabela-indicadores'), /8,2 a 10,0/);
+  });
+  await teste('"Mostrar na bancada" destaca a parte e ajusta o nível', async () => {
+    await ir(b, '#/manual/medidas');
+    await b.click('#manual-medidas [data-mostrar]');
+    await naBancada(b);
+    await b.waitForSelector('#ajustes.ajuda-destaque');
+    assert.equal(await estado(b, () => SIAB.state.level), 'calcular');
+    assert.equal(await estado(b, () => document.querySelector('#ajustes').open), true);
+    assert.equal(await b.isVisible('#initial-volume'), true);
+    await ir(b, '#/manual/conta-gotas');
+    await b.click('#manual-conta-gotas [data-mostrar]');
+    await b.waitForSelector('#dose-area.ajuda-destaque');
+  });
+  await teste('roteiro "Ácido forte × base forte": montar, chegar a pH 7,00 e desfazer', async () => {
+    await b.evaluate(() => { SIAB.usarBancada('lab'); });
+    const antes = await nomes(b);
+    await ir(b, '#/manual/roteiros');
+    assert.match(await texto(b, '#roteiro-titulacao-forte'), /equivalência em 1,00 mL \(20 gotas\), pH 7,00/);
+    await b.click('[data-roteiro="titulacao-forte"]');
+    await naBancada(b);
+    assert.deepEqual(await nomes(b), ['HCl + NaOH']);
+    assert.equal(await estado(b, () => SIAB.state.level), 'medir');
+    for (let i = 0; i < 4; i++) await b.click('#drop5-btn');
+    assert.equal(await texto(b, '#ph-value'), '7,00');
+    assert.equal(await texto(b, '#color-name'), 'verde');
+    for (let i = 0; i < 5; i++) await b.click('#undo-btn');
+    assert.deepEqual(await nomes(b), antes);
+  });
+  await teste('roteiro "Ácido fraco × base forte" confere com o previsto (8,22 na equivalência)', async () => {
+    await ir(b, '#/manual/roteiros');
+    assert.match(await texto(b, '#roteiro-titulacao-fraco'), /pH 8,22/);
+    await b.click('[data-roteiro="titulacao-fraco"]');
+    await naBancada(b);
+    for (let i = 0; i < 4; i++) await b.click('#drop5-btn');
+    assert.equal(await texto(b, '#ph-value'), '8,22');
+  });
+  await teste('roteiro "Mesma titulação, três indicadores" cria tubos vinculados', async () => {
+    await ir(b, '#/manual/roteiros');
+    await b.click('[data-roteiro="tres-indicadores"]');
+    await naBancada(b);
+    await b.click('#drop5-btn');
+    const gotas = await estado(b, () => SIAB.state.tubes.map(t => `${t.group}:${t.additions.length}`));
+    assert.equal(new Set(gotas).size, 1, gotas.join(' '));
+    assert.equal(gotas.length, 3);
+  });
+  await teste('todos os roteiros montam sem erro', async () => {
+    const ids = await estado(b, () => SIAB.roteiros.map(r => r.id));
+    for (const id of ids) {
+      await ir(b, '#/manual/roteiros');
+      await b.click(`[data-roteiro="${id}"]`);
+      await naBancada(b);
+      const esperado = await estado(b, i => SIAB.roteiros.find(r => r.id === i).tubos.map(t => t.name), id);
+      assert.deepEqual(await nomes(b), esperado, id);
+    }
+  });
+  await teste('imprimir manual', async () => {
+    await ir(b, '#/manual');
+    await b.evaluate(() => { window.print = () => { window.__impresso = true; }; });
+    await b.click('#manual-imprimir');
+    assert.ok(await estado(b, () => window.__impresso));
+  });
+  await ctxB.close();
+
+  const { context: ctxBM, page: bm } = await novaPagina({ viewport: { width: 390, height: 844 }, hasTouch: true, isMobile: true }, 'bancada');
+  await teste('celular, modo bancada: barra inferior com 3 itens e manual sem rolagem lateral', async () => {
+    assert.equal(await bm.locator('.bottom-nav a:visible').count(), 3);
+    for (const rota of ['#/manual', '#/manual/roteiros', '#/manual/frascos', '#/laboratorio', '#/caderno']) {
+      await ir(bm, rota);
+      const sobra = await estado(bm, () => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      assert.ok(sobra <= 1, `${rota}: rolagem horizontal de ${sobra}px`);
+    }
+  });
+  await teste('celular, modo bancada: "Mostrar na bancada" da prateleira abre o painel', async () => {
+    await ir(bm, '#/manual/prateleira');
+    await bm.click('#manual-prateleira [data-mostrar]');
+    await bm.waitForFunction(() => document.querySelector('#controls').classList.contains('open'));
+    await bm.waitForSelector('#painel-laboratorio.ajuda-destaque');
+    await bm.click('#close-controls');
+  });
+  await ctxBM.close();
+
+  /* ------------------------------------------------------------------ */
+  console.log('PWA e uso sem internet (modo bancada)');
+  const { context: ctxP, page: p } = await novaPagina({}, 'bancada');
   await teste('service worker registra e assume a página', async () => {
     await p.waitForFunction(() => navigator.serviceWorker.controller || navigator.serviceWorker.ready.then(() => true), null, { timeout: 15000 });
     await p.evaluate(() => navigator.serviceWorker.ready);
@@ -627,19 +768,20 @@ async function teste(nome, fn) {
     const manifesto = await p.evaluate(async () => (await fetch(document.querySelector('link[rel="manifest"]').href)).json());
     assert.equal(manifesto.short_name, 'SIAB');
   });
-  await teste('sem internet: recarrega e usa laboratório, missão e desafio', async () => {
+  await teste('sem internet: recarrega e usa bancada, roteiro, caderno e manual', async () => {
     await ctxP.setOffline(true);
     await p.reload();
     await p.waitForFunction(() => window.SIAB && SIAB.rota.nome);
     await ir(p, '#/laboratorio');
     await p.click('#drop5-btn');
     assert.equal(await estado(p, () => SIAB.current().additions.length), 5);
-    await ir(p, '#/missao/tampao');
-    assert.match(await texto(p, '#missao-titulo'), /Laboratório do tampão/);
-    await ir(p, '#/desafio/regua');
-    assert.equal(await p.locator('[data-palpite]').count(), 6);
-    await p.goto(BASE + '?theme=dark#/aprender');
-    await p.waitForFunction(() => SIAB.rota.nome === 'aprender');
+    await ir(p, '#/manual/roteiros');
+    await p.click('[data-roteiro="tampao"]');
+    await p.waitForFunction(() => SIAB.rota.nome === 'laboratorio' && SIAB.state.tubes.length === 2);
+    await ir(p, '#/caderno');
+    await p.goto(BASE + '?theme=dark#/manual');
+    await p.waitForFunction(() => SIAB.rota.nome === 'manual');
+    assert.ok((await p.locator('.manual-secao').count()) > 10);
     await ctxP.setOffline(false);
   });
   await teste('versão nova do service worker assume, troca o cache e avisa "Recarregar"', async () => {

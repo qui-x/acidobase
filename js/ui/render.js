@@ -33,7 +33,7 @@ SIAB.render = (syncForm = false) => {
   $('focus-tab').setAttribute('aria-pressed', String(s.view === 'focus'));
   $('overview-tab').setAttribute('aria-pressed', String(s.view === 'overview'));
   $('overview-count').textContent = s.tubes.length;
-  $('bench-mode').textContent = cfg.modo === 'missao' ? 'MISSÃO' : `LABORATÓRIO · ${s.level.toUpperCase()}`;
+  $('bench-mode').textContent = cfg.modo === 'missao' ? 'MISSÃO' : `BANCADA · ${s.level.toUpperCase()}`;
   $('tube-count').textContent = `${s.tubes.length} / ${SIAB.MAX_TUBES}`;
   $('prepare-btn').textContent = cfg.modo === 'missao' ? 'Missão' : 'Prateleira';
 

@@ -1,7 +1,10 @@
 'use strict';
 /* Roteador por endereço. A parte depois de # indica a tela:
+   #/laboratorio (bancada), #/caderno, #/manual/<seção> e, no modo completo,
    #/inicio, #/aprender, #/missao/<id>, #/desafios, #/desafio/<id>,
-   #/laboratorio, #/professor, #/aula/<ids>, #/caderno.
+   #/professor e #/aula/<ids>.
+   Telas marcadas com "completo: true" só existem no modo completo; no modo
+   bancada, o endereço delas leva à bancada.
    Funciona abrindo o arquivo direto do computador e com o botão voltar. */
 SIAB.telas = {};
 SIAB.rota = { nome: null, parametro: '' };
@@ -13,9 +16,15 @@ SIAB.irPara = rota => {
 
 SIAB.rotear = () => {
   const partes = location.hash.replace(/^#\/?/, '').split('/');
-  const pedido = partes[0] || 'inicio';
-  const nome = Object.hasOwn(SIAB.telas, pedido) ? pedido : 'inicio';
-  const parametro = decodeURIComponent(partes.slice(1).join('/'));
+  const padrao = SIAB.MODO === 'bancada' ? 'laboratorio' : 'inicio';
+  const pedido = partes[0] || padrao;
+  let nome = Object.hasOwn(SIAB.telas, pedido) ? pedido : padrao;
+  let parametro = decodeURIComponent(partes.slice(1).join('/'));
+  if (SIAB.telas[nome].completo && SIAB.MODO === 'bancada') {
+    nome = 'laboratorio';
+    parametro = '';
+    try { history.replaceState(null, '', `${location.pathname}${location.search}#/laboratorio`); } catch (erro) { /* file:// */ }
+  }
   const anterior = SIAB.rota.nome;
   if (anterior && SIAB.telas[anterior].sair) SIAB.telas[anterior].sair(nome);
   const tela = SIAB.telas[nome];

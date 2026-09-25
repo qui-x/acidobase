@@ -125,6 +125,7 @@ SIAB.professor = (() => {
 })();
 
 SIAB.telas.professor = {
+  completo: true,
   secao: 'professor',
   titulo: () => 'Professor',
   entrar() {
@@ -134,6 +135,7 @@ SIAB.telas.professor = {
 };
 
 SIAB.telas.aula = {
+  completo: true,
   secao: 'aula',
   menu: 'aprender',
   titulo: () => 'Aula',

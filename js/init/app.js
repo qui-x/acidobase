@@ -17,6 +17,7 @@
   SIAB.missaoTela.ligar();
   SIAB.telas.caderno.ligar();
   SIAB.professor.ligar();
+  SIAB.manualTela.ligar();
   SIAB.pwa.iniciar();
 
   // Altura real do cabeçalho (muda com a fonte ampliada): usada pelo layout.

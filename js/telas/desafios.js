@@ -26,6 +26,7 @@ SIAB.fimDePartida = (id, pontos, linhas) => {
 };
 
 SIAB.telas.desafios = {
+  completo: true,
   secao: 'desafios',
   titulo: () => 'Desafios',
   entrar() {
@@ -42,6 +43,7 @@ SIAB.telas.desafios = {
 };
 
 SIAB.telas.desafio = {
+  completo: true,
   secao: 'jogo',
   menu: 'desafios',
   titulo: id => (Object.hasOwn(SIAB.desafios, id) ? SIAB.desafios[id].titulo : 'Desafio'),

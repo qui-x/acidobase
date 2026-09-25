@@ -26,7 +26,7 @@ SIAB.telas.caderno = {
           <dl>${(nota.linhas || []).map(([campo, valor]) => `<div><dt>${SIAB.escape(campo)}</dt><dd>${SIAB.escape(valor)}</dd></div>`).join('')}</dl>
           <button type="button" class="quiet-btn" data-apagar-nota="${nota.id}" aria-label="Apagar a nota ${SIAB.escape(nota.titulo)}">Apagar nota</button>
         </article>`).join('')
-      : '<p class="vazio">O caderno está vazio. Use “Prever e gotejar” no laboratório, conclua uma missão ou jogue um desafio.</p>';
+      : `<p class="vazio">O caderno está vazio. Na bancada, use “Prever e gotejar” ou, no painel VER → Histórico, “Registrar no caderno”${SIAB.MODO === 'completo' ? '. Missões e desafios também anotam aqui' : ''}.</p>`;
   },
   ligar() {
     const $ = SIAB.$;

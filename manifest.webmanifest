@@ -5,7 +5,7 @@
   "lang": "pt-BR",
   "dir": "ltr",
   "id": "./",
-  "start_url": "./index.html#/inicio",
+  "start_url": "./index.html#/",
   "scope": "./",
   "display": "standalone",
   "orientation": "any",
@@ -19,8 +19,8 @@
     { "src": "assets/siab-icone.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
   ],
   "shortcuts": [
-    { "name": "Laboratório", "url": "./index.html#/laboratorio", "icons": [{ "src": "assets/icones/icone-192.png", "sizes": "192x192" }] },
-    { "name": "Missões", "url": "./index.html#/aprender", "icons": [{ "src": "assets/icones/icone-192.png", "sizes": "192x192" }] },
-    { "name": "Desafios", "url": "./index.html#/desafios", "icons": [{ "src": "assets/icones/icone-192.png", "sizes": "192x192" }] }
+    { "name": "Bancada", "url": "./index.html#/laboratorio", "icons": [{ "src": "assets/icones/icone-192.png", "sizes": "192x192" }] },
+    { "name": "Manual", "url": "./index.html#/manual", "icons": [{ "src": "assets/icones/icone-192.png", "sizes": "192x192" }] },
+    { "name": "Caderno", "url": "./index.html#/caderno", "icons": [{ "src": "assets/icones/icone-192.png", "sizes": "192x192" }] }
   ]
 }
