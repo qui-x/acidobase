@@ -1,4 +1,4 @@
-# Arquitetura do SIAB 0.3 — guia para quem está começando
+# Arquitetura do SIAB 0.5 — guia para quem está começando
 
 Este guia explica como o código está organizado e como fazer as mudanças mais
 comuns: criar uma missão, acrescentar um frasco à prateleira e criar um desafio.
@@ -6,7 +6,7 @@ comuns: criar uma missão, acrescentar um frasco à prateleira e criar um desafi
 ## 1. Ideia geral
 
 O SIAB é uma página só (`index.html`) com várias **telas**. O endereço depois
-do `#` diz qual tela aparece: `#/inicio`, `#/laboratorio`, `#/missao/tampao`…
+do `#` diz qual tela aparece: `#/laboratorio`, `#/manual/prateleira`, `#/missao/tampao`…
 Não há servidor nem biblioteca externa: HTML, CSS e JavaScript puros, que
 funcionam até abrindo o arquivo direto no navegador.
 
@@ -33,9 +33,9 @@ redesenhadas. Assim ninguém esquece de atualizar a tela.
 | `js/core/` | espaço de nomes, utilidades, estado, loja, progresso salvo e roteador |
 | `js/data/` | catálogo de soluções e indicadores, amostras, sais, funções inorgânicas, missões e trilhas |
 | `js/simulation/` | motor químico (`quimica.js`) e motor de missões (`motor-missoes.js`) |
-| `js/ui/` | componentes: tubo, régua de pH, gráfico, lupa, equação, prateleira, conta-gotas, som |
+| `js/ui/` | componentes: tubo, régua de pH, gráfico, lupa, equação, prateleira, conta-gotas, som; menu ☰ (`gaveta.js`), painéis recolhíveis (`trilho.js`), tour guiado (`tour.js`) e animação de abertura (`abertura.js`) |
 | `js/telas/` | cada tela: bancada, laboratório, missão, início, trilhas, desafios (um arquivo por jogo), professor, caderno |
-| `js/a11y/` | painel de acessibilidade (usa o `a11y.js` da raiz) |
+| `js/a11y/` | interruptores do painel de acessibilidade e o tradutor de Libras (usa o `a11y.js` da raiz) |
 | `js/init/` | inicialização (`app.js`) e aplicativo instalável (`pwa.js`) |
 | `css/stylesiab.css` | estilos, em seções numeradas e comentadas |
 | `sw.js`, `manifest.webmanifest`, `assets/icones/` | PWA: funcionamento sem internet e instalação |
@@ -43,7 +43,31 @@ redesenhadas. Assim ninguém esquece de atualizar a tela.
 | `tools/servidor.cjs` | servidor local para testar o PWA |
 
 A ordem dos `<script>` no `index.html` importa: primeiro dados e motor, depois
-estado, interface, telas e, por último, `app.js`.
+estado, interface, telas e, por último, `app.js`. A exceção é o
+`js/ui/abertura.js`, que vem logo depois do estado: a animação começa enquanto
+o resto carrega.
+
+### Modos: só a bancada ou completo
+
+`SIAB.MODO` vale `'bancada'` (padrão) ou `'completo'`. O usuário troca em Menu ☰
+→ Modos, que chama `SIAB.definirModo(modo)` (em `js/core/roteador.js`). A
+escolha fica no armazenamento local `siab_modo`.
+
+- No HTML, o que só existe no modo completo tem o atributo `data-completo` e o
+  CSS esconde no modo bancada. `data-so-bancada` faz o contrário.
+- Uma tela com `completo: true` (por exemplo `SIAB.telas.desafios`) leva à
+  bancada no modo bancada. Com `ligaCompleto: true` (a tela da aula), o
+  endereço liga o modo completo sozinho.
+
+### A bancada começa vazia
+
+`js/core/estado.js` não cria tubos. Com a bancada vazia, `SIAB.render` chama
+`SIAB.renderVazia` (em `js/ui/render.js`), que mostra o aviso "Bancada vazia".
+O CSS (`.workspace.vazia`) esconde o que precisa de um tubo: leitura,
+conta-gotas, indicador e ajustes. Tocar num frasco (`colocar`, em
+`js/telas/bancada.js`) cria o "Tubo 1". Remover o último tubo volta ao vazio, e
+"Desfazer" traz o tubo de volta. Quem usa `SIAB.current()` precisa aceitar que
+ele seja `undefined`.
 
 ## 3. Como criar uma missão
 
@@ -124,7 +148,7 @@ para salvar o recorde e anotar no caderno. Depois:
 | Comando | O que faz |
 | --- | --- |
 | `npm test` | química, amostras, sais e ambiente, todas as missões e o PWA (sem navegador) |
-| `npm run test:e2e` | 74 testes no Chromium: laboratório, 14 missões, 5 desafios, professor, caderno, acessibilidade, celular, uso sem internet e atualização |
+| `npm run test:e2e` | 104 testes no Chromium: bancada (começando vazia), 14 missões, 5 desafios, professor, caderno, menu ☰, modos, acessibilidade, trilhos, tour, animação de abertura, celular, uso sem internet e atualização |
 | `npm start` | servidor local em http://localhost:8080 |
 | `npm run build` | gera um HTML único (sem instalação como app) |
 
@@ -136,12 +160,13 @@ O navegador guarda arquivos no cache. Se o `index.html` for novo e o `app.js`
 continuar antigo, o app quebra. Para evitar isso, a versão aparece em três
 lugares, que precisam ser iguais:
 
-1. `js/core/namespace.js`: `version: '0.3.1'`;
-2. `index.html`: o final `?v=0.3.1` de cada `<script>` e do CSS;
-3. `sw.js`: `const VERSAO = 'siab-0.3.1'`.
+1. `js/core/namespace.js`: `version: '0.5.0'`;
+2. `index.html`: o final `?v=0.5.0` de cada `<script>` e do CSS;
+3. `sw.js`: `const VERSAO = 'siab-0.5.0'`.
 
 Ao publicar, troque os três (no `index.html`, use "substituir tudo" de
-`?v=0.3.1` pela versão nova). O `npm test` avisa se algum ficou diferente. O
+`?v=0.5.0` pela versão nova). Arquivo `.js` novo? Acrescente também na lista
+`ARQUIVOS` do `sw.js`. O `npm test` avisa se algum ficou diferente. O
 service worker novo baixa tudo direto do servidor (`cache: 'reload'`), assume
 sozinho e a página mostra "Recarregar".
 
@@ -149,9 +174,17 @@ sozinho e a página mostra "Recarregar".
 
 No `localStorage` do navegador, sem conta e sem envio de dados:
 
-- `siab_progresso_v1`: missões concluídas, recordes e caderno;
-- `siab_a11y_prefs`: tema, fonte e filtros (via `a11y.js`);
+- `siab_progresso_v1`: missões concluídas, recordes e caderno. Uma leitura
+  guarda a tabela de gotas em `tabela: { colunas, linhas }`; notas antigas, com
+  a tabela em texto, são convertidas ao abrir;
+- `siab_a11y_prefs`: tema, contraste, fonte, espaçamento, leitura simples,
+  animações e filtros (via `a11y.js`);
 - `siab_som_v1`: som do pH e vibração;
+- `siab_modo`: `bancada` ou `completo`;
+- `siab_trilho_v1`: painéis recolhidos no computador;
+- `siab_abertura`: `off` desliga a animação de abertura;
+- `siab_libras_v1`: tradutor de Libras ligado;
+- `siab_manual_visto`: o aviso de boas-vindas já foi fechado;
 - `siab_projetor`: modo projetor.
 
 Se o navegador bloquear o armazenamento, o SIAB funciona normalmente, mas sem

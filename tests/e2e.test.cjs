@@ -12,7 +12,9 @@ const servidor = () => new Promise(resolve => { const s = criarServidor({ transf
 
 const resultados = [];
 const errosConsole = [];
+let testeAtual = '(abertura)';
 async function teste(nome, fn) {
+  testeAtual = nome;
   const inicio = Date.now();
   try {
     await fn();
@@ -32,10 +34,12 @@ async function teste(nome, fn) {
   // modo 'completo' liga missões, desafios e professor (o padrão do programa é 'bancada').
   async function novaPagina(opcoes = {}, modo = 'completo') {
     const context = await browser.newContext({ viewport: { width: 1360, height: 900 }, acceptDownloads: true, ...opcoes });
+    // A animação de abertura tem testes próprios; nos demais, fica desligada.
+    await context.addInitScript(() => { try { localStorage.setItem('siab_abertura', 'off'); } catch (erro) { /* sem armazenamento */ } });
     if (modo === 'completo') await context.addInitScript(() => { try { localStorage.setItem('siab_modo', 'completo'); } catch (erro) { /* sem armazenamento */ } });
     const page = await context.newPage();
-    page.on('console', m => { if (m.type() === 'error') errosConsole.push(`${m.text()} (${page.url()})`); });
-    page.on('pageerror', e => errosConsole.push(`[pageerror] ${e.message}`));
+    page.on('console', m => { if (m.type() === 'error') errosConsole.push(`[${testeAtual}] ${m.text()} (${page.url()})`); });
+    page.on('pageerror', e => errosConsole.push(`[${testeAtual}] [pageerror] ${e.message}`));
     page.on('dialog', d => { errosConsole.push(`diálogo nativo usado: ${d.message()}`); d.dismiss(); });
     await page.goto(BASE);
     await page.waitForFunction(() => window.SIAB && SIAB.rota.nome);
@@ -88,10 +92,31 @@ async function teste(nome, fn) {
   await ir(page, '#/laboratorio');
   const t = () => estado(page, () => { const x = SIAB.current(); const r = SIAB.chem.solve(x); return { nome: x.name, sol: x.solution, gotas: x.additions.length, pH: r.pH, ind: x.indicator, tit: x.titrant, vol: r.volume }; });
 
-  await teste('bancada inicial: três tubos do cotidiano e tira de tubos', async () => {
+  await teste('bancada começa vazia e o primeiro frasco cria o Tubo 1', async () => {
+    assert.equal(await estado(page, () => SIAB.state.tubes.length), 0);
+    assert.equal(await page.locator('#tube-list button').count(), 0);
+    assert.equal(await page.isVisible('#bancada-vazia'), true);
+    for (const escondido of ['#drop-btn', '#tube-name', '#indicator-group', '#remove-btn']) assert.equal(await page.isVisible(escondido), false, escondido);
+    assert.equal(await texto(page, '#tube-count'), '0 / 10');
+    assert.match(await texto(page, '#ver-conteudo'), /Coloque um frasco num tubo/);
+    await page.click('#vazia-prateleira');
+    assert.equal(await estado(page, () => document.activeElement.id), 'shelf-search');
+    await page.click('#shelf [data-solution="lemon"]');
+    assert.equal(await texto(page, '#tube-name'), 'Tubo 1');
+    assert.equal(await page.isVisible('#bancada-vazia'), false);
+    assert.equal((await t()).ind, 'none');
+    // Conta-gotas com bicarbonato e indicador de repolho roxo, como na aula.
+    await page.check('input[name="destino"][value="titrant"]', { force: true });
+    await page.click('#shelf [data-solution="bicarbonate"]');
+    await page.check('input[name="destino"][value="tube"]', { force: true });
+    await page.check('#indicator-chips input[value="cabbage"]', { force: true });
+    const x = await t();
+    assert.deepEqual([x.sol, x.tit, x.ind], ['lemon', 'bicarbonate', 'cabbage']);
+    assert.match(await texto(page, '#ph-value'), /≈ 2,/);
+    await page.click('#add-tube-btn');
+    await page.click('#add-tube-btn');
     assert.equal(await page.locator('#tube-list button').count(), 3);
-    assert.equal(await texto(page, '#tube-name'), 'Limão diluído');
-    assert.match(await texto(page, '#ph-value'), /≈ 2,6/);
+    await page.click('#tube-list [data-tube="1"]');
   });
   await teste('segurar o conta-gotas goteja várias vezes; soltar para', async () => {
     await page.locator('#drop-btn').scrollIntoViewIfNeeded();
@@ -214,9 +239,14 @@ async function teste(nome, fn) {
     await page.keyboard.press('ArrowLeft');
     assert.equal(await page.getAttribute('#tab-historico', 'aria-selected'), 'true');
   });
-  await teste('registrar leitura no caderno', async () => {
+  await teste('registrar leitura no caderno guarda a tabela de gotas como tabela', async () => {
     await page.click('#ver-conteudo [data-acao="registrar"]');
-    assert.ok(await estado(page, () => SIAB.progresso.dados.caderno.some(n => n.tipo === 'leitura')));
+    const nota = await estado(page, () => SIAB.progresso.dados.caderno.find(n => n.tipo === 'leitura'));
+    assert.ok(nota);
+    assert.deepEqual(nota.tabela.colunas, ['Gota', 'Adicionado (mL)', 'pH', 'Cor']);
+    assert.equal(nota.tabela.linhas.length, await estado(page, () => SIAB.current().additions.length + 1));
+    assert.ok(nota.tabela.linhas.every(l => l.length === 4));
+    assert.ok(!nota.linhas.some(([campo]) => campo === 'Tabela'));
   });
   await teste('ocultar pH esconde leitura, régua e gráfico', async () => {
     await page.click('#ph-toggle');
@@ -287,7 +317,7 @@ async function teste(nome, fn) {
     assert.equal(await page.locator('.overview-tube').count(), 10);
     await page.click('.overview-tube >> nth=0');
     assert.equal(await page.isVisible('#focus-view'), true);
-    assert.equal(await texto(page, '#tube-name'), 'Limão diluído');
+    assert.equal(await texto(page, '#tube-name'), await estado(page, () => SIAB.state.tubes[0].name));
   });
 
   /* ------------------------------------------------------------------ */
@@ -525,40 +555,82 @@ async function teste(nome, fn) {
     const notas = await page.locator('.nota').count();
     assert.ok(notas >= 20, `notas: ${notas}`);
     const [download] = await Promise.all([page.waitForEvent('download'), page.click('#caderno-csv')]);
-    assert.match(fs.readFileSync(await download.path(), 'utf8'), /data;tipo;titulo;campo;valor/);
+    const csv = fs.readFileSync(await download.path(), 'utf8');
+    assert.match(csv, /data;tipo;titulo;campo;valor;gota;volume_adicionado_mL;pH;cor/);
+    assert.match(csv, /;Tabela de gotas;;0;0,00;\d+,\d\d;[a-zà-ú ]+\n/);
+    assert.ok(!csv.includes(' | '), 'tabela não pode virar texto corrido');
+    // Tabela de gotas: colunas de verdade, com rolagem própria (sem rolagem da página).
+    const tabela = page.locator('.nota-tabela').first();
+    assert.equal(await tabela.locator('thead th').count(), 4);
+    assert.ok(await tabela.locator('tbody tr').count() >= 2);
+    const [dl] = await Promise.all([page.waitForEvent('download'), page.click('[data-baixar-tabela] >> nth=0')]);
+    assert.match(fs.readFileSync(await dl.path(), 'utf8'), /^\uFEFF?gota;volume_adicionado_mL;pH;cor\n0;0,00;/);
     await page.click('.nota [data-apagar-nota] >> nth=0');
     assert.equal(await page.locator('.nota').count(), notas - 1);
     await page.click('#caderno-limpar');
     await page.click('#confirm-yes');
     assert.equal(await page.locator('.nota').count(), 0);
   });
-  await teste('acessibilidade: tema claro, fonte 200 %, som e vibração salvos', async () => {
+  await teste('caderno: nota antiga (tabela em texto) vira tabela ao abrir', async () => {
+    await page.evaluate(() => {
+      const dados = JSON.parse(localStorage.getItem('siab_progresso_v1'));
+      dados.caderno.unshift({ id: 'antiga', data: new Date().toISOString(), tipo: 'leitura', titulo: 'Leitura antiga',
+        linhas: [['pH', '2,00'], ['Tabela', '0;0,00;2,00;amarelo | 1;0,05;2,05;amarelo']] });
+      localStorage.setItem('siab_progresso_v1', JSON.stringify(dados));
+    });
+    await page.reload();
+    await page.waitForFunction(() => SIAB.rota.nome === 'caderno');
+    const nota = await estado(page, () => SIAB.progresso.dados.caderno.find(n => n.id === 'antiga'));
+    assert.deepEqual(nota.tabela.linhas, [['0', '0,00', '2,00', 'amarelo'], ['1', '0,05', '2,05', 'amarelo']]);
+    assert.deepEqual(nota.linhas, [['pH', '2,00']]);
+    assert.equal(await page.locator('.nota').first().locator('.nota-tabela tbody tr').count(), 2);
+    await page.click('.nota [data-apagar-nota] >> nth=0');
+  });
+  await teste('acessibilidade no menu ☰: interruptores, fonte 200 %, som e vibração salvos', async () => {
     await page.click('#access-btn');
-    await page.click('#theme-select-trigger');
-    await page.click('#choice-options [role="option"]:has-text("Claro")');
+    assert.equal(await estado(page, () => document.querySelector('#app-drawer').open), true);
+    assert.equal(await page.getAttribute('#a11y-toggle', 'aria-expanded'), 'true');
+    assert.equal(await estado(page, () => document.activeElement.id), 'a11y-toggle');
+    await page.uncheck('#tema-escuro');
     assert.equal(await page.getAttribute('html', 'data-theme'), 'light');
     for (let i = 0; i < 12; i++) if (!(await page.isDisabled('#font-plus'))) await page.click('#font-plus');
     assert.equal(await texto(page, '#font-output'), '200%');
     await page.check('#sound-check');
     await page.check('#vibrate-check');
+    for (const [id, atributo, valor] of [['#contraste-check', 'data-contrast', 'on'], ['#espacamento-check', 'data-spacing', 'on'], ['#motion-check', 'data-motion', 'on'], ['#leitura-check', 'data-reading', 'on']]) {
+      await page.check(id);
+      assert.equal(await page.getAttribute('html', atributo), valor, id);
+      assert.equal(await page.getAttribute(id, 'role'), 'switch');
+    }
+    await page.click('#cvd-select-trigger');
+    await page.click('#choice-options [role="option"]:has-text("Tritanopia")');
+    assert.equal(await page.getAttribute('html', 'data-colorblind'), 'tritanopia');
+    assert.equal(await estado(page, () => document.querySelector('#app-drawer').open), true);
     await page.keyboard.press('Escape');
+    assert.equal(await estado(page, () => document.querySelector('#app-drawer').open), false);
     await page.reload();
     await page.waitForFunction(() => SIAB.rota.nome);
     assert.equal(await estado(page, () => SIAB.som.prefs.som && SIAB.som.prefs.vibrar), true);
     assert.equal(await page.getAttribute('html', 'data-theme'), 'light');
+    assert.equal(await page.getAttribute('html', 'data-spacing'), 'on');
+    assert.equal(await estado(page, () => document.querySelector('#tema-escuro').checked), false);
     await page.click('#access-btn');
-    await page.click('#theme-select-trigger');
-    await page.click('#choice-options [role="option"]:has-text("Escuro")');
-    for (let i = 0; i < 12; i++) if (!(await page.isDisabled('#font-minus'))) await page.click('#font-minus');
-    for (let i = 0; i < 2; i++) await page.click('#font-plus');
-    await page.uncheck('#sound-check');
-    await page.uncheck('#vibrate-check');
+    await page.click('#a11y-restaurar');
+    for (const [atributo, valor] of [['data-theme', 'dark'], ['data-contrast', 'off'], ['data-spacing', 'off'], ['data-motion', 'off'], ['data-reading', 'off'], ['data-colorblind', 'none']]) {
+      assert.equal(await page.getAttribute('html', atributo), valor, atributo);
+    }
+    assert.equal(await texto(page, '#font-output'), '100%');
+    assert.equal(await estado(page, () => SIAB.som.prefs.som || SIAB.som.prefs.vibrar), false);
     await page.keyboard.press('Escape');
   });
-  await teste('com fonte ampliada, a bancada não cria rolagem horizontal', async () => {
-    await ir(page, '#/laboratorio');
-    const sobra = await estado(page, () => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-    assert.ok(sobra <= 1, `rolagem horizontal de ${sobra}px`);
+  await teste('com fonte 200 % e espaçamento de letras, nenhuma rolagem horizontal', async () => {
+    await page.evaluate(() => { A11Y.definir('fontScale', 2); A11Y.definir('spacing', true); });
+    for (const rota of ['#/laboratorio', '#/caderno', '#/manual', '#/inicio']) {
+      await ir(page, rota);
+      const sobra = await estado(page, () => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+      assert.ok(sobra <= 1, `${rota}: rolagem horizontal de ${sobra}px`);
+    }
+    await page.evaluate(() => { A11Y.definir('fontScale', 1); A11Y.definir('spacing', false); });
   });
   await ctxA.close();
 
@@ -584,10 +656,50 @@ async function teste(nome, fn) {
     await m.waitForFunction(() => document.querySelector('#controls').classList.contains('open'));
     assert.equal(await estado(m, () => document.activeElement.id), 'close-controls');
     assert.equal(await estado(m, () => document.querySelector('#experiment').inert), true);
+    assert.equal(await m.getAttribute('#prepare-btn', 'aria-expanded'), 'true');
     await m.click('#shelf [data-solution="soap"]');
     assert.equal(await estado(m, () => SIAB.current().solution), 'soap');
+    // Fecha sozinha depois de escolher o frasco e devolve o foco ao botão do cabeçalho.
+    await m.waitForFunction(() => !document.querySelector('#controls').classList.contains('open'));
+    assert.equal(await estado(m, () => document.activeElement.id), 'prepare-btn');
+    assert.equal(await m.getAttribute('#prepare-btn', 'aria-expanded'), 'false');
+    await m.click('#prepare-btn');
+    await m.waitForFunction(() => document.querySelector('#controls').classList.contains('open'));
     await m.keyboard.press('Escape');
     await m.waitForFunction(() => !document.querySelector('#controls').classList.contains('open'));
+  });
+  await teste('celular: cabeçalho com ☰, prateleira e acessibilidade; botão da prateleira só na bancada', async () => {
+    for (const id of ['#menu-btn', '#prepare-btn', '#access-btn']) assert.equal(await m.isVisible(id), true, id);
+    const altura = await estado(m, () => document.querySelector('.app-header').getBoundingClientRect().height);
+    assert.ok(altura <= 60, `cabeçalho com ${altura}px`);
+    await ir(m, '#/caderno');
+    assert.equal(await m.isVisible('#prepare-btn'), false);
+    assert.equal(await texto(m, '#header-sub'), 'Caderno de laboratório');
+    await ir(m, '#/laboratorio');
+    assert.equal(await texto(m, '#header-sub'), 'Bancada de testes');
+  });
+  await teste('celular: barra de chips fixa leva ao painel VER na aba escolhida', async () => {
+    await ir(m, '#/laboratorio');
+    assert.equal(await m.isVisible('.chip-ver[data-ir-ver="particulas"]'), true);
+    await m.click('.chip-ver[data-ir-ver="particulas"]');
+    await m.waitForFunction(() => SIAB.state.verTab === 'particulas');
+    assert.equal(await m.getAttribute('.chip-ver[data-ir-ver="particulas"]', 'aria-pressed'), 'true');
+    assert.equal(await estado(m, () => document.activeElement.id), 'tab-particulas');
+    await m.waitForFunction(() => { const r = document.querySelector('#ver-panel').getBoundingClientRect(); return r.top < innerHeight && r.bottom > 0; });
+    // A barra continua visível logo abaixo do cabeçalho.
+    const topo = await estado(m, () => document.querySelector('.view-tabs').getBoundingClientRect().top);
+    const cabecalho = await estado(m, () => document.querySelector('.app-header').getBoundingClientRect().bottom);
+    assert.ok(Math.abs(topo - cabecalho) <= 2, `chips em ${topo}, cabeçalho até ${cabecalho}`);
+    await m.evaluate(() => scrollTo(0, 0));
+  });
+  await teste('celular: menu ☰ abre como gaveta e fecha com ×', async () => {
+    await m.click('#menu-btn');
+    assert.equal(await estado(m, () => document.querySelector('#app-drawer').open), true);
+    const largura = await estado(m, () => document.querySelector('#app-drawer').getBoundingClientRect().width);
+    assert.ok(largura <= 344 && largura >= 300, `gaveta com ${largura}px`);
+    await m.click('.drawer-close');
+    assert.equal(await estado(m, () => document.querySelector('#app-drawer').open), false);
+    assert.equal(await estado(m, () => document.activeElement.id), 'menu-btn');
   });
   await teste('celular: toque no conta-gotas adiciona 1 gota', async () => {
     const antes = await estado(m, () => SIAB.current().additions.length);
@@ -618,7 +730,7 @@ async function teste(nome, fn) {
     assert.equal(await b.isVisible('.header-notebook'), true);
   });
   await teste('endereços do modo completo levam à bancada', async () => {
-    for (const rota of ['#/inicio', '#/aprender', '#/missao/tampao', '#/desafios', '#/desafio/trunfo', '#/professor', '#/aula/missao:tampao']) {
+    for (const rota of ['#/inicio', '#/aprender', '#/missao/tampao', '#/desafios', '#/desafio/trunfo', '#/professor']) {
       await b.evaluate(r => { location.hash = r; }, rota);
       await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio' && location.hash === '#/laboratorio');
       assert.equal(await b.locator('main > [data-tela]:not([hidden])').count(), 1, rota);
@@ -629,11 +741,176 @@ async function teste(nome, fn) {
   });
   await teste('aviso de boas-vindas aparece na primeira vez e "Agora não" fica guardado', async () => {
     assert.equal(await b.isVisible('#boas-vindas'), true);
+    assert.equal(await b.isVisible('#boas-vindas-tour'), true);
     await b.click('#boas-vindas-fechar');
     assert.equal(await b.isVisible('#boas-vindas'), false);
     await b.reload();
     await b.waitForFunction(() => window.SIAB && SIAB.rota.nome);
     assert.equal(await b.isVisible('#boas-vindas'), false);
+  });
+  await teste('menu ☰: gaveta com navegação, fecha com Esc e devolve o foco', async () => {
+    await b.click('#menu-btn');
+    assert.equal(await b.getAttribute('#menu-btn', 'aria-expanded'), 'true');
+    assert.equal(await estado(b, () => document.querySelector('#app-drawer').open), true);
+    assert.equal(await estado(b, () => document.querySelector('#app-drawer').contains(document.activeElement)), true);
+    assert.equal(await b.getAttribute('.drawer-link[data-nav="laboratorio"]', 'aria-current'), 'page');
+    for (const nav of ['aprender', 'desafios', 'professor']) assert.equal(await b.isVisible(`.drawer-link[data-nav="${nav}"]`), false, nav);
+    await b.keyboard.press('Escape');
+    assert.equal(await estado(b, () => document.querySelector('#app-drawer').open), false);
+    await b.waitForFunction(() => document.querySelector('#menu-btn').getAttribute('aria-expanded') === 'false');
+    assert.equal(await estado(b, () => document.activeElement.id), 'menu-btn');
+    // Escolher um destino fecha a gaveta.
+    await b.click('#menu-btn');
+    await b.click('.drawer-link[data-nav="manual"]');
+    await b.waitForFunction(() => SIAB.rota.nome === 'manual');
+    assert.equal(await estado(b, () => document.querySelector('#app-drawer').open), false);
+    assert.equal(await texto(b, '#header-sub'), 'Manual de uso');
+    // Toque fora (no fundo escurecido) também fecha.
+    await b.click('#menu-btn');
+    await b.mouse.click(1200, 450);
+    assert.equal(await estado(b, () => document.querySelector('#app-drawer').open), false);
+    await ir(b, '#/laboratorio');
+  });
+  await teste('menu ☰: roteiros de teste montam na bancada', async () => {
+    await b.click('#menu-btn');
+    assert.equal(await texto(b, '#drawer-roteiros-total'), '10');
+    await b.click('.drawer-cat-expand');
+    assert.equal(await b.locator('#drawer-roteiros [data-montar]').count(), 10);
+    await b.click('#drawer-roteiros [data-montar="tres-indicadores"]');
+    await b.waitForFunction(() => SIAB.state.tubes.length === 3 && SIAB.state.tubes.every(t => t.solution === 'hcl'));
+    assert.equal(await estado(b, () => document.querySelector('#app-drawer').open), false);
+    await b.click('#undo-btn');
+  });
+  await teste('menu ☰ → Modos: liga e desliga missões, desafios e professor', async () => {
+    await b.click('#menu-btn');
+    assert.equal(await b.isChecked('#modo-completo'), false);
+    await b.check('#modo-completo');
+    assert.equal(await estado(b, () => [SIAB.MODO, document.documentElement.dataset.modo, localStorage.getItem('siab_modo')].join()), 'completo,completo,completo');
+    for (const nav of ['inicio', 'aprender', 'desafios', 'professor']) assert.equal(await b.isVisible(`.drawer-link[data-nav="${nav}"]`), true, nav);
+    assert.equal(await texto(b, '#drawer-total-missoes'), '14');
+    assert.equal(await texto(b, '#drawer-total-desafios'), '5');
+    await b.click('.drawer-link[data-nav="desafios"]');
+    await b.waitForFunction(() => SIAB.rota.nome === 'desafios');
+    assert.equal(await b.isVisible('.main-nav a[data-nav="desafios"]'), true);
+    // Desligar numa tela do modo completo leva de volta à bancada.
+    await b.click('#menu-btn');
+    await b.uncheck('#modo-completo');
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
+    assert.equal(await estado(b, () => localStorage.getItem('siab_modo')), 'bancada');
+    assert.equal(await b.isVisible('.drawer-link[data-nav="desafios"]'), false);
+    await b.keyboard.press('Escape');
+  });
+  await teste('link de aula do professor liga o modo completo sozinho', async () => {
+    await ir(b, '#/aula/missao:tampao');
+    await b.waitForFunction(() => SIAB.rota.nome === 'aula');
+    assert.equal(await estado(b, () => SIAB.MODO), 'completo');
+    assert.equal(await b.locator('#aula-sequencia a').count(), 1);
+    await b.evaluate(() => SIAB.definirModo('bancada'));
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
+  });
+  await teste('painéis recolhem em trilho de ícones, reabrem na parte escolhida e ficam salvos', async () => {
+    await ir(b, '#/laboratorio');
+    assert.equal(await estado(b, () => SIAB.state.tubes.length), 0);
+    await b.click('[data-recolher="controls"]');
+    // Bancada vazia: o trilho mostra só nível e frascos.
+    assert.deepEqual(await estado(b, () => [...document.querySelectorAll('#trilho-controls [data-item]')].map(x => x.dataset.item)), ['nivel', 'frascos']);
+    await b.click('#trilho-controls [data-item="frascos"]');
+    assert.equal(await estado(b, () => document.activeElement.id), 'shelf-search');
+    await b.click('#shelf [data-solution="lemon"]');
+    const largura = () => estado(b, () => document.querySelector('#experiment').getBoundingClientRect().width);
+    const antes = await largura();
+    await b.click('[data-recolher="controls"]');
+    await b.click('[data-recolher="ver-panel"]');
+    assert.equal(await b.isVisible('#trilho-controls'), true);
+    assert.equal(await b.isVisible('#shelf'), false);
+    assert.equal(await estado(b, () => document.activeElement.closest('#trilho-ver') !== null), true);
+    assert.ok(await largura() > antes + 500, 'a bancada ganha espaço');
+    await b.reload();
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
+    // A escolha fica salva; a bancada volta vazia (não é guardada entre visitas).
+    assert.equal(await b.isVisible('#trilho-controls'), true);
+    assert.equal(await b.locator('#trilho-controls [data-item="indicador"]').count(), 0);
+    await b.click('#trilho-controls [data-item="frascos"]');
+    await b.click('#shelf [data-solution="lemon"]');
+    await b.click('[data-recolher="controls"]');
+    await b.click('#trilho-controls [data-item="indicador"]');
+    assert.equal(await b.isVisible('#shelf'), true);
+    assert.equal(await estado(b, () => document.activeElement.closest('#indicator-group') !== null), true);
+    await b.click('#trilho-ver [data-item="equacao"]');
+    assert.equal(await estado(b, () => SIAB.state.verTab), 'equacao');
+    assert.equal(await estado(b, () => document.activeElement.id), 'tab-equacao');
+    assert.equal(await b.isVisible('#trilho-ver'), false);
+    assert.equal(await estado(b, () => JSON.stringify(SIAB.trilho.estado)), '{"controls":false,"ver-panel":false}');
+  });
+  await teste('tour guiado: passos com contorno, voltar, próximo e Esc', async () => {
+    await b.evaluate(() => SIAB.tour.iniciar());
+    assert.equal(await estado(b, () => document.querySelector('#tour').open), true);
+    // Bancada vazia: o tour mostra o aviso "Comece por aqui" e pula leitura e conta-gotas.
+    const total = Number((await texto(b, '#tour-passo')).match(/PASSO 1 DE (\d+)/)[1]);
+    assert.equal(total, await estado(b, () => SIAB.state.tubes.length ? 7 : 6));
+    assert.equal(await estado(b, () => document.activeElement.id), 'tour-proximo');
+    await b.click('#tour-proximo');
+    assert.equal(await texto(b, '#tour-titulo'), 'Prateleira');
+    // O contorno envolve a prateleira (limitado às bordas da tela).
+    await b.waitForFunction(() => {
+      const anel = document.querySelector('.tour-anel').getBoundingClientRect();
+      const alvo = document.querySelector('#controls').getBoundingClientRect();
+      return anel.left <= Math.max(alvo.left, 4) && anel.right >= alvo.right && anel.top <= alvo.top;
+    });
+    // O cartão não cobre o contorno.
+    const [anel, cartao] = await estado(b, () => ['.tour-anel', '.tour-cartao'].map(x => document.querySelector(x).getBoundingClientRect().toJSON()));
+    assert.ok(cartao.left >= anel.right || cartao.top >= anel.bottom || cartao.bottom <= anel.top, 'cartão fora do contorno');
+    await b.click('#tour-voltar');
+    assert.equal(await texto(b, '#tour-titulo'), 'Menu ☰');
+    const titulos = [];
+    for (let i = 0; i < total - 1; i++) { await b.click('#tour-proximo'); titulos.push(await texto(b, '#tour-titulo')); }
+    if (total === 6) assert.ok(titulos.includes('Comece por aqui'), titulos.join());
+    assert.equal(await texto(b, '#tour-proximo'), 'Concluir');
+    await b.keyboard.press('Escape');
+    assert.equal(await estado(b, () => document.querySelector('#tour').open), false);
+    // Pelo menu ☰, fora da bancada: volta para a bancada e começa.
+    await ir(b, '#/caderno');
+    await b.click('#menu-btn');
+    await b.click('#drawer-tour');
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio' && document.querySelector('#tour').open);
+    await b.click('#tour-pular');
+    assert.equal(await estado(b, () => document.querySelector('#tour').open), false);
+  });
+  await teste('Libras (VLibras) é opcional e avisa quando não carrega', async () => {
+    await b.route('https://vlibras.gov.br/**', rota => rota.abort());
+    await b.click('#access-btn');
+    await b.check('#libras-check');
+    await b.waitForFunction(() => /VLibras não pôde ser carregado/.test(document.querySelector('#toast').textContent));
+    assert.equal(await estado(b, () => document.querySelector('#vlibras-script')), null);
+    await b.uncheck('#libras-check');
+    await b.keyboard.press('Escape');
+    await b.unroute('https://vlibras.gov.br/**');
+    // O bloqueio proposital gera o aviso "Failed to load resource" do navegador: esperado aqui.
+    for (let i = errosConsole.length - 1; i >= 0; i--) {
+      if (errosConsole[i].startsWith('[Libras') && errosConsole[i].includes('net::ERR_FAILED')) errosConsole.splice(i, 1);
+    }
+  });
+  await teste('remover o último tubo deixa a bancada vazia; Desfazer traz de volta', async () => {
+    await ir(b, '#/laboratorio');
+    if (!(await estado(b, () => SIAB.state.tubes.length))) await b.click('#vazia-agua');
+    while (await estado(b, () => SIAB.state.tubes.length)) {
+      await b.click('#remove-btn');
+      await b.click('#confirm-yes');
+    }
+    assert.equal(await b.isVisible('#bancada-vazia'), true);
+    assert.equal(await estado(b, () => document.activeElement.id), 'vazia-titulo');
+    assert.equal(await b.isVisible('#vazia-desfazer'), true);
+    await b.click('#vazia-desfazer');
+    assert.equal(await estado(b, () => SIAB.state.tubes.length), 1);
+    assert.equal(await estado(b, () => document.activeElement.id), 'tube-name');
+  });
+  await teste('"Mostrar na bancada" com a bancada vazia destaca o aviso', async () => {
+    await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.state.history = []; SIAB.loja.avisar(); });
+    await ir(b, '#/manual/leitura');
+    await b.click('#manual-leitura [data-mostrar]');
+    await b.waitForSelector('#bancada-vazia.ajuda-destaque');
+    assert.match(await texto(b, '#toast'), /bancada está vazia/);
+    await b.click('#vazia-agua');
   });
   await teste('botões "?" da bancada abrem a seção certa do manual', async () => {
     for (const [seletor, secao] of [['.stage-stats .ajuda-link', 'leitura'], ['#ver-panel .ajuda-link', 'ver'], ['.dose-info .ajuda-link', 'conta-gotas'], ['.strip-heading .ajuda-link', 'tubos'], ['.controls-heading .ajuda-link', 'prateleira']]) {
@@ -744,6 +1021,65 @@ async function teste(nome, fn) {
   await ctxBM.close();
 
   /* ------------------------------------------------------------------ */
+  console.log('Animação de abertura');
+  const ctxAb = await browser.newContext({ viewport: { width: 1360, height: 900 } });
+  const ab = await ctxAb.newPage();
+  ab.on('console', m => { if (m.type() === 'error') errosConsole.push(`[${testeAtual}] ${m.text()} (${ab.url()})`); });
+  ab.on('pageerror', e => errosConsole.push(`[${testeAtual}] [pageerror] ${e.message}`));
+  await teste('abertura: 5 tubos trocam de composto e de cor, com as cores do motor, e somem sozinhos', async () => {
+    await ab.goto(BASE);
+    await ab.waitForSelector('#abertura .ab-tubo');
+    assert.equal(await ab.locator('#abertura .ab-tubo').count(), 5);
+    const formula = n => ab.locator(`#abertura .ab-tubo[data-n="${n}"] .ab-formula`).textContent();
+    await ab.waitForFunction(() => document.querySelector('#abertura .ab-tubo[data-n="0"] .ab-formula').textContent === 'HCl');
+    assert.equal(await ab.getAttribute('#abertura .ab-tubo[data-n="0"]', 'data-cor'), 'incolor');
+    // Última etapa: NaOH com fenolftaleína fica rosa e NH₃ com bromotimol, azul — como na bancada.
+    // Os tubos recebem a gota um depois do outro: espera o último.
+    await ab.waitForFunction(() => document.querySelector('#abertura .ab-tubo[data-n="4"] .ab-formula').textContent === 'NaOH');
+    assert.equal(await formula(0), 'NaOH');
+    assert.equal(await formula(1), 'NH₃');
+    assert.equal(await ab.getAttribute('#abertura .ab-tubo[data-n="0"]', 'data-cor'), 'rosa');
+    assert.equal(await ab.getAttribute('#abertura .ab-tubo[data-n="1"]', 'data-cor'), 'azul');
+    const [cor, esperada] = await estado(ab, () => [document.querySelector('#abertura .ab-tubo[data-n="0"] .ab-liquido').style.fill, SIAB.abertura.leitura('naoh', 'phenol').cor]);
+    assert.equal(cor.replace(/\s/g, ''), esperada.replace(/\s/g, ''));
+    assert.match(await texto(ab, '#abertura .ab-tubo[data-n="0"] .ab-ph'), /pH 12,0/);
+    await ab.waitForSelector('#abertura', { state: 'detached', timeout: 6000 });
+    assert.equal(await estado(ab, () => SIAB.rota.nome), 'laboratorio');
+  });
+  await teste('abertura: toque ou tecla pulam; o toque não atravessa para a bancada', async () => {
+    await ab.reload();
+    await ab.waitForSelector('#abertura .ab-tubo');
+    await ab.mouse.click(680, 450);
+    await ab.waitForSelector('#abertura', { state: 'detached', timeout: 1500 });
+    assert.equal(await estado(ab, () => SIAB.state.tubes.length), 0);
+    await ab.reload();
+    await ab.waitForSelector('#abertura .ab-tubo');
+    await ab.keyboard.press('Escape');
+    await ab.waitForSelector('#abertura', { state: 'detached', timeout: 1500 });
+  });
+  await teste('abertura: desligar no menu ☰ e "Reduzir animações" valem ao recarregar', async () => {
+    await ab.click('#access-btn');
+    assert.equal(await ab.isChecked('#abertura-check'), true);
+    await ab.uncheck('#abertura-check');
+    await ab.keyboard.press('Escape');
+    await ab.reload({ waitUntil: 'domcontentloaded' });
+    assert.equal(await ab.getAttribute('html', 'data-abertura'), 'off');
+    assert.equal(await ab.isVisible('#abertura'), false);
+    await ab.waitForFunction(() => window.SIAB && SIAB.rota.nome);
+    // Restaurar padrões liga de novo; com "Reduzir animações", não toca.
+    await ab.click('#access-btn');
+    await ab.click('#a11y-restaurar');
+    assert.equal(await ab.isChecked('#abertura-check'), true);
+    await ab.check('#motion-check');
+    await ab.keyboard.press('Escape');
+    await ab.reload();
+    await ab.waitForFunction(() => window.SIAB && SIAB.rota.nome);
+    assert.equal(await ab.locator('#abertura').count(), 0);
+    assert.equal(await ab.locator('.ab-tubo').count(), 0);
+  });
+  await ctxAb.close();
+
+  /* ------------------------------------------------------------------ */
   console.log('PWA e uso sem internet (modo bancada)');
   const { context: ctxP, page: p } = await novaPagina({}, 'bancada');
   await teste('service worker registra e assume a página', async () => {
@@ -773,6 +1109,7 @@ async function teste(nome, fn) {
     await p.reload();
     await p.waitForFunction(() => window.SIAB && SIAB.rota.nome);
     await ir(p, '#/laboratorio');
+    await p.click('#shelf [data-solution="vinegar"]');
     await p.click('#drop5-btn');
     assert.equal(await estado(p, () => SIAB.current().additions.length), 5);
     await ir(p, '#/manual/roteiros');
@@ -806,6 +1143,7 @@ async function teste(nome, fn) {
 
   /* ------------------------------------------------------------------ */
   await teste('nenhum erro no console nem diálogo nativo durante os testes', async () => {
+    if (errosConsole.length) console.log(errosConsole.join('\n'));
     assert.deepEqual(errosConsole, []);
   });
 

@@ -20,22 +20,25 @@ SIAB.pwa = (() => {
   }
 
   function iniciar() {
-    const botao = SIAB.$('install-btn');
+    // Dois botões: no cabeçalho (computador) e no menu ☰ → Aplicativo.
+    const botoes = [SIAB.$('install-btn'), SIAB.$('drawer-install')];
+    const mostrar = visivel => botoes.forEach(botao => { botao.hidden = !visivel; });
     window.addEventListener('beforeinstallprompt', evento => {
       evento.preventDefault();
       pedidoInstalacao = evento;
-      botao.hidden = false;
+      mostrar(true);
     });
-    botao.addEventListener('click', async () => {
+    botoes.forEach(botao => botao.addEventListener('click', async () => {
       if (!pedidoInstalacao) return;
+      SIAB.gaveta.fechar();
       pedidoInstalacao.prompt();
       const escolha = await pedidoInstalacao.userChoice;
       pedidoInstalacao = null;
-      botao.hidden = true;
+      mostrar(false);
       if (escolha.outcome === 'accepted') SIAB.notice('SIAB instalado. Ele abre mesmo sem internet.');
-    });
+    }));
     window.addEventListener('appinstalled', () => {
-      botao.hidden = true;
+      mostrar(false);
       pedidoInstalacao = null;
     });
     if (!podeUsarServiceWorker()) return;

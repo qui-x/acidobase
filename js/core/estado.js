@@ -59,8 +59,5 @@ SIAB.desfazer = (bench = SIAB.state) => {
   return ultima.descricao;
 };
 
-// Bancada inicial do laboratório: três comparações do cotidiano.
-SIAB.newTube({ name: 'Limão diluído', solution: 'lemon', dilution: 10, titrant: 'bicarbonate', indicator: 'cabbage' });
-SIAB.newTube({ name: 'Água pura', solution: 'water', titrant: 'lemon', titrantDilution: 10, indicator: 'cabbage' });
-SIAB.newTube({ name: 'Bicarbonato', solution: 'bicarbonate', titrant: 'vinegar', titrantDilution: 10, indicator: 'cabbage' });
-SIAB.state.activeId = 1;
+// A bancada do laboratório começa vazia: o primeiro frasco escolhido na
+// prateleira cria o "Tubo 1" (ver colocar, em js/telas/bancada.js).

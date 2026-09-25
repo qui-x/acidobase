@@ -1,4 +1,4 @@
-# SIAB — A química das cores · versão 0.3.1
+# SIAB — A química das cores · versão 0.5.0
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -14,8 +14,8 @@ como aplicativo.
 | Publicado | Publique a pasta em um endereço https (por exemplo, GitHub Pages) | Sim |
 | Arquivo único | `npm run build` gera um HTML só | Não |
 
-**Para instalar:** abra pelo endereço http(s) e use o botão **Instalar app** no
-topo, ou o menu do navegador ("Instalar aplicativo" / "Adicionar à tela de
+**Para instalar:** abra pelo endereço http(s) e use **Instalar app** (no topo,
+no computador, ou em Menu ☰ → Aplicativo), ou o menu do navegador ("Instalar aplicativo" / "Adicionar à tela de
 início"). Depois da primeira visita, o SIAB abre sem internet. Quando houver
 versão nova, ela é baixada sozinha e aparece o aviso "Nova versão do SIAB
 instalada · Recarregar".
@@ -25,12 +25,49 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.3.1`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.0`), o que evita
 essa mistura.
 
-## O que há na versão 0.3
+## O que há na versão 0.5
 
-Quatro caminhos a partir da tela inicial:
+O SIAB abre na **bancada de testes**, e ela **começa vazia**: você toca num
+frasco da prateleira e ele vira o "Tubo 1".
+
+- **Animação de abertura:** ao abrir o app ou recarregar a página, cinco tubos
+  de ensaio (fenolftaleína, bromotimol, repolho roxo, metilorange e universal)
+  recebem gotas e trocam de composto, de ácido a neutro e depois a básico. As
+  cores e os pH vêm do próprio motor químico. Um toque ou uma tecla pula a
+  animação. Ela não toca com "Reduzir animações" e pode ser desligada.
+- **Barra superior compacta** (inspirada no Laboratório Virtual): botão ☰, marca
+  com o nome da tela atual e botão de acessibilidade. No celular, também um
+  botão para a prateleira. Se faltar espaço (texto ampliado), os botões ficam só
+  com o ícone e as abas descem para uma segunda linha.
+- **Menu ☰ (gaveta lateral):** navegar, os 10 roteiros de teste (montam com um
+  toque), **Modos**, **Acessibilidade** e Aplicativo (tour, instalar, sobre).
+- **Painel de acessibilidade com interruptores:** modo escuro, alto contraste,
+  tamanho do texto, espaçamento de letras, reduzir animações, animação de
+  abertura, leitura simples, simular daltonismo, som do pH, vibração, tradutor
+  de Libras (VLibras, precisa de internet) e restaurar padrões.
+- **Celular:** barra de chips rolável e presa abaixo do cabeçalho, que leva ao
+  painel VER. A prateleira fecha sozinha depois de escolher o frasco.
+- **Computador:** a prateleira e o painel VER recolhem num trilho de ícones. Um
+  ícone reabre o painel já na parte escolhida.
+- **Tour guiado da bancada:** contorna cada parte e explica em um cartão.
+- **Caderno:** a tabela de gotas fica guardada como tabela de verdade, com
+  colunas, na tela, na impressão e no CSV. As notas antigas são convertidas
+  sozinhas.
+
+### Como acessar missões, desafios e professor
+
+Abra o **Menu ☰ → Modos** e ligue **"Missões, desafios e professor"**. Aparecem
+Início, Aprender (14 missões), Desafios (5 jogos) e Professor no menu, nas abas
+do topo e na barra de baixo do celular. A escolha fica salva neste navegador.
+Desligando, volta a ficar só a bancada. Um link de aula enviado pelo professor
+(`#/aula/...`) liga esse modo sozinho.
+
+## Modo completo (desde a versão 0.3)
+
+Com o modo completo ligado, a tela inicial oferece quatro caminhos:
 
 - **Aprender:** 4 trilhas com 14 missões guiadas (ler → prever → observar →
   agir → explicar → conferir). As respostas vão para o caderno.
@@ -55,10 +92,9 @@ Na bancada:
 - **Caderno de laboratório:** previsões, missões, leituras e pontuações, com
   download em CSV.
 
-Acessibilidade: temas escuro, claro e alto contraste; fonte até 200 %;
-filtros de percepção de cor; cor sempre descrita em texto; teclado em todos os
-controles; som do pH (tom mais agudo com pH maior) e vibração na viragem,
-ambos opcionais.
+Acessibilidade: veja o painel acima. A cor é sempre descrita em texto, todos os
+controles funcionam pelo teclado, e o som do pH (tom mais agudo com pH maior)
+e a vibração na viragem são opcionais.
 
 ## Mapa das mecânicas (propostas em `docs/`)
 
@@ -86,7 +122,7 @@ ambos opcionais.
 npm test            # química, sais, missões e PWA, sem navegador
 npm install         # uma vez, para os testes no navegador
 npx playwright install chromium
-npm run test:e2e    # 74 testes no Chromium, incluindo celular, sem internet e atualização
+npm run test:e2e    # 104 testes no Chromium: bancada, menu, modos, trilhos, tour, abertura, celular, sem internet e atualização
 ```
 
 Resultados da última validação: `tests/RESULTADOS.md`.

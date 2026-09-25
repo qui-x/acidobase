@@ -136,6 +136,7 @@ SIAB.telas.professor = {
 
 SIAB.telas.aula = {
   completo: true,
+  ligaCompleto: true,
   secao: 'aula',
   menu: 'aprender',
   titulo: () => 'Aula',

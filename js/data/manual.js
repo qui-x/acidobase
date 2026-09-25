@@ -20,15 +20,36 @@ SIAB.manual = [
     blocos: [
       { p: 'A bancada é um laboratório virtual de ácidos e bases. Você escolhe o que vai no tubo, escolhe o que vai no conta-gotas e acompanha, a cada gota, a cor, o pH, as partículas e o gráfico.' },
       { gerado: 'diagrama' },
+      { p: 'A bancada começa vazia: nenhum tubo, nenhuma amostra. Você monta o teste do zero.' },
       { passos: [
-        'Na Prateleira (1), deixe “Tubo” selecionado e toque em um frasco: ele vai para o tubo.',
+        'Na Prateleira (1), deixe “Tubo” selecionado e toque em um frasco: ele vira o “Tubo 1”.',
         'Troque para “Conta-gotas” e toque no frasco que vai gotejar.',
         'Escolha um indicador, logo abaixo dos frascos.',
         'Segure o botão “Segure para gotejar” (3) e observe a leitura (2) e o painel VER (4).',
         'Se algo sair diferente do que queria, toque em “Desfazer”.'
       ] },
-      { dica: 'No celular, a prateleira abre pelo botão “Prateleira”, ao lado do nome do tubo. O painel VER fica abaixo do conta-gotas e a tira de tubos (5), no fim da tela.' },
-      { p: 'Quer começar com um teste já montado? Veja “Roteiros de teste prontos”.' }
+      { dica: 'No celular, a prateleira abre pelo botão de ajustes no alto da tela (ícone de controles deslizantes, ao lado do botão de acessibilidade). A barra de chips logo abaixo do cabeçalho leva ao painel VER; a tira de tubos (5) fica no fim da tela.' },
+      { p: 'Para um passeio de 1 minuto por cada parte, use Menu ☰ → “Tour guiado da bancada”. Quer começar com um teste já montado? Veja “Roteiros de teste prontos”.' }
+    ]
+  },
+  {
+    id: 'menu', titulo: 'Menu ☰, modos e tela', alvo: '#menu-btn',
+    resumo: 'O que há no menu lateral, como ligar missões e desafios e como a tela se adapta.',
+    blocos: [
+      { p: 'O botão ☰, no canto esquerdo do cabeçalho, abre o menu lateral. Ele fecha com ×, com Esc, com um toque fora dele ou depois que você escolhe um destino.' },
+      { lista: [
+        'Navegar: bancada de testes, manual e caderno.',
+        'Roteiros de teste: a seta ao lado mostra os 10 roteiros; tocar em um monta os tubos na bancada (dá para desfazer).',
+        'Modos: o interruptor “Missões, desafios e professor” mostra as 14 missões guiadas, os 5 jogos e o painel do professor. Desligado, fica só a bancada. A escolha fica salva. Um link de aula enviado pelo professor liga esse modo sozinho.',
+        'Preferências → Acessibilidade: interruptores de tema, contraste, texto, animações, cores, som e Libras (veja “Acessibilidade e teclado”).',
+        'Aplicativo: tour guiado da bancada, instalar o app, ideias para a aula e informações sobre o SIAB.'
+      ] },
+      { lista: [
+        'Cabeçalho: ao lado de “SIAB”, o subtítulo diz em que parte você está. Se faltar espaço (texto ampliado), os botões ficam só com o ícone e as abas descem para uma segunda linha.',
+        'Computador: o botão com seta ao lado de “Prateleira” e de “VER” recolhe o painel num trilho de ícones, e a bancada ganha espaço. Tocar num ícone reabre o painel já naquela parte. A escolha fica salva.',
+        'Celular e tablet: a barra de chips (Tubo em foco, Visão geral, Gráfico, Partículas, Equação, Histórico) rola para os lados e fica presa abaixo do cabeçalho.',
+        'Celular: a prateleira abre por baixo e fecha sozinha depois que você escolhe um frasco, para o resultado aparecer na hora.'
+      ] }
     ]
   },
   {
@@ -149,7 +170,7 @@ SIAB.manual = [
         'Comparar indicadores (na prateleira): cria 3 cópias do tubo com bromotimol, fenolftaleína e indicador universal, vinculadas: cada gota cai nas três.',
         'Desvincular este tubo: o tubo volta a receber gotas sozinho.',
         'Recomeçar gotas: tira todas as gotas do tubo.',
-        'Remover tubo: pede confirmação; “Desfazer” traz o tubo de volta.'
+        'Remover tubo: pede confirmação; “Desfazer” traz o tubo de volta. Removendo o último, a bancada fica vazia de novo.'
       ] }
     ]
   },
@@ -159,8 +180,9 @@ SIAB.manual = [
     blocos: [
       { lista: [
         'O que entra: previsões do “Prever e gotejar”, leituras de “Registrar no caderno” e, no modo completo, missões e desafios. Cada nota tem data e hora.',
-        'Baixar caderno (CSV): uma planilha com todas as notas.',
-        'Imprimir: imprime as notas.',
+        'Leituras: guardam a tabela de gotas como tabela (Gota, Adicionado, pH, Cor), com rolagem própria e “Baixar esta tabela (CSV)”. Com o pH oculto, a coluna pH fica “—”.',
+        'Baixar caderno (CSV): uma planilha com todas as notas. As linhas da tabela de gotas ocupam as colunas gota, volume_adicionado_mL, pH e cor.',
+        'Imprimir: imprime as notas; tabelas longas continuam na página seguinte, repetindo o cabeçalho.',
         'Apagar nota ou apagar caderno: apagar o caderno pede confirmação.'
       ] },
       { dica: 'O caderno fica guardado só neste navegador, neste aparelho. Baixe o CSV para guardar uma cópia.' }
@@ -189,18 +211,24 @@ SIAB.manual = [
   },
   {
     id: 'acessibilidade', titulo: 'Acessibilidade e teclado', alvo: '#access-btn',
-    resumo: 'Tema, fonte, som do pH e uso sem mouse.',
+    resumo: 'Painel com interruptores, som do pH, Libras e uso sem mouse.',
     blocos: [
-      { p: 'O botão “Acessibilidade”, no alto da tela, abre as preferências. Elas ficam salvas neste navegador.' },
+      { p: 'O botão de acessibilidade (figura humana), no alto da tela, abre o menu ☰ direto no painel “Acessibilidade”. Cada linha tem um interruptor; tudo fica salvo neste navegador.' },
       { lista: [
-        'Tema: escuro, claro ou alto contraste.',
-        'Tamanho do texto: de 80 % a 200 %.',
-        'Reduzir animações: desliga gota caindo e partículas se mexendo.',
+        'Modo escuro: desligado, a tela fica clara.',
+        'Alto contraste: fundo preto, texto branco e destaques amarelos.',
+        'Tamanho do texto: A− e A+, de 80 % a 200 %.',
+        'Espaçamento de letras: mais espaço entre letras e palavras.',
+        'Reduzir animações: desliga gota caindo, partículas se mexendo e a animação de abertura.',
+        'Animação de abertura: tubos de ensaio mudando de cor ao abrir ou recarregar. Um toque ou uma tecla pula.',
+        'Leitura simples: texto um pouco maior, cores mais firmes e nada se mexendo.',
+        'Simular daltonismo: filtros para ver como a bancada aparece para pessoas com daltonismo. Não são correções.',
         'Som do pH: um tom a cada gota, mais agudo quanto maior o pH.',
         'Vibrar na viragem: o celular vibra quando o indicador muda de cor (em aparelhos compatíveis).',
-        'Simulação da percepção de cores: filtros para ver como a bancada aparece para pessoas com daltonismo. Não são correções.'
+        'Tradutor de Libras (VLibras): o tradutor oficial do governo federal. Precisa de internet.',
+        'Restaurar padrões: volta tudo ao início.'
       ] },
-      { teclas: [['Tab / Shift + Tab', 'avançar / voltar entre controles'], ['Enter ou Espaço', 'acionar botões e opções'], ['← →', 'trocar de aba no painel VER'], ['↑ ↓', 'percorrer listas de escolha'], ['Esc', 'fechar diálogos e o painel da prateleira']] },
+      { teclas: [['Tab / Shift + Tab', 'avançar / voltar entre controles'], ['Enter ou Espaço', 'acionar botões e interruptores'], ['← →', 'trocar de aba no painel VER'], ['↑ ↓', 'percorrer listas de escolha'], ['Esc', 'fechar diálogos, o menu ☰, o painel da prateleira e o tour'], ['Qualquer tecla', 'pular a animação de abertura']] },
       { dica: 'Leitores de tela anunciam a cor, o pH e o número de gotas depois de cada sequência de gotas.' }
     ]
   },
@@ -210,7 +238,8 @@ SIAB.manual = [
     blocos: [
       { lista: [
         'Aberto como arquivo (index.html): tudo funciona, mas não dá para instalar.',
-        'Aberto por um endereço http(s), como o GitHub Pages ou “npm start”: aparece o botão “Instalar app” (ou use o menu do navegador, “Instalar aplicativo” / “Adicionar à tela de início”).',
+        'Aberto por um endereço http(s), como o GitHub Pages ou “npm start”: aparece “Instalar app” no cabeçalho (computador) e em Menu ☰ → Aplicativo (ou use o menu do navegador, “Instalar aplicativo” / “Adicionar à tela de início”).',
+        'Ao abrir: a animação de abertura mostra tubos de ensaio mudando de composto e de cor (as cores vêm do próprio simulador). Toque para pular; dá para desligar em Acessibilidade.',
         'Sem internet: depois da primeira visita pelo endereço, o SIAB abre mesmo offline.',
         'Atualização: quando há versão nova, ela é baixada sozinha e aparece “Nova versão do SIAB instalada · Recarregar”.'
       ] },

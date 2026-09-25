@@ -27,8 +27,17 @@ SIAB.ajuda = (() => {
         SIAB.render(true);
       }
       if (secao.painel && SIAB.bancada.mobile.matches) SIAB.bancada.openSheet();
-      const alvo = document.querySelector(secao.alvo);
+      let alvo = document.querySelector(secao.alvo);
       if (!alvo) return;
+      // Bancada vazia: leitura, conta-gotas e ajustes só aparecem com um tubo.
+      if (!alvo.getClientRects().length && !SIAB.current()) {
+        alvo = SIAB.$('bancada-vazia');
+        SIAB.notice(`A bancada está vazia. Escolha um frasco na prateleira para ver: ${secao.titulo}.`);
+        alvo.scrollIntoView({ block: 'center' });
+        alvo.classList.add('ajuda-destaque');
+        setTimeout(() => alvo.classList.remove('ajuda-destaque'), 4500);
+        return;
+      }
       if (alvo.tagName === 'DETAILS') alvo.open = true;
       alvo.scrollIntoView({ block: 'center', behavior: window.A11Y?.estado?.motion ? 'auto' : 'smooth' });
       alvo.classList.remove('ajuda-destaque');
@@ -263,7 +272,7 @@ SIAB.manualTela = (() => {
     $('boas-vindas-fechar').addEventListener('click', () => {
       SIAB.ajuda.marcarVisto();
       $('boas-vindas').hidden = true;
-      $('tube-name').focus();
+      $(SIAB.current() ? 'tube-name' : 'vazia-titulo').focus();
     });
   }
 

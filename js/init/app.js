@@ -8,25 +8,41 @@
     const fechar = evento.target.closest('[data-close]');
     if (fechar) $(fechar.dataset.close).close();
   });
-  $('about-btn').addEventListener('click', () => $('about-dialog').showModal());
   $('about-version').textContent = SIAB.version;
 
   SIAB.initSelects();
   SIAB.initPreferences();
+  SIAB.gaveta.ligar();
   SIAB.bancada.ligar();
+  SIAB.trilho.ligar();
+  SIAB.tour.ligar();
   SIAB.missaoTela.ligar();
   SIAB.telas.caderno.ligar();
   SIAB.professor.ligar();
   SIAB.manualTela.ligar();
   SIAB.pwa.iniciar();
 
-  // Altura real do cabeçalho (muda com a fonte ampliada): usada pelo layout.
-  if (typeof ResizeObserver !== 'undefined') {
-    const cabecalho = document.querySelector('.app-header');
-    new ResizeObserver(() => {
+  // Cabeçalho adaptável: se não couber (fonte ampliada, muitas abas), primeiro
+  // os botões ficam só com o ícone; se ainda faltar espaço, as abas descem para
+  // uma segunda linha rolável. A altura real vai para --header-h (usada pelo layout).
+  const cabecalho = document.querySelector('.app-header');
+  let pedido = 0;
+  function ajustarCabecalho() {
+    cancelAnimationFrame(pedido);
+    pedido = requestAnimationFrame(() => {
+      const transborda = () => cabecalho.scrollWidth > cabecalho.clientWidth + 1;
+      cabecalho.classList.remove('compacto', 'em-duas-linhas');
+      if (transborda()) cabecalho.classList.add('compacto');
+      if (transborda()) cabecalho.classList.add('em-duas-linhas');
       document.documentElement.style.setProperty('--header-h', `${cabecalho.getBoundingClientRect().height}px`);
-    }).observe(cabecalho);
+    });
   }
+  if (typeof ResizeObserver !== 'undefined') {
+    const observador = new ResizeObserver(ajustarCabecalho);
+    [cabecalho, cabecalho.querySelector('.main-nav'), cabecalho.querySelector('.header-actions')].forEach(x => observador.observe(x));
+  }
+  window.addEventListener('resize', ajustarCabecalho);
+  document.addEventListener('siab:modo', ajustarCabecalho);
 
   window.addEventListener('hashchange', SIAB.rotear);
   SIAB.rotear();

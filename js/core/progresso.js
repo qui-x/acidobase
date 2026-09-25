@@ -6,6 +6,21 @@ SIAB.progresso = (() => {
   const dados = Object.assign({ missoes: {}, desafios: {}, caderno: [], ultima: null }, SIAB.armazenamento.ler(CHAVE, {}));
   const salvar = () => SIAB.armazenamento.gravar(CHAVE, dados);
 
+  // Até a versão 0.4, a tabela de gotas era guardada como um texto só
+  // ("0;0,00;2,57;rosa | 1;0,05;2,93;rosa | …"). Converte para tabela de verdade.
+  let convertidas = 0;
+  dados.caderno.forEach(nota => {
+    const i = (nota.linhas || []).findIndex(([campo, valor]) => campo === 'Tabela' && String(valor).includes(';'));
+    if (i < 0 || nota.tabela) return;
+    nota.tabela = {
+      colunas: ['Gota', 'Adicionado (mL)', 'pH', 'Cor'],
+      linhas: String(nota.linhas[i][1]).split(' | ').map(linha => linha.split(';'))
+    };
+    nota.linhas.splice(i, 1);
+    convertidas++;
+  });
+  if (convertidas) salvar();
+
   return {
     dados,
     salvar,
@@ -26,7 +41,8 @@ SIAB.progresso = (() => {
       salvar();
       return pontos > anterior.recorde;
     },
-    // entrada: { tipo, titulo, linhas: [[rótulo, valor], ...] }. Devolve o id da nota.
+    // entrada: { tipo, titulo, linhas: [[rótulo, valor], ...], tabela?: { colunas, linhas } }.
+    // Devolve o id da nota.
     anotar(entrada) {
       const id = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
       dados.caderno.unshift({ id, data: new Date().toISOString(), ...entrada });

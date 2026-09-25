@@ -16,7 +16,14 @@ SIAB.NIVEIS = {
 
 SIAB.render = (syncForm = false) => {
   const $ = SIAB.$, s = SIAB.state, t = SIAB.current();
-  if (!t || $('workspace').hidden) return;
+  if ($('workspace').hidden) return;
+  if (!t) {
+    SIAB.renderVazia();
+    return;
+  }
+  $('workspace').classList.remove('vazia');
+  $('bancada-vazia').hidden = true;
+  $('overview-tab').disabled = false;
   const cfg = SIAB.bancada.config;
   const pode = controle => cfg.controles.has(controle);
   const i = s.tubes.indexOf(t);
@@ -35,7 +42,9 @@ SIAB.render = (syncForm = false) => {
   $('overview-count').textContent = s.tubes.length;
   $('bench-mode').textContent = cfg.modo === 'missao' ? 'MISSÃO' : `BANCADA · ${s.level.toUpperCase()}`;
   $('tube-count').textContent = `${s.tubes.length} / ${SIAB.MAX_TUBES}`;
-  $('prepare-btn').textContent = cfg.modo === 'missao' ? 'Missão' : 'Prateleira';
+  // Botão do cabeçalho que abre o painel no celular (texto visível dentro do nome acessível).
+  $('prepare-btn').querySelector('.header-btn-texto').textContent = cfg.modo === 'missao' ? 'Missão' : 'Prateleira';
+  $('prepare-btn').setAttribute('aria-label', cfg.modo === 'missao' ? 'Abrir painel da missão' : 'Abrir prateleira e ajustes');
 
   // Cabeçalho do tubo.
   $('tube-index').textContent = `TUBO ${i + 1} DE ${s.tubes.length}`;
@@ -120,7 +129,6 @@ SIAB.render = (syncForm = false) => {
     $('compare-btn').disabled = s.tubes.length + 3 > SIAB.MAX_TUBES;
     $('unlink-btn').hidden = !t.group;
     $('restart-btn').disabled = !t.additions.length;
-    $('remove-btn').disabled = s.tubes.length === 1;
     if (syncForm) SIAB.syncForm();
   }
 
@@ -128,8 +136,41 @@ SIAB.render = (syncForm = false) => {
   SIAB.refreshSelects?.();
 };
 
+// Bancada sem tubos (é assim que o laboratório começa): orienta o primeiro
+// passo e deixa a prateleira pronta. Tocar num frasco cria o Tubo 1.
+SIAB.renderVazia = () => {
+  const $ = SIAB.$, s = SIAB.state;
+  s.view = 'focus';
+  $('workspace').dataset.modo = SIAB.bancada.config.modo;
+  $('workspace').classList.add('vazia');
+  $('workspace').classList.remove('overview');
+  $('bancada-vazia').hidden = false;
+  $('focus-view').hidden = false;
+  $('overview-view').hidden = true;
+  $('focus-tab').setAttribute('aria-pressed', 'true');
+  $('overview-tab').setAttribute('aria-pressed', 'false');
+  $('overview-tab').disabled = true;
+  $('overview-count').textContent = '0';
+  $('bench-mode').textContent = `BANCADA · ${s.level.toUpperCase()}`;
+  $('tube-count').textContent = `0 / ${SIAB.MAX_TUBES}`;
+  $('tube-list').innerHTML = '';
+  $('add-tube-btn').hidden = false;
+  $('add-tube-btn').disabled = false;
+  $('prepare-btn').querySelector('.header-btn-texto').textContent = 'Prateleira';
+  $('prepare-btn').setAttribute('aria-label', 'Abrir prateleira e ajustes');
+  const ultima = s.history.at(-1);
+  $('vazia-desfazer').hidden = !ultima;
+  $('vazia-desfazer').title = ultima ? `Desfazer: ${ultima.descricao}` : '';
+  document.querySelectorAll('input[name="nivel"]').forEach(x => { x.checked = x.value === s.level; });
+  document.querySelectorAll('input[name="destino"]').forEach(x => { x.checked = x.value === s.destination; });
+  $('nivel-dica').textContent = SIAB.NIVEIS[s.level];
+  SIAB.prateleira.render();
+  SIAB.renderVer();
+};
+
 SIAB.syncForm = () => {
   const $ = SIAB.$, t = SIAB.current();
+  if (!t) return;
   $('concentration').value = t.concentration;
   $('initial-volume').value = t.initialVolume;
   $('titrant-concentration').value = t.titrantConcentration;
@@ -152,6 +193,15 @@ SIAB.renderVer = () => {
     tab.tabIndex = tab.dataset.ver === s.verTab ? 0 : -1;
   });
   $('ver-conteudo').setAttribute('aria-labelledby', `tab-${s.verTab}`);
+  if (!t) {
+    $('ver-conteudo').innerHTML = '<p class="ver-oculto">Coloque um frasco num tubo para ver o gráfico, as partículas, a equação e o histórico.</p>';
+    return;
+  }
+  // Atalhos do VER na barra de chips (celular e tablet).
+  document.querySelectorAll('[data-ir-ver]').forEach(chip => {
+    chip.hidden = !disponiveis.includes(chip.dataset.irVer);
+    chip.setAttribute('aria-pressed', String(chip.dataset.irVer === s.verTab));
+  });
   const r = SIAB.chem.solve(t);
   const nivel = SIAB.bancada.config.modo === 'missao' ? SIAB.bancada.config.nivel : s.level;
   let conteudo = '';
@@ -185,14 +235,18 @@ SIAB.historicoHTML = tube => {
   return `${botoes}<table><caption class="sr-only">Histórico de ${SIAB.escape(tube.name)}</caption><thead><tr><th>Gota</th><th>Adicionado (mL)</th><th>pH</th><th>Cor</th></tr></thead><tbody>${linhas.join('')}</tbody></table>`;
 };
 
-// Tabela do histórico em CSV (M14), com ponto e vírgula e vírgula decimal.
-SIAB.historyCSV = tube => {
-  const linhas = ['gota;volume_adicionado_mL;pH;cor'];
-  const inicial = SIAB.chem.solve({ ...tube, additions: [] });
-  linhas.push(`0;${SIAB.format(0)};${SIAB.format(inicial.pH)};${SIAB.chem.color(tube.indicator, inicial.pH).name}`);
-  tube.additions.forEach((_, i) => {
-    const r = SIAB.chem.solve({ ...tube, additions: tube.additions.slice(0, i + 1) });
-    linhas.push(`${i + 1};${SIAB.format(r.added)};${SIAB.format(r.pH)};${SIAB.chem.color(tube.indicator, r.pH).name}`);
-  });
-  return linhas.join('\n');
+// Tabela de gotas do tubo: da gota 0 (antes de gotejar) até a última.
+// Com o pH oculto, a coluna pH fica "—" (o que não aparece na tela não sai no arquivo).
+SIAB.COLUNAS_GOTAS = ['Gota', 'Adicionado (mL)', 'pH', 'Cor'];
+SIAB.historicoTabela = tube => {
+  const linhas = [];
+  for (let i = 0; i <= tube.additions.length; i++) {
+    const r = SIAB.chem.solve({ ...tube, additions: tube.additions.slice(0, i) });
+    linhas.push([String(i), SIAB.format(r.added), SIAB.state.showPH ? SIAB.format(r.pH) : '—', SIAB.chem.color(tube.indicator, r.pH).name]);
+  }
+  return { colunas: [...SIAB.COLUNAS_GOTAS], linhas };
 };
+
+// Tabela do histórico em CSV (M14), com ponto e vírgula e vírgula decimal.
+SIAB.tabelaCSV = tabela => ['gota;volume_adicionado_mL;pH;cor', ...tabela.linhas.map(linha => linha.map(SIAB.csvCampo).join(';'))].join('\n');
+SIAB.historyCSV = tube => SIAB.tabelaCSV(SIAB.historicoTabela(tube));

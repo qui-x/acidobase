@@ -14,7 +14,9 @@ SIAB.prateleira = (() => {
     if (!box) return;
     const s = SIAB.state, t = SIAB.current();
     const query = SIAB.normalizar(SIAB.$('shelf-search').value);
-    const destino = s.destination === 'tube' ? 'no tubo' : 'no conta-gotas';
+    const destino = t
+      ? (s.destination === 'tube' ? 'no tubo' : 'no conta-gotas')
+      : (s.destination === 'tube' ? 'num tubo novo' : 'no conta-gotas de um tubo novo');
     const grupos = Object.entries(SIAB.solutionGroups).map(([grupo, rotulo]) => {
       const frascos = Object.entries(SIAB.solutions)
         .filter(([, x]) => x.group === grupo)
@@ -22,10 +24,10 @@ SIAB.prateleira = (() => {
       if (!frascos.length) return '';
       const botoes = frascos.map(([id, x]) => {
         const marcas = [];
-        if (id === t.solution) marcas.push('<span class="tag tag-tubo">no tubo</span>');
-        if (id === t.titrant) marcas.push('<span class="tag tag-gotas">conta-gotas</span>');
+        if (id === t?.solution) marcas.push('<span class="tag tag-tubo">no tubo</span>');
+        if (id === t?.titrant) marcas.push('<span class="tag tag-gotas">conta-gotas</span>');
         const detalhe = [x.formula && x.kind !== 'sample' ? x.formula : '', x.label].filter(Boolean).join(' · ');
-        const estado = [id === t.solution ? 'está no tubo' : '', id === t.titrant ? 'está no conta-gotas' : ''].filter(Boolean).join(' e ');
+        const estado = [id === t?.solution ? 'está no tubo' : '', id === t?.titrant ? 'está no conta-gotas' : ''].filter(Boolean).join(' e ');
         return `<button type="button" class="bottle" data-solution="${id}" aria-label="${SIAB.escape(x.name)}. ${SIAB.escape(x.label || '')}. Colocar ${destino}.${estado ? ' Atualmente ' + estado + '.' : ''}">
           <span class="bottle-dot" style="background:${corDoFrasco(x)}" aria-hidden="true"></span>
           <span class="bottle-text"><strong>${SIAB.escape(x.name)}</strong><small>${SIAB.escape(detalhe)}</small></span>
@@ -48,7 +50,7 @@ SIAB.prateleira = (() => {
         const cores = [2, 5, 7, 9, 12].map(pH => `rgb(${SIAB.chem.color(id, pH).rgb.join(',')})`);
         amostra = `linear-gradient(90deg,${cores.join(',')})`;
       }
-      return `<label class="chip"><input type="radio" name="indicador" value="${id}" ${t.indicator === id ? 'checked' : ''}><span class="chip-cor" style="background:${amostra}" aria-hidden="true"></span><span>${SIAB.escape(x.short)}</span></label>`;
+      return `<label class="chip"><input type="radio" name="indicador" value="${id}" ${t?.indicator === id ? 'checked' : ''}><span class="chip-cor" style="background:${amostra}" aria-hidden="true"></span><span>${SIAB.escape(x.short)}</span></label>`;
     }).join('');
   }
 

@@ -38,6 +38,7 @@ SIAB.bancada = (() => {
   const bloqueaveis = () => [$('experiment'), $('ver-panel'), document.querySelector('.app-header'), document.querySelector('.bottom-nav')];
   function closeSheet(restore = true) {
     $('controls').classList.remove('open');
+    $('prepare-btn').setAttribute('aria-expanded', 'false');
     $('sheet-backdrop').hidden = true;
     document.body.classList.remove('sheet-open');
     bloqueaveis().forEach(el => { el.inert = false; });
@@ -52,6 +53,7 @@ SIAB.bancada = (() => {
     lastSheetFocus = document.activeElement;
     $('controls').inert = false;
     $('controls').classList.add('open');
+    $('prepare-btn').setAttribute('aria-expanded', 'true');
     $('controls').setAttribute('aria-hidden', 'false');
     $('controls').setAttribute('role', 'dialog');
     $('controls').setAttribute('aria-modal', 'true');
@@ -164,11 +166,17 @@ SIAB.bancada = (() => {
   /* ---------- Prateleira e preparo ---------- */
   const eReagente = id => !SIAB.isEveryday(id) && id !== 'water';
   function colocar(id) {
-    const s = SIAB.state, t = SIAB.current(), x = SIAB.solutions[id];
+    const s = SIAB.state, x = SIAB.solutions[id];
     if (!x) return;
     const alvo = s.destination === 'titrant' ? 'titrant' : 'tube';
-    SIAB.alterar(alvo === 'tube' ? `colocar ${x.name} no tubo` : `colocar ${x.name} no conta-gotas`, () => {
-      SIAB.targets(t).forEach(tubo => {
+    // Bancada vazia: o frasco escolhido cria o primeiro tubo (com água e sem indicador).
+    const primeiro = !SIAB.current();
+    SIAB.alterar(alvo === 'tube' ? `colocar ${x.name} no tubo` : `colocar ${x.name} no conta-gotas`, estado => {
+      if (primeiro) {
+        estado.activeId = SIAB.newTube({ solution: 'water', indicator: 'none' }).id;
+        estado.view = 'focus';
+      }
+      SIAB.targets(SIAB.current()).forEach(tubo => {
         if (alvo === 'tube') {
           tubo.solution = id;
           tubo.dilution = 1;
@@ -183,8 +191,12 @@ SIAB.bancada = (() => {
     });
     SIAB.syncForm();
     const onde = alvo === 'tube' ? 'no tubo' : 'no conta-gotas';
-    SIAB.notice(`${x.name} ${onde}. As gotas recomeçaram; use Desfazer para voltar.`);
+    SIAB.notice(primeiro
+      ? `${SIAB.current().name} criado com ${x.name} ${onde}. Agora escolha um indicador.`
+      : `${x.name} ${onde}. As gotas recomeçaram; use Desfazer para voltar.`);
     SIAB.announce(`${x.name} ${onde}.`);
+    // No celular, o painel fecha depois de escolher o frasco: o resultado aparece na hora.
+    if (mobile.matches && $('controls').classList.contains('open')) closeSheet();
   }
 
   function erroForm(form, campo, mensagem) {
@@ -260,8 +272,10 @@ SIAB.bancada = (() => {
     const s = SIAB.state;
     if (s.tubes.length >= SIAB.MAX_TUBES) return;
     let novo;
+    // O novo tubo usa o mesmo conta-gotas do tubo atual (ou o padrão, se a bancada estiver vazia).
+    const atual = SIAB.current();
     SIAB.alterar('novo tubo', () => {
-      novo = SIAB.newTube({ solution: 'water', indicator: 'none', titrant: SIAB.current().titrant, titrantConcentration: SIAB.current().titrantConcentration });
+      novo = SIAB.newTube({ solution: 'water', indicator: 'none', ...(atual && { titrant: atual.titrant, titrantConcentration: atual.titrantConcentration, titrantDilution: atual.titrantDilution }) });
     });
     selecionarTubo(novo.id);
     SIAB.notice(`${novo.name} adicionado com água. Escolha um frasco na prateleira.`);
@@ -270,8 +284,8 @@ SIAB.bancada = (() => {
 
   function removerTubo() {
     const s = SIAB.state;
-    if (s.tubes.length === 1) return;
     const t = SIAB.current();
+    if (!t) return;
     SIAB.confirmar('Remover tubo?', `“${t.name}” e suas gotas serão removidos. Você pode desfazer depois.`, () => {
       closeSheet(false);
       const indice = s.tubes.indexOf(t);
@@ -279,10 +293,12 @@ SIAB.bancada = (() => {
         estado.tubes = estado.tubes.filter(x => x.id !== t.id);
         const resto = estado.tubes.filter(x => x.group && x.group === t.group);
         if (resto.length === 1) resto[0].group = null;
-        estado.activeId = estado.tubes[Math.min(indice, estado.tubes.length - 1)].id;
+        estado.activeId = estado.tubes.length ? estado.tubes[Math.min(indice, estado.tubes.length - 1)].id : null;
       });
       SIAB.render(true);
-      SIAB.notice('Tubo removido.');
+      // Sem tubos, a bancada volta ao início (vazia); o foco vai para o aviso.
+      if (!s.tubes.length) $('vazia-titulo').focus();
+      SIAB.notice(s.tubes.length ? 'Tubo removido.' : 'Tubo removido. A bancada está vazia; use Desfazer para voltar.');
     }, 'Remover tubo', 'danger');
   }
 
@@ -333,6 +349,10 @@ SIAB.bancada = (() => {
     SIAB.render(true);
     SIAB.loja.avisar();
     SIAB.announce(`Desfeito: ${descricao}.`);
+    // Se o botão usado sumiu (a bancada ficou vazia ou deixou de estar), o foco vai para o título visível.
+    if (document.activeElement?.closest('[hidden]') || document.activeElement === document.body) {
+      $(SIAB.current() ? 'tube-name' : 'vazia-titulo').focus();
+    }
   }
 
   /* ---------- Prever, observar, explicar (M1) ---------- */
@@ -440,6 +460,13 @@ SIAB.bancada = (() => {
       if (frasco && frasco.closest('#shelf')) colocar(frasco.dataset.solution);
     });
     $('add-tube-btn').addEventListener('click', adicionarTubo);
+    // Botões do aviso "Bancada vazia".
+    $('vazia-agua').addEventListener('click', adicionarTubo);
+    $('vazia-desfazer').addEventListener('click', desfazer);
+    $('vazia-prateleira').addEventListener('click', () => {
+      if (mobile.matches) openSheet();
+      else SIAB.trilho.expandir('controls', 'frascos');
+    });
 
     $('rename-btn').addEventListener('click', () => {
       $('new-name').value = SIAB.current().name;
@@ -494,6 +521,16 @@ SIAB.bancada = (() => {
     $('remove-btn').addEventListener('click', removerTubo);
     $('guide-btn').addEventListener('click', () => $('guide-dialog').showModal());
 
+    // Chips do VER (celular e tablet): escolhem a aba e rolam até o painel.
+    document.querySelector('.view-tabs').addEventListener('click', evento => {
+      const chip = evento.target.closest('[data-ir-ver]');
+      if (!chip) return;
+      SIAB.state.verTab = chip.dataset.irVer;
+      SIAB.loja.avisar();
+      $('ver-panel').scrollIntoView({ block: 'start', behavior: A11Y.estado.motion ? 'auto' : 'smooth' });
+      $(`tab-${chip.dataset.irVer}`).focus({ preventScroll: true });
+    });
+
     // Abas do painel VER, com setas do teclado.
     const abas = () => [...document.querySelectorAll('#ver-tabs [data-ver]')].filter(x => !x.hidden);
     $('ver-tabs').addEventListener('click', evento => {
@@ -534,9 +571,9 @@ SIAB.bancada = (() => {
             ['Conta-gotas', SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)],
             ['Gotas', `${r.drops} (${SIAB.format(r.added)} mL)`],
             ['Indicador', `${SIAB.indicators[t.indicator].name}: ${SIAB.chem.color(t.indicator, r.pH).name}`],
-            ['pH', SIAB.phFormat(r)],
-            ['Tabela', SIAB.historyCSV(t).split('\n').slice(1).join(' | ')]
-          ]
+            ['pH', SIAB.state.showPH ? SIAB.phFormat(r) : 'oculto']
+          ],
+          tabela: SIAB.historicoTabela(t)
         });
         SIAB.notice('Leitura registrada no caderno.');
       }
