@@ -23,7 +23,7 @@ for (const s of SIAB.manual) {
   }
 }
 // Cada parte da bancada tem seção; cada "?" da página leva a uma seção existente.
-for (const parte of ['comecar', 'menu', 'prateleira', 'vidraria', 'indicadores', 'medidas', 'leitura', 'conta-gotas', 'prever', 'ver', 'tubos', 'caderno', 'roteiros', 'frascos', 'tabela-indicadores', 'acessibilidade', 'app', 'limites']) {
+for (const parte of ['comecar', 'menu', 'modulos', 'prateleira', 'vidraria', 'indicadores', 'medidas', 'leitura', 'conta-gotas', 'prever', 'ver', 'tubos', 'caderno', 'roteiros', 'frascos', 'tabela-indicadores', 'acessibilidade', 'app', 'limites']) {
   assert.ok(ids.includes(parte), `falta a seção ${parte}`); count++;
 }
 const links = [...html.matchAll(/href="#\/manual\/([^"]+)"/g)].map(m => m[1]);

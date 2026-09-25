@@ -2,8 +2,8 @@
 /* Manual digital da bancada, escrito como dados.
    Cada seção: id (endereço #/manual/<id>), titulo, resumo, alvo (elemento da
    bancada destacado por "Mostrar na bancada"), painel (true se o alvo fica na
-   prateleira, que no celular é um painel inferior), nivel (nível necessário
-   para o alvo aparecer) e blocos de conteúdo:
+   prateleira, que no celular é um painel inferior), nivel (módulo necessário
+   para o alvo aparecer: explorar, medir ou calcular) e blocos de conteúdo:
      { p }            parágrafo
      { lista: [] }    lista de itens ("Rótulo: texto" deixa o rótulo em negrito)
      { passos: [] }   passo a passo numerado
@@ -53,14 +53,32 @@ SIAB.manual = [
     ]
   },
   {
+    id: 'modulos', titulo: 'Módulos: Explorar, Medir e Calcular', alvo: '#modulos', painel: true,
+    resumo: 'O que cada módulo propõe e o que ele libera na bancada.',
+    blocos: [
+      { p: 'A bancada tem três módulos, do qualitativo ao quantitativo. A química é sempre a mesma (o mesmo balanço de cargas calcula o pH); o módulo só decide quantos controles e números aparecem, para não sobrecarregar quem está começando.' },
+      { lista: [
+        'Explorar (módulo 1): frascos, indicadores e vidraria. Você observa a cor, o pH e as partículas; os números do preparo ficam escondidos.',
+        'Medir (módulo 2): acrescenta os ajustes de diluição, volume inicial e volume da gota. O gráfico prevê o volume de equivalência e a Equação mostra pOH e pH + pOH.',
+        'Calcular (módulo 3): acrescenta as concentrações em mol/L no preparo; a Equação mostra [H₃O⁺], [OH⁻], Ka ou Kb, grau de ionização α e n = C · V; a lupa mostra a concentração de cada espécie.'
+      ] },
+      { passos: [
+        'Toque no nome de um módulo para abrir o cartão dele.',
+        'Leia o que ele propõe e o que libera.',
+        'Toque em “Ativar módulo”. O selo “Ativo” mostra o módulo em uso, e a barra da bancada também (por exemplo, “MÓDULO · MEDIR”).'
+      ] },
+      { dica: 'Trocar de módulo não mexe nos tubos: as gotas e as medidas continuam como estavam.' }
+    ]
+  },
+  {
     id: 'prateleira', titulo: 'Prateleira de frascos', alvo: '#painel-laboratorio', painel: true,
-    resumo: 'Níveis, destino do frasco, busca e grupos de frascos.',
+    resumo: 'Menus Tubo e Conta-gotas, busca e grupos de frascos.',
     blocos: [
       { p: 'A prateleira guarda todos os frascos, separados em grupos: frutas e sucos, alimentos e bebidas, soluções do cotidiano, reagentes de laboratório, sais e tampões, saúde e ambiente, e referência (água pura).' },
       { lista: [
-        'Nível: Explorar mostra só frascos e indicadores. Medir acrescenta diluição, volume inicial e tamanho da gota. Calcular acrescenta concentrações em mol/L e mais números no painel Equação.',
-        'Tocar em um frasco coloca no: escolha “Tubo” ou “Conta-gotas” antes de tocar no frasco.',
-        'Buscar frasco: digite parte do nome ou da fórmula, com ou sem acento (“limao” encontra “Suco de limão”; “NaOH” encontra o hidróxido de sódio).',
+        'Menus Tubo e Conta-gotas: cada um mostra o frasco em uso. Toque no menu para abrir a lista logo abaixo dele; tocar em um frasco coloca a solução ali e o menu se fecha. Esc também fecha.',
+        'Grupos recolhíveis: a lista abre só o grupo do frasco em uso. Toque no nome de um grupo para abrir ou fechar; o número ao lado diz quantos frascos ele tem.',
+        'Buscar frasco: digite parte do nome ou da fórmula, com ou sem acento (“limao” encontra “Suco de limão”; “NaOH” encontra o hidróxido de sódio). Os grupos com resultado se abrem sozinhos.',
         'Etiquetas: “no tubo” e “conta-gotas” mostram o que está em uso no tubo selecionado.'
       ] },
       { dica: 'Trocar o frasco recomeça as gotas do tubo. Se foi sem querer, toque em “Desfazer”.' }
@@ -104,9 +122,9 @@ SIAB.manual = [
     id: 'medidas', titulo: 'Ajustes de medida', alvo: '#ajustes', painel: true, nivel: 'calcular',
     resumo: 'Concentração, diluição, volume inicial e tamanho da gota.',
     blocos: [
-      { p: 'Os ajustes aparecem nos níveis Medir e Calcular. Valem para o tubo selecionado e para os tubos vinculados a ele.' },
+      { p: 'Os ajustes aparecem nos módulos Medir e Calcular. Valem para o tubo selecionado e para os tubos vinculados a ele.' },
       { lista: [
-        'Concentração no tubo e no conta-gotas (nível Calcular): de 0,0001 a 0,1 mol/L. Aparece para reagentes de laboratório, sais, tampões e antiácidos.',
+        'Concentração no tubo e no conta-gotas (módulo Calcular): de 0,0001 a 0,1 mol/L. Aparece para reagentes de laboratório, sais, tampões e antiácidos.',
         'Diluição da amostra: para frutas, alimentos e chuva. Como preparada, 1 + 1, 1 + 4 ou 1 + 9 partes de água.',
         'Volume inicial: de 0,1 a 4 mL de solução no tubo.',
         'Volume da gota: 0,01, 0,02, 0,05 ou 0,10 mL. Gotas menores mostram melhor o salto de pH.'
@@ -174,7 +192,7 @@ SIAB.manual = [
       { lista: [
         'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência. Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca). Tracejado horizontal: pH neutro.',
         'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece.',
-        'Equação: ionização do que está no tubo e no conta-gotas, reação ao misturar e números. pOH aparece no nível Medir; [H₃O⁺], Ka, α e quantidades em mmol, no nível Calcular.',
+        'Equação: ionização do que está no tubo e no conta-gotas, reação ao misturar e números. pOH aparece no módulo Medir; [H₃O⁺], Ka, α e quantidades em mmol, no módulo Calcular.',
         'Histórico: tabela gota a gota. “Baixar tabela (CSV)” abre em planilha (ponto e vírgula, vírgula decimal). “Registrar no caderno” guarda a leitura atual.'
       ] },
       { dica: 'Com o teclado, use as setas ← e → para trocar de aba.' }
@@ -289,7 +307,7 @@ SIAB.manual = [
 ];
 
 /* Roteiros de teste prontos: tubos (como em SIAB.newTube; "grupo" vincula
-   tubos), nível da bancada, aba do painel VER e o que fazer depois de montar.
+   tubos), módulo da bancada, aba do painel VER e o que fazer depois de montar.
    O resultado esperado é calculado pelo motor em js/telas/manual.js. */
 SIAB.roteiros = [
   {

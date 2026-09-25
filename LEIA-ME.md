@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.3
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.4
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.3`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.4`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -33,6 +33,16 @@ essa mistura.
 O SIAB abre na **bancada de testes**, e ela **começa vazia**: você toca num
 frasco da prateleira e ele vira o "Tubo 1".
 
+- **Módulos Explorar, Medir e Calcular:** três cartões recolhíveis na
+  prateleira, como os cartões de modelo do SIMA. Cada um mostra o número, o
+  selo "Ativo", o que propõe, o que libera na bancada e o botão "Ativar
+  módulo". A química é a mesma nos três; muda só quantos controles e números
+  aparecem (do qualitativo ao quantitativo).
+- **Menus Tubo e Conta-gotas:** a prateleira mostra dois menus recolhíveis com
+  o frasco em uso. A lista abre logo abaixo do menu escolhido e fecha depois
+  da escolha; os grupos de frascos também se recolhem, e a busca abre os que
+  têm resultado. Com isso a prateleira ficou cerca de 63 % mais curta
+  (de 3.281 para 1.208 px no computador).
 - **Gotas com movimento:** o conta-gotas aparece sobre a vidraria, a gota se
   forma na ponta, cai e, ao chegar, faz ondas, respingos e espalha a nova cor;
   o nível sobe nesse momento. Na viragem, a cor se espalha mais.
@@ -100,7 +110,7 @@ Com o modo completo ligado, a tela inicial oferece quatro caminhos:
   agir → explicar → conferir). As respostas vão para o caderno.
 - **Desafios:** 5 jogos com pontuação e recorde: Amostra misteriosa, Missão
   titulação, Super Trunfo químico, Régua do pH e Construtor de neutralização.
-- **Laboratório:** bancada livre com prateleira de frascos e níveis
+- **Laboratório:** bancada livre com prateleira de frascos e os módulos
   Explorar, Medir e Calcular.
 - **Professor:** montar aula com link para a turma, roteiro impresso,
   respostas esperadas e modo projetor.

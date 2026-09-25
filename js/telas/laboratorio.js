@@ -1,5 +1,5 @@
 'use strict';
-/* Tela do laboratório livre: a bancada com prateleira e níveis. */
+/* Tela do laboratório livre: a bancada com prateleira e módulos. */
 SIAB.telas.laboratorio = {
   secao: 'bancada',
   menu: 'laboratorio',

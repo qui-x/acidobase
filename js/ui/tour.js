@@ -9,7 +9,7 @@ SIAB.tour = (() => {
   // alvoCelular: o que contornar quando a parte fica em outro lugar no celular.
   const PASSOS = [
     { alvo: '#menu-btn', titulo: 'Menu ☰', texto: 'Roteiros de teste prontos, modos (missões, desafios e professor) e acessibilidade ficam aqui.' },
-    { alvo: '#controls', alvoCelular: '#prepare-btn', titulo: 'Prateleira', texto: 'Escolha o frasco que vai no tubo ou no conta-gotas, o indicador e o nível: Explorar, Medir ou Calcular.' },
+    { alvo: '#controls', alvoCelular: '#prepare-btn', titulo: 'Prateleira', texto: 'Escolha o módulo (Explorar, Medir ou Calcular), a vidraria e, nos menus Tubo e Conta-gotas, os frascos. Depois, o indicador.' },
     { alvo: '#bancada-vazia', titulo: 'Comece por aqui', texto: 'A bancada começa vazia. Toque num frasco da prateleira e ele vira o Tubo 1. Depois escolha o indicador.' },
     { alvo: '.stage-stats', titulo: 'Leitura', texto: 'pH, régua de cores e volume do tubo em foco. A cor observada também aparece escrita.' },
     { alvo: '#drop-btn', titulo: 'Conta-gotas', texto: 'Segure para gotejar e solte para parar. Um toque põe 1 gota. “Desfazer” volta qualquer ação.' },

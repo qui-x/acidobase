@@ -1,6 +1,6 @@
 'use strict';
 /* Painel "Equação": nível simbólico. Mostra ionização, reação ao misturar e,
-   conforme o nível, os números do equilíbrio (pH, pOH, concentrações, α, Ka). */
+   conforme o módulo, os números do equilíbrio (pH, pOH, concentrações, α, Ka). */
 SIAB.equacao = (() => {
   // Equação iônica da reação entre o que está no tubo e o que cai do conta-gotas.
   function reacaoIonica(a, b) {
@@ -104,7 +104,7 @@ SIAB.equacao = (() => {
         numeros.push(linha('Volume de equivalência', `V = ${SIAB.format(result.equivalenceVolume, 3)} mL`));
       }
     }
-    blocos.push(`<section class="eq-bloco"><h3>Números</h3><dl class="eq-numeros">${numeros.join('')}</dl>${nivel === 'explorar' ? '<p class="field-hint">Mais números nos níveis Medir e Calcular.</p>' : ''}${result.temperature !== 25 ? `<p class="field-hint">A ${SIAB.format(result.temperature, 0)} °C, o neutro é pH ${SIAB.format(result.neutralPH)}.</p>` : ''}</section>`);
+    blocos.push(`<section class="eq-bloco"><h3>Números</h3><dl class="eq-numeros">${numeros.join('')}</dl>${nivel === 'explorar' ? '<p class="field-hint">Mais números nos módulos Medir e Calcular.</p>' : ''}${result.temperature !== 25 ? `<p class="field-hint">A ${SIAB.format(result.temperature, 0)} °C, o neutro é pH ${SIAB.format(result.neutralPH)}.</p>` : ''}</section>`);
     return `<div class="equacao">${blocos.join('')}</div>`;
   }
 

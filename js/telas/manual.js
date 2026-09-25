@@ -145,7 +145,7 @@ SIAB.manualTela = (() => {
     return `<div class="roteiros">${SIAB.roteiros.map(r => `<article class="roteiro" id="roteiro-${r.id}">
       <h3>${esc(r.titulo)}</h3>
       <p>${esc(r.objetivo)}</p>
-      <p class="eyebrow">MONTA · NÍVEL ${esc(r.nivel.toUpperCase())}</p>
+      <p class="eyebrow">MONTA · MÓDULO ${esc(r.nivel.toUpperCase())}</p>
       <ul class="manual-lista">${r.tubos.map(spec => `<li>${descricaoTubo(spec)}</li>`).join('')}</ul>
       <p class="eyebrow">DEPOIS DE MONTAR</p>
       <ol class="manual-passos">${r.passos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>

@@ -212,7 +212,7 @@ SIAB.segredo = (() => {
     $('shelf').addEventListener('click', evento => {
       const botao = evento.target.closest('[data-segredo]');
       if (!botao) return;
-      $('shelf-search').value = '';
+      SIAB.prateleira.fechar(false);
       if (botao.dataset.segredo === 'mistura') misturar();
       else arcoIris();
     });

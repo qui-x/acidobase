@@ -47,9 +47,9 @@ SIAB.trilho = (() => {
     if (cfg.modo === 'missao') return [{ id: 'missao', rotulo: 'Missão', icone: ICONES.missao, foco: '#painel-missao button' }];
     const temTubo = Boolean(SIAB.current());
     return [
-      { id: 'nivel', rotulo: 'Nível', icone: ICONES.nivel, foco: '#nivel-grupo input:checked' },
+      { id: 'nivel', rotulo: 'Módulos', icone: ICONES.nivel, foco: '#modulos .modulo.ativo .modulo-cab' },
       { id: 'vidraria', rotulo: 'Vidraria', icone: ICONES.vidraria, foco: '#vidraria-grupo input:checked' },
-      { id: 'frascos', rotulo: 'Frascos', icone: ICONES.frascos, foco: '#shelf-search' },
+      { id: 'frascos', rotulo: 'Frascos', icone: ICONES.frascos, foco: '#menu-tubo' },
       temTubo && { id: 'indicador', rotulo: 'Indicador', icone: ICONES.indicador, foco: '#indicator-chips input:checked, #indicator-chips input' },
       temTubo && SIAB.state.level !== 'explorar' && { id: 'ajustes', rotulo: 'Ajustes de medida', icone: ICONES.ajustes, foco: '#ajustes summary' },
       temTubo && { id: 'acoes', rotulo: 'Ações do tubo', icone: ICONES.acoes, foco: '#compare-btn' }
@@ -215,7 +215,7 @@ SIAB.trilho = (() => {
       if (flutuante?.painel === 'controls') fecharFlutuante(false);
     });
     largo.addEventListener('change', () => { fecharFlutuante(false); aplicar(); });
-    // Modo, tubos e nível mudam as partes do trilho; a aba do VER muda a marca.
+    // Modo, tubos e módulo mudam as partes do trilho; a aba do VER muda a marca.
     SIAB.loja.assinar(() => {
       if (largo.matches) for (const painel of ['controls', 'ver-panel']) if (recolhido[painel] && !suspenso) desenhar(painel);
       marcarAtivo();

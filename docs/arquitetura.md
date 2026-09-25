@@ -1,4 +1,4 @@
-# Arquitetura do SIAB 0.5.3 — guia para quem está começando
+# Arquitetura do SIAB 0.5.4 — guia para quem está começando
 
 Este guia explica como o código está organizado e como fazer as mudanças mais
 comuns: criar uma missão, acrescentar um frasco à prateleira e criar um desafio.
@@ -33,7 +33,7 @@ redesenhadas. Assim ninguém esquece de atualizar a tela.
 | `js/core/` | espaço de nomes, utilidades, estado, loja, progresso salvo e roteador |
 | `js/data/` | catálogo de soluções e indicadores, amostras, sais, funções inorgânicas, missões e trilhas |
 | `js/simulation/` | motor químico (`quimica.js`) e motor de missões (`motor-missoes.js`) |
-| `js/ui/` | componentes: tubo, régua de pH, gráfico, lupa, equação, prateleira, conta-gotas, som; menu ☰ (`gaveta.js`), painéis recolhíveis (`trilho.js`), tour guiado (`tour.js`) e animação de abertura (`abertura.js`) |
+| `js/ui/` | componentes: tubo, régua de pH, gráfico, lupa, equação, prateleira, módulos (`modulos.js`), conta-gotas, som; menu ☰ (`gaveta.js`), painéis recolhíveis (`trilho.js`), tour guiado (`tour.js`) e animação de abertura (`abertura.js`) |
 | `js/telas/` | cada tela: bancada, laboratório, missão, início, trilhas, desafios (um arquivo por jogo), professor, caderno |
 | `js/a11y/` | interruptores do painel de acessibilidade e o tradutor de Libras (usa o `a11y.js` da raiz) |
 | `js/init/` | inicialização (`app.js`) e aplicativo instalável (`pwa.js`) |
@@ -85,10 +85,26 @@ animações".
 ### Painéis recolhidos (trilho)
 
 `js/ui/trilho.js` segue o trilho do SIMA: recolhido, cada ícone abre só uma
-`.painel-secao` (Nível, Vidraria, Frascos, Indicador, Ajustes, Ações) num
+`.painel-secao` (Módulos, Vidraria, Frascos, Indicador, Ajustes, Ações) num
 cartão flutuante (`.flutuando`), ou a aba escolhida do VER. `SIAB.trilho.mostrar(painel, parte)`
 serve aos dois casos: flutua se estiver recolhido, rola até a parte se não. O
 tour chama `suspender()` e `retomar()`.
+
+### Módulos e menus de frascos (prateleira)
+
+`js/ui/modulos.js` guarda em `SIAB.MODULOS` o texto de cada módulo (o que
+propõe, o que libera, uma nota) e monta os três cartões recolhíveis em
+`#modulos`. Um cartão aberto por vez; "Ativar módulo" muda
+`SIAB.state.level` ('explorar', 'medir' ou 'calcular') e redesenha. O resto
+do programa continua lendo `state.level`, então nada mais precisou mudar.
+
+`js/ui/prateleira.js` mostra dois menus, `#menu-tubo` e `#menu-gotas`, com o
+frasco em uso. `SIAB.prateleira.abrir(destino)` move a lista
+(`#menu-frasco-corpo`, com a busca e `#shelf`) para baixo do menu escolhido e
+define `state.destination`; `fechar()` esconde e limpa a busca. A lista só é
+desenhada com o menu aberto. Os grupos são `<details>`: abre o do frasco em
+uso, a busca abre os que têm resultado, e os que a pessoa abre ou fecha ficam
+lembrados enquanto o menu está aberto.
 
 ### Mistura de vários componentes (motor)
 
@@ -205,12 +221,12 @@ O navegador guarda arquivos no cache. Se o `index.html` for novo e o `app.js`
 continuar antigo, o app quebra. Para evitar isso, a versão aparece em três
 lugares, que precisam ser iguais:
 
-1. `js/core/namespace.js`: `version: '0.5.3'`;
-2. `index.html`: o final `?v=0.5.3` de cada `<script>` e do CSS;
-3. `sw.js`: `const VERSAO = 'siab-0.5.3'`.
+1. `js/core/namespace.js`: `version: '0.5.4'`;
+2. `index.html`: o final `?v=0.5.4` de cada `<script>` e do CSS;
+3. `sw.js`: `const VERSAO = 'siab-0.5.4'`.
 
 Ao publicar, troque os três (no `index.html`, use "substituir tudo" de
-`?v=0.5.3` pela versão nova). Arquivo `.js` novo? Acrescente também na lista
+`?v=0.5.4` pela versão nova). Arquivo `.js` novo? Acrescente também na lista
 `ARQUIVOS` do `sw.js`. O `npm test` avisa se algum ficou diferente. O
 service worker novo baixa tudo direto do servidor (`cache: 'reload'`), assume
 sozinho e a página mostra "Recarregar".

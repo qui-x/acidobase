@@ -205,8 +205,11 @@ SIAB.bancada = (() => {
       ? `${SIAB.current().name} criado com ${x.name} ${onde}. Agora escolha um indicador.`
       : `${x.name} ${onde}. As gotas recomeçaram; use Desfazer para voltar.`);
     SIAB.announce(`${x.name} ${onde}.`);
-    // No celular, o painel fecha depois de escolher o frasco: o resultado aparece na hora.
-    if (mobile.matches && $('controls').classList.contains('open')) closeSheet();
+    // O menu da prateleira se fecha depois da escolha (o foco volta ao cabeçalho
+    // dele). No celular, o painel também fecha: o resultado aparece na hora.
+    const noCelular = mobile.matches && $('controls').classList.contains('open');
+    SIAB.prateleira.fechar(!noCelular);
+    if (noCelular) closeSheet();
   }
 
   function erroForm(form, campo, mensagem) {
@@ -521,6 +524,7 @@ SIAB.bancada = (() => {
     $('vazia-prateleira').addEventListener('click', () => {
       if (mobile.matches) openSheet();
       else SIAB.trilho.mostrar('controls', 'frascos');
+      SIAB.prateleira.abrir('tube', { foco: 'busca' });
     });
 
     $('rename-btn').addEventListener('click', () => {
@@ -558,20 +562,12 @@ SIAB.bancada = (() => {
       SIAB.announce(`Indicador: ${SIAB.indicators[valor].name}.`);
       document.querySelector(`#indicator-chips input[value="${valor}"]`)?.focus();
     });
-    document.querySelectorAll('input[name="nivel"]').forEach(x => x.addEventListener('change', () => {
-      SIAB.state.level = x.value;
-      SIAB.render(true);
-      SIAB.announce(SIAB.NIVEIS[x.value]);
-    }));
+    SIAB.modulos.ligar();
     document.querySelectorAll('input[name="vidraria"]').forEach(x => x.addEventListener('change', () => trocarVidraria(x.value)));
     $('capacidade-opcoes').addEventListener('change', evento => {
       if (evento.target.name === 'capacidade') trocarCapacidade(Number(evento.target.value));
     });
-    document.querySelectorAll('input[name="destino"]').forEach(x => x.addEventListener('change', () => {
-      SIAB.state.destination = x.value;
-      SIAB.prateleira.render();
-    }));
-    $('shelf-search').addEventListener('input', SIAB.prateleira.render);
+    SIAB.prateleira.ligar();
     $('prepare-form').addEventListener('input', () => limparErros('prepare'));
     $('prepare-form').addEventListener('change', () => limparErros('prepare'));
     $('prepare-form').addEventListener('submit', aplicarMedidas);

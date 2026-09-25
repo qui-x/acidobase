@@ -48,6 +48,19 @@ async function teste(nome, fn) {
   const ir = (page, rota) => page.evaluate(r => { location.hash = r; }, rota).then(() => page.waitForFunction(r => location.hash === r && SIAB.rota.nome, rota));
   const texto = (page, seletor) => page.locator(seletor).first().textContent().then(x => x.trim());
   const estado = (page, fn, arg) => page.evaluate(fn, arg);
+  // Escolhe um frasco nos menus recolhíveis da prateleira (Tubo ou Conta-gotas):
+  // abre o menu, abre o grupo do frasco e toca nele.
+  const frasco = async (pg, id, destino = 'tube') => {
+    const menu = destino === 'tube' ? '#menu-tubo' : '#menu-gotas';
+    if (await pg.getAttribute(menu, 'aria-expanded') !== 'true') await pg.click(menu);
+    await pg.evaluate(x => { document.querySelector(`#shelf [data-solution="${x}"]`).closest('details').open = true; }, id);
+    await pg.click(`#shelf [data-solution="${id}"]`);
+  };
+  // Abre o cartão de um módulo e toca em "Ativar módulo".
+  const modulo = async (pg, id) => {
+    if (await pg.getAttribute(`#modulo-cab-${id}`, 'aria-expanded') !== 'true') await pg.click(`#modulo-cab-${id}`);
+    await pg.click(`#modulos [data-nivel="${id}"]`);
+  };
 
   /* ------------------------------------------------------------------ */
   console.log('Modo completo · navegação e telas');
@@ -101,14 +114,13 @@ async function teste(nome, fn) {
     assert.match(await texto(page, '#ver-conteudo'), /Coloque um frasco num tubo/);
     await page.click('#vazia-prateleira');
     assert.equal(await estado(page, () => document.activeElement.id), 'shelf-search');
-    await page.click('#shelf [data-solution="lemon"]');
+    assert.equal(await page.getAttribute('#menu-tubo', 'aria-expanded'), 'true', '"Escolher um frasco" abre o menu Tubo');
+    await frasco(page, 'lemon');
     assert.equal(await texto(page, '#tube-name'), 'Tubo 1');
     assert.equal(await page.isVisible('#bancada-vazia'), false);
     assert.equal((await t()).ind, 'none');
     // Conta-gotas com bicarbonato e indicador de repolho roxo, como na aula.
-    await page.check('input[name="destino"][value="titrant"]', { force: true });
-    await page.click('#shelf [data-solution="bicarbonate"]');
-    await page.check('input[name="destino"][value="tube"]', { force: true });
+    await frasco(page, 'bicarbonate', 'titrant');
     await page.check('#indicator-chips input[value="cabbage"]', { force: true });
     const x = await t();
     assert.deepEqual([x.sol, x.tit, x.ind], ['lemon', 'bicarbonate', 'cabbage']);
@@ -189,7 +201,7 @@ async function teste(nome, fn) {
     assert.match(await texto(page, '#ph-delta'), /→/);
   });
   await teste('prateleira: frasco vai para o tubo, gotas recomeçam e Desfazer restaura', async () => {
-    await page.click('#shelf [data-solution="vinegar"]');
+    await frasco(page, 'vinegar');
     let x = await t();
     assert.equal(x.sol, 'vinegar');
     assert.equal(x.gotas, 0);
@@ -199,28 +211,67 @@ async function teste(nome, fn) {
     assert.equal(x.sol, 'lemon');
     assert.ok(x.gotas > 0);
   });
-  await teste('prateleira: destino conta-gotas', async () => {
-    await page.check('input[name="destino"][value="titrant"]');
-    await page.click('#shelf [data-solution="naoh"]');
+  await teste('prateleira: menus Tubo e Conta-gotas recolhíveis', async () => {
+    // Fechados, mostram o frasco em uso e a lista não aparece.
+    assert.equal(await page.isVisible('#shelf'), false);
+    assert.match(await texto(page, '#menu-tubo'), /Tubo.*Suco de limão/s);
+    assert.match(await texto(page, '#menu-gotas'), /Conta-gotas.*Bicarbonato/s);
+    // Abrir o Conta-gotas: a lista vai para baixo dele e só o grupo do frasco em uso abre.
+    await page.click('#menu-gotas');
+    assert.equal(await page.getAttribute('#menu-gotas', 'aria-expanded'), 'true');
+    assert.equal(await page.getAttribute('#menu-tubo', 'aria-expanded'), 'false');
+    assert.equal(await estado(page, () => document.querySelector('#menu-frasco-corpo').parentElement.contains(document.querySelector('#menu-gotas'))), true);
+    assert.deepEqual(await estado(page, () => [...document.querySelectorAll('#shelf details[open]')].map(d => d.dataset.grupo)), ['home']);
+    // Tocar no frasco coloca no conta-gotas, fecha o menu e devolve o foco ao cabeçalho.
+    await frasco(page, 'naoh', 'titrant');
     const x = await t();
     assert.equal(x.tit, 'naoh');
     assert.match(await texto(page, '#titrant-label'), /NaOH/);
-    await page.check('input[name="destino"][value="tube"]');
+    assert.equal(await page.getAttribute('#menu-gotas', 'aria-expanded'), 'false');
+    assert.equal(await page.isVisible('#shelf'), false);
+    assert.equal(await estado(page, () => document.activeElement.id), 'menu-gotas');
+    assert.match(await texto(page, '#menu-gotas'), /Hidróxido de sódio/);
+    // Esc fecha o menu aberto.
+    await page.click('#menu-tubo');
+    await page.keyboard.press('Escape');
+    assert.equal(await page.getAttribute('#menu-tubo', 'aria-expanded'), 'false');
+    assert.equal(await estado(page, () => document.activeElement.id), 'menu-tubo');
   });
-  await teste('busca da prateleira sem acentos encontra "Suco de limão"', async () => {
+  await teste('busca da prateleira sem acentos encontra "Suco de limão" e abre o grupo', async () => {
+    await page.click('#menu-tubo');
     await page.fill('#shelf-search', 'limao');
     assert.equal(await page.locator('#shelf .bottle').count(), 1);
     assert.match(await texto(page, '#shelf .bottle'), /Suco de limão/);
+    assert.equal(await page.isVisible('#shelf .bottle'), true, 'o grupo com resultado se abre sozinho');
     await page.fill('#shelf-search', '');
+    await page.click('#menu-tubo');
+    assert.equal(await page.inputValue('#shelf-search'), '', 'fechar limpa a busca');
   });
-  await teste('níveis: Explorar esconde ajustes; Medir mostra volume; Calcular mostra concentração', async () => {
+  await teste('módulos: cartões recolhíveis; Explorar esconde ajustes; Medir mostra volume; Calcular mostra concentração', async () => {
     assert.equal(await page.isVisible('#ajustes'), false);
-    await page.check('input[name="nivel"][value="medir"]');
+    assert.equal(await page.locator('#modulos .modulo').count(), 3);
+    assert.equal(await page.isVisible('#modulos .modulo-corpo'), false, 'começam recolhidos');
+    assert.equal(await page.isVisible('#modulos [data-modulo="explorar"] .modulo-ativo'), true);
+    assert.equal(await page.isVisible('#modulos [data-modulo="medir"] .modulo-ativo'), false);
+    // Abrir um cartão só mostra o que o módulo oferece; ativar é outro toque.
+    await page.click('#modulo-cab-medir');
+    assert.equal(await page.isVisible('#modulo-corpo-medir'), true);
+    assert.match(await texto(page, '#modulo-corpo-medir .fact-grid'), /equivalência/);
+    assert.equal(await estado(page, () => SIAB.state.level), 'explorar');
+    await page.click('#modulos [data-nivel="medir"]');
+    assert.equal(await estado(page, () => SIAB.state.level), 'medir');
+    assert.equal(await page.getAttribute('#modulos [data-nivel="medir"]', 'aria-pressed'), 'true');
+    assert.equal(await page.isVisible('#modulos [data-modulo="medir"] .modulo-ativo'), true);
+    assert.equal(await texto(page, '#bench-mode'), 'MÓDULO · MEDIR');
     assert.equal(await page.isVisible('#initial-volume'), true);
-    await page.click('#shelf [data-solution="hcl"]');
+    await frasco(page, 'hcl');
     assert.equal(await page.isVisible('#concentration'), false);
-    await page.check('input[name="nivel"][value="calcular"]');
+    // Um só cartão aberto por vez.
+    await modulo(page, 'calcular');
+    assert.equal(await page.isVisible('#modulo-corpo-medir'), false);
     assert.equal(await page.isVisible('#concentration'), true);
+    await page.click('#modulo-cab-calcular');
+    assert.equal(await page.isVisible('#modulos .modulo-corpo'), false);
   });
   await teste('ajustes: volume inválido mostra erro no formulário', async () => {
     await page.fill('#initial-volume', '9');
@@ -656,6 +707,8 @@ async function teste(nome, fn) {
     await page.evaluate(() => { A11Y.definir('fontScale', 2); A11Y.definir('spacing', true); });
     for (const rota of ['#/laboratorio', '#/caderno', '#/manual', '#/inicio']) {
       await ir(page, rota);
+      // O cabeçalho se adapta no quadro seguinte (ResizeObserver + requestAnimationFrame).
+      await estado(page, () => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
       const sobra = await estado(page, () => document.documentElement.scrollWidth - document.documentElement.clientWidth);
       assert.ok(sobra <= 1, `${rota}: rolagem horizontal de ${sobra}px`);
     }
@@ -686,7 +739,7 @@ async function teste(nome, fn) {
     assert.equal(await estado(m, () => document.activeElement.id), 'close-controls');
     assert.equal(await estado(m, () => document.querySelector('#experiment').inert), true);
     assert.equal(await m.getAttribute('#prepare-btn', 'aria-expanded'), 'true');
-    await m.click('#shelf [data-solution="soap"]');
+    await frasco(m, 'soap');
     assert.equal(await estado(m, () => SIAB.current().solution), 'soap');
     // Fecha sozinha depois de escolher o frasco e devolve o foco ao botão do cabeçalho.
     await m.waitForFunction(() => !document.querySelector('#controls').classList.contains('open'));
@@ -849,17 +902,18 @@ async function teste(nome, fn) {
     await b.click('[data-recolher="controls"]');
     const recolhida = await largura();
     assert.ok(recolhida > antes + 200, 'a bancada ganha espaço');
-    // Bancada vazia: o trilho mostra nível, vidraria e frascos.
+    // Bancada vazia: o trilho mostra módulos, vidraria e frascos.
     assert.deepEqual(await estado(b, () => [...document.querySelectorAll('#trilho-controls [data-item]')].map(x => x.dataset.item)), ['nivel', 'vidraria', 'frascos']);
     await b.click('#trilho-controls [data-item="frascos"]');
     assert.equal(await flutuante(), '{"painel":"controls","item":"frascos"}');
     assert.equal(await largura(), recolhida, 'o cartão flutua: a bancada não muda de largura');
-    assert.equal(await estado(b, () => document.activeElement.id), 'shelf-search');
-    assert.equal(await b.isVisible('#shelf'), true);
-    assert.equal(await b.isVisible('#nivel-grupo'), false, 'só a parte escolhida aparece');
+    assert.equal(await estado(b, () => document.activeElement.id), 'menu-tubo');
+    assert.equal(await b.isVisible('#menu-gotas'), true);
+    assert.equal(await b.isVisible('#modulos'), false, 'só a parte escolhida aparece');
     assert.equal(await b.getAttribute('#trilho-controls [data-item="frascos"]', 'aria-expanded'), 'true');
-    await b.click('#shelf [data-solution="lemon"]');
+    await frasco(b, 'lemon');
     assert.equal(await flutuante(), '{"painel":"controls","item":"frascos"}', 'continua aberto depois de escolher');
+    assert.equal(await b.getAttribute('#menu-tubo', 'aria-expanded'), 'false', 'o menu Tubo se fecha');
     // Um toque na bancada fecha o cartão da prateleira.
     await b.click('#experiment', { position: { x: 700, y: 500 } });
     assert.equal(await flutuante(), 'null');
@@ -888,7 +942,8 @@ async function teste(nome, fn) {
     assert.equal(await b.isVisible('#trilho-ver'), true);
     await b.click('#trilho-controls [data-fixar]');
     await b.click('#trilho-ver [data-fixar]');
-    assert.equal(await b.isVisible('#shelf'), true);
+    assert.equal(await b.isVisible('#menu-tubo'), true);
+    assert.equal(await b.isVisible('#modulos'), true);
     assert.equal(await estado(b, () => JSON.stringify(SIAB.trilho.estado)), '{"controls":false,"ver-panel":false}');
   });
   await teste('vidraria: começa no tubo de ensaio; béquer e erlenmeyer mudam o desenho, não a química', async () => {
@@ -896,7 +951,7 @@ async function teste(nome, fn) {
     assert.equal(await estado(b, () => SIAB.state.vidraria), 'tubo');
     assert.equal(await b.isChecked('input[name="vidraria"][value="tubo"]'), true);
     if (!(await estado(b, () => SIAB.state.tubes.length))) await b.click('#vazia-agua');
-    await b.click('#shelf [data-solution="hcl"]');
+    await frasco(b, 'hcl');
     const ph = await estado(b, () => SIAB.chem.solve(SIAB.current()).pH);
     await b.check('input[name="vidraria"][value="bequer"]', { force: true });
     assert.equal(await texto(b, '#tube-index'), await estado(b, () => `BÉQUER DE 50 mL · ${SIAB.state.tubes.indexOf(SIAB.current()) + 1} DE ${SIAB.state.tubes.length}`));
@@ -1020,12 +1075,13 @@ async function teste(nome, fn) {
     assert.equal(await b.locator('#manual-tabela-indicadores tbody tr').count(), indicadores);
     assert.match(await texto(b, '#manual-tabela-indicadores'), /8,2 a 10,0/);
   });
-  await teste('"Mostrar na bancada" destaca a parte e ajusta o nível', async () => {
+  await teste('"Mostrar na bancada" destaca a parte e ativa o módulo necessário', async () => {
     await ir(b, '#/manual/medidas');
     await b.click('#manual-medidas [data-mostrar]');
     await naBancada(b);
     await b.waitForSelector('#ajustes.ajuda-destaque');
     assert.equal(await estado(b, () => SIAB.state.level), 'calcular');
+    assert.equal(await b.getAttribute('#modulos [data-nivel="calcular"]', 'aria-pressed'), 'true', 'o cartão Calcular fica ativo');
     assert.equal(await estado(b, () => document.querySelector('#ajustes').open), true);
     assert.equal(await b.isVisible('#initial-volume'), true);
     await ir(b, '#/manual/conta-gotas');
@@ -1083,7 +1139,7 @@ async function teste(nome, fn) {
   await teste('capacidade: tubo com 5 mL; béquer e erlenmeyer com tamanhos à escolha, e o volume acompanha', async () => {
     await ir(b, '#/laboratorio');
     await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.state.vidraria = 'tubo'; SIAB.loja.avisar(); });
-    await b.click('#shelf [data-solution="hcl"]');
+    await frasco(b, 'hcl');
     await b.click('#drop5-btn');
     assert.equal(await b.isVisible('#capacidade-grupo'), false, 'tubo: sem escolha de capacidade');
     assert.equal(await b.isVisible('#drop5ml-btn'), false);
@@ -1110,16 +1166,16 @@ async function teste(nome, fn) {
     await b.click('#undo-btn');
     assert.equal(await estado(b, () => SIAB.state.vidraria), 'tubo');
     assert.equal((await t()).v0, 1);
-    // No nível Medir, o volume inicial vai até 80 % da capacidade.
+    // No módulo Medir, o volume inicial vai até 80 % da capacidade.
     await b.check('input[name="vidraria"][value="bequer"]', { force: true });
-    await b.check('input[name="nivel"][value="medir"]', { force: true });
+    await modulo(b, 'medir');
     await b.fill('#initial-volume', '45');
     await b.click('#prepare-form button[type="submit"]');
     assert.match(await texto(b, '#prepare-error'), /entre 0,1 e 40 mL/);
     await b.fill('#initial-volume', '30');
     await b.click('#prepare-form button[type="submit"]');
     assert.equal((await t()).v0, 30);
-    await b.check('input[name="nivel"][value="explorar"]', { force: true });
+    await modulo(b, 'explorar');
     await b.check('input[name="vidraria"][value="tubo"]', { force: true });
   });
   await teste('segredo: 7 toques no logotipo montam o Arco-íris do pH (indicador universal, pH 1 a 13)', async () => {
@@ -1144,6 +1200,7 @@ async function teste(nome, fn) {
   });
   await teste('segredo: "arco-íris" na busca mostra o frasco secreto; 6 toques não bastam', async () => {
     await ir(b, '#/laboratorio');
+    if (await b.getAttribute('#menu-tubo', 'aria-expanded') !== 'true') await b.click('#menu-tubo');
     await b.fill('#shelf-search', 'arco');
     assert.equal(await b.locator('[data-segredo]').count(), 0);
     await b.fill('#shelf-search', 'Arco-íris');
@@ -1165,14 +1222,16 @@ async function teste(nome, fn) {
     await ir(b, '#/laboratorio');
     await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.state.vidraria = 'tubo'; SIAB.loja.avisar(); });
     await b.click('#vazia-agua');
-    await b.click('#shelf [data-solution="hcl"]');
+    await frasco(b, 'hcl');
+    await b.click('#menu-tubo');
     await b.fill('#shelf-search', 'misturar');
     await b.click('[data-segredo="mistura"]');
     await b.waitForFunction(() => /pelo menos 2 tubos/.test(document.querySelector('#toast').textContent));
     assert.equal(await estado(b, () => SIAB.state.tubes.length), 1);
     await b.click('#add-tube-btn');
-    await b.click('#shelf [data-solution="naoh"]');
+    await frasco(b, 'naoh');
     await b.check('#indicator-chips input[value="btb"]', { force: true });
+    await b.click('#menu-tubo');
     await b.fill('#shelf-search', 'Misturar tudo');
     await b.click('[data-segredo="mistura"]');
     await b.waitForFunction(() => SIAB.state.tubes.length === 1 && SIAB.current().componentes?.length === 2);
@@ -1335,7 +1394,7 @@ async function teste(nome, fn) {
     await p.reload();
     await p.waitForFunction(() => window.SIAB && SIAB.rota.nome);
     await ir(p, '#/laboratorio');
-    await p.click('#shelf [data-solution="vinegar"]');
+    await frasco(p, 'vinegar');
     await p.click('#drop5-btn');
     assert.equal(await estado(p, () => SIAB.current().additions.length), 5);
     await ir(p, '#/manual/roteiros');

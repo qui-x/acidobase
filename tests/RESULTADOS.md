@@ -1,4 +1,4 @@
-# Validação da versão 0.5.3 — 25/09/2026
+# Validação da versão 0.5.4 — 25/09/2026
 
 ## Resumo
 
@@ -8,12 +8,34 @@
 | Amostras do cotidiano (`cotidiano.test.cjs`) | 15 amostras: aprovado |
 | Sais, tampões, antiácidos, chuva, temperatura, espécies e funções (`sais-ambiente.test.cjs`) | 62 verificações: aprovado |
 | Missões (`missoes.test.cjs`) | 14 missões e 88 passos percorridos: aprovado |
-| Manual (`manual.test.cjs`) | 83 verificações de seções, links de ajuda, alvos e roteiros: aprovado |
+| Manual (`manual.test.cjs`) | 88 verificações de seções, links de ajuda, alvos e roteiros: aprovado |
 | Mistura geral (`mistura.test.cjs`) | 18 verificações: HCl + NaOH = 7,00; diluição 2,30; tampão acetato 4,76; conservação; excesso de base 11,30; indicadores misturados: aprovado |
-| PWA (`pwa.test.cjs`) | 228 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
+| PWA (`pwa.test.cjs`) | 232 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
 | Ponta a ponta no Chromium (`e2e.test.cjs`) | 113 de 113 testes: aprovado |
-| Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados da 0.5.0 (bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura) e em mais 26 da 0.5.1 (frasco secreto, arco-íris, despejo, mistura, erlenmeyer e cartões flutuantes); temas escuro, claro e alto contraste; computador e celular |
+| Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados da 0.5.0 (bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura) e em mais 26 da 0.5.1 (frasco secreto, arco-íris, despejo, mistura, erlenmeyer e cartões flutuantes) e 12 da 0.5.4 (menus Tubo e Conta-gotas abertos, busca, os três módulos abertos e ativos, no celular); temas escuro, claro e alto contraste; computador e celular |
 | Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, com a animação de abertura e sem erros no console |
+
+## Novidades da 0.5.4 testadas
+
+- **Menus Tubo e Conta-gotas:** fechados, mostram o frasco em uso e escondem
+  a lista. Abrir um fecha o outro e leva a lista para baixo dele, com só o
+  grupo do frasco em uso aberto. Escolher um frasco coloca no lugar certo,
+  fecha o menu e devolve o foco ao cabeçalho; Esc também fecha. A busca abre
+  os grupos com resultado, e fechar o menu limpa a busca. "Escolher um frasco"
+  (bancada vazia) abre o menu Tubo com o foco na busca. No celular, o painel
+  fecha depois da escolha, como antes.
+- **Módulos:** começam recolhidos, com o selo "Ativo" no Explorar. Abrir um
+  cartão não troca o módulo; "Ativar módulo" troca, marca o botão como
+  pressionado e muda a barra para "MÓDULO · MEDIR". Um só cartão abre por vez.
+  O manual ("Mostrar na bancada" em Ajustes de medida) ativa o Calcular.
+- **Tamanho da prateleira:** com um tubo, o conteúdo caiu de 3.281 para
+  1.208 px no computador (1360×900) e de 3.016 para 1.097 px no celular
+  (390×844).
+- **Cores dos módulos no tema claro:** o axe apontou contraste baixo do azul
+  do Calcular sobre o fundo tingido; os três tons claros foram escurecidos
+  até passar de 4,5:1 também nesse fundo.
+- **Teste mais robusto:** o teste de "fonte 200 % sem rolagem horizontal"
+  agora espera o quadro em que o cabeçalho se adapta, em vez de medir antes.
 
 ## Novidades da 0.5.3 testadas
 

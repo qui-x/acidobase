@@ -20,11 +20,6 @@ SIAB.resumoConteudo = t => (t.componentes?.length
   ? `Mistura de ${t.componentes.length} ${t.componentes.length === 1 ? 'componente' : 'componentes'} · ${SIAB.format(SIAB.chem.base(t).reduce((s, x) => s + x.volume, 0))} mL`
   : `${SIAB.solutionSummary(t.solution, t.concentration, t.dilution)} · ${SIAB.format(t.initialVolume)} mL iniciais`);
 
-SIAB.NIVEIS = {
-  explorar: 'Explorar: escolha frascos e indicadores. Os números ficam para depois.',
-  medir: 'Medir: diluição, volume inicial e tamanho da gota. O gráfico mostra a equivalência.',
-  calcular: 'Calcular: concentrações em mol/L, [H₃O⁺], Ka, α e quantidades em mmol.'
-};
 
 SIAB.render = (syncForm = false) => {
   const $ = SIAB.$, s = SIAB.state, t = SIAB.current();
@@ -52,7 +47,7 @@ SIAB.render = (syncForm = false) => {
   $('focus-tab').setAttribute('aria-pressed', String(s.view === 'focus'));
   $('overview-tab').setAttribute('aria-pressed', String(s.view === 'overview'));
   $('overview-count').textContent = s.tubes.length;
-  $('bench-mode').textContent = cfg.modo === 'missao' ? 'MISSÃO' : `BANCADA · ${s.level.toUpperCase()}`;
+  $('bench-mode').textContent = cfg.modo === 'missao' ? 'MISSÃO' : `MÓDULO · ${s.level.toUpperCase()}`;
   $('tube-count').textContent = `${s.tubes.length} / ${SIAB.MAX_TUBES}`;
   // Botão do cabeçalho que abre o painel no celular (texto visível dentro do nome acessível).
   $('prepare-btn').querySelector('.header-btn-texto').textContent = cfg.modo === 'missao' ? 'Missão' : 'Prateleira';
@@ -133,9 +128,7 @@ SIAB.render = (syncForm = false) => {
 
   // Painel do laboratório.
   if (cfg.modo === 'laboratorio') {
-    document.querySelectorAll('input[name="nivel"]').forEach(x => { x.checked = x.value === s.level; });
-    document.querySelectorAll('input[name="destino"]').forEach(x => { x.checked = x.value === s.destination; });
-    $('nivel-dica').textContent = SIAB.NIVEIS[s.level];
+    SIAB.modulos.render();
     SIAB.renderVidraria();
     SIAB.prateleira.render();
     SIAB.prateleira.renderIndicadores();
@@ -173,7 +166,7 @@ SIAB.renderVazia = () => {
   $('overview-tab').setAttribute('aria-pressed', 'false');
   $('overview-tab').disabled = true;
   $('overview-count').textContent = '0';
-  $('bench-mode').textContent = `BANCADA · ${s.level.toUpperCase()}`;
+  $('bench-mode').textContent = `MÓDULO · ${s.level.toUpperCase()}`;
   $('tube-count').textContent = `0 / ${SIAB.MAX_TUBES}`;
   $('tube-list').innerHTML = '';
   $('add-tube-btn').hidden = false;
@@ -183,9 +176,7 @@ SIAB.renderVazia = () => {
   const ultima = s.history.at(-1);
   $('vazia-desfazer').hidden = !ultima;
   $('vazia-desfazer').title = ultima ? `Desfazer: ${ultima.descricao}` : '';
-  document.querySelectorAll('input[name="nivel"]').forEach(x => { x.checked = x.value === s.level; });
-  document.querySelectorAll('input[name="destino"]').forEach(x => { x.checked = x.value === s.destination; });
-  $('nivel-dica').textContent = SIAB.NIVEIS[s.level];
+  SIAB.modulos.render();
   SIAB.renderVidraria();
   SIAB.prateleira.render();
   SIAB.renderVer();
