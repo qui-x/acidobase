@@ -899,7 +899,7 @@ async function teste(nome, fn) {
     await b.click('#shelf [data-solution="hcl"]');
     const ph = await estado(b, () => SIAB.chem.solve(SIAB.current()).pH);
     await b.check('input[name="vidraria"][value="bequer"]', { force: true });
-    assert.equal(await texto(b, '#tube-index'), await estado(b, () => `BÉQUER ${SIAB.state.tubes.indexOf(SIAB.current()) + 1} DE ${SIAB.state.tubes.length}`));
+    assert.equal(await texto(b, '#tube-index'), await estado(b, () => `BÉQUER DE 50 mL · ${SIAB.state.tubes.indexOf(SIAB.current()) + 1} DE ${SIAB.state.tubes.length}`));
     assert.match(await texto(b, '#tube-name'), /^Béquer \d+$/);
     assert.equal(await b.locator('#large-tube svg.vidro-bequer').count(), 1);
     assert.match(await texto(b, '#vidraria-dica'), /Béquer/);
@@ -1080,6 +1080,48 @@ async function teste(nome, fn) {
     await b.click('#manual-imprimir');
     assert.ok(await estado(b, () => window.__impresso));
   });
+  await teste('capacidade: tubo com 5 mL; béquer e erlenmeyer com tamanhos à escolha, e o volume acompanha', async () => {
+    await ir(b, '#/laboratorio');
+    await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.state.vidraria = 'tubo'; SIAB.loja.avisar(); });
+    await b.click('#shelf [data-solution="hcl"]');
+    await b.click('#drop5-btn');
+    assert.equal(await b.isVisible('#capacidade-grupo'), false, 'tubo: sem escolha de capacidade');
+    assert.equal(await b.isVisible('#drop5ml-btn'), false);
+    await b.check('input[name="vidraria"][value="erlenmeyer"]', { force: true });
+    assert.equal(await estado(b, () => [...document.querySelectorAll('input[name="capacidade"]')].map(x => x.value + (x.checked ? '*' : '')).join()), '25,50,125*,250');
+    const t = () => estado(b, () => ({ v0: SIAB.current().initialVolume, gotas: SIAB.current().additions.length, cap: SIAB.capacidade(SIAB.current()), pH: SIAB.chem.solve(SIAB.current()).pH }));
+    let x = await t();
+    assert.deepEqual([x.v0, x.gotas, x.cap], [25, 0, 125], 'o volume acompanha (1 → 25 mL) e as gotas recomeçam');
+    assert.match(await texto(b, '#tube-index'), /^ERLENMEYER DE 125 mL/);
+    assert.equal(await b.getAttribute('#initial-volume', 'max'), '100');
+    await b.check('input[name="capacidade"][value="250"]', { force: true });
+    x = await t();
+    assert.deepEqual([x.v0, x.cap], [50, 250]);
+    assert.equal(await b.isVisible('#drop5ml-btn'), true);
+    await b.click('#drop5ml-btn');
+    assert.equal((await t()).gotas, 100, '+5 mL = 100 gotas de 0,05 mL');
+    // As marcas acompanham a capacidade (50, 100, 150, 200 e 250 mL).
+    assert.deepEqual(await estado(b, () => [...document.querySelectorAll('#large-tube .tube-graduation')].map(e => e.textContent)), ['50', '100', '150', '200', '250']);
+    // Desfazer volta a capacidade e a vidraria junto com os volumes.
+    await b.click('#undo-btn');
+    await b.click('#undo-btn');
+    x = await t();
+    assert.deepEqual([x.v0, x.cap], [25, 125]);
+    await b.click('#undo-btn');
+    assert.equal(await estado(b, () => SIAB.state.vidraria), 'tubo');
+    assert.equal((await t()).v0, 1);
+    // No nível Medir, o volume inicial vai até 80 % da capacidade.
+    await b.check('input[name="vidraria"][value="bequer"]', { force: true });
+    await b.check('input[name="nivel"][value="medir"]', { force: true });
+    await b.fill('#initial-volume', '45');
+    await b.click('#prepare-form button[type="submit"]');
+    assert.match(await texto(b, '#prepare-error'), /entre 0,1 e 40 mL/);
+    await b.fill('#initial-volume', '30');
+    await b.click('#prepare-form button[type="submit"]');
+    assert.equal((await t()).v0, 30);
+    await b.check('input[name="nivel"][value="explorar"]', { force: true });
+    await b.check('input[name="vidraria"][value="tubo"]', { force: true });
+  });
   await teste('segredo: 7 toques no logotipo montam o Arco-íris do pH (indicador universal, pH 1 a 13)', async () => {
     await ir(b, '#/caderno');
     const antes = await estado(b, () => SIAB.state.tubes.map(t => t.name));
@@ -1121,7 +1163,7 @@ async function teste(nome, fn) {
   });
   await teste('segredo: "misturar" despeja todos os tubos num béquer de 50 mL e o motor calcula a mistura', async () => {
     await ir(b, '#/laboratorio');
-    await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.loja.avisar(); });
+    await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.state.vidraria = 'tubo'; SIAB.loja.avisar(); });
     await b.click('#vazia-agua');
     await b.click('#shelf [data-solution="hcl"]');
     await b.fill('#shelf-search', 'misturar');
@@ -1137,12 +1179,12 @@ async function teste(nome, fn) {
     const m = await estado(b, () => { const t = SIAB.current(), r = SIAB.chem.solve(t); return { nome: t.name, vidro: t.vidraria, cap: t.capacidade, pH: r.pH, vol: r.volume, cor: SIAB.chem.liquid(t, false, r).name }; });
     assert.equal(m.nome, 'Mistura');
     assert.equal(m.vidro, 'bequer');
-    assert.equal(m.cap, 50);
+    assert.equal(m.cap, 10, 'o menor béquer em que 2 mL cabem com folga');
     assert.ok(Math.abs(m.pH - 7) < .01, `HCl + NaOH na mesma quantidade: pH ${m.pH}`);
     assert.equal(m.vol, 2);
     assert.equal(m.cor, 'verde', 'bromotimol em meio neutro');
     await b.waitForSelector('#mistura-aviso:not([hidden])', { timeout: 5000 });
-    assert.equal(await texto(b, '#capacity-value'), '50,00');
+    assert.equal(await texto(b, '#capacity-value'), '10,00');
     await b.click('#tab-equacao');
     assert.match(await texto(b, '#ver-conteudo'), /Na mistura · 2 componentes[\s\S]*H₃O⁺ \+ OH⁻ → 2 H₂O/);
     assert.ok(await estado(b, () => SIAB.progresso.dados.caderno.some(n => n.titulo === 'Descoberta secreta · Mistura geral')));
@@ -1173,6 +1215,36 @@ async function teste(nome, fn) {
     await bm.click('#close-controls');
   });
   await ctxBM.close();
+
+  /* ------------------------------------------------------------------ */
+  console.log('Organização da bancada');
+  for (const [largura, altura, celular] of [[1280, 720, false], [1360, 900, false], [390, 844, true]]) {
+    await teste(`bancada em ${largura}×${altura}: conta-gotas e atalhos visíveis, sem texto por cima`, async () => {
+      const ctx = await browser.newContext({ viewport: { width: largura, height: altura }, isMobile: celular, hasTouch: celular });
+      await ctx.addInitScript(() => { localStorage.setItem('siab_abertura', 'off'); localStorage.setItem('siab_manual_visto', 'true'); });
+      const pg = await ctx.newPage();
+      pg.on('pageerror', e => errosConsole.push(`[${testeAtual}] [pageerror] ${e.message}`));
+      await pg.goto(BASE + '#/laboratorio');
+      await pg.waitForFunction(() => window.SIAB && SIAB.rota.nome === 'laboratorio');
+      await pg.evaluate(() => { SIAB.bancada.colocar('lemon'); SIAB.current().indicator = 'cabbage'; SIAB.loja.avisar(); });
+      const caixas = () => pg.evaluate(() => {
+        const r = s => document.querySelector(s).getBoundingClientRect();
+        const baixo = [...document.querySelectorAll('.tube-strip, .bottom-nav')].filter(e => getComputedStyle(e).position !== 'static' && e.getBoundingClientRect().height).map(e => e.getBoundingClientRect().top);
+        return { gotejar: r('#drop-btn'), atalhos: r('#dose-shortcuts'), limite: Math.min(innerHeight, ...baixo) };
+      });
+      let c = await caixas();
+      assert.ok(c.gotejar.bottom <= c.limite + 1 && c.atalhos.bottom <= c.limite + 1, `botões até ${Math.round(c.atalhos.bottom)}, limite ${Math.round(c.limite)}`);
+      // Aviso de amostra representativa: curto, abre ao tocar.
+      assert.equal(await texto(pg, '#sample-model-note summary'), '≈ estimativa');
+      if (celular) {
+        // Rolando até o VER, a barra do conta-gotas continua à mão.
+        await pg.evaluate(() => document.querySelector('#ver-panel').scrollIntoView());
+        c = await caixas();
+        assert.ok(c.gotejar.top >= 0 && c.gotejar.bottom <= c.limite + 1, 'barra do conta-gotas presa embaixo');
+      }
+      await ctx.close();
+    });
+  }
 
   /* ------------------------------------------------------------------ */
   console.log('Animação de abertura');

@@ -251,6 +251,8 @@ SIAB.manualTela = (() => {
       estado.showPH = true;
       estado.verTab = roteiro.ver || 'grafico';
       estado.destination = 'tube';
+      // Os roteiros foram calculados para o tubo de ensaio (5 mL).
+      estado.vidraria = 'tubo';
     });
     SIAB.irPara('#/laboratorio');
     SIAB.notice(`Roteiro montado: ${roteiro.titulo}. “Desfazer” volta aos tubos anteriores.`);

@@ -5,14 +5,15 @@ SIAB.grafico = (() => {
   const W = 340, H = 230, M = { left: 38, right: 12, top: 14, bottom: 34 };
   const largura = W - M.left - M.right, altura = H - M.top - M.bottom;
 
-  // Pontos (volume, pH) a cada gota já adicionada.
+  // Pontos (volume, pH) a cada gota já adicionada. O pH só depende do volume
+  // total gotejado, então cada ponto usa uma "gota" com a soma (rápido mesmo
+  // com centenas de gotas num erlenmeyer grande).
   function serie(tube) {
     const pontos = [];
     let soma = 0;
     for (let i = 0; i <= tube.additions.length; i++) {
-      const parcial = { ...tube, additions: tube.additions.slice(0, i) };
       if (i > 0) soma += tube.additions[i - 1];
-      pontos.push({ v: soma, pH: SIAB.chem.solve(parcial).pH });
+      pontos.push({ v: soma, pH: SIAB.chem.solve({ ...tube, additions: soma > 0 ? [soma] : [] }).pH });
     }
     return pontos;
   }
@@ -30,7 +31,7 @@ SIAB.grafico = (() => {
     const r = SIAB.chem.solve(tube);
     const eq = r.equivalenceVolume;
     const ultimo = pontos.at(-1)?.v || 0;
-    const xMax = maxVolume || Math.max(1, ultimo * 1.1, eq ? Math.min(SIAB.CAPACITY_ML - tube.initialVolume, eq * 1.6) : 0);
+    const xMax = maxVolume || Math.max(1, ultimo * 1.1, eq ? Math.min(SIAB.capacidade(tube) - tube.initialVolume, eq * 1.6) : 0);
     const x = v => M.left + (v / xMax) * largura;
     const y = pH => M.top + (1 - Math.max(0, Math.min(14, pH)) / 14) * altura;
     const partes = [];
@@ -39,7 +40,7 @@ SIAB.grafico = (() => {
     for (let pH = 0; pH <= 14; pH += 2) {
       partes.push(`<path class="grafico-grade" d="M${M.left} ${y(pH)}H${W - M.right}"/><text class="grafico-rotulo" x="${M.left - 6}" y="${y(pH) + 4}" text-anchor="end">${pH}</text>`);
     }
-    const passoX = xMax <= 1.2 ? .2 : xMax <= 2.5 ? .5 : 1;
+    const passoX = [.2, .5, 1, 2, 5, 10, 20, 50, 100].find(p => xMax / p <= 7) || 100;
     for (let v = 0; v <= xMax + 1e-9; v += passoX) {
       partes.push(`<text class="grafico-rotulo" x="${x(v)}" y="${H - M.bottom + 16}" text-anchor="middle">${SIAB.format(v, passoX < 1 ? 1 : 0)}</text>`);
     }

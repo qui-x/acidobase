@@ -13,8 +13,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
   <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.2">
-  <script src="a11y.js?v=0.5.2"></script>
+  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.3">
+  <script src="a11y.js?v=0.5.3"></script>
   <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
   <script>try { if (localStorage.getItem('siab_abertura') === 'off') document.documentElement.dataset.abertura = 'off'; } catch (erro) { }</script>
 </head>
@@ -235,6 +235,10 @@
                 <label><input type="radio" name="vidraria" value="bequer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4c1 .3 2 1 2 2.5V19a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 18 19V4.5M9 10h3M9 14h3"/></svg><span>Béquer</span></label>
                 <label><input type="radio" name="vidraria" value="erlenmeyer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L5 19a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/></svg><span>Erlenmeyer</span></label>
               </fieldset>
+              <fieldset class="segmented capacidade-grupo" id="capacidade-grupo" hidden>
+                <legend>Capacidade (mL)</legend>
+                <div id="capacidade-opcoes" class="capacidade-opcoes"></div>
+              </fieldset>
               <p id="vidraria-dica" class="field-hint"></p>
             </div>
             <div class="painel-secao" data-secao="frascos">
@@ -339,7 +343,9 @@
                 <h1 id="tube-name" data-foco tabindex="-1"></h1>
                 <button id="rename-btn" type="button" class="icon-btn" aria-label="Renomear tubo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l4-1L20 7a2 2 0 0 0-3-3L5 16l-1 4Z"/></svg></button>
               </div>
-              <p id="sample-summary" class="small"></p>
+              <div class="resumo-linha"><span id="sample-summary" class="small"></span>
+                <details id="sample-model-note" class="nota-estimativa" hidden><summary>≈ estimativa</summary><span>Amostra representativa: o pH e a resposta às gotas são estimativas. Amostras reais variam.</span></details>
+              </div>
             </div>
           </div>
           <div id="group-notice" class="group-notice" hidden></div>
@@ -348,7 +354,6 @@
             <p id="mistura-texto"></p>
             <button type="button" class="quiet-btn" id="mistura-fechar">Fechar</button>
           </div>
-          <p id="sample-model-note" class="sample-model-note" hidden></p>
           <div id="boas-vindas" class="boas-vindas" role="note" hidden>
             <p><strong>Primeira vez aqui?</strong> O tour mostra cada parte da bancada em 1 minuto. O manual explica tudo e traz testes prontos.</p>
             <div><button type="button" class="primary-btn" id="boas-vindas-tour">Fazer o tour</button><a class="secondary-btn" href="#/manual" id="boas-vindas-manual">Abrir o manual</a><button type="button" class="quiet-btn" id="boas-vindas-fechar">Agora não</button></div>
@@ -374,9 +379,8 @@
 
           <div class="tube-stage">
             <div class="stage-stats">
-              <span class="eyebrow">LEITURA <a class="ajuda-link" href="#/manual/leitura" aria-label="Ajuda: leitura do tubo" title="Ajuda: leitura do tubo">?</a></span>
-              <div class="ph-readout"><span>pH</span><strong id="ph-value"></strong></div>
-              <span id="ph-phase" class="phase"></span>
+              <span class="eyebrow">pH <a class="ajuda-link" href="#/manual/leitura" aria-label="Ajuda: leitura do tubo" title="Ajuda: leitura do tubo">?</a></span>
+              <div class="ph-readout"><strong id="ph-value"></strong><span id="ph-phase" class="phase"></span></div>
               <span id="ph-delta" class="ph-delta" aria-hidden="true" hidden></span>
               <div id="ph-ruler" class="ph-ruler"></div>
               <button id="ph-toggle" type="button" class="quiet-btn" aria-pressed="true">Ocultar pH</button>
@@ -384,20 +388,20 @@
             <div id="large-tube" class="large-tube"></div>
             <div class="volume-readout">
               <span class="eyebrow">VOLUME</span>
-              <strong id="volume-value"></strong>
-              <span class="small">mL</span>
-              <span class="small capacity">capacidade<br><span id="capacity-value">5,00</span> mL</span>
+              <strong><span id="volume-value"></span> <small>mL</small></strong>
+              <span class="small capacity">de <span id="capacity-value">5,00</span> mL</span>
               <span id="temperature-value" class="temperature-readout" hidden></span>
             </div>
           </div>
           <div class="color-reading">
             <span id="color-swatch" class="color-swatch" aria-hidden="true"></span>
-            <div><strong id="color-name"></strong><span id="indicator-name" class="small"></span></div>
+            <p><strong id="color-name"></strong> <span id="indicator-name" class="small"></span></p>
           </div>
           <p id="equivalence-note" class="equivalence-note" aria-live="polite"></p>
 
           <div id="dose-area" class="dose-area">
-            <div class="dose-info"><span id="titrant-label"></span><span id="dose-summary"></span><a class="ajuda-link" href="#/manual/conta-gotas" aria-label="Ajuda: conta-gotas" title="Ajuda: conta-gotas">?</a></div>
+            <div class="dose-info"><span id="titrant-label"></span><a class="ajuda-link" href="#/manual/conta-gotas" aria-label="Ajuda: conta-gotas" title="Ajuda: conta-gotas">?</a><span id="dose-summary"></span></div>
+            <div class="dose-barra">
             <div class="dose-actions">
               <button id="undo-btn" type="button" class="secondary-btn" aria-label="Desfazer última ação">↶ <span>Desfazer</span></button>
               <button id="drop-btn" type="button" class="primary-btn drop-btn">＋ Segure para gotejar</button>
@@ -405,9 +409,10 @@
             <div class="dose-shortcuts" id="dose-shortcuts">
               <button id="drop5-btn" type="button" class="secondary-btn">+5 gotas</button>
               <button id="drop1ml-btn" type="button" class="secondary-btn">+1 mL</button>
+              <button id="drop5ml-btn" type="button" class="secondary-btn" hidden>+5 mL</button>
               <button id="poe-btn" type="button" class="secondary-btn">Prever e gotejar</button>
             </div>
-            <span id="dose-target" class="dose-target"></span>
+            </div>
           </div>
         </section>
 
@@ -690,53 +695,53 @@
   <div id="toast" role="status" aria-live="polite" hidden></div>
   <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="js/core/namespace.js?v=0.5.2"></script>
-  <script src="js/core/util.js?v=0.5.2"></script>
-  <script src="js/data/catalogo.js?v=0.5.2"></script>
-  <script src="js/data/cotidiano.js?v=0.5.2"></script>
-  <script src="js/data/sais.js?v=0.5.2"></script>
-  <script src="js/data/ambiente-saude.js?v=0.5.2"></script>
-  <script src="js/data/funcoes.js?v=0.5.2"></script>
-  <script src="js/simulation/quimica.js?v=0.5.2"></script>
-  <script src="js/core/estado.js?v=0.5.2"></script>
-  <script src="js/ui/abertura.js?v=0.5.2"></script>
-  <script src="js/core/loja.js?v=0.5.2"></script>
-  <script src="js/core/progresso.js?v=0.5.2"></script>
-  <script src="js/core/roteador.js?v=0.5.2"></script>
-  <script src="js/data/missoes.js?v=0.5.2"></script>
-  <script src="js/data/trilhas.js?v=0.5.2"></script>
-  <script src="js/data/manual.js?v=0.5.2"></script>
-  <script src="js/simulation/motor-missoes.js?v=0.5.2"></script>
-  <script src="js/ui/tubo.js?v=0.5.2"></script>
-  <script src="js/ui/regua-ph.js?v=0.5.2"></script>
-  <script src="js/ui/grafico.js?v=0.5.2"></script>
-  <script src="js/ui/lupa.js?v=0.5.2"></script>
-  <script src="js/ui/equacao.js?v=0.5.2"></script>
-  <script src="js/ui/som.js?v=0.5.2"></script>
-  <script src="js/ui/conta-gotas.js?v=0.5.2"></script>
-  <script src="js/ui/seletores.js?v=0.5.2"></script>
-  <script src="js/ui/prateleira.js?v=0.5.2"></script>
-  <script src="js/ui/render.js?v=0.5.2"></script>
-  <script src="js/ui/gaveta.js?v=0.5.2"></script>
-  <script src="js/ui/trilho.js?v=0.5.2"></script>
-  <script src="js/ui/tour.js?v=0.5.2"></script>
-  <script src="js/ui/segredo.js?v=0.5.2"></script>
-  <script src="js/telas/bancada.js?v=0.5.2"></script>
-  <script src="js/telas/laboratorio.js?v=0.5.2"></script>
-  <script src="js/telas/missao.js?v=0.5.2"></script>
-  <script src="js/telas/inicio.js?v=0.5.2"></script>
-  <script src="js/telas/aprender.js?v=0.5.2"></script>
-  <script src="js/telas/desafios.js?v=0.5.2"></script>
-  <script src="js/telas/detetive.js?v=0.5.2"></script>
-  <script src="js/telas/titulacao.js?v=0.5.2"></script>
-  <script src="js/telas/trunfo.js?v=0.5.2"></script>
-  <script src="js/telas/regua.js?v=0.5.2"></script>
-  <script src="js/telas/construtor.js?v=0.5.2"></script>
-  <script src="js/telas/professor.js?v=0.5.2"></script>
-  <script src="js/telas/caderno.js?v=0.5.2"></script>
-  <script src="js/telas/manual.js?v=0.5.2"></script>
-  <script src="js/a11y/preferencias.js?v=0.5.2"></script>
-  <script src="js/init/pwa.js?v=0.5.2"></script>
-  <script src="js/init/app.js?v=0.5.2"></script>
+  <script src="js/core/namespace.js?v=0.5.3"></script>
+  <script src="js/core/util.js?v=0.5.3"></script>
+  <script src="js/data/catalogo.js?v=0.5.3"></script>
+  <script src="js/data/cotidiano.js?v=0.5.3"></script>
+  <script src="js/data/sais.js?v=0.5.3"></script>
+  <script src="js/data/ambiente-saude.js?v=0.5.3"></script>
+  <script src="js/data/funcoes.js?v=0.5.3"></script>
+  <script src="js/simulation/quimica.js?v=0.5.3"></script>
+  <script src="js/core/estado.js?v=0.5.3"></script>
+  <script src="js/ui/abertura.js?v=0.5.3"></script>
+  <script src="js/core/loja.js?v=0.5.3"></script>
+  <script src="js/core/progresso.js?v=0.5.3"></script>
+  <script src="js/core/roteador.js?v=0.5.3"></script>
+  <script src="js/data/missoes.js?v=0.5.3"></script>
+  <script src="js/data/trilhas.js?v=0.5.3"></script>
+  <script src="js/data/manual.js?v=0.5.3"></script>
+  <script src="js/simulation/motor-missoes.js?v=0.5.3"></script>
+  <script src="js/ui/tubo.js?v=0.5.3"></script>
+  <script src="js/ui/regua-ph.js?v=0.5.3"></script>
+  <script src="js/ui/grafico.js?v=0.5.3"></script>
+  <script src="js/ui/lupa.js?v=0.5.3"></script>
+  <script src="js/ui/equacao.js?v=0.5.3"></script>
+  <script src="js/ui/som.js?v=0.5.3"></script>
+  <script src="js/ui/conta-gotas.js?v=0.5.3"></script>
+  <script src="js/ui/seletores.js?v=0.5.3"></script>
+  <script src="js/ui/prateleira.js?v=0.5.3"></script>
+  <script src="js/ui/render.js?v=0.5.3"></script>
+  <script src="js/ui/gaveta.js?v=0.5.3"></script>
+  <script src="js/ui/trilho.js?v=0.5.3"></script>
+  <script src="js/ui/tour.js?v=0.5.3"></script>
+  <script src="js/ui/segredo.js?v=0.5.3"></script>
+  <script src="js/telas/bancada.js?v=0.5.3"></script>
+  <script src="js/telas/laboratorio.js?v=0.5.3"></script>
+  <script src="js/telas/missao.js?v=0.5.3"></script>
+  <script src="js/telas/inicio.js?v=0.5.3"></script>
+  <script src="js/telas/aprender.js?v=0.5.3"></script>
+  <script src="js/telas/desafios.js?v=0.5.3"></script>
+  <script src="js/telas/detetive.js?v=0.5.3"></script>
+  <script src="js/telas/titulacao.js?v=0.5.3"></script>
+  <script src="js/telas/trunfo.js?v=0.5.3"></script>
+  <script src="js/telas/regua.js?v=0.5.3"></script>
+  <script src="js/telas/construtor.js?v=0.5.3"></script>
+  <script src="js/telas/professor.js?v=0.5.3"></script>
+  <script src="js/telas/caderno.js?v=0.5.3"></script>
+  <script src="js/telas/manual.js?v=0.5.3"></script>
+  <script src="js/a11y/preferencias.js?v=0.5.3"></script>
+  <script src="js/init/pwa.js?v=0.5.3"></script>
+  <script src="js/init/app.js?v=0.5.3"></script>
 </body>
 </html>

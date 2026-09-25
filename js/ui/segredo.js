@@ -76,7 +76,7 @@ SIAB.segredo = (() => {
     SIAB.bancada.closeSheet?.(false);
     SIAB.alterar('arco-íris do pH', estado => {
       estado.tubes = [];
-      ARCO_IRIS.forEach(spec => SIAB.newTube({ ...spec, indicator: 'universal', titrant: 'water', initialVolume: 1 }, estado));
+      ARCO_IRIS.forEach(spec => SIAB.newTube({ ...spec, indicator: 'universal', titrant: 'water' }, estado));
       estado.activeId = estado.tubes[0].id;
       estado.view = 'overview';
       estado.showPH = true;
@@ -146,7 +146,8 @@ SIAB.segredo = (() => {
         name: 'Mistura', solution: 'water', initialVolume: spec.volume, dilution: 1,
         componentes: spec.componentes, indicadores: spec.indicadores, indicator: spec.indicator,
         titrant: atual.titrant, titrantConcentration: atual.titrantConcentration, titrantDilution: atual.titrantDilution,
-        dropVolume: atual.dropVolume, vidraria: 'bequer', capacidade: 50, additions: []
+        // O menor béquer em que a mistura cabe com folga.
+        dropVolume: atual.dropVolume, vidraria: 'bequer', capacidade: [10, 25, 50, 100, 250, 500, 1000].find(ml => ml >= spec.volume * 1.25) || 1000, additions: []
       }, estado);
       estado.activeId = mistura.id;
       estado.view = 'focus';
@@ -154,7 +155,7 @@ SIAB.segredo = (() => {
     const r = SIAB.chem.solve(mistura), fim = leitura(mistura);
     const cor = SIAB.chem.liquid(mistura, false, r).name;
     const mostrar = () => {
-      $('mistura-titulo').textContent = `${antes.length} tubos num béquer de 50 mL`;
+      $('mistura-titulo').textContent = `${antes.length} tubos num béquer de ${mistura.capacidade} mL`;
       $('mistura-texto').textContent = `Volume total ${SIAB.format(r.volume)} mL · pH ${SIAB.phFormat(r)} (${r.phase.toLowerCase()}) · ${cor}. Ácidos e bases se neutralizam na proporção das quantidades em mol, não do número de tubos. “Desfazer” devolve os tubos.`;
       $('mistura-aviso').hidden = false;
       if (SIAB.rota.nome === 'laboratorio') SIAB.render(true);

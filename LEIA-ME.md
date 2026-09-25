@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.2
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.3
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.2`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.3`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -36,8 +36,9 @@ frasco da prateleira e ele vira o "Tubo 1".
 - **Gotas com movimento:** o conta-gotas aparece sobre a vidraria, a gota se
   forma na ponta, cai e, ao chegar, faz ondas, respingos e espalha a nova cor;
   o nível sobe nesse momento. Na viragem, a cor se espalha mais.
-- **Vidraria:** tubo de ensaio (sempre o padrão ao abrir), béquer ou
-  erlenmeyer. A química é a mesma; muda o desenho. No erlenmeyer, que é
+- **Vidraria e capacidade:** tubo de ensaio (5 mL, sempre o padrão ao abrir),
+  béquer (10 a 250 mL) ou erlenmeyer (25 a 250 mL). O volume inicial acompanha
+  a capacidade e, a partir de 25 mL, aparece o atalho "+5 mL". No erlenmeyer, que é
   cônico, as marcas de 1 a 5 mL se afastam perto do gargalo, como no vidro de
   verdade.
 
@@ -148,7 +149,7 @@ e a vibração na viragem são opcionais.
 npm test            # química, sais, missões e PWA, sem navegador
 npm install         # uma vez, para os testes no navegador
 npx playwright install chromium
-npm run test:e2e    # 109 testes no Chromium: bancada, vidraria, menu, modos, painéis, tour, abertura, segredos, celular, sem internet e atualização
+npm run test:e2e    # 113 testes no Chromium: bancada, vidraria, menu, modos, painéis, tour, abertura, segredos, celular, sem internet e atualização
 ```
 
 Resultados da última validação: `tests/RESULTADOS.md`.

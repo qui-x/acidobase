@@ -76,7 +76,13 @@ SIAB.manual = [
         'Béquer: boca larga, usado para misturar, aquecer e transferir. As marcas de volume de um béquer são aproximadas.',
         'Erlenmeyer: o frasco das titulações. A boca estreita evita respingos quando se agita a mistura. Como ele é cônico, 1 mL a mais sobe pouco perto do fundo largo e sobe mais perto do gargalo: por isso as marcas ficam cada vez mais afastadas.'
       ] },
-      { dica: 'A química não muda com a vidraria: pH, cor e gráfico são os mesmos. A escala da simulação vai até 5 mL em todas (microescala); só o desenho e a posição das marcas mudam.' },
+      { lista: [
+        'Capacidade: o tubo de ensaio tem sempre 5 mL. O béquer pode ter 10, 25, 50, 100 ou 250 mL (começa com 50) e o erlenmeyer 25, 50, 125 ou 250 mL (começa com 125, o tamanho clássico das titulações).',
+        'Ao trocar a vidraria ou a capacidade, o volume inicial acompanha: o líquido continua na mesma altura (1 mL no tubo vira 10 mL no béquer de 50 mL e 25 mL no erlenmeyer de 125 mL). As gotas recomeçam, e “Desfazer” volta tudo, inclusive a vidraria.',
+        'Num recipiente novo, o volume inicial é 20 % da capacidade. No módulo Medir, “Volume inicial” vai até 80 % dela.',
+        'A partir de 25 mL aparece o atalho “+5 mL”, para não precisar de centenas de gotas.'
+      ] },
+      { dica: 'A concentração não muda com a vidraria: o pH e a cor de cada frasco são os mesmos. O que muda com o volume é quanto é preciso gotejar para neutralizar (mais amostra pede mais gotas).' },
       { p: 'Os nomes que o programa dá (“Tubo 2”) acompanham a troca (“Béquer 2”). Nomes escolhidos por você não mudam.' }
     ]
   },
@@ -123,7 +129,7 @@ SIAB.manual = [
         'Variação: depois das gotas, aparece por alguns segundos, por exemplo “3,59 → 7,00 (+3,41)”.',
         'Régua de pH: o triângulo marca o pH na escala de 0 a 14; o tracejado marca o neutro.',
         'Ocultar pH: esconde o número, a régua e o gráfico. Use para prever antes de ver.',
-        'Volume: quanto líquido há no tubo. A capacidade é de 5 mL.',
+        'Volume: quanto líquido há no recipiente e a capacidade dele (5 mL no tubo de ensaio).',
         'Cor: nome da cor e do indicador, abaixo do tubo.',
         'Ponto de equivalência: aviso que aparece quando uma gota atinge exatamente a quantidade de base que reage com todo o ácido (ou o contrário).'
       ] },
@@ -138,8 +144,9 @@ SIAB.manual = [
         'Segure para gotejar: enquanto o botão estiver pressionado, cai uma gota a cada quarto de segundo; depois de 8 gotas, o ritmo acelera. Um toque rápido adiciona 1 gota.',
         '+5 gotas e +1 mL: atalhos para ir mais rápido.',
         'Desfazer: desfaz a última ação inteira (uma sequência de gotas, a troca de frasco, as medidas, a remoção de um tubo…).',
-        'Linha acima do botão: o que está no conta-gotas e quantas gotas já caíram.',
-        'Capacidade: quando o tubo chega a 5 mL, os botões de gotejar ficam desativados.',
+        'Linha acima do botão: o que está no conta-gotas, quantas gotas já caíram, o volume e o tamanho de cada gota.',
+        'Capacidade: quando o recipiente fica cheio, os botões de gotejar ficam desativados.',
+        '+5 mL: aparece nos recipientes de 25 mL ou mais.',
         'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas e espalha a nova cor; o nível sobe nesse momento. Na viragem do indicador, a cor se espalha mais e o contorno pisca. “Reduzir animações” desliga esse movimento.'
       ] },
       { teclas: [['Enter', 'adiciona 1 gota'], ['Espaço (segurar)', 'goteja sem parar até soltar'], ['Tab', 'passa para o próximo controle']] },
@@ -272,7 +279,7 @@ SIAB.manual = [
         ['Por que a fenolftaleína não muda na equivalência do HCl?', 'Ela muda entre pH 8,2 e 10. Na titulação de HCl com NaOH, o pH salta de cerca de 3,6 para 10,4 em duas gotas; a cor rosa aparece logo depois da equivalência.'],
         ['Diluir muito um ácido deixa a solução básica?', 'Não. Com mais água, o pH se aproxima de 7, sem passar dele.'],
         ['As cores são exatas?', 'Não. São representações didáticas das faixas de viragem. O repolho roxo real varia com o preparo do extrato.'],
-        ['A vidraria muda o resultado?', 'Não. Tubo de ensaio, béquer e erlenmeyer mudam o desenho e a posição das marcas; a escala vai até 5 mL em todos (microescala) e o pH é o mesmo.'],
+        ['A vidraria muda o resultado?', 'O pH de cada frasco não muda: ele depende da concentração, não do volume. Com mais amostra (um recipiente maior), é preciso gotejar mais para neutralizar, e a curva do gráfico se estica no eixo do volume.'],
         ['Posso mudar a temperatura?', 'Na bancada, não: tudo está a 25 °C. A temperatura só muda na missão “Neutro nem sempre é 7”, no modo completo.'],
         ['Antiácidos: posso usar isso para saber a dose?', 'Não. É uma atividade didática, não uma orientação de saúde.']
       ] },

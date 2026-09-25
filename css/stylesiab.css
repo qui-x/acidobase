@@ -130,6 +130,12 @@ td { font-family: Consolas, monospace; }
 /* Chips e grupos segmentados: rádios reais, com aparência de botão. */
 .chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
 /* Escolha da vidraria: três cartões com desenho e nome. */
+/* Capacidade do béquer e do erlenmeyer: botões em linha. */
+.capacidade-grupo { margin-top: 10px; }
+.capacidade-opcoes { display: flex; width: 100%; }
+.capacidade-opcoes label { flex: 1; justify-content: center; min-height: 40px; padding: 6px 4px; font-size: .78rem; margin-left: -1px; }
+.capacidade-opcoes label:first-of-type { border-radius: 6px 0 0 6px; margin-left: 0; }
+.capacidade-opcoes label:last-of-type { border-radius: 0 6px 6px 0; }
 .vidraria-opcoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
 .vidraria-opcoes legend { grid-column: 1 / -1; }
 .vidraria-opcoes label {
@@ -511,6 +517,14 @@ button.cartao { font: inherit; cursor: pointer; }
 /* A tira de tubos fica fixa embaixo: a rolagem (e o foco do teclado) param antes dela,
    para ela nunca cobrir o botão de gotejar (WCAG 2.4.11). */
 .experiment { scroll-padding-bottom: 100px; }
+/* Computador: a vidraria ocupa só o espaço que sobra, e o conta-gotas nunca
+   fica escondido embaixo da tira de tubos. */
+@media (min-width: 1201px) {
+  .experiment .focus-view { min-height: 0; }
+  .focus-view .tube-stage { flex: 1 1 0; min-height: 160px; margin-top: 4px; }
+  .focus-view .large-tube { height: 100%; min-height: 0; }
+  .focus-view .large-tube .tube-svg { height: 100%; width: auto; max-width: 100%; max-height: 420px; }
+}
 @media (max-height: 950px) and (min-width: 901px) {
   .tube-svg { max-height: 280px; }
   .large-tube .tube-svg { max-height: 314px; }
@@ -554,15 +568,25 @@ button.cartao { font: inherit; cursor: pointer; }
 .chip-ver, .chip-sep { display: none; }
 #overview-count { font-size: .7rem; opacity: .8; margin-left: 4px; }
 
-.focus-view { padding: 18px 28px 8px; display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.focus-view { padding: 14px 28px 8px; display: flex; flex-direction: column; flex: 1; min-width: 0; }
 .focus-heading { display: flex; justify-content: space-between; gap: 8px; }
 .focus-heading > div { min-width: 0; }
 .focus-heading .eyebrow { margin-bottom: 4px; }
 .name-row { display: flex; gap: 10px; align-items: center; }
 .name-row h1 { overflow-wrap: anywhere; }
 .name-row .icon-btn { border-color: transparent; flex: none; }
-.focus-heading .small { margin-top: 4px; }
-.group-notice, .sample-model-note { font-size: .75rem; padding: 7px 10px; border-left: 2px solid var(--accent); background: var(--panel2); margin-top: 10px; color: var(--secondary); }
+.focus-heading .small { margin-top: 0; }
+/* Linha do conteúdo + aviso recolhível "≈ estimativa" (no lugar do parágrafo longo). */
+.resumo-linha { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin-top: 2px; }
+.nota-estimativa { font-size: .72rem; color: var(--secondary); border: 0; margin: 0; padding: 0; }
+.nota-estimativa summary::after { content: none; }
+.nota-estimativa summary { display: inline-flex; align-items: center; min-height: 26px; padding: 0 9px; border: 1px solid var(--border); border-radius: 999px; cursor: pointer; list-style: none; }
+.nota-estimativa summary::-webkit-details-marker { display: none; }
+.nota-estimativa summary:hover { border-color: var(--accent); }
+.nota-estimativa[open] { flex-basis: 100%; }
+.nota-estimativa[open] summary { border-color: var(--accent); color: var(--accent); }
+.nota-estimativa > span { display: block; margin-top: 4px; padding: 6px 10px; border-left: 2px solid var(--accent); background: var(--panel2); }
+.group-notice { font-size: .75rem; padding: 7px 10px; border-left: 2px solid var(--accent); background: var(--panel2); margin-top: 10px; color: var(--secondary); }
 .mission-bar { display: none; }
 
 .tube-stage {
@@ -570,10 +594,10 @@ button.cartao { font: inherit; cursor: pointer; }
   align-items: center; gap: 14px; min-height: 240px; margin: 8px 0 0; flex: 1;
 }
 .stage-stats { justify-self: start; display: flex; flex-direction: column; gap: 2px; min-width: 0; width: 100%; max-width: 250px; }
-.ph-readout { display: flex; flex-direction: column; margin-top: 4px; }
-.ph-readout > span { font-size: .8rem; color: var(--secondary); }
+/* Leitura: valor e fase na mesma linha. */
+.ph-readout { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 10px; margin-top: 2px; }
 .ph-readout strong { font-size: 2rem; font-weight: 500; font-family: Consolas, monospace; letter-spacing: -.05em; }
-.phase { font-size: .8rem; color: var(--secondary); }
+.phase { font-size: .85rem; color: var(--secondary); }
 .ph-delta { align-self: flex-start; font-family: Consolas, monospace; font-size: .75rem; padding: 2px 8px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--accent); color: var(--accent); margin-top: 4px; }
 .ph-ruler { margin-top: 6px; width: 100%; }
 .regua-svg { width: 100%; height: auto; overflow: visible; }
@@ -602,22 +626,29 @@ button.cartao { font: inherit; cursor: pointer; }
 .onda { fill: none; stroke-width: 1.4; }
 .respingo, .nuvem-cor { pointer-events: none; }
 .volume-readout { justify-self: end; display: flex; flex-direction: column; text-align: right; }
-.volume-readout strong { font-size: 1.25rem; font-family: Consolas, monospace; font-weight: 400; margin-top: 6px; }
-.capacity { margin-top: 12px; font-size: .65rem; }
+.volume-readout strong { font-size: 1.25rem; font-family: Consolas, monospace; font-weight: 400; margin-top: 4px; white-space: nowrap; }
+.volume-readout strong small { font-size: .7rem; font-family: 'Segoe UI', system-ui, sans-serif; color: var(--secondary); }
+.capacity { margin-top: 2px; font-size: .7rem; }
 .temperature-readout { margin-top: 12px; font-family: Consolas, monospace; color: #fb923c; font-weight: 700; }
-.color-reading { display: flex; justify-content: center; align-items: center; gap: 10px; margin: 6px auto 0; text-align: left; max-width: 100%; }
+/* Cor numa linha só: amostra de cor, nome e indicador. */
+.color-reading { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 4px auto 0; text-align: left; max-width: 100%; }
 .color-swatch { display: block; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); flex: none; }
-.color-reading > div { display: flex; flex-direction: column; min-width: 0; }
-.color-reading strong { font-size: .875rem; font-weight: 600; text-transform: capitalize; }
+.color-reading p { margin: 0; min-width: 0; line-height: 1.35; }
+.color-reading strong { display: inline-block; font-size: .875rem; font-weight: 600; }
+.color-reading strong::first-letter { text-transform: uppercase; }
 .color-reading .small { font-size: .75rem; overflow-wrap: anywhere; }
-.equivalence-note { font-size: .75rem; min-height: 22px; text-align: center; color: var(--accent); margin: 6px 0; }
-.dose-area { padding-top: 10px; border-top: 1px solid var(--border); }
-.dose-info { display: flex; flex-wrap: wrap; gap: 4px 12px; justify-content: space-between; font-size: .72rem; color: var(--secondary); margin-bottom: 8px; }
-.dose-actions { display: grid; grid-template-columns: auto 1fr; gap: 10px; }
-.drop-btn { font-size: .95rem; min-height: 50px; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
-.dose-shortcuts { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
-.dose-shortcuts .secondary-btn { flex: 1; min-height: 40px; font-size: .8rem; }
-.dose-target { display: block; text-align: center; color: var(--muted); font-size: .7rem; line-height: 1.4; margin: 8px 0 2px; }
+.equivalence-note { font-size: .75rem; text-align: center; color: var(--accent); margin: 4px 0; }
+.equivalence-note:empty { display: none; }
+/* Conta-gotas: uma linha de informação e uma barra de botões (quebra em 2 linhas se faltar espaço). */
+.dose-area { padding-top: 8px; border-top: 1px solid var(--border); flex: none; }
+.dose-info { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; font-size: .72rem; color: var(--secondary); margin-bottom: 6px; }
+.dose-info #titrant-label { color: var(--text); font-weight: 600; }
+.dose-barra { display: flex; flex-wrap: wrap; gap: 8px; }
+.dose-actions { display: grid; grid-template-columns: auto 1fr; gap: 8px; flex: 1 1 360px; }
+.drop-btn { font-size: .95rem; min-height: 48px; white-space: nowrap; touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; }
+.dose-shortcuts { display: flex; gap: 6px; flex-wrap: nowrap; flex: 1 1 auto; }
+.dose-shortcuts .secondary-btn { flex: 1 1 auto; min-height: 48px; font-size: .78rem; padding: 6px 10px; white-space: nowrap; }
+.dose-shortcuts .secondary-btn[hidden] { display: none; }
 
 .tube-strip { display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); padding: 10px 20px max(10px, env(safe-area-inset-bottom)); background: var(--panel); position: sticky; bottom: 0; }
 .strip-heading { display: flex; flex-direction: column; flex: none; }
@@ -859,7 +890,8 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 .themed-select:hover:not(:disabled), .themed-select[aria-expanded=true] { border-color: var(--accent); background: var(--panel2); }
 
 #toast {
-  position: fixed; bottom: calc(max(20px, env(safe-area-inset-bottom)) + var(--bottom-h)); left: 50%; transform: translateX(-50%);
+  /* No alto da tela: embaixo ficam o conta-gotas e a tira de tubos. */
+  position: fixed; top: calc(var(--header-h) + 12px); left: 50%; transform: translateX(-50%);
   background: var(--panel2); color: var(--text); border: 1px solid var(--accent); border-radius: 8px; padding: 10px 16px;
   z-index: 1200; max-width: calc(100vw - 30px); width: max-content; font-size: .875rem; box-shadow: 0 5px 20px #0005;
 }
@@ -873,7 +905,7 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 }
 .ajuda-link:hover { border-color: var(--accent); }
 .controls-heading .ajuda-link { margin-right: auto; }
-.dose-info .ajuda-link { margin-left: auto; }
+.dose-info .ajuda-link { margin-left: 0; }
 .ver-cabecalho { display: flex; align-items: center; gap: 4px; margin-bottom: 8px; }
 .ver-cabecalho h2 { margin: 0; }
 .ajuda-destaque { outline: 3px solid var(--accent) !important; outline-offset: 4px; border-radius: 6px; animation: destacar 1.1s ease-in-out 3; }
@@ -1006,6 +1038,12 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .chip-sep { display: block; flex-shrink: 0; width: 1px; align-self: stretch; margin: 6px 4px; background: var(--border); }
   .workspace.sem-ver .chip-sep { display: none; }
   .ver-panel { scroll-margin-top: calc(var(--header-h) + 64px); }
+  /* A barra do conta-gotas fica presa embaixo: gotejar sempre à mão. */
+  .workspace:not(.vazia) .dose-area {
+    position: sticky; bottom: var(--bottom-h); z-index: 30; margin: 0 -16px; padding: 8px 16px calc(8px + env(safe-area-inset-bottom) * 0);
+    background: var(--panel); box-shadow: 0 -8px 18px #0006;
+  }
+  html:has(.workspace:not([hidden])) { scroll-padding-bottom: calc(var(--bottom-h) + 140px); }
   /* Barra de chips rolável, fixa abaixo do cabeçalho (como a barra de modos do Laboratório Virtual). */
   .view-tabs {
     position: sticky; top: var(--header-h); z-index: 800; background: var(--panel); flex-wrap: nowrap;
@@ -1072,7 +1110,9 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .tube-strip { padding: 8px 12px; }
   .strip-heading { display: none; }
   .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .dose-actions button { min-height: 50px; }
+  .dose-actions button { min-height: 48px; }
+  .focus-view .dose-area { margin: 6px -16px 0; }
+  .color-reading { margin-top: 2px; }
   .detetive-grade, .titulacao-bancada { grid-template-columns: 1fr; }
   .detetive-tubo .tube-svg, .titulacao-tubo .tube-svg { max-height: 190px; margin: 0 auto; width: auto; }
   .memoria-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
@@ -1090,6 +1130,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   #prepare-btn .header-btn-texto { display: none; }
   .tube-stage { grid-template-columns: minmax(100px, 1fr) 96px 52px; }
   .dose-actions .secondary-btn span { display: none; }
+  .dose-shortcuts .secondary-btn { font-size: .74rem; padding: 6px 8px; }
   .field-pair { grid-template-columns: 1fr; }
   .nota dl > div, .resumo-missao > div { grid-template-columns: 1fr; gap: 0; }
   .carta { width: 100%; }

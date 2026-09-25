@@ -46,9 +46,9 @@ SIAB.VIDRO = (() => {
   };
 })();
 
-// Marcas da escala: de 1 em 1 mL até 5 mL; em recipientes maiores, de 10 em 10.
+// Marcas da escala: cerca de 5 marcas, com números redondos (1, 2, 5, 10, 25 ou 50 mL).
 SIAB.marcasDeVolume = capacidade => {
-  const passo = capacidade <= 5 ? 1 : capacidade <= 20 ? 5 : 10;
+  const passo = [1, 2, 5, 10, 25, 50, 100].find(p => capacidade / p <= 5) || 100;
   return Array.from({ length: Math.floor(capacidade / passo) }, (_, i) => (i + 1) * passo);
 };
 
@@ -56,7 +56,7 @@ SIAB.marcasDeVolume = capacidade => {
 function estadoDoVidro(tube, vidraria) {
   const tipo = SIAB.VIDRO[tube.vidraria || vidraria] ? (tube.vidraria || vidraria) : 'tubo';
   const forma = SIAB.VIDRO[tipo];
-  const capacidade = tube.capacidade || SIAB.CAPACITY_ML;
+  const capacidade = SIAB.capacidade(tube, tipo);
   const r = SIAB.chem.solve(tube);
   const c = SIAB.chem.liquid(tube, SIAB.state.indicatorOnly, r);
   const y = forma.altura(Math.min(1, r.volume / capacidade));
@@ -138,7 +138,7 @@ SIAB.vidro = (() => {
 
   // Desenha o tubo em foco: recria só quando muda o tubo, a vidraria ou a capacidade.
   function desenhar(caixa, tube, vidraria) {
-    const chave = `${tube.id}|${tube.vidraria || vidraria}|${tube.capacidade || ''}|${SIAB.activeBench}`;
+    const chave = `${tube.id}|${tube.vidraria || vidraria}|${SIAB.capacidade(tube, tube.vidraria || vidraria)}|${SIAB.activeBench}`;
     if (caixa.dataset.chave !== chave || !caixa.querySelector('svg .liquido')) {
       clearTimeout(pendente);
       caixa.innerHTML = SIAB.tubeSVG(tube, 'focus', false, vidraria);

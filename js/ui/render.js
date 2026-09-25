@@ -60,11 +60,12 @@ SIAB.render = (syncForm = false) => {
 
   // Cabeçalho do tubo.
   const vidro = SIAB.VIDRARIAS[t.vidraria || s.vidraria] || SIAB.VIDRARIAS.tubo;
-  $('tube-index').textContent = `${vidro.curto.toUpperCase()} ${i + 1} DE ${s.tubes.length}`;
+  const capacidade = SIAB.capacidade(t);
+  const tamanho = (t.vidraria || s.vidraria) === 'tubo' ? '' : ` DE ${SIAB.format(capacidade, 0)} mL`;
+  $('tube-index').textContent = `${vidro.curto.toUpperCase()}${tamanho} · ${i + 1} DE ${s.tubes.length}`;
   $('tube-name').textContent = t.name;
   $('sample-summary').textContent = SIAB.resumoConteudo(t);
   $('sample-model-note').hidden = !r.approximate;
-  $('sample-model-note').textContent = 'Amostra representativa · pH e resposta às gotas são estimativas. Amostras reais variam.';
   $('rename-btn').hidden = !pode('renomear');
 
   // Leitura.
@@ -83,15 +84,15 @@ SIAB.render = (syncForm = false) => {
   $('color-swatch').style.background = rgb;
   $('color-swatch').style.opacity = c.opacity;
   const nomeInd = SIAB.nomeIndicador(t);
-  $('indicator-name').textContent = c.masked ? `${nomeInd} · indicador ${c.indicatorName}; amostra ${c.pigmentName}` : nomeInd;
+  $('indicator-name').textContent = c.masked ? `${nomeInd}: ${c.indicatorName} + amostra ${c.pigmentName}` : nomeInd;
   $('capacity-value').textContent = SIAB.format(SIAB.capacidade(t));
 
   // Conta-gotas.
   const cheio = targets.some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.capacidade(x) + 1e-9);
   $('dose-area').hidden = !pode('gotas');
   $('titrant-label').textContent = `Conta-gotas: ${SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)}`;
-  $('dose-summary').textContent = `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL`;
-  $('dose-target').textContent = `${SIAB.format(t.dropVolume)} mL por gota · ${t.group ? 'em cada um dos ' + targets.length + ' tubos vinculados' : t.name}`;
+  // Uma linha só: quantas gotas, quanto volume e o tamanho da gota.
+  $('dose-summary').textContent = `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL · gota de ${SIAB.format(t.dropVolume)} mL${t.group ? ` · em cada um dos ${targets.length} tubos vinculados` : ''}`;
   $('drop-btn').textContent = t.group ? '＋ Segure: gotas em cada tubo' : '＋ Segure para gotejar';
   $('drop-btn').disabled = cheio;
   $('drop5-btn').disabled = cheio;
@@ -100,6 +101,9 @@ SIAB.render = (syncForm = false) => {
   $('dose-shortcuts').hidden = !pode('atalhos') && !pode('poe');
   $('drop5-btn').hidden = !pode('atalhos');
   $('drop1ml-btn').hidden = !pode('atalhos');
+  // Recipientes grandes: +5 mL (encher 25 mL de gota em gota levaria minutos).
+  $('drop5ml-btn').hidden = !pode('atalhos') || capacidade < 25;
+  $('drop5ml-btn').disabled = cheio;
   $('poe-btn').hidden = !pode('poe');
   const ultima = s.history.at(-1);
   $('undo-btn').disabled = !ultima;
@@ -187,11 +191,23 @@ SIAB.renderVazia = () => {
   SIAB.renderVer();
 };
 
-// Escolha da vidraria na prateleira.
+// Escolha da vidraria e da capacidade na prateleira.
 SIAB.renderVidraria = () => {
-  const v = SIAB.state.vidraria;
+  const $ = SIAB.$, s = SIAB.state, v = s.vidraria;
   document.querySelectorAll('input[name="vidraria"]').forEach(x => { x.checked = x.value === v; });
-  SIAB.$('vidraria-dica').textContent = `${SIAB.VIDRARIAS[v].dica} Escala da simulação: até 5 mL (microescala).`;
+  const opcoes = SIAB.VIDRARIAS[v].capacidades;
+  const capacidade = SIAB.capacidadeDaBancada(s);
+  $('capacidade-grupo').hidden = opcoes.length < 2;
+  const atual = [...document.querySelectorAll('input[name="capacidade"]')].map(x => x.value).join();
+  if (atual !== opcoes.join()) {
+    $('capacidade-opcoes').innerHTML = opcoes.map(ml => `<label><input type="radio" name="capacidade" value="${ml}"><span>${ml}</span></label>`).join('');
+  }
+  document.querySelectorAll('input[name="capacidade"]').forEach(x => { x.checked = Number(x.value) === capacidade; });
+  $('vidraria-dica').textContent = v === 'tubo'
+    ? `${SIAB.VIDRARIAS[v].dica} Capacidade: 5 mL (microescala).`
+    : `${SIAB.VIDRARIAS[v].dica} Capacidade: ${capacidade} mL. Ao trocar, o volume inicial acompanha (${SIAB.format(SIAB.volumePadrao(s))} mL num recipiente novo) e as gotas recomeçam.`;
+  // O volume inicial pode ir até 80 % da capacidade.
+  $('initial-volume').max = String(Math.round(capacidade * .8 * 100) / 100);
 };
 
 SIAB.syncForm = () => {
@@ -253,11 +269,15 @@ SIAB.historicoHTML = tube => {
   const s = SIAB.state;
   const botoes = `<div class="ver-acoes"><button type="button" class="secondary-btn" data-acao="csv">Baixar tabela (CSV)</button><button type="button" class="secondary-btn" data-acao="registrar">Registrar no caderno</button></div>`;
   if (!tube.additions.length) return `<p class="field-hint">Nenhuma gota adicionada.</p>${botoes}`;
-  const linhas = tube.additions.map((_, i) => {
-    const r = SIAB.chem.solve({ ...tube, additions: tube.additions.slice(0, i + 1) });
+  // Só as 200 gotas mais recentes aparecem; o pH depende apenas do volume total.
+  let acumulado = 0;
+  const somas = tube.additions.map(v => (acumulado += v));
+  const linhas = somas.slice(-200).map((soma, j) => {
+    const i = somas.length - Math.min(200, somas.length) + j;
+    const r = SIAB.chem.solve({ ...tube, additions: [soma] });
     const cor = SIAB.chem.indicatorColor(tube, r.pH).name;
     return `<tr><td>${i + 1}</td><td>${SIAB.format(r.added)}</td><td>${s.showPH ? SIAB.phFormat(r) : '—'}</td><td>${cor}</td></tr>`;
-  }).reverse().slice(0, 200);
+  }).reverse();
   return `${botoes}<table><caption class="sr-only">Histórico de ${SIAB.escape(tube.name)}</caption><thead><tr><th>Gota</th><th>Adicionado (mL)</th><th>pH</th><th>Cor</th></tr></thead><tbody>${linhas.join('')}</tbody></table>`;
 };
 
@@ -266,8 +286,10 @@ SIAB.historicoHTML = tube => {
 SIAB.COLUNAS_GOTAS = ['Gota', 'Adicionado (mL)', 'pH', 'Cor'];
 SIAB.historicoTabela = tube => {
   const linhas = [];
+  let soma = 0;
   for (let i = 0; i <= tube.additions.length; i++) {
-    const r = SIAB.chem.solve({ ...tube, additions: tube.additions.slice(0, i) });
+    if (i > 0) soma += tube.additions[i - 1];
+    const r = SIAB.chem.solve({ ...tube, additions: soma > 0 ? [soma] : [] });
     linhas.push([String(i), SIAB.format(r.added), SIAB.state.showPH ? SIAB.format(r.pH) : '—', SIAB.chem.indicatorColor(tube, r.pH).name]);
   }
   return { colunas: [...SIAB.COLUNAS_GOTAS], linhas };

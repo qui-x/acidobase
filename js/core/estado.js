@@ -15,6 +15,7 @@ SIAB.criarBancada = () => ({
   destination: 'tube',    // a prateleira coloca o frasco no tubo ou no conta-gotas
   verTab: 'grafico',      // aba do painel VER
   vidraria: 'tubo',       // tubo, bequer ou erlenmeyer (sempre começa no tubo de ensaio)
+  capacidades: { bequer: 50, erlenmeyer: 125 },  // mL escolhidos para cada vidraria (tubo: sempre 5)
   history: []             // pilha para desfazer ações
 });
 
@@ -36,27 +37,37 @@ SIAB.TUBE_DEFAULTS = {
   dropVolume: .05, indicator: 'btb', additions: [], group: null, temperature: 25
 };
 
-// Vidrarias da bancada. A escala é a mesma em todas (microescala, até 5 mL);
-// o que muda é o desenho e o nome ("Tubo 1", "Béquer 1"...).
+// Vidrarias da bancada: nome, dica e capacidades (mL) que se pode escolher.
+// O tubo de ensaio tem sempre 5 mL (microescala); béquer e erlenmeyer têm os
+// tamanhos comuns de laboratório escolar.
 SIAB.VIDRARIAS = {
-  tubo: { nome: 'Tubo de ensaio', curto: 'Tubo',
+  tubo: { nome: 'Tubo de ensaio', curto: 'Tubo', capacidades: [5],
     dica: 'Tubo de ensaio: o clássico dos testes rápidos com poucas gotas.' },
-  bequer: { nome: 'Béquer', curto: 'Béquer',
+  bequer: { nome: 'Béquer', curto: 'Béquer', capacidades: [10, 25, 50, 100, 250],
     dica: 'Béquer: boca larga, para misturar e aquecer. Suas marcas de volume são aproximadas.' },
-  erlenmeyer: { nome: 'Erlenmeyer', curto: 'Erlenmeyer',
+  erlenmeyer: { nome: 'Erlenmeyer', curto: 'Erlenmeyer', capacidades: [25, 50, 125, 250],
     dica: 'Erlenmeyer: o frasco das titulações; a boca estreita evita respingos ao agitar. Por ser cônico, as marcas se afastam perto do gargalo.' }
 };
 
+// Capacidade (mL) da vidraria em uso numa bancada.
+SIAB.capacidadeDaBancada = (bench = SIAB.state) =>
+  (bench?.vidraria && bench.vidraria !== 'tubo' ? bench.capacidades?.[bench.vidraria] : null) || SIAB.CAPACITY_ML;
+// Volume inicial de um recipiente novo: 20 % da capacidade (1 mL no tubo de ensaio).
+SIAB.volumePadrao = (bench = SIAB.state) => Math.round(SIAB.capacidadeDaBancada(bench) * .2 * 100) / 100;
+
 SIAB.newTube = (options = {}, bench = SIAB.state) => {
   const id = bench.nextId++;
-  const tube = { id, name: `${SIAB.VIDRARIAS[bench.vidraria]?.curto || 'Tubo'} ${id}`, ...SIAB.TUBE_DEFAULTS, ...options };
+  const tube = { id, name: `${SIAB.VIDRARIAS[bench.vidraria]?.curto || 'Tubo'} ${id}`, ...SIAB.TUBE_DEFAULTS, initialVolume: SIAB.volumePadrao(bench), ...options };
   tube.additions = [...tube.additions];
   bench.tubes.push(tube);
   return tube;
 };
 
-// Capacidade do recipiente: 5 mL (microescala), ou a do béquer da mistura.
-SIAB.capacidade = tube => tube.capacidade || SIAB.CAPACITY_ML;
+// Capacidade de um recipiente: a própria (béquer da mistura geral) ou a da
+// vidraria. Sem vidraria indicada, usa a da bancada em uso.
+SIAB.capacidade = (tube, vidraria = SIAB.state?.vidraria) => tube.capacidade
+  || (vidraria && vidraria !== 'tubo' ? SIAB.state?.capacidades?.[vidraria] : null)
+  || SIAB.CAPACITY_ML;
 
 // Mistura geral (modo secreto): junta tudo o que há nos tubos — soluções,
 // gotas e indicadores — num só recipiente. Função pura, sem mexer na bancada.
@@ -94,7 +105,7 @@ SIAB.misturarTubos = tubos => {
 SIAB.registrar = (descricao, bench = SIAB.state) => {
   bench.history.push({
     descricao,
-    copia: JSON.stringify({ tubes: bench.tubes, activeId: bench.activeId, nextId: bench.nextId, nextGroup: bench.nextGroup })
+    copia: JSON.stringify({ tubes: bench.tubes, activeId: bench.activeId, nextId: bench.nextId, nextGroup: bench.nextGroup, vidraria: bench.vidraria, capacidades: bench.capacidades })
   });
   if (bench.history.length > 60) bench.history.shift();
 };

@@ -92,7 +92,7 @@ SIAB.bancada = (() => {
   function gotaDaSequencia() {
     if (!sequencia) iniciarSequencia();
     if (!cabeMaisUma()) {
-      SIAB.notice('Capacidade de 5 mL atingida.');
+      SIAB.notice(`Capacidade de ${SIAB.format(SIAB.capacidade(SIAB.current()), 0)} mL atingida.`);
       return false;
     }
     SIAB.targets(SIAB.current()).forEach(x => x.additions.push(x.dropVolume));
@@ -111,8 +111,11 @@ SIAB.bancada = (() => {
         tubo.classList.add('viragem');
       }, chegada);
     }
-    SIAB.som.tocar(agora.pH);
-    SIAB.loja.avisar();
+    // Numa rajada (+5 gotas, +1 mL, +5 mL) a tela e o som ficam para o fim.
+    if (!emLote) {
+      SIAB.som.tocar(agora.pH);
+      SIAB.loja.avisar();
+    }
     return true;
   }
   function fimSequencia() {
@@ -132,13 +135,20 @@ SIAB.bancada = (() => {
     SIAB.announce(texto);
     SIAB.loja.avisar();
   }
+  let emLote = false;
   function gotejar(n) {
     iniciarSequencia();
     let feitas = 0;
-    for (let k = 0; k < n; k++) {
-      if (!gotaDaSequencia()) break;
-      feitas++;
+    emLote = n > 1;
+    try {
+      for (let k = 0; k < n; k++) {
+        if (!gotaDaSequencia()) break;
+        feitas++;
+      }
+    } finally {
+      emLote = false;
     }
+    if (feitas > 0) SIAB.som.tocar(leitura().pH);
     fimSequencia();
     return feitas;
   }
@@ -229,8 +239,9 @@ SIAB.bancada = (() => {
       dilution: Number($('dilution-select').value),
       titrantDilution: Number($('titrant-dilution-select').value)
     };
-    if (!Number.isFinite(medidas.initialVolume) || medidas.initialVolume < .1 || medidas.initialVolume > 4) {
-      erroForm('prepare', 'initial-volume', 'O volume inicial deve ficar entre 0,1 e 4 mL.');
+    const maximo = Math.round(SIAB.capacidade(t) * .8 * 100) / 100;
+    if (!Number.isFinite(medidas.initialVolume) || medidas.initialVolume < .1 || medidas.initialVolume > maximo) {
+      erroForm('prepare', 'initial-volume', `O volume inicial deve ficar entre 0,1 e ${SIAB.format(maximo, maximo % 1 ? 2 : 0)} mL (80 % da capacidade).`);
       return;
     }
     if (![.01, .02, .05, .1].includes(medidas.dropVolume)) {
@@ -255,22 +266,47 @@ SIAB.bancada = (() => {
     SIAB.notice(SIAB.targets(t).length > 1 ? 'Medidas aplicadas aos tubos vinculados.' : 'Medidas aplicadas. Use Desfazer para voltar.');
   }
 
-  /* ---------- Vidraria ---------- */
+  /* ---------- Vidraria e capacidade ---------- */
   // Troca o desenho de todos os recipientes. Nomes padrão acompanham
   // ("Tubo 2" vira "Béquer 2"); nomes dados pelo estudante ficam como estão.
-  function trocarVidraria(valor) {
+  // Se a capacidade muda, o volume inicial acompanha na mesma proporção (o
+  // recipiente continua cheio até a mesma altura) e as gotas recomeçam.
+  // Tudo numa só ação de "Desfazer" (que também devolve a vidraria).
+  function mudarRecipiente(descricao, mudar) {
     const s = SIAB.state;
-    if (!SIAB.VIDRARIAS[valor] || s.vidraria === valor) return;
-    const curtos = Object.values(SIAB.VIDRARIAS).map(x => x.curto).join('|');
-    const padrao = new RegExp(`^(${curtos}) (\\d+)$`);
-    s.vidraria = valor;
-    s.tubes.forEach(t => {
-      const m = t.name.match(padrao);
-      if (m && !t.vidraria) t.name = `${SIAB.VIDRARIAS[valor].curto} ${m[2]}`;
+    const antes = SIAB.capacidadeDaBancada(s);
+    const aviso = [];
+    SIAB.alterar(descricao, estado => {
+      mudar(estado);
+      const depois = SIAB.capacidadeDaBancada(estado);
+      const curtos = Object.values(SIAB.VIDRARIAS).map(x => x.curto).join('|');
+      const padrao = new RegExp(`^(${curtos}) (\\d+)$`);
+      estado.tubes.forEach(t => {
+        if (t.vidraria) return; // o béquer da mistura geral tem vidraria própria
+        const m = t.name.match(padrao);
+        if (m) t.name = `${SIAB.VIDRARIAS[estado.vidraria].curto} ${m[2]}`;
+        if (depois !== antes) {
+          const novo = Math.round(t.initialVolume * depois / antes * 100) / 100;
+          if (!aviso.length) aviso.push(`${SIAB.format(t.initialVolume)} → ${SIAB.format(novo)} mL`);
+          t.initialVolume = Math.min(depois * .8, Math.max(.1, novo));
+          t.additions = [];
+        }
+      });
     });
     SIAB.render(true);
-    SIAB.loja.avisar();
-    SIAB.announce(`Vidraria: ${SIAB.VIDRARIAS[valor].nome}.`);
+    const v = SIAB.VIDRARIAS[s.vidraria];
+    const tamanho = s.vidraria === 'tubo' ? '5 mL' : `${SIAB.capacidadeDaBancada(s)} mL`;
+    SIAB.announce(`${v.nome} de ${tamanho}.`);
+    if (aviso.length) SIAB.notice(`${v.nome} de ${tamanho}: volume inicial ${aviso[0]}. As gotas recomeçaram; use Desfazer para voltar.`);
+  }
+  function trocarVidraria(valor) {
+    if (!SIAB.VIDRARIAS[valor] || SIAB.state.vidraria === valor) return;
+    mudarRecipiente('trocar vidraria', estado => { estado.vidraria = valor; });
+  }
+  function trocarCapacidade(ml) {
+    const s = SIAB.state;
+    if (s.vidraria === 'tubo' || !SIAB.VIDRARIAS[s.vidraria].capacidades.includes(ml) || s.capacidades[s.vidraria] === ml) return;
+    mudarRecipiente('trocar capacidade', estado => { estado.capacidades = { ...estado.capacidades, [estado.vidraria]: ml }; });
   }
 
   /* ---------- Tubos ---------- */
@@ -464,6 +500,7 @@ SIAB.bancada = (() => {
     });
     $('drop5-btn').addEventListener('click', () => gotejar(5));
     $('drop1ml-btn').addEventListener('click', () => gotejar(Math.round(1 / SIAB.current().dropVolume)));
+    $('drop5ml-btn').addEventListener('click', () => gotejar(Math.round(5 / SIAB.current().dropVolume)));
     $('poe-btn').addEventListener('click', abrirPrevisao);
     $('poe-form').addEventListener('submit', conferirPrevisao);
     $('poe-resultado').addEventListener('submit', salvarExplicacao);
@@ -527,6 +564,9 @@ SIAB.bancada = (() => {
       SIAB.announce(SIAB.NIVEIS[x.value]);
     }));
     document.querySelectorAll('input[name="vidraria"]').forEach(x => x.addEventListener('change', () => trocarVidraria(x.value)));
+    $('capacidade-opcoes').addEventListener('change', evento => {
+      if (evento.target.name === 'capacidade') trocarCapacidade(Number(evento.target.value));
+    });
     document.querySelectorAll('input[name="destino"]').forEach(x => x.addEventListener('change', () => {
       SIAB.state.destination = x.value;
       SIAB.prateleira.render();
@@ -624,5 +664,5 @@ SIAB.bancada = (() => {
     responsive();
   }
 
-  return { config, configurar, ligar, gotejar, colocar, selecionarTubo, trocarVidraria, openSheet, closeSheet, responsive, TODOS, mobile };
+  return { config, configurar, ligar, gotejar, colocar, selecionarTubo, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
 })();

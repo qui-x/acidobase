@@ -1,4 +1,4 @@
-# Validação da versão 0.5.2 — 25/09/2026
+# Validação da versão 0.5.3 — 25/09/2026
 
 ## Resumo
 
@@ -11,9 +11,26 @@
 | Manual (`manual.test.cjs`) | 83 verificações de seções, links de ajuda, alvos e roteiros: aprovado |
 | Mistura geral (`mistura.test.cjs`) | 18 verificações: HCl + NaOH = 7,00; diluição 2,30; tampão acetato 4,76; conservação; excesso de base 11,30; indicadores misturados: aprovado |
 | PWA (`pwa.test.cjs`) | 228 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
-| Ponta a ponta no Chromium (`e2e.test.cjs`) | 109 de 109 testes: aprovado |
+| Ponta a ponta no Chromium (`e2e.test.cjs`) | 113 de 113 testes: aprovado |
 | Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados da 0.5.0 (bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura) e em mais 26 da 0.5.1 (frasco secreto, arco-íris, despejo, mistura, erlenmeyer e cartões flutuantes); temas escuro, claro e alto contraste; computador e celular |
 | Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, com a animação de abertura e sem erros no console |
+
+## Novidades da 0.5.3 testadas
+
+- **Capacidade:** o tubo tem 5 mL e não oferece escolha. O erlenmeyer oferece
+  25, 50, 125 (padrão) e 250 mL. Ao trocar, o volume inicial acompanha
+  (1 → 25 → 50 mL) e as gotas recomeçam. As marcas passam a 50, 100, 150, 200
+  e 250 mL, e "+5 mL" põe 100 gotas. "Desfazer" devolve a capacidade e a
+  vidraria. No módulo Medir, o volume inicial vai até 80 % (40 mL no béquer
+  de 50 mL). A mistura geral escolhe o menor béquer em que a mistura cabe.
+- **Bancada organizada:** em 1280×720 e 1360×900 o botão de gotejar e os
+  atalhos ficam acima da tira de tubos. No celular (390×844) a barra do
+  conta-gotas fica presa embaixo mesmo rolando até o VER. O aviso de amostra
+  representativa virou "≈ estimativa", que abre ao tocar, e os avisos (toasts)
+  foram para o alto da tela.
+- **Desempenho:** 10 × "+5 mL" (1.000 gotas num erlenmeyer de 250 mL) caiu de
+  8 s para 0,76 s, porque as rajadas redesenham e tocam o som uma vez só, e o
+  gráfico e o histórico passaram a ser lineares no número de gotas.
 
 ## Novidades da 0.5.2 testadas
 
