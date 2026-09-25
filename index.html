@@ -13,8 +13,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
   <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.7">
-  <script src="a11y.js?v=0.5.7"></script>
+  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.8">
+  <script src="a11y.js?v=0.5.8"></script>
   <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
   <script>try { if (localStorage.getItem('siab_abertura') === 'off') document.documentElement.dataset.abertura = 'off'; } catch (erro) { }</script>
 </head>
@@ -320,6 +320,7 @@
             <div class="painel-secao" data-secao="acoes">
               <div class="panel-actions">
                 <button id="compare-btn" type="button" class="secondary-btn">Comparar indicadores</button>
+                <button id="imprimir-relatorio" type="button" class="secondary-btn">Imprimir relatório</button>
                 <button id="unlink-btn" type="button" class="quiet-btn" hidden>Desvincular este tubo</button>
                 <button id="restart-btn" type="button" class="quiet-btn">Recomeçar gotas</button>
                 <button id="remove-btn" type="button" class="quiet-btn danger">Remover tubo</button>
@@ -703,57 +704,60 @@
   </dialog>
 
   <div id="roteiro-impressao" class="roteiro-impressao" aria-hidden="true"></div>
+  <!-- Folha de impressão da bancada (js/ui/impressao.js): só aparece no papel. -->
+  <div id="folha-impressao" class="folha" aria-hidden="true"></div>
   <div id="toast" role="status" aria-live="polite" hidden></div>
   <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="js/core/namespace.js?v=0.5.7"></script>
-  <script src="js/core/util.js?v=0.5.7"></script>
-  <script src="js/data/catalogo.js?v=0.5.7"></script>
-  <script src="js/data/cotidiano.js?v=0.5.7"></script>
-  <script src="js/data/sais.js?v=0.5.7"></script>
-  <script src="js/data/ambiente-saude.js?v=0.5.7"></script>
-  <script src="js/data/funcoes.js?v=0.5.7"></script>
-  <script src="js/simulation/quimica.js?v=0.5.7"></script>
-  <script src="js/core/estado.js?v=0.5.7"></script>
-  <script src="js/ui/abertura.js?v=0.5.7"></script>
-  <script src="js/core/loja.js?v=0.5.7"></script>
-  <script src="js/core/progresso.js?v=0.5.7"></script>
-  <script src="js/core/roteador.js?v=0.5.7"></script>
-  <script src="js/data/missoes.js?v=0.5.7"></script>
-  <script src="js/data/trilhas.js?v=0.5.7"></script>
-  <script src="js/data/manual.js?v=0.5.7"></script>
-  <script src="js/simulation/motor-missoes.js?v=0.5.7"></script>
-  <script src="js/ui/tubo.js?v=0.5.7"></script>
-  <script src="js/ui/regua-ph.js?v=0.5.7"></script>
-  <script src="js/ui/grafico.js?v=0.5.7"></script>
-  <script src="js/ui/lupa.js?v=0.5.7"></script>
-  <script src="js/ui/equacao.js?v=0.5.7"></script>
-  <script src="js/ui/som.js?v=0.5.7"></script>
-  <script src="js/ui/conta-gotas.js?v=0.5.7"></script>
-  <script src="js/ui/seletores.js?v=0.5.7"></script>
-  <script src="js/ui/prateleira.js?v=0.5.7"></script>
-  <script src="js/ui/modulos.js?v=0.5.7"></script>
-  <script src="js/ui/render.js?v=0.5.7"></script>
-  <script src="js/ui/gaveta.js?v=0.5.7"></script>
-  <script src="js/ui/trilho.js?v=0.5.7"></script>
-  <script src="js/ui/tour.js?v=0.5.7"></script>
-  <script src="js/ui/segredo.js?v=0.5.7"></script>
-  <script src="js/telas/bancada.js?v=0.5.7"></script>
-  <script src="js/telas/laboratorio.js?v=0.5.7"></script>
-  <script src="js/telas/missao.js?v=0.5.7"></script>
-  <script src="js/telas/inicio.js?v=0.5.7"></script>
-  <script src="js/telas/aprender.js?v=0.5.7"></script>
-  <script src="js/telas/desafios.js?v=0.5.7"></script>
-  <script src="js/telas/detetive.js?v=0.5.7"></script>
-  <script src="js/telas/titulacao.js?v=0.5.7"></script>
-  <script src="js/telas/trunfo.js?v=0.5.7"></script>
-  <script src="js/telas/regua.js?v=0.5.7"></script>
-  <script src="js/telas/construtor.js?v=0.5.7"></script>
-  <script src="js/telas/professor.js?v=0.5.7"></script>
-  <script src="js/telas/caderno.js?v=0.5.7"></script>
-  <script src="js/telas/manual.js?v=0.5.7"></script>
-  <script src="js/a11y/preferencias.js?v=0.5.7"></script>
-  <script src="js/init/pwa.js?v=0.5.7"></script>
-  <script src="js/init/app.js?v=0.5.7"></script>
+  <script src="js/core/namespace.js?v=0.5.8"></script>
+  <script src="js/core/util.js?v=0.5.8"></script>
+  <script src="js/data/catalogo.js?v=0.5.8"></script>
+  <script src="js/data/cotidiano.js?v=0.5.8"></script>
+  <script src="js/data/sais.js?v=0.5.8"></script>
+  <script src="js/data/ambiente-saude.js?v=0.5.8"></script>
+  <script src="js/data/funcoes.js?v=0.5.8"></script>
+  <script src="js/simulation/quimica.js?v=0.5.8"></script>
+  <script src="js/core/estado.js?v=0.5.8"></script>
+  <script src="js/ui/abertura.js?v=0.5.8"></script>
+  <script src="js/core/loja.js?v=0.5.8"></script>
+  <script src="js/core/progresso.js?v=0.5.8"></script>
+  <script src="js/core/roteador.js?v=0.5.8"></script>
+  <script src="js/data/missoes.js?v=0.5.8"></script>
+  <script src="js/data/trilhas.js?v=0.5.8"></script>
+  <script src="js/data/manual.js?v=0.5.8"></script>
+  <script src="js/simulation/motor-missoes.js?v=0.5.8"></script>
+  <script src="js/ui/tubo.js?v=0.5.8"></script>
+  <script src="js/ui/regua-ph.js?v=0.5.8"></script>
+  <script src="js/ui/grafico.js?v=0.5.8"></script>
+  <script src="js/ui/lupa.js?v=0.5.8"></script>
+  <script src="js/ui/equacao.js?v=0.5.8"></script>
+  <script src="js/ui/som.js?v=0.5.8"></script>
+  <script src="js/ui/conta-gotas.js?v=0.5.8"></script>
+  <script src="js/ui/seletores.js?v=0.5.8"></script>
+  <script src="js/ui/prateleira.js?v=0.5.8"></script>
+  <script src="js/ui/modulos.js?v=0.5.8"></script>
+  <script src="js/ui/render.js?v=0.5.8"></script>
+  <script src="js/ui/gaveta.js?v=0.5.8"></script>
+  <script src="js/ui/trilho.js?v=0.5.8"></script>
+  <script src="js/ui/tour.js?v=0.5.8"></script>
+  <script src="js/ui/segredo.js?v=0.5.8"></script>
+  <script src="js/ui/impressao.js?v=0.5.8"></script>
+  <script src="js/telas/bancada.js?v=0.5.8"></script>
+  <script src="js/telas/laboratorio.js?v=0.5.8"></script>
+  <script src="js/telas/missao.js?v=0.5.8"></script>
+  <script src="js/telas/inicio.js?v=0.5.8"></script>
+  <script src="js/telas/aprender.js?v=0.5.8"></script>
+  <script src="js/telas/desafios.js?v=0.5.8"></script>
+  <script src="js/telas/detetive.js?v=0.5.8"></script>
+  <script src="js/telas/titulacao.js?v=0.5.8"></script>
+  <script src="js/telas/trunfo.js?v=0.5.8"></script>
+  <script src="js/telas/regua.js?v=0.5.8"></script>
+  <script src="js/telas/construtor.js?v=0.5.8"></script>
+  <script src="js/telas/professor.js?v=0.5.8"></script>
+  <script src="js/telas/caderno.js?v=0.5.8"></script>
+  <script src="js/telas/manual.js?v=0.5.8"></script>
+  <script src="js/a11y/preferencias.js?v=0.5.8"></script>
+  <script src="js/init/pwa.js?v=0.5.8"></script>
+  <script src="js/init/app.js?v=0.5.8"></script>
 </body>
 </html>

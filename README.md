@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.7
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.8
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.7`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.8`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -53,6 +53,13 @@ frasco da prateleira e ele vira o "Tubo 1".
 - **Responsivo de 320 px a 2K:** em telas grandes a letra cresce um pouco, os
   painéis alargam e leitura, vidraria e conta-gotas ficam juntos no centro; no
   celular, os atalhos cabem numa linha e o manual não passa da tela.
+- **Impressão de verdade:** "Imprimir relatório" (ou Ctrl+P na bancada) gera
+  um relatório A4 com cabeçalho (logotipo, título, data, Nome e Turma),
+  tabela dos recipientes, o recipiente em foco (desenho, preparo, leitura,
+  gráfico e tabela de gotas em duas colunas), linhas para observações e a nota
+  do modelo. Caderno, manual e roteiro do professor saem com o mesmo
+  cabeçalho, paleta clara em qualquer tema e "Página X de Y" no rodapé. Botões,
+  painéis e o VLibras nunca vão para o papel.
 - **Escala do recipiente:** os números acompanham a capacidade escolhida. O
   volume aparece com a precisão que o vidro permite (centésimos no tubo de
   5 mL, décimos de 10 a 125 mL, mL inteiros em 250 mL, já que as marcas de

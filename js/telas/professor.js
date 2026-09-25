@@ -55,12 +55,12 @@ SIAB.professor = (() => {
       const perguntas = def.passos.filter(p => ['prever', 'quiz', 'explicar'].includes(p.tipo)).map(p => {
         const opcoes = p.opcoes && !p.porTubo ? `<ul class="roteiro-opcoes">${p.opcoes.map(o => `<li>( ) ${SIAB.escape(o)}</li>`).join('')}</ul>` : '';
         const tubos = p.porTubo ? `<ul class="roteiro-opcoes">${def.bancada.tubos.map(t => `<li>${SIAB.escape(t.name)}: ____________</li>`).join('')}</ul>` : '';
-        const linhas = p.tipo === 'explicar' ? '<div class="roteiro-linhas"></div>' : '';
+        const linhas = p.tipo === 'explicar' ? '<div class="roteiro-linhas"><span></span><span></span><span></span></div>' : '';
         return `<li><p>${SIAB.escape(p.pergunta)}</p>${opcoes}${tubos}${linhas}</li>`;
       }).join('');
       return `<section><h2>${n + 1}. Missão: ${SIAB.escape(def.titulo)}</h2><p><em>Objetivo:</em> ${SIAB.escape(def.professor.objetivo)}</p><ol>${perguntas}</ol></section>`;
     }).join('');
-    $('roteiro-impressao').innerHTML = `<header><h1>SIAB — Roteiro de aula</h1><p>Nome: ______________________________ Turma: ________ Data: ___/___/_____</p></header>${blocos}`;
+    $('roteiro-impressao').innerHTML = `${SIAB.impressao.cabecalho('Roteiro de aula', { subtitulo: `${lista.length} ${lista.length === 1 ? 'atividade' : 'atividades'}` })}${blocos}`;
   }
 
   function ligar() {

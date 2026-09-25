@@ -216,6 +216,7 @@ SIAB.manual = [
         'Comparar indicadores (na prateleira): cria 3 cópias do tubo com bromotimol, fenolftaleína e indicador universal, vinculadas: cada gota cai nas três.',
         'Desvincular este tubo: o tubo volta a receber gotas sozinho.',
         'Recomeçar gotas: tira todas as gotas do tubo.',
+        'Imprimir relatório (na prateleira, ou Ctrl+P na bancada): uma folha A4 com cabeçalho (Nome, Turma e Data), a tabela de todos os recipientes, o recipiente em foco (desenho, preparo, leitura, gráfico e tabela de gotas), linhas para observações e a nota sobre o modelo. Botões, painéis e o VLibras não saem no papel.',
         'Remover tubo: pede confirmação; “Desfazer” traz o tubo de volta. Removendo o último, a bancada fica vazia de novo.'
       ] }
     ]
@@ -228,7 +229,7 @@ SIAB.manual = [
         'O que entra: previsões do “Prever e gotejar”, leituras de “Registrar no caderno” e, no modo completo, missões e desafios. Cada nota tem data e hora.',
         'Leituras: guardam a tabela de gotas como tabela (Gota, Adicionado, pH, Cor), com rolagem própria e “Baixar esta tabela (CSV)”. Com o pH oculto, a coluna pH fica “—”.',
         'Baixar caderno (CSV): uma planilha com todas as notas. As linhas da tabela de gotas ocupam as colunas gota, volume_adicionado_mL, pH e cor.',
-        'Imprimir: imprime as notas; tabelas longas continuam na página seguinte, repetindo o cabeçalho.',
+        'Imprimir: imprime as notas numa folha com cabeçalho (Nome, Turma e Data) e número de página; tabelas longas continuam na página seguinte, repetindo o cabeçalho.',
         'Apagar nota ou apagar caderno: apagar o caderno pede confirmação.'
       ] },
       { dica: 'O caderno fica guardado só neste navegador, neste aparelho. Baixe o CSV para guardar uma cópia.' }

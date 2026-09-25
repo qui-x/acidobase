@@ -1305,29 +1305,137 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
 
 /* 13. IMPRESSÃO ------------------------------------------------------- */
 .roteiro-impressao { display: none; }
+/* Folha de impressão (js/ui/impressao.js): fora do papel, não aparece. */
+.folha, .so-impressao { display: none; }
+
 @media print {
-  :root { color-scheme: light; }
-  body { background: #fff; color: #000; padding: 0; }
-  .app-header, .bottom-nav, .skip-link, #toast, .drawer, .tour, .trilho, .caderno-acoes, [data-apagar-nota], #colorblindOverlay, .sheet-backdrop { display: none !important; }
-  .nota, .trilha, .jogo-painel, .gabarito { break-inside: avoid; border-color: #999; background: #fff; }
+  /* Papel A4, margens de documento e número da página no rodapé. */
+  @page {
+    size: A4; margin: 14mm 14mm 16mm;
+    @bottom-left { content: "SIAB · Simulador Interativo de Ácidos e Bases"; font: 7.5pt system-ui, sans-serif; color: #666; }
+    @bottom-right { content: "Página " counter(page) " de " counter(pages); font: 7.5pt system-ui, sans-serif; color: #666; }
+  }
+  /* Paleta de papel em qualquer tema (escuro, claro ou alto contraste). */
+  :root, :root[data-theme=light], :root[data-theme=dark], :root[data-contrast=on] {
+    --bg: #fff; --panel: #fff; --panel2: #f3f5f8; --hover: #eef1f5; --border: #b4bcc8;
+    --text: #111; --secondary: #333; --muted: #555; --accent: #6b2185; --focus: #6b2185;
+    --ok: #15803d; --warn: #8a5a00; --erro: #b91c1c;
+    color-scheme: light;
+  }
+  html { font-size: 10.5pt !important; }
+  body { background: #fff; color: #111; padding: 0; min-height: 0; }
+  * { box-shadow: none !important; text-shadow: none !important; animation: none !important; transition: none !important; }
+  /* Cores que carregam informação (líquido, cor do indicador, faixa de viragem) saem no papel. */
+  .folha-cor, .tube-svg, .grafico-svg, .mini-dot, .regua-svg { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  /* Nunca vão para o papel: navegação, controles, avisos e o VLibras. */
+  .app-header, .bottom-nav, .skip-link, #toast, .drawer, .tour, .trilho, .abertura, .sheet-backdrop, #colorblindOverlay,
+  dialog, .caderno-acoes, [data-apagar-nota], [data-baixar-tabela], .ajuda-link,
+  [vw], [vw-access-button], [vw-plugin-wrapper], #vlibras-widget, #vlibras-script, [class^="vpw-"], [class*=" vpw-"] { display: none !important; }
+
+  /* Cabeçalho de documento, comum a todas as folhas. */
+  .so-impressao { display: block; }
+  .folha-cabecalho {
+    display: grid; grid-template-columns: 1fr 68mm; gap: 4mm 10mm; align-items: end;
+    padding-bottom: 3mm; margin-bottom: 5mm; border-bottom: 1.2pt solid #111;
+  }
+  .folha-marca { display: flex; align-items: center; gap: 2mm; margin-bottom: 2.5mm; }
+  .folha-logo { width: 9mm; height: 9mm; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .folha-marca strong { display: block; font-size: 12pt; letter-spacing: .08em; color: #6b2185; line-height: 1.1; }
+  .folha-marca span { display: block; font-size: 7.5pt; color: #444; }
+  .folha-titulo h1 { font-size: 17pt; line-height: 1.15; margin: 0; color: #111; }
+  .folha-sub { font-size: 8pt; color: #555; margin: 1.2mm 0 0; }
+  .folha-aluno { display: grid; gap: 3.2mm; font-size: 8.5pt; }
+  .folha-aluno p { margin: 0; display: flex; align-items: flex-end; gap: 2mm; }
+  .folha-aluno p::after { content: ''; flex: 1; border-bottom: .6pt solid #555; height: 4mm; }
+  .folha-aluno span { color: #333; }
+
+  /* Relatório da bancada: só a folha vai para o papel. */
+  body.imprimindo-folha > :not(.folha) { display: none !important; }
+  body.imprimindo-folha .folha { display: block; color: #111; font-size: 10pt; }
+  .folha h2 { font-size: 11.5pt; margin: 0 0 2.5mm; padding-bottom: 1mm; border-bottom: .6pt solid #999; color: #111; }
+  .folha h3 { font-size: 9.5pt; margin: 3mm 0 1.5mm; color: #6b2185; text-transform: uppercase; letter-spacing: .06em; }
+  .folha-secao { margin-bottom: 6mm; }
+  .folha-vazia { font-size: 11pt; margin-top: 10mm; }
+  .folha-tabela { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
+  .folha-tabela th { text-align: left; font-weight: 700; background: #eef0f4; border-bottom: .8pt solid #555; padding: 1.2mm 2mm; }
+  .folha-tabela td { border-bottom: .4pt solid #c8cdd5; padding: 1mm 2mm; vertical-align: top; font-family: inherit; }
+  .folha-tabela.folha-gotas { width: auto; min-width: 80mm; }
+  .folha-gotas td { padding: .45mm 2mm; line-height: 1.25; }
+  .folha-gotas-colunas { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; align-items: start; }
+  .folha-gotas-colunas .folha-tabela.folha-gotas { width: 100%; min-width: 0; }
+  .folha h3 { break-after: avoid; }
+  .folha-bloco { break-inside: avoid; }
+  .folha-resumo td:nth-child(2), .folha-resumo td:nth-child(3) { white-space: nowrap; }
+  .folha-tabela th.num { text-align: right; }
+  .folha-tabela .num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .folha-tabela thead { display: table-header-group; }
+  .folha-tabela tr { break-inside: avoid; }
+  .folha-resumo .folha-em-foco td { background: #f6eefa; font-weight: 600; }
+  .folha-fase { color: #444; font-weight: 400; }
+  .folha-cor { display: inline-block; width: 3mm; height: 3mm; border-radius: 50%; border: .5pt solid #666; margin-right: 1.5mm; vertical-align: -0.3mm; }
+  .folha-foco { display: grid; grid-template-columns: 38mm 1fr; gap: 6mm; align-items: start; break-inside: avoid; }
+  .folha-vidro { margin: 0; text-align: center; }
+  .folha-vidro .tube-svg { width: 100%; height: auto; max-height: 62mm; color: #555; }
+  .folha-vidro figcaption { font-size: 8pt; color: #333; margin-top: 1mm; }
+  .folha-dados dl { display: grid; grid-template-columns: 38mm 1fr; gap: .8mm 4mm; margin: 0; font-size: 9pt; }
+  .folha-dados dl > div { display: contents; }
+  .folha-dados dt { color: #444; }
+  .folha-dados dd { margin: 0; font-weight: 600; }
+  .folha-dados h3:first-child { margin-top: 0; }
+  .folha-grafico { margin: 4mm 0 0; break-inside: avoid; }
+  .folha-grafico .grafico-svg { width: 100%; max-height: 72mm; border: .6pt solid #999; border-radius: 0; background: #fff; }
+  .folha-grafico figcaption, .folha-nota { font-size: 7.5pt; color: #444; margin: 1mm 0 0; }
+  .folha-observacoes { break-inside: avoid; }
+  /* Linhas para escrever: traços de verdade (listras de degradê finas somem na impressão). */
+  .folha-linhas span, .roteiro-linhas span { display: block; height: 7.5mm; border-bottom: .5pt solid #8a939e; }
+  .folha-linhas { margin-bottom: 4mm; }
+  .folha-rodape { font-size: 7.5pt; color: #444; border-top: .6pt solid #999; padding-top: 2mm; margin: 0; }
+  .grafico-rotulo, .grafico-legenda { fill: #333; }
+  .grafico-eixo { fill: #111; }
+  .grafico-grade { stroke: #c8cdd5; }
+  .grafico-linha { stroke: #111; }
+  .tube-outline { stroke: #555; fill: #fff; }
+  .tube-graduation { fill: #333; }
+
+  /* Demais telas: o conteúdo com cara de documento (sem cartões escuros nem botões). */
+  main button, main .primary-btn, main .secondary-btn, main input[type=search], main .manual-busca { display: none !important; }
+  .tela { max-width: none; padding: 0; }
+  .tela-cabecalho { display: none; }
   main :is(p, dt, dd, li, h1, h2, h3, caption, caption span, th, td, .eyebrow, .small) { color: #111 !important; }
+  /* Caderno */
+  .nota, .trilha, .jogo-painel, .gabarito { break-inside: avoid; border: 0; border-top: .6pt solid #999; border-radius: 0; background: #fff; padding: 3mm 0; }
+  .nota { border-left: 0 !important; }
+  .nota h3 { font-size: 11pt; margin: 0 0 1.5mm; }
+  .nota dl { font-size: 9pt; }
   .nota:has(.nota-tabela) { break-inside: auto; }
-  .nota-tabela { max-height: none; overflow: visible; border-color: #999; background: #fff; }
-  .nota-tabela th { position: static; background: #eee; color: #000; }
+  .nota-tabela { max-height: none; overflow: visible; border: 0; background: #fff; margin-top: 2mm; }
+  .nota-tabela table { font-size: 8.5pt; width: auto; min-width: 120mm; }
+  .nota-tabela th { position: static; background: #eef0f4; color: #000; padding: 1mm 2mm; border-bottom: .8pt solid #555; }
+  .nota-tabela td { padding: .8mm 2mm; border-bottom: .4pt solid #c8cdd5; color: #000; }
   .nota-tabela thead { display: table-header-group; }
   .nota-tabela tr { break-inside: avoid; }
-  .nota-tabela tbody tr:nth-child(even) { background: #f4f4f4; }
-  .nota-tabela caption, .nota-tabela td { color: #000; }
-  [data-baixar-tabela] { display: none !important; }
+  .nota-tabela tbody tr:nth-child(even) { background: #f6f7f9; }
+  .nota-tabela caption { color: #000; text-align: left; font-weight: 700; padding-bottom: 1mm; }
+  /* Roteiro do professor */
   body.imprimindo-roteiro main { display: none !important; }
-  body.imprimindo-roteiro .roteiro-impressao { display: block; color: #000; font-size: 11pt; }
-  .manual-acoes, .manual-acoes-secao, .ajuda-link, .roteiro .primary-btn, .manual-indice { display: none !important; }
-  .manual-grade { display: block; }
-  .manual-secao { break-inside: avoid-page; background: #fff; border-color: #999; color: #000; }
-  .manual-secao > p, .manual-secao li, .manual-secao dd, .manual-resumo { color: #222 !important; }
-  .roteiro-impressao h1 { font-size: 16pt; }
-  .roteiro-impressao h2 { font-size: 13pt; margin-top: 14pt; }
+  body.imprimindo-roteiro .roteiro-impressao { display: block; color: #000; font-size: 10.5pt; }
+  .roteiro-impressao h2 { font-size: 12pt; margin-top: 5mm; }
   .roteiro-impressao section { break-inside: avoid; }
-  .roteiro-opcoes { list-style: none; padding-left: 10pt; }
-  .roteiro-linhas { height: 60pt; background: repeating-linear-gradient(to bottom, transparent, transparent 19pt, #999 19pt, #999 20pt); }
+  .roteiro-opcoes { list-style: none; padding-left: 4mm; }
+  .roteiro-linhas { margin-bottom: 2mm; }
+  /* Manual */
+  .manual-acoes, .manual-acoes-secao, .roteiro .primary-btn, .manual-indice { display: none !important; }
+  .manual-grade { display: block; }
+  /* Seções podem continuar na página seguinte (sem meias páginas vazias), mas título,
+     itens, dicas, figuras e linhas de tabela não se partem. */
+  .manual-secao { break-inside: auto; background: #fff; border: 0; border-top: .6pt solid #999; border-radius: 0; padding: 4mm 0; color: #000; }
+  .manual-secao > h2, .manual-resumo { break-after: avoid; }
+  .manual-secao li, .manual-dica, .manual-secao figure, .manual-secao tr, .manual-teclas > div { break-inside: avoid; }
+  .manual-conteudo > .manual-secao:first-child, .caderno-lista > .nota:first-child { border-top: 0; padding-top: 0; }
+  .diagrama { max-width: 120mm; }
+  .diag-texto { font-size: 10.5px; }
+  .manual-secao > h2 { font-size: 12.5pt; }
+  .manual-secao > p, .manual-secao li, .manual-secao dd, .manual-resumo { color: #222 !important; font-size: 9.5pt; }
+  .manual-dica { background: #f3f5f8; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 }

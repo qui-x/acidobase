@@ -3,7 +3,7 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = 'siab-0.5.7';
+const VERSAO = 'siab-0.5.8';
 const ARQUIVOS = [
   './',
   './index.html',
@@ -49,6 +49,7 @@ const ARQUIVOS = [
   './js/ui/trilho.js',
   './js/ui/tour.js',
   './js/ui/segredo.js',
+  './js/ui/impressao.js',
   './js/telas/bancada.js',
   './js/telas/laboratorio.js',
   './js/telas/missao.js',
