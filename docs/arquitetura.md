@@ -124,13 +124,28 @@ para salvar o recorde e anotar no caderno. Depois:
 | Comando | O que faz |
 | --- | --- |
 | `npm test` | química, amostras, sais e ambiente, todas as missões e o PWA (sem navegador) |
-| `npm run test:e2e` | 72 testes no Chromium: laboratório, 14 missões, 5 desafios, professor, caderno, acessibilidade, celular e uso sem internet |
+| `npm run test:e2e` | 74 testes no Chromium: laboratório, 14 missões, 5 desafios, professor, caderno, acessibilidade, celular, uso sem internet e atualização |
 | `npm start` | servidor local em http://localhost:8080 |
 | `npm run build` | gera um HTML único (sem instalação como app) |
 
 Para os testes de navegador: `npm install` e depois `npx playwright install chromium`.
 
-## 7. Onde o progresso fica guardado
+## 7. Publicar uma versão nova
+
+O navegador guarda arquivos no cache. Se o `index.html` for novo e o `app.js`
+continuar antigo, o app quebra. Para evitar isso, a versão aparece em três
+lugares, que precisam ser iguais:
+
+1. `js/core/namespace.js`: `version: '0.3.1'`;
+2. `index.html`: o final `?v=0.3.1` de cada `<script>` e do CSS;
+3. `sw.js`: `const VERSAO = 'siab-0.3.1'`.
+
+Ao publicar, troque os três (no `index.html`, use "substituir tudo" de
+`?v=0.3.1` pela versão nova). O `npm test` avisa se algum ficou diferente. O
+service worker novo baixa tudo direto do servidor (`cache: 'reload'`), assume
+sozinho e a página mostra "Recarregar".
+
+## 8. Onde o progresso fica guardado
 
 No `localStorage` do navegador, sem conta e sem envio de dados:
 

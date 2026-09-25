@@ -1,4 +1,4 @@
-# SIAB — A química das cores · versão 0.3.0
+# SIAB — A química das cores · versão 0.3.1
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -17,7 +17,16 @@ como aplicativo.
 **Para instalar:** abra pelo endereço http(s) e use o botão **Instalar app** no
 topo, ou o menu do navegador ("Instalar aplicativo" / "Adicionar à tela de
 início"). Depois da primeira visita, o SIAB abre sem internet. Quando houver
-versão nova, aparece o aviso "Nova versão disponível · Atualizar".
+versão nova, ela é baixada sozinha e aparece o aviso "Nova versão do SIAB
+instalada · Recarregar".
+
+**Se aparecer erro depois de trocar a versão** (por exemplo, `Cannot set
+properties of undefined`), o navegador está usando arquivos antigos guardados
+no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
+continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
+site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.3.1`), o que evita
+essa mistura.
 
 ## O que há na versão 0.3
 
@@ -77,7 +86,7 @@ ambos opcionais.
 npm test            # química, sais, missões e PWA, sem navegador
 npm install         # uma vez, para os testes no navegador
 npx playwright install chromium
-npm run test:e2e    # 72 testes no Chromium, incluindo celular e sem internet
+npm run test:e2e    # 74 testes no Chromium, incluindo celular, sem internet e atualização
 ```
 
 Resultados da última validação: `tests/RESULTADOS.md`.

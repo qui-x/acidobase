@@ -14,10 +14,12 @@ root = Path(__file__).resolve().parent
 html = (root / 'index.html').read_text(encoding='utf-8')
 
 # Estilos e scripts entram no próprio HTML.
+# O "?v=0.3.1" dos endereços só serve para o cache do navegador: é removido aqui.
+arquivo = lambda endereco: root / endereco.split('?')[0]
 html = re.sub(r'<link rel="stylesheet" href="([^"]+)">',
-              lambda m: '<style>\n' + (root / m[1]).read_text(encoding='utf-8') + '\n</style>', html)
+              lambda m: '<style>\n' + arquivo(m[1]).read_text(encoding='utf-8') + '\n</style>', html)
 html = re.sub(r'<script src="([^"]+)"></script>',
-              lambda m: '<script>\n' + (root / m[1]).read_text(encoding='utf-8').replace('</script', '<\\/script') + '\n</script>', html)
+              lambda m: '<script>\n' + arquivo(m[1]).read_text(encoding='utf-8').replace('</script', '<\\/script') + '\n</script>', html)
 
 # Manifesto e ícone da tela inicial só funcionam com a pasta publicada.
 html = re.sub(r'\s*<link rel="(manifest|apple-touch-icon)"[^>]*>', '', html)

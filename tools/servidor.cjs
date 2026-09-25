@@ -10,7 +10,8 @@ const TIPOS = {
   '.md': 'text/markdown; charset=utf-8'
 };
 
-function criarServidor() {
+// transformar(caminho, conteúdo) permite aos testes simular uma versão nova de um arquivo.
+function criarServidor({ transformar = null } = {}) {
   return http.createServer((pedido, resposta) => {
     const caminho = decodeURIComponent(pedido.url.split('?')[0]);
     const arquivo = path.join(RAIZ, caminho === '/' ? 'index.html' : caminho);
@@ -20,7 +21,8 @@ function criarServidor() {
       return;
     }
     resposta.writeHead(200, { 'Content-Type': TIPOS[path.extname(arquivo)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-    fs.createReadStream(arquivo).pipe(resposta);
+    const conteudo = fs.readFileSync(arquivo);
+    resposta.end(transformar ? transformar(path.relative(RAIZ, arquivo), conteudo) : conteudo);
   });
 }
 

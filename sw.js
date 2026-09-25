@@ -1,8 +1,9 @@
 /* Service worker do SIAB: guarda os arquivos do app para funcionar sem internet.
-   Ao publicar uma versão nova, mude VERSAO: o navegador baixa tudo de novo e
-   o app mostra "Nova versão disponível". A lista ARQUIVOS precisa conter todo
-   arquivo usado pela página (o teste tests/pwa.test.cjs confere isso). */
-const VERSAO = 'siab-0.3.0';
+   Ao publicar uma versão nova, mude VERSAO (igual a SIAB.version e ao ?v= do
+   index.html): o navegador baixa tudo de novo, a versão nova assume e o app
+   avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
+   página (o teste tests/pwa.test.cjs confere isso). */
+const VERSAO = 'siab-0.3.1';
 const ARQUIVOS = [
   './',
   './index.html',
@@ -59,8 +60,15 @@ const ARQUIVOS = [
   './js/init/app.js'
 ];
 
+// cache: 'reload' busca cada arquivo no servidor, sem usar o cache do navegador.
+// Sem isso, uma versão nova podia guardar arquivos antigos misturados aos novos.
+// skipWaiting: a versão nova assume logo; a página avisa para recarregar.
 self.addEventListener('install', evento => {
-  evento.waitUntil(caches.open(VERSAO).then(cache => cache.addAll(ARQUIVOS)));
+  evento.waitUntil(
+    caches.open(VERSAO)
+      .then(cache => cache.addAll(ARQUIVOS.map(url => new Request(url, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 // Remove caches de versões antigas.
@@ -70,11 +78,6 @@ self.addEventListener('activate', evento => {
       .then(chaves => Promise.all(chaves.filter(chave => chave.startsWith('siab-') && chave !== VERSAO).map(chave => caches.delete(chave))))
       .then(() => self.clients.claim())
   );
-});
-
-// A página pede para ativar a versão nova (botão "Atualizar").
-self.addEventListener('message', evento => {
-  if (evento.data?.tipo === 'ATUALIZAR') self.skipWaiting();
 });
 
 // Primeiro o cache; se não houver, a rede (e guarda a resposta para depois).

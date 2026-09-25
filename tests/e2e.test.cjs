@@ -5,7 +5,10 @@ const fs = require('node:fs'), assert = require('node:assert/strict');
 const { chromium } = require('playwright');
 
 const { criarServidor } = require('../tools/servidor.cjs');
-const servidor = () => new Promise(resolve => { const s = criarServidor(); s.listen(0, '127.0.0.1', () => resolve(s)); });
+// sobrescrever['sw.js'] = texto => novoTexto simula a publicação de uma versão nova.
+let sobrescrever = {};
+const transformar = (caminho, conteudo) => (sobrescrever[caminho] ? Buffer.from(sobrescrever[caminho](conteudo.toString())) : conteudo);
+const servidor = () => new Promise(resolve => { const s = criarServidor({ transformar }); s.listen(0, '127.0.0.1', () => resolve(s)); });
 
 const resultados = [];
 const errosConsole = [];
@@ -607,10 +610,18 @@ async function teste(nome, fn) {
     await p.evaluate(() => navigator.serviceWorker.ready);
     await p.reload();
     await p.waitForFunction(() => Boolean(navigator.serviceWorker.controller), null, { timeout: 15000 });
+    const versao = await p.evaluate(() => 'siab-' + SIAB.version);
     const chaves = await p.evaluate(async () => (await caches.keys()));
-    assert.ok(chaves.includes('siab-0.3.0'));
-    const guardados = await p.evaluate(async () => (await (await caches.open('siab-0.3.0')).keys()).length);
+    assert.ok(chaves.includes(versao), `cache ${versao} ausente: ${chaves}`);
+    const guardados = await p.evaluate(async v => (await (await caches.open(v)).keys()).length, versao);
     assert.ok(guardados >= 50, `arquivos no cache: ${guardados}`);
+    assert.equal(await p.isVisible('#pwa-recarregar'), false, 'primeira visita não pede para recarregar');
+  });
+  await teste('scripts e estilos são pedidos com ?v= da versão (sem misturar cache antigo)', async () => {
+    const versao = await p.evaluate(() => SIAB.version);
+    const enderecos = await p.evaluate(() => [...document.querySelectorAll('script[src], link[rel="stylesheet"]')].map(x => x.getAttribute('src') || x.getAttribute('href')));
+    assert.ok(enderecos.length > 40);
+    for (const e of enderecos) assert.ok(e.endsWith(`?v=${versao}`), e);
   });
   await teste('manifesto válido é servido', async () => {
     const manifesto = await p.evaluate(async () => (await fetch(document.querySelector('link[rel="manifest"]').href)).json());
@@ -630,6 +641,24 @@ async function teste(nome, fn) {
     await p.goto(BASE + '?theme=dark#/aprender');
     await p.waitForFunction(() => SIAB.rota.nome === 'aprender');
     await ctxP.setOffline(false);
+  });
+  await teste('versão nova do service worker assume, troca o cache e avisa "Recarregar"', async () => {
+    const antiga = await p.evaluate(() => 'siab-' + SIAB.version);
+    sobrescrever['sw.js'] = texto => texto.replace(/const VERSAO = '[^']+'/, "const VERSAO = 'siab-teste-atualizacao'");
+    await p.evaluate(async () => (await navigator.serviceWorker.getRegistration()).update());
+    await p.waitForSelector('#pwa-recarregar', { timeout: 20000 });
+    // O aviso chega quando a versão nova assume; a limpeza do cache antigo termina logo depois.
+    let chaves = [];
+    for (let i = 0; i < 50; i++) {
+      chaves = await p.evaluate(async () => caches.keys());
+      if (!chaves.includes(antiga)) break;
+      await p.waitForTimeout(100);
+    }
+    assert.ok(chaves.includes('siab-teste-atualizacao'), `cache novo ausente: ${chaves}`);
+    assert.ok(!chaves.includes(antiga), 'cache antigo não foi apagado');
+    await Promise.all([p.waitForEvent('load'), p.click('#pwa-recarregar')]);
+    await p.waitForFunction(() => window.SIAB && SIAB.rota.nome);
+    sobrescrever = {};
   });
   await ctxP.close();
 

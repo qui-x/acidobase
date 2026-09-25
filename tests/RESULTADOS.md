@@ -1,4 +1,4 @@
-# Validação da versão 0.3.0 — 25/09/2026
+# Validação da versão 0.3.1 — 25/09/2026
 
 ## Resumo
 
@@ -8,8 +8,8 @@
 | Amostras do cotidiano (`cotidiano.test.cjs`) | 15 amostras: aprovado |
 | Sais, tampões, antiácidos, chuva, temperatura, espécies e funções (`sais-ambiente.test.cjs`) | 62 verificações: aprovado |
 | Missões (`missoes.test.cjs`) | 14 missões e 88 passos percorridos: aprovado |
-| PWA (`pwa.test.cjs`) | 155 verificações de cache, arquivos, manifesto e ícones: aprovado |
-| Ponta a ponta no Chromium (`e2e.test.cjs`) | 72 de 72 testes: aprovado |
+| PWA (`pwa.test.cjs`) | 200 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
+| Ponta a ponta no Chromium (`e2e.test.cjs`) | 74 de 74 testes: aprovado |
 | Instalabilidade (Chromium, `Page.getInstallabilityErrors`) | nenhum erro |
 | Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 12 telas (tema escuro) e em 8 estados nos temas claro, alto contraste e no celular |
 | Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, sem erros no console |
@@ -51,7 +51,9 @@ alimentos, produtos comerciais ou o organismo humano.
 - **Celular (390 × 844):** barra inferior; nenhuma rolagem horizontal em 9
   telas; prateleira no painel inferior com foco no botão fechar e bancada
   inerte; toque = 1 gota; barra da missão abre o cartão.
-- **PWA:** service worker ativo, 55 entradas no cache e manifesto válido.
+- **PWA:** service worker ativo, 55 entradas no cache e manifesto válido. Todos
+  os scripts e estilos são pedidos com `?v=` da versão. Uma versão nova do
+  service worker assume sozinha, apaga o cache antigo e mostra "Recarregar".
   **Sem internet:** recarregar, gotejar, abrir missão e desafio.
 - Nenhum erro no console nem diálogo nativo (alert, confirm, prompt) em todo o percurso.
 
@@ -70,6 +72,28 @@ alimentos, produtos comerciais ou o organismo humano.
    estudante confirma.
 7. O detetive dava 99 pontos para um palpite igual ao pH mostrado.
 8. O Super Trunfo não permitia trocar de modo no meio da partida.
+
+## Correção da versão 0.3.1: erro depois de atualizar
+
+Relato: ao abrir a 0.3.0 onde antes estava a 0.2, apareciam
+`Cannot set properties of undefined (setting 'ammonium')` em `sais.js` e
+`Cannot set properties of null (setting 'innerHTML')` em `app.js`.
+
+Causa, reproduzida no Chromium: o navegador recarregou o `index.html` novo,
+mas continuou usando o `app.js` e o `cotidiano.js` da 0.2 guardados no cache.
+Os endereços eram os mesmos, e o servidor não enviou nenhuma instrução de
+cache. O `sais.js`, que é novo, veio do servidor e procurou uma estrutura que
+só existe no `cotidiano.js` novo.
+
+Correção:
+1. Endereços com versão (`?v=0.3.1`).
+2. O service worker baixa sem o cache do navegador (`cache: 'reload'`).
+3. A versão nova assume sozinha e a página avisa "Recarregar".
+
+Depois da correção, a mesma reprodução (abrir a 0.2, trocar os arquivos e
+recarregar normalmente) carrega sem erros. O `pwa.test.cjs` confere se a
+versão é igual nos três lugares, e o `e2e.test.cjs` testa a atualização do
+service worker.
 
 ## Não verificado
 

@@ -5,12 +5,22 @@ const raiz = path.join(__dirname, '..');
 const html = fs.readFileSync(path.join(raiz, 'index.html'), 'utf8');
 const sw = fs.readFileSync(path.join(raiz, 'sw.js'), 'utf8');
 const lista = [...sw.matchAll(/'\.\/([^']*)'/g)].map(m => m[1]).filter(Boolean);
+const semVersao = endereco => endereco.split('?')[0];
 const referenciados = [
   ...[...html.matchAll(/<script src="([^"]+)"/g)].map(m => m[1]),
   ...[...html.matchAll(/<link rel="(?:stylesheet|icon|apple-touch-icon|manifest)"[^>]*href="([^"]+)"/g)].map(m => m[1]),
   ...[...html.matchAll(/<img src="([^"]+)"/g)].map(m => m[1])
-];
+].map(semVersao);
 let count = 0;
+
+// A mesma versão em três lugares: SIAB.version, ?v= dos arquivos e VERSAO do sw.js.
+// Sem isso, o navegador pode misturar arquivos de versões diferentes guardados no cache.
+const versao = fs.readFileSync(path.join(raiz, 'js/core/namespace.js'), 'utf8').match(/version: '([^']+)'/)[1];
+assert.match(sw, new RegExp(`const VERSAO = 'siab-${versao.replace(/\./g, '\\.')}'`), 'VERSAO do sw.js diferente de SIAB.version'); count++;
+for (const [, endereco] of html.matchAll(/<(?:script src|link rel="stylesheet" href)="([^"]+)"/g)) {
+  assert.ok(endereco.endsWith(`?v=${versao}`), `${endereco} sem ?v=${versao} no index.html`); count++;
+}
+assert.match(sw, /cache: 'reload'/, 'o service worker deve baixar sem o cache do navegador'); count++;
 for (const arquivo of new Set(referenciados)) {
   assert.ok(lista.includes(arquivo), `sw.js não guarda ${arquivo}`); count++;
 }
@@ -40,5 +50,5 @@ const varrer = pasta => fs.readdirSync(path.join(raiz, pasta), { withFileTypes: 
   if (e.isDirectory()) varrer(rel); else if (rel.endsWith('.js')) todos.push(rel);
 });
 varrer('js');
-for (const arquivo of todos) { assert.ok(html.includes(`src="${arquivo}"`), `index.html não carrega ${arquivo}`); count++; }
+for (const arquivo of todos) { assert.ok(html.includes(`src="${arquivo}?v=`), `index.html não carrega ${arquivo}`); count++; }
 console.log(`${count} verificações do PWA (cache, arquivos, manifesto e ícones): OK`);
