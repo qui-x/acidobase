@@ -535,48 +535,53 @@ button.cartao { font: inherit; cursor: pointer; }
 .controls h2 { font-size: 1rem; }
 .mobile-control, .sheet-handle { display: none !important; }
 
-/* Módulos (Explorar, Medir, Calcular): cartões recolhíveis como os modelos do SIMA.
-   Cada módulo tem sua cor; no tema claro os tons foram escurecidos para manter
-   4,5:1 também sobre o fundo tingido do selo "Ativo" (o pior caso). */
+/* Módulos (Explorar, Medir, Calcular): cartões recolhíveis como os modelos do SIMA,
+   com a estética do SIAB. Cada módulo pega um trecho do degradê da marca
+   (--brand: vermelho → rosa → fúcsia → violeta): lado a lado, os três ícones
+   refazem o degradê, na ordem da progressão 1 → 2 → 3. O texto usa o tom
+   pastel do mesmo trecho (como o lilás de --accent) e os selos e o botão
+   ativo são contornados, como .tag e .secondary-btn[aria-pressed]. Sem fundo
+   tingido atrás do texto, o contraste fica acima de 4,5:1 nos dois temas. */
 .modulos { display: grid; gap: 6px; }
 .modulo { --mod: var(--accent); --mod-rgb: 230, 165, 245; border: 1px solid var(--border); border-radius: 10px; background: var(--panel2); overflow: hidden; transition: border-color .2s, box-shadow .2s; }
-.modulo[data-modulo=explorar] { --mod: #4ade80; --mod-rgb: 74, 222, 128; }
-.modulo[data-modulo=medir] { --mod: #fbbf24; --mod-rgb: 251, 191, 36; }
-.modulo[data-modulo=calcular] { --mod: #7dd3fc; --mod-rgb: 125, 211, 252; }
-:root[data-theme=light] .modulo[data-modulo=explorar] { --mod: #0e5526; --mod-rgb: 14, 85, 38; }
-:root[data-theme=light] .modulo[data-modulo=medir] { --mod: #5e4400; --mod-rgb: 94, 68, 0; }
-:root[data-theme=light] .modulo[data-modulo=calcular] { --mod: #034d6d; --mod-rgb: 3, 77, 109; }
+.modulo[data-modulo=explorar] { --mod: #fda4af; --mod-rgb: 253, 164, 175; --mod-grad: linear-gradient(135deg, #dc2626, #db2777); }
+.modulo[data-modulo=medir] { --mod: #f0abfc; --mod-rgb: 240, 171, 252; --mod-grad: linear-gradient(135deg, #db2777, #c026d3); }
+.modulo[data-modulo=calcular] { --mod: #c4b5fd; --mod-rgb: 196, 181, 253; --mod-grad: linear-gradient(135deg, #c026d3, #7c3aed); }
+:root[data-theme=light] .modulo[data-modulo=explorar] { --mod: #9f1239; --mod-rgb: 159, 18, 57; }
+:root[data-theme=light] .modulo[data-modulo=medir] { --mod: #86198f; --mod-rgb: 134, 25, 143; }
+:root[data-theme=light] .modulo[data-modulo=calcular] { --mod: #5b21b6; --mod-rgb: 91, 33, 182; }
 :root[data-contrast=on] .modulo { --mod: var(--accent); --mod-rgb: 255, 255, 0; }
-.modulo.ativo { border-color: rgba(var(--mod-rgb), .55); }
-.modulo:has(> .modulo-cab[aria-expanded="true"]) { border-color: rgba(var(--mod-rgb), .6); box-shadow: 0 0 0 1px rgba(var(--mod-rgb), .15); }
+.modulo.ativo { border-color: rgba(var(--mod-rgb), .6); }
+.modulo:has(> .modulo-cab[aria-expanded="true"]) { border-color: var(--mod); box-shadow: 0 0 0 1px rgba(var(--mod-rgb), .2); }
 .modulo-cab {
   width: 100%; display: flex; align-items: center; gap: 9px; min-height: 46px; padding: 8px 11px;
   background: transparent; border: 0; border-radius: 10px; text-align: left; color: var(--text);
-  font-size: .85rem; font-weight: 700; transition: background .15s, color .15s;
+  font-size: .85rem; font-weight: 700; transition: background .15s;
 }
-.modulo-cab:hover { background: rgba(var(--mod-rgb), .08); color: var(--mod); }
-.modulo-cab[aria-expanded="true"] {
-  background: linear-gradient(135deg, rgba(var(--mod-rgb), .14), rgba(var(--mod-rgb), .05));
-  color: var(--mod); border-radius: 10px 10px 0 0; border-bottom: 1px solid rgba(var(--mod-rgb), .25);
-}
+.modulo-cab:hover { background: var(--hover); }
+.modulo-cab[aria-expanded="true"] { background: rgba(var(--mod-rgb), .07); border-radius: 10px 10px 0 0; border-bottom: 1px solid var(--border); }
 .modulo-cab:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
-.modulo-icone { display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 7px; background: rgba(var(--mod-rgb), .16); color: var(--mod); flex-shrink: 0; }
+.modulo-icone { display: inline-flex; width: 26px; height: 26px; align-items: center; justify-content: center; border-radius: 7px; background: var(--mod-grad, var(--brand)); color: #fff; flex-shrink: 0; }
+:root[data-contrast=on] .modulo-icone { background: #000; color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
 .modulo-icone svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.9; stroke-linecap: round; stroke-linejoin: round; }
 .modulo-nome { flex: 1; letter-spacing: .2px; }
-.modulo-selo { font-size: .65rem; font-weight: 700; min-width: 20px; padding: 1px 6px; border-radius: 10px; text-align: center; background: rgba(var(--mod-rgb), .2); color: var(--mod); flex-shrink: 0; }
-.modulo-ativo { font-size: .6rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 2px 7px; border-radius: 10px; background: rgba(var(--mod-rgb), .25); color: var(--mod); flex-shrink: 0; }
+.modulo-cab[aria-expanded="true"] .modulo-nome, .modulo.ativo .modulo-nome { color: var(--mod); }
+.modulo-selo, .modulo-ativo { font-size: .62rem; font-weight: 700; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--mod); color: var(--mod); background: transparent; flex-shrink: 0; white-space: nowrap; }
+.modulo-selo { min-width: 20px; text-align: center; border-color: var(--border); color: var(--secondary); }
+.modulo-ativo { letter-spacing: .06em; text-transform: uppercase; }
 .modulo-cab svg.chevron { width: 16px; height: 16px; flex-shrink: 0; color: var(--muted); transition: transform .22s cubic-bezier(.4, 0, .2, 1); }
 .modulo-cab[aria-expanded="true"] svg.chevron { transform: rotate(180deg); color: var(--mod); }
 .modulo-corpo { padding: 10px 11px 11px; animation: abrir-menu .22s ease-out; }
 .modulo-ativar {
   display: flex; align-items: center; gap: 8px; width: 100%; min-height: 42px; padding: 8px 12px; margin: 0 0 10px;
-  border-radius: 8px; border: 1.5px solid var(--border); background: var(--panel); color: var(--text);
-  font-size: .8rem; font-weight: 700; text-align: left; transition: border-color .18s, background .18s, color .18s;
+  border-radius: 6px; border: 1px solid var(--border); background: var(--panel); color: var(--text);
+  font-size: .82rem; font-weight: 600; text-align: left; transition: border-color .18s, background .18s;
 }
-.modulo-ativar:hover { border-color: var(--mod); background: rgba(var(--mod-rgb), .08); color: var(--mod); }
-.modulo-ativar[aria-pressed="true"] { border-color: var(--mod); background: rgba(var(--mod-rgb), .15); color: var(--mod); box-shadow: 0 0 0 3px rgba(var(--mod-rgb), .2); cursor: default; }
+.modulo-ativar:hover { border-color: var(--mod); background: var(--hover); }
+.modulo-ativar[aria-pressed="true"] { border-color: var(--mod); color: var(--mod); box-shadow: 0 0 0 2px rgba(var(--mod-rgb), .18); cursor: default; }
 .modulo-ponto { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 2px solid var(--mod); }
-.modulo-ativar[aria-pressed="true"] .modulo-ponto { background: var(--mod); box-shadow: 0 0 6px var(--mod); }
+.modulo-ativar[aria-pressed="true"] .modulo-ponto { background: var(--mod-grad, var(--mod)); border-color: transparent; }
+:root[data-contrast=on] .modulo-ativar[aria-pressed="true"] .modulo-ponto { background: var(--accent); }
 .modulo-def { font-size: .78rem; line-height: 1.5; color: var(--secondary); margin: 0 0 10px; padding: 6px 9px; background: var(--panel); border-left: 3px solid var(--mod); border-radius: 0 6px 6px 0; }
 .fact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; margin: 0 0 10px; }
 .fact-cell { background: var(--panel); border: 1px solid var(--border); border-radius: 7px; padding: 6px 8px; min-width: 0; }

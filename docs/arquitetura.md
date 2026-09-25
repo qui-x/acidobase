@@ -1,4 +1,4 @@
-# Arquitetura do SIAB 0.5.4 — guia para quem está começando
+# Arquitetura do SIAB 0.5.5 — guia para quem está começando
 
 Este guia explica como o código está organizado e como fazer as mudanças mais
 comuns: criar uma missão, acrescentar um frasco à prateleira e criar um desafio.

@@ -1,4 +1,4 @@
-# Validação da versão 0.5.4 — 25/09/2026
+# Validação da versão 0.5.5 — 25/09/2026
 
 ## Resumo
 
@@ -14,6 +14,17 @@
 | Ponta a ponta no Chromium (`e2e.test.cjs`) | 113 de 113 testes: aprovado |
 | Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados da 0.5.0 (bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura) e em mais 26 da 0.5.1 (frasco secreto, arco-íris, despejo, mistura, erlenmeyer e cartões flutuantes) e 12 da 0.5.4 (menus Tubo e Conta-gotas abertos, busca, os três módulos abertos e ativos, no celular); temas escuro, claro e alto contraste; computador e celular |
 | Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, com a animação de abertura e sem erros no console |
+
+## Novidades da 0.5.5 testadas
+
+- **Cores dos módulos na estética do SIAB:** cada ícone de módulo leva um
+  trecho do degradê da marca (Explorar: vermelho → rosa; Medir: rosa →
+  fúcsia; Calcular: fúcsia → violeta), e lado a lado os três refazem o
+  degradê do botão "Segure para gotejar". Os textos usam os tons pastel do
+  mesmo trecho, como o lilás de destaque, e os selos e o botão ativo são
+  contornados, como as etiquetas e os botões do resto do programa. Sem fundo
+  tingido atrás do texto, o axe não acusa nada nos temas escuro e claro nem
+  no alto contraste (onde tudo vira amarelo sobre preto).
 
 ## Novidades da 0.5.4 testadas
 
