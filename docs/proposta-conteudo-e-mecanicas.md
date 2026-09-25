@@ -1,8 +1,20 @@
 # Proposta — conteúdo de ácidos e bases e mecânicas digitais
 
 Documento de planejamento do SIAB, escrito em 24/09/2026 a partir da versão 0.2.1.
-Nada aqui está implementado. Os números citados foram calculados com o próprio
-motor do SIAB (`js/simulation/quimica.js`) e conferidos com valores de livro.
+Os números citados foram calculados com o próprio motor do SIAB
+(`js/simulation/quimica.js`) e conferidos com valores de livro.
+
+> **Situação (versão 0.3.0, 25/09/2026): as 15 mecânicas foram implementadas.**
+> Veja o mapa no `LEIA-ME.md` e a validação em `tests/RESULTADOS.md`.
+> Diferenças em relação ao texto abaixo:
+> - M11: Mg(OH)₂ e Al(OH)₃ usam Kps do OpenStax (8,9 × 10⁻¹² e 2 × 10⁻³²).
+>   O estômago tem 1 mL de HCl 0,1 mol/L.
+> - M12: a correção usa água de cal, Ca(OH)₂ dissolvido. O calcário não é
+>   modelado. A chuva ácida é representada por H₂SO₄ 2,5 × 10⁻⁵ mol/L.
+> - M13: no duelo, o NaOH tem 0,1 mol/L e as gotas têm 0,01 mL, para caber no tubo.
+> - M15: só água, HCl e NaOH. Os Ka não são corrigidos pela temperatura.
+> - Os trechos de código abaixo foram a proposta. O código final está em
+>   `js/` e é explicado em `docs/arquitetura.md`.
 
 A proposta de reestruturação da interface está em `proposta-ui-ux.md`.
 

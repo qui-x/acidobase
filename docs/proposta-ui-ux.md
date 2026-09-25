@@ -1,8 +1,20 @@
 # Proposta — reestruturação de interface e experiência (UI/UX)
 
 Documento de planejamento do SIAB, escrito em 24/09/2026 a partir da versão 0.2.1.
-Nada aqui está implementado. Complementa `proposta-conteudo-e-mecanicas.md`,
-que descreve as mecânicas M1 a M15 citadas abaixo.
+Complementa `proposta-conteudo-e-mecanicas.md`, que descreve as mecânicas M1 a
+M15 citadas abaixo.
+
+> **Situação (versão 0.3.0, 25/09/2026): as fases 0 a 5 foram implementadas,**
+> **além do aplicativo instalável (PWA).** Os problemas P1 a P10 foram tratados.
+> Diferenças em relação ao texto abaixo:
+> - As condições das missões recebem `ctx.tubo(nome).r` (resultado do motor),
+>   e cada passo "agir" tem uma `demo()`, usada no botão "Mostrar como" e nos testes.
+> - O formulário antigo continua disponível em "Ajustes de medida" (níveis
+>   Medir e Calcular). A prateleira é o caminho principal.
+> - A confirmação ficou só para remover tubos, apagar o caderno e apagar o progresso.
+> - A avaliação com estudantes (seção 8) ainda não foi feita.
+>
+> A organização final do código está em `docs/arquitetura.md`.
 
 ---
 

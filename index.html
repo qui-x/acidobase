@@ -4,9 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#0c1520">
-  <meta name="description" content="SIAB — A química das cores. Explore ácidos, bases e indicadores em uma bancada de tubos de ensaio.">
+  <meta name="description" content="SIAB — A química das cores. Missões, desafios e laboratório de ácidos e bases para o ensino médio.">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SIAB">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>SIAB — A química das cores</title>
+  <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
+  <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
   <link rel="stylesheet" href="css/stylesiab.css">
   <script src="a11y.js"></script>
 </head>
@@ -18,76 +24,499 @@
     <filter id="f-acromatopsia"><feColorMatrix type="matrix" values="0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0.299 0.587 0.114 0 0 0 0 0 1 0"/></filter>
   </defs></svg>
   <div id="colorblindOverlay" aria-hidden="true"></div>
-  <a class="skip-link" href="#experiment">Ir para a bancada</a>
+  <a class="skip-link" href="#conteudo">Ir para o conteúdo</a>
+
   <header class="app-header">
-    <div class="header-brand"><img src="assets/siab-icone.svg" alt="" width="34" height="34"><div><strong>SIAB</strong><span>A química das cores</span></div></div>
-    <div class="header-actions"><button class="icon-btn" id="about-btn" aria-label="Sobre o simulador"><span aria-hidden="true">?</span></button><button id="access-btn" class="text-btn">Acessibilidade</button></div>
+    <a class="header-brand" href="#/inicio" aria-label="SIAB — início">
+      <img src="assets/siab-icone.svg" alt="" width="34" height="34">
+      <div><strong>SIAB</strong><span>A química das cores</span></div>
+    </a>
+    <nav class="main-nav" aria-label="Seções principais">
+      <a href="#/aprender" data-nav="aprender">Aprender</a>
+      <a href="#/desafios" data-nav="desafios">Desafios</a>
+      <a href="#/laboratorio" data-nav="laboratorio">Laboratório</a>
+      <a href="#/professor" data-nav="professor">Professor</a>
+    </nav>
+    <div class="header-actions">
+      <button id="install-btn" class="text-btn" type="button" hidden>Instalar app</button>
+      <a class="text-btn header-notebook" href="#/caderno" data-nav="caderno">Caderno</a>
+      <button id="access-btn" class="text-btn" type="button">Acessibilidade</button>
+      <button id="about-btn" class="icon-btn" type="button" aria-label="Sobre o simulador"><span aria-hidden="true">?</span></button>
+    </div>
   </header>
 
-  <section id="start-screen" class="start-screen" aria-labelledby="welcome-title">
-    <div class="start-card"><img class="start-icon" src="assets/siab-icone.svg" alt="" width="88" height="88"><p class="eyebrow">SIMULADOR INTERATIVO DE ÁCIDOS E BASES</p><h1 id="welcome-title">A química<br><span>das cores</span></h1><p>Uma gota, novas descobertas.<br>Observe a mesma solução pelos olhos de diferentes indicadores.</p><button id="start-btn" class="primary-btn">Começar <span aria-hidden="true">→</span></button><span class="start-note">Frutas, alimentos e descobertas ao alcance da sua aula.</span></div>
-  </section>
-
-  <div id="workspace" class="workspace" hidden>
-    <aside id="bench-sidebar" class="bench-sidebar" aria-label="Tubos da bancada">
-      <div class="sidebar-heading"><span class="eyebrow">BANCADA</span><span id="tube-count" class="count"></span></div>
-      <div id="tube-list" class="tube-list"></div>
-      <button class="secondary-btn" data-action="add">＋ Novo tubo</button>
-      <div class="sidebar-bottom"><span class="brand-line"></span><p>Vermelho ao roxo.<br>Uma química de possibilidades.</p><span class="small">SIAB · 0.2.1</span></div>
-    </aside>
-
-    <main id="experiment" class="experiment">
-      <nav class="view-tabs" aria-label="Visualização da bancada">
-        <button id="focus-tab" aria-pressed="true">Tubo em foco</button><button id="overview-tab" aria-pressed="false">Visão geral <span id="overview-count"></span></button>
-        <button class="mobile-add" data-action="add" aria-label="Adicionar tubo">＋</button>
+  <main id="conteudo" tabindex="-1">
+    <!-- INÍCIO -->
+    <section data-tela="inicio" class="tela tela-inicio" aria-labelledby="inicio-titulo" hidden>
+      <div class="inicio-hero">
+        <img class="start-icon" src="assets/siab-icone.svg" alt="" width="76" height="76">
+        <p class="eyebrow">SIMULADOR INTERATIVO DE ÁCIDOS E BASES</p>
+        <h1 id="inicio-titulo" data-foco tabindex="-1">A química <span>das cores</span></h1>
+        <p class="inicio-lema">Uma gota, novas descobertas. Por onde você quer começar?</p>
+      </div>
+      <a id="continuar" class="continuar" href="#/inicio" hidden></a>
+      <nav class="caminhos" aria-label="Caminhos">
+        <a class="caminho" href="#/aprender">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13M8 7h7M8 11h5"/></svg>
+          <strong>Aprender</strong>
+          <span>Missões guiadas, da 1ª à 2ª série</span>
+          <span class="caminho-meta" id="meta-aprender"></span>
+        </a>
+        <a class="caminho" href="#/desafios">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Zm0 1H4v2a3 3 0 0 0 3 3m10-5h3v2a3 3 0 0 1-3 3"/></svg>
+          <strong>Desafios</strong>
+          <span>Jogos curtos para rejogar</span>
+          <span class="caminho-meta" id="meta-desafios"></span>
+        </a>
+        <a class="caminho" href="#/laboratorio">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3M7 15h10"/></svg>
+          <strong>Laboratório</strong>
+          <span>Bancada livre com prateleira de frascos</span>
+          <span class="caminho-meta">Explorar · Medir · Calcular</span>
+        </a>
+        <a class="caminho" href="#/professor">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4h6a1 1 0 0 1 1 1v1H8V5a1 1 0 0 1 1-1ZM8 6H6a1 1 0 0 0-1 1v13a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1h-2M9 12l2 2 4-4M9 17h6"/></svg>
+          <strong>Professor</strong>
+          <span>Montar aula, projetor e roteiros</span>
+          <span class="caminho-meta">Gabaritos e objetivos</span>
+        </a>
       </nav>
-      <section id="focus-view" class="focus-view" aria-label="Edição do tubo selecionado">
-        <div class="focus-heading"><div><p class="eyebrow" id="tube-index"></p><div class="name-row"><h1 id="tube-name"></h1><button id="rename-btn" class="icon-btn" aria-label="Renomear tubo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l4-1L20 7a2 2 0 0 0-3-3L5 16l-1 4Z"/></svg></button></div><p id="sample-summary" class="small"></p></div><button id="prepare-btn" class="secondary-btn mobile-control">Preparar</button></div>
-        <div id="group-notice" class="group-notice" hidden></div><p id="sample-model-note" class="sample-model-note" hidden></p>
-        <div class="tube-stage"><div class="stage-stats"><span class="eyebrow">LEITURA</span><div class="ph-readout"><span>pH</span><strong id="ph-value"></strong></div><span id="ph-phase" class="phase"></span><button id="ph-toggle" class="quiet-btn" aria-pressed="true">Ocultar pH</button></div><div id="large-tube" class="large-tube"></div><div class="volume-readout"><span class="eyebrow">VOLUME</span><strong id="volume-value"></strong><span class="small">mL</span><span class="small capacity">capacidade<br>5,00 mL</span></div></div>
-        <div class="color-reading"><span id="color-swatch" class="color-swatch" aria-hidden="true"></span><div><strong id="color-name"></strong><span id="indicator-name" class="small"></span></div></div>
-        <p id="equivalence-note" class="equivalence-note" aria-live="polite"></p>
-        <div class="dose-area"><div class="dose-info"><span id="titrant-label"></span><span id="dose-summary"></span></div><div class="dose-actions"><button id="undo-btn" class="secondary-btn" aria-label="Desfazer última gota">↶ <span>Desfazer</span></button><button id="drop-btn" class="primary-btn">＋ Adicionar 1 gota</button></div><span id="dose-target" class="dose-target"></span></div>
-        <nav class="tube-navigation" aria-label="Navegar entre tubos"><button id="previous-btn" aria-label="Tubo anterior">← <span>Anterior</span></button><button id="all-tubes-btn" class="tube-position"></button><button id="next-btn" aria-label="Próximo tubo"><span>Próximo</span> →</button></nav>
-      </section>
-      <section id="overview-view" class="overview-view" aria-labelledby="overview-title" hidden><div class="overview-heading"><h1 id="overview-title">Sua bancada</h1><p>Toque em um tubo para editar.</p></div><div id="overview-grid" class="overview-grid"></div></section>
-    </main>
+      <p class="inicio-nota">Funciona sem internet depois da primeira visita. Seu progresso fica só neste aparelho.</p>
+    </section>
 
-    <aside id="controls" class="controls" aria-label="Preparar tubo">
-      <div class="sheet-handle" aria-hidden="true"></div><div class="controls-heading"><h2>Preparar tubo</h2><button id="close-controls" class="icon-btn mobile-control" aria-label="Fechar preparação">×</button></div>
-      <label class="field">Indicador<select id="indicator-select" data-label="Indicador"></select></label><p id="indicator-range" class="field-hint"></p><label class="check-row indicator-mode"><input type="checkbox" id="indicator-only">Realçar indicador <span class="small">Oculta a cor própria da amostra</span></label>
-      <form id="prepare-form" novalidate><fieldset><legend>Solução inicial</legend><label class="field">Substância<select id="solution-select" data-label="Solução inicial"></select></label><p id="solution-description" class="sample-card" hidden></p><div class="field-pair"><label class="field" id="concentration-field">Concentração <span class="unit">mol/L</span><input id="concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required></label><label class="field" id="dilution-field" hidden>Diluição da amostra<select id="dilution-select" data-label="Diluição inicial"><option value="1">Como preparada</option><option value="2">1 parte + 1 de água</option><option value="5">1 parte + 4 de água</option><option value="10">1 parte + 9 de água</option></select></label><label class="field">Volume <span class="unit">mL</span><input id="initial-volume" type="number" inputmode="decimal" min="0.1" max="4" step="any" required></label></div></fieldset>
-        <fieldset><legend>Conta-gotas</legend><label class="field">Solução adicionada<select id="titrant-select" data-label="Solução do conta-gotas"></select></label><p id="titrant-description" class="sample-card" hidden></p><div class="field-pair"><label class="field" id="titrant-concentration-field">Concentração <span class="unit">mol/L</span><input id="titrant-concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required></label><label class="field" id="titrant-dilution-field" hidden>Diluição da amostra<select id="titrant-dilution-select" data-label="Diluição do conta-gotas"><option value="1">Como preparada</option><option value="2">1 parte + 1 de água</option><option value="5">1 parte + 4 de água</option><option value="10">1 parte + 9 de água</option></select></label><label class="field">Gota <span class="unit">mL</span><select id="drop-volume" data-label="Volume de cada gota"><option value="0.01">0,01</option><option value="0.02">0,02</option><option value="0.05">0,05</option><option value="0.1">0,10</option></select></label></div></fieldset>
-        <p id="prepare-error" class="form-error" role="alert" hidden></p><p class="field-hint">Aplicar o preparo recomeça a titulação do tubo ou do grupo vinculado.</p><button class="primary-btn full-width" type="submit">Aplicar preparo</button>
+    <!-- APRENDER -->
+    <section data-tela="aprender" class="tela" aria-labelledby="aprender-titulo" hidden>
+      <header class="tela-cabecalho">
+        <p class="eyebrow">APRENDER</p>
+        <h1 id="aprender-titulo" data-foco tabindex="-1">Trilhas de missões</h1>
+        <p>Cada missão começa com uma pergunta. Você prevê, observa na bancada e explica. As respostas vão para o seu caderno.</p>
+      </header>
+      <div id="trilhas" class="trilhas"></div>
+    </section>
+
+    <!-- DESAFIOS -->
+    <section data-tela="desafios" class="tela" aria-labelledby="desafios-titulo" hidden>
+      <header class="tela-cabecalho">
+        <p class="eyebrow">DESAFIOS</p>
+        <h1 id="desafios-titulo" data-foco tabindex="-1">Jogos de ácidos e bases</h1>
+        <p>Partidas curtas com pontuação. Seu recorde fica guardado neste aparelho.</p>
+      </header>
+      <div id="desafios-lista" class="cartoes"></div>
+    </section>
+
+    <!-- UM DESAFIO -->
+    <section data-tela="jogo" class="tela tela-jogo" aria-label="Desafio" hidden>
+      <div id="jogo"></div>
+    </section>
+
+    <!-- PROFESSOR -->
+    <section data-tela="professor" class="tela" aria-labelledby="professor-titulo" hidden>
+      <header class="tela-cabecalho">
+        <p class="eyebrow">PROFESSOR</p>
+        <h1 id="professor-titulo" data-foco tabindex="-1">Montar aula</h1>
+        <p>Escolha missões e desafios, gere um link para a turma e imprima o roteiro com as perguntas.</p>
+      </header>
+      <div class="professor-ferramentas">
+        <label class="check-row"><input type="checkbox" id="projetor-check"> Modo projetor <span class="small">textos e controles maiores, para a sala</span></label>
+      </div>
+      <form id="aula-form" class="aula-form">
+        <div id="aula-itens"></div>
+        <p id="aula-erro" class="form-error" role="alert" hidden></p>
+        <div class="aula-acoes">
+          <button type="submit" class="primary-btn">Gerar link da aula</button>
+          <button type="button" id="imprimir-roteiro" class="secondary-btn">Imprimir roteiro</button>
+          <button type="button" id="limpar-aula" class="quiet-btn">Limpar seleção</button>
+        </div>
       </form>
-      <div class="panel-actions"><button id="compare-btn" class="secondary-btn">Comparar indicadores</button><button id="unlink-btn" class="quiet-btn" hidden>Desvincular este tubo</button><button id="restart-btn" class="quiet-btn">Recomeçar titulação</button><button id="remove-btn" class="quiet-btn danger">Remover tubo</button><button id="guide-btn" class="secondary-btn">Ideias para uma aula acessível</button></div>
-      <details id="history-details"><summary>Histórico de adições</summary><div id="history-table"></div></details>
-    </aside>
-  </div>
-  <button id="sheet-backdrop" class="sheet-backdrop" aria-label="Fechar preparação" hidden></button>
+      <div id="aula-link" class="aula-link" hidden>
+        <label class="field">Link da aula (funciona no mesmo endereço do SIAB)<input id="aula-url" readonly></label>
+        <div class="aula-acoes">
+          <button type="button" id="copiar-link" class="secondary-btn">Copiar link</button>
+          <a id="abrir-aula" class="secondary-btn" href="#/aula">Abrir aula</a>
+        </div>
+      </div>
+      <h2 class="secao-titulo">Objetivos e respostas esperadas</h2>
+      <div id="gabaritos" class="gabaritos"></div>
+      <div class="professor-ferramentas">
+        <button type="button" id="apagar-progresso" class="quiet-btn danger">Apagar progresso deste aparelho</button>
+      </div>
+    </section>
 
-  <dialog id="rename-dialog" class="siab-dialog dialog-rename" aria-labelledby="rename-title"><form id="rename-form" novalidate><div class="dialog-heading"><h2 id="rename-title">Renomear tubo</h2><button type="button" class="icon-btn" data-close="rename-dialog" aria-label="Fechar renomeação">×</button></div><label class="field">Nome do tubo<input id="new-name" maxlength="40" required autocomplete="off"></label><p id="rename-error" class="form-error" role="alert" hidden></p><p class="field-hint">Até 40 caracteres. O preparo e as leituras são preservados.</p><div class="dialog-actions"><button type="button" class="secondary-btn" data-close="rename-dialog">Cancelar</button><button type="submit" class="primary-btn">Salvar nome</button></div></form></dialog>
-  <dialog id="confirm-dialog" class="siab-dialog dialog-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-text"><div class="dialog-heading"><h2 id="confirm-title"></h2><button type="button" class="icon-btn" data-close="confirm-dialog" aria-label="Fechar confirmação">×</button></div><p id="confirm-text"></p><div class="dialog-actions"><button class="secondary-btn" data-close="confirm-dialog">Cancelar</button><button id="confirm-yes" class="primary-btn">Confirmar</button></div></dialog>
-  <dialog id="access-dialog" class="siab-dialog dialog-access" aria-labelledby="access-title"><div class="dialog-heading"><h2 id="access-title">Acessibilidade</h2><button class="icon-btn" data-close="access-dialog" aria-label="Fechar acessibilidade">×</button></div><label class="field">Tema<select id="theme-select" data-label="Tema"><option value="dark">Escuro</option><option value="light">Claro</option><option value="contrast">Alto contraste</option></select></label><div class="font-controls"><span>Tamanho do texto</span><div><button id="font-minus" class="secondary-btn" aria-label="Diminuir fonte">A−</button><output id="font-output"></output><button id="font-plus" class="secondary-btn" aria-label="Aumentar fonte">A＋</button></div></div><label class="check-row"><input type="checkbox" id="motion-check">Reduzir animações</label><p class="field-hint">A cor observada também é descrita em texto em todos os tubos.</p><details><summary>Simulação da percepção de cores</summary><label class="field">Filtro de simulação<select id="cvd-select" data-label="Filtro de percepção"><option value="none">Sem filtro</option><option value="protanopia">Protanopia</option><option value="deuteranopia">Deuteranopia</option><option value="tritanopia">Tritanopia</option><option value="acromatopsia">Acromatopsia</option></select></label><p class="field-hint">Estes filtros simulam diferenças de percepção. Não são correções para daltonismo.</p></details></dialog>
-  <dialog id="about-dialog" class="siab-dialog dialog-about" aria-labelledby="about-title"><div class="dialog-heading"><h2 id="about-title">A química das cores</h2><button class="icon-btn" data-close="about-dialog" aria-label="Fechar informações">×</button></div><p><strong>SIAB — Simulador Interativo de Ácidos e Bases</strong></p><p>Explore os tubos individualmente ou acompanhe toda a bancada na visão geral. “Comparar indicadores” cria três cópias vinculadas: cada gota alcança igualmente os três tubos.</p><h3>Como interpretar</h3><p>O ponto de equivalência depende das quantidades de ácido e base. A viragem depende do indicador. Eles podem ocorrer em momentos diferentes.</p><h3>Condições desta experiência</h3><p>Soluções ideais a 25 °C, volumes aditivos e mistura imediata. Indicadores em quantidade traço, com efeito sobre o pH desconsiderado. As tonalidades são representações didáticas; a cor do indicador universal varia conforme a formulação.</p><p>A fenolftaleína usa sua faixa de viragem usual. O desbotamento lento em meio muito alcalino não é representado.</p><p>Gota calibrada para a simulação. A graduação do desenho acompanha o volume calculado.</p><p class="small">Versão de teste 0.2.1 · As experiências permanecem enquanto esta página estiver aberta. Recarregar inicia uma nova bancada.</p><h3>Amostras do cotidiano</h3><p>Frutas e alimentos usam equilíbrios representativos, calibrados para um pH inicial de referência. O símbolo ≈ indica estimativa. As respostas às gotas são didáticas: pH inicial sozinho não permite prever a titulação de uma mistura real.</p><p>As cores próprias dos alimentos são ilustrativas. “Realçar indicador” oculta esses pigmentos sem mudar o pH. Não se simulam coagulação, espuma nem escape de gases. O extrato de repolho roxo também é tratado como traço, embora sua quantidade possa alterar uma experiência real.</p><h3>Referências</h3><ul><li><a href="https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations" target="_blank" rel="noopener">OpenStax — Titulações ácido-base</a></li><li><a href="https://goldbook.iupac.org/terms/view/09042" target="_blank" rel="noopener">IUPAC — Ponto de equivalência</a></li><li><a href="https://www.clemson.edu/extension/food/_files/ph-of-common-foods-table.pdf" target="_blank" rel="noopener">Clemson Extension — pH de alimentos</a></li><li><a href="https://www.acs.org/education/activities/red-cabbage-indicator.html" target="_blank" rel="noopener">ACS — Indicador de repolho roxo</a></li></ul></dialog>
+    <!-- AULA MONTADA -->
+    <section data-tela="aula" class="tela" aria-labelledby="aula-titulo" hidden>
+      <header class="tela-cabecalho">
+        <p class="eyebrow">AULA</p>
+        <h1 id="aula-titulo" data-foco tabindex="-1">Sequência da aula</h1>
+        <p>Siga a ordem proposta pelo professor. O que você concluir fica marcado.</p>
+      </header>
+      <ol id="aula-sequencia" class="aula-sequencia"></ol>
+    </section>
+
+    <!-- CADERNO -->
+    <section data-tela="caderno" class="tela" aria-labelledby="caderno-titulo" hidden>
+      <header class="tela-cabecalho">
+        <p class="eyebrow">CADERNO DE LABORATÓRIO</p>
+        <h1 id="caderno-titulo" data-foco tabindex="-1">Seu caderno</h1>
+        <p>Previsões, explicações, leituras e pontuações. Baixe em CSV para abrir em planilha.</p>
+      </header>
+      <div class="caderno-acoes">
+        <button type="button" id="caderno-csv" class="secondary-btn">Baixar caderno (CSV)</button>
+        <button type="button" id="caderno-imprimir" class="secondary-btn">Imprimir</button>
+        <button type="button" id="caderno-limpar" class="quiet-btn danger">Apagar caderno</button>
+      </div>
+      <div id="caderno-lista" class="caderno-lista"></div>
+    </section>
+
+    <!-- BANCADA: laboratório livre e missões -->
+    <div id="workspace" data-tela="bancada" class="workspace" data-modo="laboratorio" hidden>
+      <aside id="controls" class="controls" aria-labelledby="controls-title">
+        <div class="sheet-handle" aria-hidden="true"></div>
+        <div class="controls-heading">
+          <h2 id="controls-title">Prateleira</h2>
+          <button id="close-controls" type="button" class="icon-btn mobile-control" aria-label="Fechar painel">×</button>
+        </div>
+
+        <div id="painel-laboratorio">
+          <fieldset class="segmented" id="nivel-grupo">
+            <legend>Nível</legend>
+            <label><input type="radio" name="nivel" value="explorar"><span>Explorar</span></label>
+            <label><input type="radio" name="nivel" value="medir"><span>Medir</span></label>
+            <label><input type="radio" name="nivel" value="calcular"><span>Calcular</span></label>
+          </fieldset>
+          <p id="nivel-dica" class="field-hint"></p>
+
+          <fieldset class="segmented" id="destino-grupo">
+            <legend>Tocar em um frasco coloca no</legend>
+            <label><input type="radio" name="destino" value="tube"><span>Tubo</span></label>
+            <label><input type="radio" name="destino" value="titrant"><span>Conta-gotas</span></label>
+          </fieldset>
+          <label class="field shelf-search">Buscar frasco
+            <input id="shelf-search" type="search" autocomplete="off" placeholder="limão, vinagre, NaOH…">
+          </label>
+          <div id="shelf" class="shelf"></div>
+
+          <fieldset class="chips" id="indicator-group">
+            <legend>Indicador</legend>
+            <div id="indicator-chips" class="chip-list"></div>
+          </fieldset>
+          <p id="indicator-range" class="field-hint"></p>
+          <label class="check-row indicator-mode"><input type="checkbox" id="indicator-only">Realçar indicador <span class="small">Oculta a cor própria da amostra</span></label>
+
+          <details id="ajustes" class="ajustes" open>
+            <summary>Ajustes de medida</summary>
+            <form id="prepare-form" novalidate>
+              <div class="field-pair">
+                <label class="field" id="concentration-field">Concentração no tubo <span class="unit">mol/L</span>
+                  <input id="concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
+                </label>
+                <label class="field" id="dilution-field">Diluição da amostra
+                  <select id="dilution-select" data-label="Diluição da amostra do tubo">
+                    <option value="1">Como preparada</option>
+                    <option value="2">1 parte + 1 de água</option>
+                    <option value="5">1 parte + 4 de água</option>
+                    <option value="10">1 parte + 9 de água</option>
+                  </select>
+                </label>
+                <label class="field">Volume inicial <span class="unit">mL</span>
+                  <input id="initial-volume" type="number" inputmode="decimal" min="0.1" max="4" step="any" required>
+                </label>
+              </div>
+              <div class="field-pair">
+                <label class="field" id="titrant-concentration-field">Concentração no conta-gotas <span class="unit">mol/L</span>
+                  <input id="titrant-concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
+                </label>
+                <label class="field" id="titrant-dilution-field">Diluição no conta-gotas
+                  <select id="titrant-dilution-select" data-label="Diluição do conta-gotas">
+                    <option value="1">Como preparada</option>
+                    <option value="2">1 parte + 1 de água</option>
+                    <option value="5">1 parte + 4 de água</option>
+                    <option value="10">1 parte + 9 de água</option>
+                  </select>
+                </label>
+                <label class="field">Volume da gota <span class="unit">mL</span>
+                  <select id="drop-volume" data-label="Volume de cada gota">
+                    <option value="0.01">0,01</option>
+                    <option value="0.02">0,02</option>
+                    <option value="0.05">0,05</option>
+                    <option value="0.1">0,10</option>
+                  </select>
+                </label>
+              </div>
+              <p id="prepare-error" class="form-error" role="alert" hidden></p>
+              <p class="field-hint">Aplicar as medidas recomeça as gotas do tubo. Você pode desfazer.</p>
+              <button class="secondary-btn full-width" type="submit">Aplicar medidas</button>
+            </form>
+          </details>
+
+          <div class="panel-actions">
+            <button id="compare-btn" type="button" class="secondary-btn">Comparar indicadores</button>
+            <button id="unlink-btn" type="button" class="quiet-btn" hidden>Desvincular este tubo</button>
+            <button id="restart-btn" type="button" class="quiet-btn">Recomeçar gotas</button>
+            <button id="remove-btn" type="button" class="quiet-btn danger">Remover tubo</button>
+            <button id="guide-btn" type="button" class="quiet-btn">Ideias para uma aula acessível</button>
+          </div>
+        </div>
+
+        <div id="painel-missao" hidden></div>
+      </aside>
+
+      <section id="experiment" class="experiment" aria-label="Bancada">
+        <nav class="view-tabs" aria-label="Visualização da bancada">
+          <button id="focus-tab" type="button" aria-pressed="true">Tubo em foco</button>
+          <button id="overview-tab" type="button" aria-pressed="false">Visão geral <span id="overview-count"></span></button>
+          <span class="view-tabs-mode" id="bench-mode"></span>
+        </nav>
+
+        <section id="focus-view" class="focus-view" aria-label="Tubo selecionado">
+          <div class="focus-heading">
+            <div>
+              <p class="eyebrow" id="tube-index"></p>
+              <div class="name-row">
+                <h1 id="tube-name" data-foco tabindex="-1"></h1>
+                <button id="rename-btn" type="button" class="icon-btn" aria-label="Renomear tubo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 4 5 5M4 20l4-1L20 7a2 2 0 0 0-3-3L5 16l-1 4Z"/></svg></button>
+              </div>
+              <p id="sample-summary" class="small"></p>
+            </div>
+            <button id="prepare-btn" type="button" class="secondary-btn mobile-control">Prateleira</button>
+          </div>
+          <div id="group-notice" class="group-notice" hidden></div>
+          <p id="sample-model-note" class="sample-model-note" hidden></p>
+          <button id="mission-bar" type="button" class="mission-bar" hidden></button>
+
+          <div class="tube-stage">
+            <div class="stage-stats">
+              <span class="eyebrow">LEITURA</span>
+              <div class="ph-readout"><span>pH</span><strong id="ph-value"></strong></div>
+              <span id="ph-phase" class="phase"></span>
+              <span id="ph-delta" class="ph-delta" aria-hidden="true" hidden></span>
+              <div id="ph-ruler" class="ph-ruler"></div>
+              <button id="ph-toggle" type="button" class="quiet-btn" aria-pressed="true">Ocultar pH</button>
+            </div>
+            <div id="large-tube" class="large-tube"></div>
+            <div class="volume-readout">
+              <span class="eyebrow">VOLUME</span>
+              <strong id="volume-value"></strong>
+              <span class="small">mL</span>
+              <span class="small capacity">capacidade<br>5,00 mL</span>
+              <span id="temperature-value" class="temperature-readout" hidden></span>
+            </div>
+          </div>
+          <div class="color-reading">
+            <span id="color-swatch" class="color-swatch" aria-hidden="true"></span>
+            <div><strong id="color-name"></strong><span id="indicator-name" class="small"></span></div>
+          </div>
+          <p id="equivalence-note" class="equivalence-note" aria-live="polite"></p>
+
+          <div id="dose-area" class="dose-area">
+            <div class="dose-info"><span id="titrant-label"></span><span id="dose-summary"></span></div>
+            <div class="dose-actions">
+              <button id="undo-btn" type="button" class="secondary-btn" aria-label="Desfazer última ação">↶ <span>Desfazer</span></button>
+              <button id="drop-btn" type="button" class="primary-btn drop-btn">＋ Segure para gotejar</button>
+            </div>
+            <div class="dose-shortcuts" id="dose-shortcuts">
+              <button id="drop5-btn" type="button" class="secondary-btn">+5 gotas</button>
+              <button id="drop1ml-btn" type="button" class="secondary-btn">+1 mL</button>
+              <button id="poe-btn" type="button" class="secondary-btn">Prever e gotejar</button>
+            </div>
+            <span id="dose-target" class="dose-target"></span>
+          </div>
+        </section>
+
+        <section id="overview-view" class="overview-view" aria-labelledby="overview-title" hidden>
+          <div class="overview-heading"><h1 id="overview-title">Sua bancada</h1><p>Toque em um tubo para editar.</p></div>
+          <div id="overview-grid" class="overview-grid"></div>
+        </section>
+
+        <div class="tube-strip" aria-labelledby="strip-title">
+          <div class="strip-heading">
+            <span class="eyebrow" id="strip-title">BANCADA</span>
+            <span id="tube-count" class="count"></span>
+          </div>
+          <div id="tube-list" class="tube-list"></div>
+          <button id="add-tube-btn" type="button" class="secondary-btn strip-add" data-action="add">＋ Novo tubo</button>
+        </div>
+      </section>
+
+      <aside id="ver-panel" class="ver-panel" aria-labelledby="ver-title">
+        <h2 id="ver-title" class="eyebrow">VER</h2>
+        <div id="ver-tabs" class="ver-tabs" role="tablist" aria-labelledby="ver-title">
+          <button type="button" role="tab" id="tab-grafico" data-ver="grafico" aria-controls="ver-conteudo">Gráfico</button>
+          <button type="button" role="tab" id="tab-particulas" data-ver="particulas" aria-controls="ver-conteudo">Partículas</button>
+          <button type="button" role="tab" id="tab-equacao" data-ver="equacao" aria-controls="ver-conteudo">Equação</button>
+          <button type="button" role="tab" id="tab-historico" data-ver="historico" aria-controls="ver-conteudo">Histórico</button>
+        </div>
+        <div id="ver-conteudo" class="ver-conteudo" role="tabpanel" tabindex="0"></div>
+      </aside>
+    </div>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegação principal">
+    <a href="#/inicio" data-nav="inicio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 11 12 4l8 7v9H4Z"/></svg><span>Início</span></a>
+    <a href="#/aprender" data-nav="aprender"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2Zm0 0a2 2 0 0 0 2 2h13"/></svg><span>Aprender</span></a>
+    <a href="#/desafios" data-nav="desafios"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0Z"/></svg><span>Desafios</span></a>
+    <a href="#/laboratorio" data-nav="laboratorio"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L4.5 18.5A2 2 0 0 0 6.2 21h11.6a2 2 0 0 0 1.7-2.5L14 9V3"/></svg><span>Lab</span></a>
+    <a href="#/caderno" data-nav="caderno"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h11a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6ZM9 3v18M12 8h3M12 12h3"/></svg><span>Caderno</span></a>
+  </nav>
+
+  <button id="sheet-backdrop" type="button" class="sheet-backdrop" aria-label="Fechar painel" hidden></button>
+
+  <dialog id="rename-dialog" class="siab-dialog dialog-rename" aria-labelledby="rename-title">
+    <form id="rename-form" novalidate>
+      <div class="dialog-heading"><h2 id="rename-title">Renomear tubo</h2><button type="button" class="icon-btn" data-close="rename-dialog" aria-label="Fechar renomeação">×</button></div>
+      <label class="field">Nome do tubo<input id="new-name" maxlength="40" required autocomplete="off"></label>
+      <p id="rename-error" class="form-error" role="alert" hidden></p>
+      <p class="field-hint">Até 40 caracteres. O preparo e as leituras são preservados.</p>
+      <div class="dialog-actions"><button type="button" class="secondary-btn" data-close="rename-dialog">Cancelar</button><button type="submit" class="primary-btn">Salvar nome</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm-dialog" class="siab-dialog dialog-confirm" aria-labelledby="confirm-title" aria-describedby="confirm-text">
+    <div class="dialog-heading"><h2 id="confirm-title"></h2><button type="button" class="icon-btn" data-close="confirm-dialog" aria-label="Fechar confirmação">×</button></div>
+    <p id="confirm-text"></p>
+    <div class="dialog-actions"><button type="button" class="secondary-btn" data-close="confirm-dialog">Cancelar</button><button type="button" id="confirm-yes" class="primary-btn">Confirmar</button></div>
+  </dialog>
+
+  <dialog id="poe-dialog" class="siab-dialog dialog-poe" aria-labelledby="poe-title">
+    <div class="dialog-heading">
+      <div><p class="dialog-kicker">PREVER · OBSERVAR · EXPLICAR</p><h2 id="poe-title">Antes de gotejar, preveja</h2></div>
+      <button type="button" class="icon-btn" data-close="poe-dialog" aria-label="Fechar previsão">×</button>
+    </div>
+    <form id="poe-form" novalidate>
+      <p id="poe-contexto" class="poe-contexto"></p>
+      <fieldset class="segmented" id="poe-gotas">
+        <legend>Quantas gotas?</legend>
+        <label><input type="radio" name="poe-gotas" value="1"><span>1</span></label>
+        <label><input type="radio" name="poe-gotas" value="5"><span>5</span></label>
+        <label><input type="radio" name="poe-gotas" value="10" checked><span>10</span></label>
+        <label><input type="radio" name="poe-gotas" value="20"><span>20</span></label>
+      </fieldset>
+      <fieldset class="segmented" id="poe-meio">
+        <legend>Depois das gotas, a solução ficará</legend>
+        <label><input type="radio" name="poe-meio" value="Ácida"><span>ácida</span></label>
+        <label><input type="radio" name="poe-meio" value="Neutra"><span>neutra</span></label>
+        <label><input type="radio" name="poe-meio" value="Básica"><span>básica</span></label>
+      </fieldset>
+      <fieldset class="chips" id="poe-cor-grupo">
+        <legend>Que cor você espera?</legend>
+        <div id="poe-cores" class="chip-list"></div>
+      </fieldset>
+      <label class="field">Por quê? <span class="unit">opcional</span><textarea id="poe-porque" rows="2" maxlength="400"></textarea></label>
+      <p id="poe-erro" class="form-error" role="alert" hidden></p>
+      <div class="dialog-actions"><button type="button" class="secondary-btn" data-close="poe-dialog">Cancelar</button><button type="submit" class="primary-btn">Gotejar e conferir</button></div>
+    </form>
+    <form id="poe-resultado" novalidate hidden>
+      <div id="poe-comparacao" class="poe-comparacao" aria-live="polite"></div>
+      <label class="field">O que aconteceu foi o que você esperava? Explique.<textarea id="poe-explicacao" rows="3" maxlength="600"></textarea></label>
+      <div class="dialog-actions"><button type="button" class="secondary-btn" data-close="poe-dialog">Fechar</button><button type="submit" class="primary-btn">Salvar no caderno</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="access-dialog" class="siab-dialog dialog-access" aria-labelledby="access-title">
+    <div class="dialog-heading"><h2 id="access-title">Acessibilidade</h2><button type="button" class="icon-btn" data-close="access-dialog" aria-label="Fechar acessibilidade">×</button></div>
+    <label class="field">Tema<select id="theme-select" data-label="Tema"><option value="dark">Escuro</option><option value="light">Claro</option><option value="contrast">Alto contraste</option></select></label>
+    <div class="font-controls"><span>Tamanho do texto</span><div><button id="font-minus" type="button" class="secondary-btn" aria-label="Diminuir fonte">A−</button><output id="font-output"></output><button id="font-plus" type="button" class="secondary-btn" aria-label="Aumentar fonte">A＋</button></div></div>
+    <label class="check-row"><input type="checkbox" id="motion-check">Reduzir animações</label>
+    <label class="check-row"><input type="checkbox" id="sound-check">Som do pH <span class="small">um tom mais agudo quanto maior o pH, a cada gota</span></label>
+    <label class="check-row"><input type="checkbox" id="vibrate-check">Vibrar na viragem <span class="small">em celulares compatíveis</span></label>
+    <p class="field-hint">A cor observada também é descrita em texto em todos os tubos.</p>
+    <details>
+      <summary>Simulação da percepção de cores</summary>
+      <label class="field">Filtro de simulação<select id="cvd-select" data-label="Filtro de percepção"><option value="none">Sem filtro</option><option value="protanopia">Protanopia</option><option value="deuteranopia">Deuteranopia</option><option value="tritanopia">Tritanopia</option><option value="acromatopsia">Acromatopsia</option></select></label>
+      <p class="field-hint">Estes filtros simulam diferenças de percepção. Não são correções para daltonismo.</p>
+    </details>
+  </dialog>
+
+  <dialog id="about-dialog" class="siab-dialog dialog-about" aria-labelledby="about-title">
+    <div class="dialog-heading"><h2 id="about-title">A química das cores</h2><button type="button" class="icon-btn" data-close="about-dialog" aria-label="Fechar informações">×</button></div>
+    <p><strong>SIAB — Simulador Interativo de Ácidos e Bases</strong> · versão <span id="about-version"></span></p>
+    <p>Missões guiadas, desafios e uma bancada livre. Tubo, partículas, gráfico e equação mudam juntos a cada gota.</p>
+    <h3>Como interpretar</h3>
+    <p>O ponto de equivalência depende das quantidades de ácido e base. A viragem depende do indicador. Eles podem ocorrer em momentos diferentes.</p>
+    <h3>Condições do modelo</h3>
+    <p>Soluções ideais, volumes aditivos e mistura imediata, a 25 °C (só a missão sobre temperatura muda Kw). Indicadores em quantidade traço. As tonalidades são representações didáticas; a cor do indicador universal varia conforme a formulação. A fenolftaleína não desbota em meio muito alcalino neste modelo.</p>
+    <h3>Amostras do cotidiano e do ambiente</h3>
+    <p>Frutas, alimentos e chuva usam equilíbrios representativos. O símbolo ≈ indica estimativa. Não se simulam coagulação, espuma nem escape de gases: o CO₂ fica em sistema fechado.</p>
+    <h3>Antiácidos</h3>
+    <p>Mg(OH)₂ e Al(OH)₃ dissolvem até o limite do Kps. Atividade didática: não é orientação de saúde.</p>
+    <h3>Instalar e usar sem internet</h3>
+    <p>Aberto por um endereço web (http ou https), o SIAB pode ser instalado como aplicativo e funciona sem internet. Aberto direto do arquivo, funciona normalmente, mas sem instalação.</p>
+    <h3>Referências</h3>
+    <ul>
+      <li><a href="https://openstax.org/books/chemistry-2e/pages/14-introduction" target="_blank" rel="noopener">OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)</a></li>
+      <li><a href="https://openstax.org/books/chemistry-2e/pages/j-solubility-products" target="_blank" rel="noopener">OpenStax — Apêndice J (Kps)</a></li>
+      <li><a href="https://goldbook.iupac.org/terms/view/09042" target="_blank" rel="noopener">IUPAC — Ponto de equivalência</a></li>
+      <li><a href="https://www.acs.org/education/activities/red-cabbage-indicator.html" target="_blank" rel="noopener">ACS — Indicador de repolho roxo</a></li>
+    </ul>
+    <p class="small">Seu progresso e o caderno ficam guardados só neste navegador. Não há contas nem envio de dados.</p>
+  </dialog>
 
   <dialog id="guide-dialog" class="siab-dialog dialog-guide" aria-labelledby="guide-title">
-    <div class="dialog-heading"><div><p class="dialog-kicker">DO VIRTUAL À SALA DE AULA</p><h2 id="guide-title">Química com o que temos</h2></div><button class="icon-btn" data-close="guide-dialog" aria-label="Fechar ideias para a aula">×</button></div>
+    <div class="dialog-heading"><div><p class="dialog-kicker">DO VIRTUAL À SALA DE AULA</p><h2 id="guide-title">Química com o que temos</h2></div><button type="button" class="icon-btn" data-close="guide-dialog" aria-label="Fechar ideias para a aula">×</button></div>
     <p>Explore primeiro no simulador e escolha poucas amostras para a experiência presencial. Uma fruta, água, vinagre e bicarbonato já permitem comparar resultados.</p>
-    <ol class="activity-list"><li><strong>Prever antes de observar</strong><p>Oculte o pH. Compare limão, água e bicarbonato com repolho roxo e registre sua hipótese.</p></li><li><strong>Uma amostra, diferentes leituras</strong><p>Use “Comparar indicadores” para observar a mesma preparação com três indicadores.</p></li><li><strong>O que a água muda?</strong><p>Compare a mesma amostra como preparada e diluída. pH e quantidade de ácido disponível não são a mesma coisa.</p></li><li><strong>Nem toda cor é do indicador</strong><p>Teste café ou suco de morango. Alterne “Realçar indicador” para discutir como pigmentos podem encobrir a viragem.</p></li></ol>
+    <ol class="activity-list">
+      <li><strong>Prever antes de observar</strong><p>Use “Prever e gotejar”. A previsão e a explicação vão para o caderno.</p></li>
+      <li><strong>Uma amostra, diferentes leituras</strong><p>Use “Comparar indicadores” para observar a mesma preparação com três indicadores.</p></li>
+      <li><strong>O que a água muda?</strong><p>No nível Medir, compare a mesma amostra como preparada e diluída. pH e quantidade de ácido não são a mesma coisa.</p></li>
+      <li><strong>Nem toda cor é do indicador</strong><p>Teste café ou suco de morango. Alterne “Realçar indicador” para discutir como pigmentos podem encobrir a viragem.</p></li>
+    </ol>
     <div class="guide-note"><strong>Indicador de baixo custo</strong><p>Folhas de repolho roxo amassadas em água liberam pigmentos indicadores. Sob orientação do professor, use porções pequenas e teste cada amostra em um recipiente limpo. Não consuma materiais usados no experimento nem misture produtos de limpeza.</p></div>
     <p class="small">Os valores do simulador são referências didáticas. Na prática, preparo, diluição, marca, maturação e quantidade de indicador afetam o resultado.</p>
-    <div class="dialog-actions"><button class="primary-btn" data-close="guide-dialog">Voltar à bancada</button></div>
+    <div class="dialog-actions"><button type="button" class="primary-btn" data-close="guide-dialog">Voltar à bancada</button></div>
   </dialog>
+
   <dialog id="choice-dialog" class="siab-dialog dialog-choice" aria-labelledby="choice-title">
-    <div class="dialog-heading"><div><p class="dialog-kicker">ESCOLHER NA BANCADA</p><h2 id="choice-title"></h2></div><button class="icon-btn" data-close="choice-dialog" aria-label="Fechar seleção">×</button></div>
+    <div class="dialog-heading"><div><p class="dialog-kicker">ESCOLHER</p><h2 id="choice-title"></h2></div><button type="button" class="icon-btn" data-close="choice-dialog" aria-label="Fechar seleção">×</button></div>
     <label class="field choice-search" id="choice-search-field">Buscar opção<input id="choice-search" type="text" autocomplete="off" placeholder="Digite um nome…"></label>
     <p id="choice-count" class="small" aria-live="polite"></p>
     <div id="choice-options" class="choice-options" role="listbox" tabindex="0" aria-labelledby="choice-title"></div>
     <p id="choice-empty" class="empty-choice" hidden>Nenhum resultado. Tente outro nome.</p>
-    <div class="dialog-actions"><button class="secondary-btn" data-close="choice-dialog">Cancelar</button></div>
+    <div class="dialog-actions"><button type="button" class="secondary-btn" data-close="choice-dialog">Cancelar</button></div>
   </dialog>
-  <div id="toast" role="status" aria-live="polite" hidden></div><div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
-  <script src="js/core/namespace.js"></script><script src="js/data/catalogo.js"></script><script src="js/data/cotidiano.js"></script><script src="js/simulation/quimica.js"></script><script src="js/core/estado.js"></script><script src="js/ui/render.js"></script><script src="js/ui/seletores.js"></script><script src="js/a11y/preferencias.js"></script><script src="js/init/app.js"></script>
+
+  <div id="roteiro-impressao" class="roteiro-impressao" aria-hidden="true"></div>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+  <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
+  <script src="js/core/namespace.js"></script>
+  <script src="js/core/util.js"></script>
+  <script src="js/data/catalogo.js"></script>
+  <script src="js/data/cotidiano.js"></script>
+  <script src="js/data/sais.js"></script>
+  <script src="js/data/ambiente-saude.js"></script>
+  <script src="js/data/funcoes.js"></script>
+  <script src="js/simulation/quimica.js"></script>
+  <script src="js/core/estado.js"></script>
+  <script src="js/core/loja.js"></script>
+  <script src="js/core/progresso.js"></script>
+  <script src="js/core/roteador.js"></script>
+  <script src="js/data/missoes.js"></script>
+  <script src="js/data/trilhas.js"></script>
+  <script src="js/simulation/motor-missoes.js"></script>
+  <script src="js/ui/tubo.js"></script>
+  <script src="js/ui/regua-ph.js"></script>
+  <script src="js/ui/grafico.js"></script>
+  <script src="js/ui/lupa.js"></script>
+  <script src="js/ui/equacao.js"></script>
+  <script src="js/ui/som.js"></script>
+  <script src="js/ui/conta-gotas.js"></script>
+  <script src="js/ui/seletores.js"></script>
+  <script src="js/ui/prateleira.js"></script>
+  <script src="js/ui/render.js"></script>
+  <script src="js/telas/bancada.js"></script>
+  <script src="js/telas/laboratorio.js"></script>
+  <script src="js/telas/missao.js"></script>
+  <script src="js/telas/inicio.js"></script>
+  <script src="js/telas/aprender.js"></script>
+  <script src="js/telas/desafios.js"></script>
+  <script src="js/telas/detetive.js"></script>
+  <script src="js/telas/titulacao.js"></script>
+  <script src="js/telas/trunfo.js"></script>
+  <script src="js/telas/regua.js"></script>
+  <script src="js/telas/construtor.js"></script>
+  <script src="js/telas/professor.js"></script>
+  <script src="js/telas/caderno.js"></script>
+  <script src="js/a11y/preferencias.js"></script>
+  <script src="js/init/pwa.js"></script>
+  <script src="js/init/app.js"></script>
 </body>
 </html>

@@ -15,6 +15,19 @@ SIAB.acidFamilies = {
   phosphate: [2.15, 7.20, 12.35], carbonate: [-Math.log10(4.3e-7), -Math.log10(4.7e-11)],
   coffeeBuffer: [4.8], milkBuffer: [6.8], soapBuffer: [9.5]
 };
+// Nomes das espécies de cada sistema, da mais protonada à menos protonada.
+// Usados pela lupa molecular; não alteram o cálculo.
+SIAB.familySpecies = {
+  citrate: ['H₃Cit (ácido cítrico)', 'H₂Cit⁻', 'HCit²⁻', 'Cit³⁻'],
+  malate: ['H₂Mal (ácido málico)', 'HMal⁻', 'Mal²⁻'],
+  acetate: ['CH₃COOH', 'CH₃COO⁻'],
+  lactate: ['HLac (ácido láctico)', 'Lac⁻'],
+  phosphate: ['H₃PO₄', 'H₂PO₄⁻', 'HPO₄²⁻', 'PO₄³⁻'],
+  carbonate: ['H₂CO₃', 'HCO₃⁻', 'CO₃²⁻'],
+  coffeeBuffer: ['HA (ácidos do café)', 'A⁻ (café)'],
+  milkBuffer: ['HA (tampão do leite)', 'A⁻ (leite)'],
+  soapBuffer: ['HA (sabão)', 'A⁻ (sabão)']
+};
 const everyday = (name, group, targetPH, family, total, natural, preparation, note, source) => ({
   name, group, kind: 'sample', label: 'Amostra do cotidiano',
   model: { targetPH, systems: family ? [{ family, total }] : [] },
@@ -67,7 +80,7 @@ Object.assign(SIAB.solutions, {
     'O modelo representa a contribuição ácida por fosfato. A perda de gás ao abrir e as diferenças entre marcas não são simuladas.', 'beverages'),
   bicarbonate: {
     name: 'Bicarbonato em água', group: 'home', kind: 'sample', label: 'Amostra do cotidiano',
-    model: { systems: [{ family: 'carbonate', total: .11904 }], fixedCharge: .11904 },
+    model: { systems: [{ family: 'carbonate', total: .11904 }], fixedCharge: .11904 }, fixedIon: 'Na⁺',
     natural: { rgb: [233, 237, 243], opacity: .02, name: 'incolor' },
     preparation: 'Referência: 1 g de bicarbonato de sódio em 100 mL de solução aquosa.',
     note: 'Bicarbonato de sódio, não fermento químico. Com ácidos pode liberar CO₂; escape de gás e espuma não são simulados.', source: 'bicarbonate'

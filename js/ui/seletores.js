@@ -1,11 +1,14 @@
 'use strict';
-/* Seletores temáticos. O select continua como estado do formulário;
-   botão, busca e listbox substituem a janela nativa do navegador. */
+/* Seletores temáticos. O <select> continua guardando o valor do formulário;
+   um botão, uma busca e uma lista substituem a janela nativa do navegador,
+   seguindo o tema e aceitando teclado. */
 SIAB.initSelects = () => {
-  const $ = SIAB.$, dialog = $('choice-dialog'), list = $('choice-options');
+  const $ = SIAB.$;
+  const dialog = $('choice-dialog');
+  const list = $('choice-options');
   const records = [];
   let origin = null, visible = [], active = 0;
-  const normalized = text => String(text).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLocaleLowerCase('pt-BR');
+
   SIAB.refreshSelects = () => {
     records.forEach(({ select, button }) => {
       const label = select.selectedOptions[0]?.textContent || 'Escolher';
@@ -14,18 +17,23 @@ SIAB.initSelects = () => {
       button.setAttribute('aria-label', `${select.dataset.label}: ${label}`);
     });
   };
+
   function focusOption(scroll = false) {
     const options = [...list.querySelectorAll('[role="option"]')];
-    options.forEach((option, index) => option.dataset.active = String(index === active));
+    options.forEach((option, index) => { option.dataset.active = String(index === active); });
     if (options[active]) {
       list.setAttribute('aria-activedescendant', options[active].id);
       if (scroll) options[active].scrollIntoView?.({ block: 'nearest' });
-    } else list.removeAttribute('aria-activedescendant');
+    } else {
+      list.removeAttribute('aria-activedescendant');
+    }
   }
+
   function paint() {
     if (!origin) return;
-    const query = normalized($('choice-search').value);
-    visible = [...origin.select.options].filter(option => !option.disabled && !option.hidden && normalized(option.textContent + ' ' + (option.parentElement.label || '')).includes(query));
+    const query = SIAB.normalizar($('choice-search').value);
+    visible = [...origin.select.options].filter(option => !option.disabled && !option.hidden
+      && SIAB.normalizar(option.textContent + ' ' + (option.parentElement.label || '')).includes(query));
     active = Math.max(0, visible.findIndex(option => option.selected));
     let previousGroup = null;
     list.innerHTML = visible.map((option, index) => {
@@ -38,22 +46,31 @@ SIAB.initSelects = () => {
     $('choice-empty').hidden = visible.length !== 0;
     focusOption();
   }
+
   function choose(index) {
     if (!origin || !visible[index]) return;
-    const select = origin.select, value = visible[index].value;
-    select.value = value;
+    const select = origin.select;
+    select.value = visible[index].value;
     select.dispatchEvent(new Event('change', { bubbles: true }));
     SIAB.refreshSelects();
     dialog.close();
   }
-  document.querySelectorAll('select').forEach(select => {
+
+  // Transforma um <select> em botão temático. Pode ser chamada depois, para selects novos.
+  SIAB.enhanceSelect = select => {
+    if (records.some(record => record.select === select)) return;
     const button = document.createElement('button');
-    button.type = 'button'; button.className = 'themed-select'; button.id = `${select.id}-trigger`;
-    button.setAttribute('aria-haspopup', 'dialog'); button.setAttribute('aria-controls', 'choice-dialog');
+    button.type = 'button';
+    button.className = 'themed-select';
+    button.id = `${select.id}-trigger`;
+    button.setAttribute('aria-haspopup', 'dialog');
+    button.setAttribute('aria-controls', 'choice-dialog');
     button.setAttribute('aria-expanded', 'false');
     button.innerHTML = '<span></span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>';
-    select.hidden = true; select.after(button);
-    const record = { select, button }; records.push(record);
+    select.hidden = true;
+    select.after(button);
+    const record = { select, button };
+    records.push(record);
     select.addEventListener('change', SIAB.refreshSelects);
     button.addEventListener('click', () => {
       origin = record;
@@ -61,9 +78,15 @@ SIAB.initSelects = () => {
       $('choice-search').value = '';
       $('choice-search-field').hidden = select.options.length < 8;
       button.setAttribute('aria-expanded', 'true');
-      paint(); dialog.showModal(); list.focus();
+      paint();
+      dialog.showModal();
+      list.focus();
     });
-  });
+    SIAB.refreshSelects();
+  };
+
+  document.querySelectorAll('select').forEach(SIAB.enhanceSelect);
+
   list.addEventListener('click', event => {
     const option = event.target.closest('[data-choice-index]');
     if (option) choose(Number(option.dataset.choiceIndex));
@@ -86,8 +109,12 @@ SIAB.initSelects = () => {
     if (event.key === 'Enter') { event.preventDefault(); choose(active); }
   });
   dialog.addEventListener('close', () => {
-    const previous = origin; origin = null;
-    if (previous) { previous.button.setAttribute('aria-expanded', 'false'); previous.button.focus(); }
+    const previous = origin;
+    origin = null;
+    if (previous) {
+      previous.button.setAttribute('aria-expanded', 'false');
+      previous.button.focus();
+    }
   });
   SIAB.refreshSelects();
 };

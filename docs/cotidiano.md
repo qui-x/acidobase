@@ -1,7 +1,8 @@
-# Amostras do cotidiano — SIAB 0.2
+# Amostras do cotidiano — SIAB 0.2 e 0.3
 
-O catálogo contém 15 amostras do cotidiano, além dos cinco reagentes/referências
-da versão inicial. Podem ser usadas tanto no tubo quanto no conta-gotas.
+O catálogo contém 15 amostras do cotidiano. Elas podem ser usadas tanto no tubo
+quanto no conta-gotas. Os reagentes, os sais, os tampões, os antiácidos e as
+amostras de chuva da versão 0.3 estão descritos em `modelo-quimico.md`.
 
 ## O que os números significam
 
