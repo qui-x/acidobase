@@ -1,10 +1,33 @@
 'use strict';
+/* Reagentes de laboratório e indicadores.
+   Campos químicos: kind (tipo de modelo), ka, n (H⁺ ou OH⁻ por fórmula).
+   Campos didáticos: formas ácida/básica para a lupa e equações para o painel. */
 SIAB.solutions = {
-  hcl: { name: 'Ácido clorídrico', formula: 'HCl', kind: 'strongAcid', label: 'Ácido forte' },
-  acetic: { name: 'Ácido acético', formula: 'CH₃COOH', kind: 'weakAcid', ka: 1.8e-5, label: 'Ácido fraco' },
-  naoh: { name: 'Hidróxido de sódio', formula: 'NaOH', kind: 'strongBase', label: 'Base forte' },
-  ammonia: { name: 'Amônia em água', formula: 'NH₃', kind: 'weakBase', ka: 1e-14 / 1.8e-5, label: 'Base fraca' },
-  water: { name: 'Água pura', formula: 'H₂O', kind: 'water', label: 'Referência neutra' }
+  hcl: {
+    name: 'Ácido clorídrico', formula: 'HCl', kind: 'strongAcid', label: 'Ácido forte',
+    anion: 'Cl⁻', ionization: 'HCl + H₂O → H₃O⁺ + Cl⁻',
+    explain: 'Ácido forte: praticamente todas as moléculas de HCl se ionizam na água.'
+  },
+  acetic: {
+    name: 'Ácido acético', formula: 'CH₃COOH', kind: 'weakAcid', ka: 1.8e-5, label: 'Ácido fraco',
+    acidForm: 'CH₃COOH', baseForm: 'CH₃COO⁻', ionization: 'CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻',
+    explain: 'Ácido fraco: só uma pequena fração das moléculas se ioniza; o restante permanece inteiro.'
+  },
+  naoh: {
+    name: 'Hidróxido de sódio', formula: 'NaOH', kind: 'strongBase', label: 'Base forte',
+    cation: 'Na⁺', ionization: 'NaOH → Na⁺ + OH⁻',
+    explain: 'Base forte: dissocia-se totalmente, liberando íons OH⁻.'
+  },
+  ammonia: {
+    name: 'Amônia em água', formula: 'NH₃', kind: 'weakBase', ka: 1e-14 / 1.8e-5, kb: 1.8e-5, label: 'Base fraca',
+    acidForm: 'NH₄⁺', baseForm: 'NH₃', ionization: 'NH₃ + H₂O ⇌ NH₄⁺ + OH⁻',
+    explain: 'Base fraca: só uma pequena parte da amônia recebe H⁺ da água.'
+  },
+  water: {
+    name: 'Água pura', formula: 'H₂O', kind: 'water', label: 'Referência neutra',
+    ionization: '2 H₂O ⇌ H₃O⁺ + OH⁻',
+    explain: 'Na água pura, [H₃O⁺] = [OH⁻]: a solução é neutra.'
+  }
 };
 SIAB.indicators = {
   btb: { name: 'Azul de bromotimol', short: 'Bromotimol', low: 6, high: 7.6, acid: [246,205,35], middle: [69,171,79], base: [38,103,210], acidName: 'amarelo', middleName: 'verde', baseName: 'azul' },

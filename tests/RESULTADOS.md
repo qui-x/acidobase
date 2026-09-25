@@ -1,47 +1,78 @@
-# Validação da versão 0.2.1 — 24/09/2026
+# Validação da versão 0.3.0 — 25/09/2026
 
-## Cálculo: aprovado
+## Resumo
 
-11 verificações numéricas independentes: ácido/base forte antes, na e após a
-equivalência; ácido acético no início, na meia-equivalência e na equivalência;
-amônia na equivalência; água pura; ácido extremamente diluído; 20 gotas de
-0,05 mL em 1 mL de HCl, com concentrações iguais de 0,01 mol/L.
+| Verificação | Resultado |
+| --- | --- |
+| Química (`quimica.test.cjs`) | 11 verificações contra OpenStax: aprovado |
+| Amostras do cotidiano (`cotidiano.test.cjs`) | 15 amostras: aprovado |
+| Sais, tampões, antiácidos, chuva, temperatura, espécies e funções (`sais-ambiente.test.cjs`) | 62 verificações: aprovado |
+| Missões (`missoes.test.cjs`) | 14 missões e 88 passos percorridos: aprovado |
+| PWA (`pwa.test.cjs`) | 155 verificações de cache, arquivos, manifesto e ícones: aprovado |
+| Ponta a ponta no Chromium (`e2e.test.cjs`) | 72 de 72 testes: aprovado |
+| Instalabilidade (Chromium, `Page.getInstallabilityErrors`) | nenhum erro |
+| Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 12 telas (tema escuro) e em 8 estados nos temas claro, alto contraste e no celular |
+| Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, sem erros no console |
 
-Conferidos também a identificação da equivalência e os estados de cor
-verde do bromotimol, incolor da fenolftaleína e amarelo do alaranjado de metila.
+## Química
 
-Para as 15 novas amostras: conservação ao misturar a mesma preparação;
-equivalência entre diluição por preparo e adição de água; aproximação ao neutro
-ao diluir; pH crescente ao adicionar NaOH e decrescente ao adicionar HCl;
-ausência de marcador de equivalência quantitativa para misturas; referência
-analítica anfiprótica do bicarbonato; cor própria e realce do indicador.
-Esses testes verificam o modelo implementado, não sua validade quantitativa
-como representação de um alimento ou produto comercial real.
+Hidrólise salina a 0,1 mol/L comparada com √(Ka·C) e √(Kb·C): NH₄Cl 5,13;
+CH₃COONa 8,87; Na₂CO₃ 11,65; NaCl 7,00. Tampão acetato com pH = pKa e
+Henderson-Hasselbalch após adição de ácido (4,66). Mg(OH)₂ saturado com
+[OH⁻] = 2·(Kps/4)^(1/3) (pH 10,42). Al(OH)₃ em excesso limita o pH perto de 4.
+Chuva limpa com pH 5,65. Água pura neutra com pH = pKw/2 a 0, 25, 50 e 100 °C.
+Balanços de massa e de carga das espécies da lupa. Grau de ionização do ácido
+acético: 1,3 % (0,1 mol/L) e 4,2 % (0,01 mol/L). Coerência entre as faixas de
+cor do detetive e a função de cor. Equações e nomes de sais: totais e parciais.
 
-## Interação por DOM: aprovada
+Esses testes verificam o modelo implementado. Não validam quantitativamente
+alimentos, produtos comerciais ou o organismo humano.
 
-Ambiente jsdom 26.1.0. Cliques e eventos reais da interface acionam os controles
-do aplicativo. Foram conferidos início, gotas, desfazer, renomeação com
-caracteres especiais, navegação com preservação de dados, visão geral,
-abertura/fechamento do painel, cópias vinculadas e gotas em grupo, pH oculto,
-repreparo de grupo, rejeição de volume negativo, mudança de modo mobile/desktop,
-temas, fonte de 200%, limite de dez tubos e remoção do tubo ativo.
+## Interface (Chromium, Playwright)
 
-Adicionalmente: entrada única pelo botão Começar, catálogo completo de amostras
-e reagentes e preparo de uma titulação de laboratório na mesma bancada; diluição preservada nas cópias;
-aplicação de novas amostras ao grupo; busca por nome sem acentos; seleção com
-teclado; retorno de foco; seleção de tema dentro de outro diálogo; rótulos dos
-diálogos; pH aproximado/oculto; realce de cores sem alterar pH; erros de nome
-e volume apresentados no próprio formulário. Os testes rejeitam chamadas a
-alert/prompt/confirm nativos e a reportValidity.
+- **Navegação:** menu, voltar do navegador, títulos, uma tela visível por vez e endereços inválidos tratados.
+- **Laboratório:** segurar para gotejar e soltar para parar; Desfazer da
+  sequência inteira; toque simples = 1 gota; Enter e Espaço; +5 e +1 mL; chip
+  de variação do pH; prateleira no tubo e no conta-gotas; busca sem acentos;
+  níveis; erro de validação no formulário; titulação até a equivalência (pH
+  7,00, bromotimol verde); gráfico com um ponto por gota; lupa, equação e
+  histórico; CSV; abas com setas; caderno; pH oculto; prever e gotejar;
+  indicadores; renomear com caracteres especiais; tubos vinculados; remover com
+  confirmação e desfazer; limite de 10 tubos; visão geral.
+- **Missões:** as 14 missões concluídas pela interface. Também foram feitas
+  ações reais sem demonstração: conta-gotas até a fenolftaleína ficar rosa,
+  controle de temperatura a 60 °C (pH 6,51, neutra) e realce do indicador.
+- **Desafios:** detetive (300/300), titulação (≥ 90), Super Trunfo nos três
+  modos, régua do pH (≥ 90) e construtor (100/100 e treino parcial).
+- **Professor e caderno:** link da aula, sequência, gabaritos, roteiro
+  impresso, modo projetor salvo, CSV do caderno, apagar nota e apagar tudo.
+- **Acessibilidade:** tema claro e fonte de 200 % mantidos depois de recarregar;
+  som e vibração salvos; sem rolagem horizontal.
+- **Celular (390 × 844):** barra inferior; nenhuma rolagem horizontal em 9
+  telas; prateleira no painel inferior com foco no botão fechar e bancada
+  inerte; toque = 1 gota; barra da missão abre o cartão.
+- **PWA:** service worker ativo, 55 entradas no cache e manifesto válido.
+  **Sem internet:** recarregar, gotejar, abrir missão e desafio.
+- Nenhum erro no console nem diálogo nativo (alert, confirm, prompt) em todo o percurso.
 
-As primitivas de diálogo e a consulta de largura foram simuladas neste teste.
-Ele não substitui a conferência da aparência ou dos gestos em navegador real.
+## Problemas encontrados e corrigidos durante a validação
 
-## Conferência visual: pendente
+1. O roteador marcava o `<body>` com o atributo das telas e podia escondê-lo.
+2. Na primeira visita, a ativação do service worker recarregava a página.
+3. Tema e fonte voltavam ao padrão ao recarregar: o endereço guardava os
+   parâmetros antigos, que têm prioridade no `a11y.js`. Defeito já existente
+   na versão 0.2.
+4. No celular, o painel inferior abria sem receber o foco, por causa da
+   transição de visibilidade. Defeito já existente na versão 0.2.
+5. Um toque rápido no conta-gotas podia gerar 2 gotas, e segurar por mais de
+   1 s gerava uma gota a mais no fim.
+6. O gabarito de uma previsão mudava depois das gotas. Agora fica fixo quando o
+   estudante confirma.
+7. O detetive dava 99 pontos para um palpite igual ao pH mostrado.
+8. O Super Trunfo não permitia trocar de modo no meio da partida.
 
-A pré-visualização bloqueou o protocolo local dos arquivos. Não foi possível
-validar a aparência renderizada em navegador nesta sessão. Preparados no CSS:
-celular de 320 px, celular de 390 px, paisagem, desktop, fontes ampliadas,
-painel inferior, áreas seguras e rolagem. O usuário deve conferir esses casos
-ao abrir a versão de teste; não foram tratados como testes visuais aprovados.
+## Não verificado
+
+Aparelhos físicos (iPhone e Android), leitores de tela reais (NVDA, TalkBack,
+VoiceOver) e instalação na tela inicial de um celular. Recomenda-se uma rodada
+com estudantes e o questionário SUS descrito em `docs/proposta-ui-ux.md`.

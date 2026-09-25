@@ -1,87 +1,104 @@
-# SIAB — A química das cores · versão de teste 0.2.1
+# SIAB — A química das cores · versão 0.3.0
 
-Extraia o ZIP inteiro e abra `siab/index.html` em um navegador.
-O pacote contém apenas os arquivos do SIAB, com HTML, CSS, JavaScript e SVG
-separados. Não exige instalação, internet ou servidor. A pasta `siab/` pode
-ser hospedada em um diretório independente ou colocada na raiz do laboratório.
+**SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
+uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
+Funciona no computador e no celular, com ou sem internet, e pode ser instalado
+como aplicativo.
 
-Nome: **SIAB — Simulador Interativo de Ácidos e Bases**.
-Nome fantasia: **A química das cores**.
+## Como abrir
 
-## Novidades: cotidiano e caixas de diálogo
+| Forma | Como | Instala como app? |
+| --- | --- | --- |
+| Arquivo | Abra `index.html` no navegador | Não, mas funciona igual |
+| Servidor local | `npm start` e acesse http://localhost:8080 | Sim |
+| Publicado | Publique a pasta em um endereço https (por exemplo, GitHub Pages) | Sim |
+| Arquivo único | `npm run build` gera um HTML só | Não |
 
-- 15 amostras novas: limão, laranja, abacaxi, maçã, morango, tomate, vinagre,
-  café, leite, iogurte, refrigerante tipo cola, bicarbonato, sal, açúcar e sabão.
-- Grupos no catálogo e seleção com busca por nome, inclusive sem acentos.
-- Diluição própria para amostras; molaridade ajustável para reagentes puros.
-- Extrato de repolho roxo, cores próprias dos alimentos e opção de realçar
-  apenas a cor do indicador, sem alterar o cálculo do pH.
-- Uma entrada **Começar**, com todas as amostras e reagentes no mesmo catálogo.
-- Ideias de atividades acessíveis disponíveis dentro da bancada.
-- Diálogos de renomeação, confirmação, acessibilidade, informações, atividades
-  e escolha com estilos próprios. Seletores e mensagens de validação seguem
-  os temas do SIAB e aceitam navegação por teclado.
+**Para instalar:** abra pelo endereço http(s) e use o botão **Instalar app** no
+topo, ou o menu do navegador ("Instalar aplicativo" / "Adicionar à tela de
+início"). Depois da primeira visita, o SIAB abre sem internet. Quando houver
+versão nova, aparece o aviso "Nova versão disponível · Atualizar".
 
-O pH e a resposta às gotas nas amostras do cotidiano são estimativas didáticas.
-Uma fruta ou produto real pode apresentar resultados diferentes. Veja
-`docs/cotidiano.md` para os parâmetros usados e suas limitações.
+## O que há na versão 0.3
 
-## Testar o cotidiano
+Quatro caminhos a partir da tela inicial:
 
-1. Na tela inicial, toque em **Começar** para abrir a bancada única.
-2. Observe limão diluído, água e bicarbonato com indicador de repolho roxo.
-3. Em **Preparar**, toque no nome da solução e busque **café** ou **laranja**.
-4. Escolha a diluição e aplique o preparo. Teste **Realçar indicador**.
-5. Compare indicadores e navegue pelos tubos. As cópias conservam a diluição.
-6. Abra **Ideias para uma aula acessível** para explorar atividades.
+- **Aprender:** 4 trilhas com 14 missões guiadas (ler → prever → observar →
+  agir → explicar → conferir). As respostas vão para o caderno.
+- **Desafios:** 5 jogos com pontuação e recorde: Amostra misteriosa, Missão
+  titulação, Super Trunfo químico, Régua do pH e Construtor de neutralização.
+- **Laboratório:** bancada livre com prateleira de frascos e níveis
+  Explorar, Medir e Calcular.
+- **Professor:** montar aula com link para a turma, roteiro impresso,
+  respostas esperadas e modo projetor.
 
-Nos menus: setas percorrem as opções, Home/End vão aos extremos, Enter ou
-Espaço confirmam, Esc cancela e Tab percorre os controles. A busca permite
-digitar nomes sem acentos. Há botão visível para fechar cada diálogo.
+Na bancada:
 
-## Testar a titulação de laboratório
+- **Conta-gotas dinâmico:** segure para gotejar; +5 gotas; +1 mL. No teclado,
+  Enter adiciona 1 gota e segurar Espaço goteja.
+- **Painel VER:** gráfico da titulação ao vivo, lupa de partículas, equações e
+  histórico. Tudo muda junto a cada gota.
+- **Prever e gotejar:** registra previsão, resultado e explicação no caderno.
+- **Desfazer amplo:** desfaz qualquer ação (gotas, frascos, medidas, remoção).
+- **Novos frascos:** sais (NaCl, NH₄Cl, CH₃COONa, Na₂CO₃), tampões acetato e
+  fosfato, antiácidos Mg(OH)₂ e Al(OH)₃, água de cal e água da chuva (limpa e
+  ácida).
+- **Caderno de laboratório:** previsões, missões, leituras e pontuações, com
+  download em CSV.
 
-1. Na mesma bancada, abra **Preparar** e escolha HCl, 0,01 mol/L, 1 mL.
-   Selecione bromotimol e, no conta-gotas, NaOH, 0,01 mol/L, gota de 0,05 mL.
-   Toque em **Aplicar preparo**.
-2. No primeiro tubo, adicione 20 gotas de NaOH, 0,01 mol/L, com 0,05 mL por gota.
-   O pH calculado chega a 7,00 e o bromotimol fica verde.
-3. Renomeie o tubo. Vá ao próximo e volte: o preparo, o nome e as gotas permanecem.
-4. Abra **Visão geral** e toque em uma miniatura para retomar a edição.
-5. Em **Preparar**, use **Comparar indicadores**. Três cópias são criadas com
-   indicadores diferentes e adições vinculadas. O tubo original é preservado.
-6. Experimente o tema claro, a fonte ampliada e o pH oculto.
+Acessibilidade: temas escuro, claro e alto contraste; fonte até 200 %;
+filtros de percepção de cor; cor sempre descrita em texto; teclado em todos os
+controles; som do pH (tom mais agudo com pH maior) e vibração na viragem,
+ambos opcionais.
 
-No celular, **Preparar** abre o painel inferior. Adicionar gotas fica na área
-principal. A visão geral contém miniaturas e navegação; o preparo é feito na
-edição individual. O limite é dez tubos. Renomeação: até quarenta caracteres.
+## Mapa das mecânicas (propostas em `docs/`)
 
-As experiências são mantidas durante a página aberta; atualizar inicia outra
-bancada. Preferências de acessibilidade são guardadas localmente quando o
-navegador permite. Não há contas nem envio de dados.
+| Mecânica | Onde está |
+| --- | --- |
+| M1 Prever antes da gota | "Prever e gotejar" no laboratório; passos "prever" das missões |
+| M2 Amostra misteriosa | Desafios |
+| M3 Régua do pH | Desafios |
+| M4 Lupa molecular | Painel VER → Partículas; missões "Dentro da água" e "Grau de ionização" |
+| M5 Gráfico ao vivo | Painel VER → Gráfico; missão "A curva da titulação" |
+| M6 Missão titulação | Desafios |
+| M7 Construtor de neutralização | Desafios |
+| M8 Super Trunfo | Desafios |
+| M9 Laboratório do tampão | Missão "Laboratório do tampão" |
+| M10 Todo sal é neutro? | Missões "Todo sal é neutro?" e "Por que o sal muda o pH?" |
+| M11 Estômago virtual | Missão "Estômago virtual" |
+| M12 Chuva ácida e calagem | Missão "Chuva ácida e calagem" |
+| M13 Duelo força × concentração | Missão "Forte ou concentrado?" |
+| M14 Caderno de laboratório | Caderno; Histórico → CSV |
+| M15 Neutro nem sempre é 7 | Missão "Neutro nem sempre é 7" |
 
-## Base e escopo
+## Testes
 
-- Estrutura modular da família de simuladores: `core`, `data`, `simulation`,
-  `ui`, `a11y` e `init`.
-- Identidade e componentes inspirados no SIQC; navegação mobile e painel
-  inferior adaptados do SIMA; conceito de gestão de tubos do SIFI.
-- Motor `a11y.js` reaproveitado do projeto fornecido, com chave própria para
-  preferências, escala até 200% e proteção do favicon incorporado.
-- A neutralização do SIQI original permanece intacta.
-- O cálculo de pH, a bancada, o estado dos tubos e a renderização das soluções
-  foram escritos para este simulador.
-- Nesta versão o painel de acessibilidade inclui tema, fonte, movimento e
-  filtros de simulação da percepção. VLibras não foi incorporado ao pacote offline.
+```
+npm test            # química, sais, missões e PWA, sem navegador
+npm install         # uma vez, para os testes no navegador
+npx playwright install chromium
+npm run test:e2e    # 72 testes no Chromium, incluindo celular e sem internet
+```
 
-Veja `docs/modelo-quimico.md` para condições e limites do modelo.
-Os ensaios numéricos podem ser repetidos com `node tests/quimica.test.cjs` e
-`node tests/cotidiano.test.cjs`. Os testes `interface.test.cjs` e
-`dialogos-cotidiano.test.cjs`, na pasta `tests/`, requerem jsdom 26.1.0.
+Resultados da última validação: `tests/RESULTADOS.md`.
 
-## Validação e próximos ajustes
+## Documentação
 
-Conferidos cálculos com casos de referência e fluxos de estado por eventos DOM.
-A pré-visualização de arquivos locais foi bloqueada pelo navegador de teste.
-Por isso, aparência renderizada, gestos nativos, teclado virtual e a rotação em
-celulares físicos ainda precisam da rodada visual de teste com este pacote.
+- `docs/arquitetura.md` — como o código está organizado e como criar missões, frascos e desafios.
+- `docs/modelo-quimico.md` — equações, constantes, fontes e limites do modelo.
+- `docs/cotidiano.md` — amostras do cotidiano e seus parâmetros.
+- `docs/proposta-conteudo-e-mecanicas.md` e `docs/proposta-ui-ux.md` — propostas que deram origem a esta versão.
+
+## Limites
+
+Os valores são referências didáticas. Soluções ideais a 25 °C (só uma missão
+muda Kw), volumes aditivos e equilíbrio imediato. Amostras do cotidiano e da
+chuva são representativas (símbolo ≈). Não se simulam escape de CO₂, espuma,
+precipitação, coagulação nem a velocidade das reações. As atividades sobre
+antiácidos são didáticas e não são orientação de saúde.
+
+O progresso fica guardado só no navegador deste aparelho. Não há contas nem
+envio de dados.
+
+Base: estrutura modular da família de simuladores (SIQC, SIMA, SIFI); motor
+`a11y.js` compartilhado. Licença: GNU GPL v3 (arquivo `LICENSE`).
