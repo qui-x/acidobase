@@ -45,8 +45,8 @@ SIAB.manual = [
         'Aplicativo: tour guiado da bancada, instalar o app, ideias para a aula e informações sobre o SIAB.'
       ] },
       { lista: [
-        'Cabeçalho: ao lado de “SIAB”, o subtítulo diz em que parte você está. Se faltar espaço (texto ampliado), os botões ficam só com o ícone e as abas descem para uma segunda linha.',
-        'Computador: o botão com seta ao lado de “Prateleira” e de “VER” recolhe o painel num trilho de ícones, e a bancada ganha espaço. Tocar num ícone reabre o painel já naquela parte. A escolha fica salva.',
+        'Cabeçalho: “SIAB” com o nome por extenso, Simulador Interativo de Ácidos e Bases. A aba destacada (ou, no celular, a barra de baixo) mostra em que parte você está. Se faltar espaço (texto ampliado), os botões ficam só com o ícone e as abas descem para uma segunda linha.',
+        'Computador: o botão com seta ao lado de “Prateleira” e de “VER” recolhe o painel num trilho de ícones, e a bancada ganha espaço (a escolha fica salva). Tocar num ícone traz só aquela parte, num cartão flutuando por cima da bancada, sem mudar o tamanho dela: dá, por exemplo, para deixar o gráfico flutuando e gotejar enquanto ele muda. O mesmo ícone, o ×, Esc ou um toque na bancada (no caso da prateleira) fecham o cartão. O primeiro ícone do trilho, ou o botão com seta no cartão, fixa o painel de novo.',
         'Celular e tablet: a barra de chips (Tubo em foco, Visão geral, Gráfico, Partículas, Equação, Histórico) rola para os lados e fica presa abaixo do cabeçalho.',
         'Celular: a prateleira abre por baixo e fecha sozinha depois que você escolhe um frasco, para o resultado aparecer na hora.'
       ] }
@@ -64,6 +64,20 @@ SIAB.manual = [
         'Etiquetas: “no tubo” e “conta-gotas” mostram o que está em uso no tubo selecionado.'
       ] },
       { dica: 'Trocar o frasco recomeça as gotas do tubo. Se foi sem querer, toque em “Desfazer”.' }
+    ]
+  },
+  {
+    id: 'vidraria', titulo: 'Vidraria', alvo: '#vidraria-grupo', painel: true,
+    resumo: 'Tubo de ensaio, béquer ou erlenmeyer: o que muda e o que não muda.',
+    blocos: [
+      { p: 'Na prateleira, “Vidraria” troca o recipiente de todos os tubos da bancada. O SIAB sempre abre com o tubo de ensaio.' },
+      { lista: [
+        'Tubo de ensaio: o clássico dos testes rápidos com poucas gotas.',
+        'Béquer: boca larga, usado para misturar, aquecer e transferir. As marcas de volume de um béquer são aproximadas.',
+        'Erlenmeyer: o frasco das titulações. A boca estreita evita respingos quando se agita a mistura. Como ele é cônico, 1 mL a mais sobe pouco perto do fundo largo e sobe mais perto do gargalo: por isso as marcas ficam cada vez mais afastadas.'
+      ] },
+      { dica: 'A química não muda com a vidraria: pH, cor e gráfico são os mesmos. A escala da simulação vai até 5 mL em todas (microescala); só o desenho e a posição das marcas mudam.' },
+      { p: 'Os nomes que o programa dá (“Tubo 2”) acompanham a troca (“Béquer 2”). Nomes escolhidos por você não mudam.' }
     ]
   },
   {
@@ -257,6 +271,7 @@ SIAB.manual = [
         ['Por que a fenolftaleína não muda na equivalência do HCl?', 'Ela muda entre pH 8,2 e 10. Na titulação de HCl com NaOH, o pH salta de cerca de 3,6 para 10,4 em duas gotas; a cor rosa aparece logo depois da equivalência.'],
         ['Diluir muito um ácido deixa a solução básica?', 'Não. Com mais água, o pH se aproxima de 7, sem passar dele.'],
         ['As cores são exatas?', 'Não. São representações didáticas das faixas de viragem. O repolho roxo real varia com o preparo do extrato.'],
+        ['A vidraria muda o resultado?', 'Não. Tubo de ensaio, béquer e erlenmeyer mudam o desenho e a posição das marcas; a escala vai até 5 mL em todos (microescala) e o pH é o mesmo.'],
         ['Posso mudar a temperatura?', 'Na bancada, não: tudo está a 25 °C. A temperatura só muda na missão “Neutro nem sempre é 7”, no modo completo.'],
         ['Antiácidos: posso usar isso para saber a dose?', 'Não. É uma atividade didática, não uma orientação de saúde.']
       ] },

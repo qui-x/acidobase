@@ -129,6 +129,17 @@ td { font-family: Consolas, monospace; }
 
 /* Chips e grupos segmentados: rádios reais, com aparência de botão. */
 .chip-list { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Escolha da vidraria: três cartões com desenho e nome. */
+.vidraria-opcoes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
+.vidraria-opcoes legend { grid-column: 1 / -1; }
+.vidraria-opcoes label {
+  position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; min-height: 64px; padding: 8px 4px;
+  border: 1px solid var(--border); border-radius: 7px; background: var(--bg); color: var(--secondary); font-size: .74rem; text-align: center; line-height: 1.2; cursor: pointer;
+}
+.vidraria-opcoes label svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.vidraria-opcoes input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+.vidraria-opcoes label:has(input:checked) { border-color: var(--accent); background: var(--panel2); color: var(--accent); font-weight: 600; }
+.vidraria-opcoes label:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
 .chip, .segmented label, .opcao {
   position: relative; display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   border: 1px solid var(--border); background: var(--bg); color: var(--text);
@@ -166,6 +177,10 @@ td { font-family: Consolas, monospace; }
 .header-brand div { min-width: 0; }
 .header-brand strong { font-size: 1rem; line-height: 1.2; letter-spacing: .07em; display: block; color: var(--accent); }
 .header-brand span { font-size: .72rem; line-height: 1.3; color: var(--secondary); display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* Nome por extenso em duas linhas quando o espaço é menor ("Simulador Interativo / de Ácidos e Bases"). */
+@media (max-width: 1200px) {
+  .header-brand span { white-space: normal; max-width: 21ch; font-size: .66rem; line-height: 1.2; }
+}
 .main-nav { display: flex; gap: 4px; margin-left: 8px; }
 .main-nav a, .bottom-nav a { color: var(--secondary); text-decoration: none; border-radius: 6px; }
 .main-nav a { padding: 8px 12px; font-size: .875rem; font-weight: 600; border: 1px solid transparent; }
@@ -311,7 +326,28 @@ dialog.drawer::backdrop { background: #000a; backdrop-filter: blur(2px); }
   .workspace.sem-ver.recolhido-controls { grid-template-columns: 60px minmax(0, 1fr); }
   .controls.recolhido, .ver-panel.recolhido { padding: 10px 7px; overflow: visible; position: relative; z-index: 20; }
   .recolhido > :not(.trilho) { display: none !important; }
+  /* Cartão flutuante (como no SIMA): só a parte escolhida, por cima da bancada,
+     sem mudar a largura dela. */
+  .controls.recolhido.flutuando > .painel-conteudo, .ver-panel.recolhido.flutuando > .painel-conteudo {
+    display: block !important; position: absolute; top: 8px; width: 330px; max-height: calc(100dvh - var(--header-h) - 24px); overflow-y: auto;
+    padding: 12px 16px 16px; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 18px 48px #000a;
+    animation: cartao-entrar .16s ease-out;
+  }
+  .controls.recolhido.flutuando > .painel-conteudo { left: calc(100% + 8px); }
+  .ver-panel.recolhido.flutuando > .painel-conteudo { right: calc(100% + 8px); width: 380px; }
+  .flutuando .painel-secao.rail-oculto { display: none; }
+  .flutuando .fechar-flutuante { display: inline-flex; }
+  .trilho-btn[aria-expanded=true] { color: var(--accent); border-color: var(--accent); background: var(--panel2); }
+  .trilho-btn.is-active::before { content: ''; position: absolute; left: 2px; top: 50%; width: 3px; height: 18px; border-radius: 2px; transform: translateY(-50%); background: var(--accent); }
+  .ver-panel .trilho-btn.is-active::before { left: auto; right: 2px; }
 }
+@keyframes cartao-entrar { from { opacity: 0; transform: translateY(-6px); } }
+.fechar-flutuante {
+  display: none; align-items: center; justify-content: center; width: 34px; height: 34px; flex-shrink: 0; margin-left: 4px;
+  border: 1px solid var(--border); border-radius: 6px; background: transparent; color: var(--secondary);
+}
+.fechar-flutuante:hover { color: var(--text); border-color: var(--accent); background: var(--hover); }
+.fechar-flutuante svg { width: 16px; height: 16px; }
 @media (max-width: 1200px) { .trilho { display: none !important; } }
 
 /* Tour guiado (coachmark). */
@@ -370,7 +406,8 @@ dialog.tour::backdrop { background: transparent; backdrop-filter: none; }
 .abertura-marca { display: flex; align-items: center; gap: 12px; opacity: 0; transform: translateY(10px) scale(.96); transition: opacity .45s ease, transform .45s ease; }
 .com-marca .abertura-marca { opacity: 1; transform: none; }
 .abertura-marca strong { display: block; font-size: 1.7rem; letter-spacing: .14em; line-height: 1.1; background: var(--brand); -webkit-background-clip: text; background-clip: text; color: transparent; }
-.abertura-marca span { display: block; font-size: .9rem; opacity: .85; }
+.abertura-marca span { display: block; font-size: .95rem; font-weight: 600; opacity: .9; }
+.abertura-marca em { display: block; font-size: .8rem; font-style: normal; opacity: .7; }
 .abertura-pular { position: absolute; bottom: calc(16px + env(safe-area-inset-bottom)); left: 0; right: 0; text-align: center; font-size: .75rem; opacity: .65; margin: 0; }
 :root[data-contrast=on] .abertura-marca strong { background: none; color: #ff0; }
 
@@ -583,6 +620,9 @@ button.cartao { font: inherit; cursor: pointer; }
   flex: none; width: 13px; height: 30px; border-radius: 2px 2px 7px 7px; box-shadow: inset 0 0 0 1.5px var(--muted);
   background: linear-gradient(to top, var(--cor) calc(var(--nivel) * 100%), transparent 0);
 }
+/* Miniaturas da tira: béquer (largo) e erlenmeyer (cônico). */
+.mini-tube.mini-bequer { width: 20px; height: 24px; border-radius: 1px 1px 4px 4px; }
+.mini-tube.mini-erlenmeyer { width: 22px; height: 26px; border-radius: 0 0 4px 4px; clip-path: polygon(38% 0, 62% 0, 62% 30%, 100% 100%, 0 100%, 38% 30%); box-shadow: none; background: linear-gradient(to top, var(--cor) calc(var(--nivel) * 100%), color-mix(in srgb, var(--muted) 45%, transparent) 0); }
 .mini-dot { width: 10px; height: 10px; border-radius: 50%; flex: none; box-shadow: 0 0 0 1px var(--border); }
 
 .overview-view { padding: 22px 24px; }
@@ -637,6 +677,7 @@ button.cartao { font: inherit; cursor: pointer; }
 .eq-bloco h3 { margin: 0 0 6px; font-size: .8rem; color: var(--accent); }
 .eq-formula { font-family: 'Cambria Math', 'STIX Two Math', Georgia, serif; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; }
 .eq-bloco .small { margin-top: 4px; }
+.eq-lista { margin: 0; padding-left: 18px; font-size: .8rem; display: grid; gap: 6px; }
 .eq-linha { display: grid; grid-template-columns: minmax(90px, 40%) 1fr; gap: 8px; font-size: .8rem; }
 .eq-linha dt { color: var(--muted); }
 .eq-linha dd { margin: 0; font-family: Consolas, monospace; overflow-wrap: anywhere; }
@@ -837,6 +878,47 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 .bancada-vazia-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
 .workspace.vazia #focus-view > :not(#bancada-vazia, #boas-vindas) { display: none !important; }
 .workspace.vazia :is(#indicator-group, #indicator-range, .indicator-mode, #ajustes, #compare-btn, #unlink-btn, #restart-btn, #remove-btn, .chip-ver, .chip-sep) { display: none !important; }
+/* Easter egg "Arco-íris do pH" (js/ui/segredo.js). */
+.segredo { margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel2); font-size: .85rem; }
+.segredo p { margin: 0 0 6px; color: var(--secondary); }
+.segredo .segredo-titulo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--text); font-size: .95rem; }
+.segredo-faixa-cores, .bottle-secreto .bottle-dot { background: linear-gradient(90deg, #d22b3a, #ef5b29, #ebc92a, #49a756, #239aab, #445ed1, #6c49bf); }
+.segredo-faixa-cores { display: inline-block; width: 44px; height: 10px; border-radius: 999px; }
+.segredo-faixa { list-style: none; margin: 8px 0 4px; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
+.segredo-faixa li { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .72rem; text-align: center; color: var(--secondary); }
+.segredo-faixa strong { color: var(--text); font-size: .75rem; white-space: nowrap; }
+.segredo-cor { width: 100%; height: 18px; border-radius: 5px; border: 1px solid var(--border); }
+.bottle-secreto { border-color: var(--accent); }
+.bottle-secreto .bottle-dot { border-radius: 50%; }
+.nota[data-tipo=descoberta] { border-left-color: transparent; background: linear-gradient(#d22b3a, #ef5b29, #ebc92a, #49a756, #239aab, #445ed1, #6c49bf) left / 4px 100% no-repeat, var(--panel); }
+.chuva-arco-iris { position: fixed; inset: 0; z-index: 1500; pointer-events: none; overflow: hidden; }
+.chuva-arco-iris span { position: absolute; top: -24px; width: 10px; height: 14px; border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%; background: var(--cor); opacity: .9; animation-name: chover; animation-timing-function: cubic-bezier(.45, 0, .8, .6); animation-fill-mode: both; }
+@keyframes chover { to { transform: translateY(calc(100vh + 40px)); } }
+@media (max-width: 600px) {
+  .segredo-faixa { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.mistura-aviso { margin-top: 10px; }
+/* Mistura geral: os tubos vão até o béquer e são despejados. */
+.despejo { position: fixed; inset: 0; z-index: 1600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: #050a14cc; cursor: pointer; }
+.despejo-palco { position: relative; width: min(420px, 92vw); height: 270px; }
+.despejo-tubo {
+  position: absolute; top: 0; left: calc(50% - 9px + var(--x)); width: 18px; height: 60px; border: 2px solid #cfd9e6; border-top-width: 0;
+  border-radius: 0 0 9px 9px; overflow: hidden; transform-origin: 50% 0; animation: despejar 1.2s cubic-bezier(.4, 0, .3, 1) both;
+}
+.despejo-tubo i { position: absolute; left: 0; right: 0; bottom: 0; height: 55%; background: var(--cor); }
+@keyframes despejar {
+  0% { transform: translate(0, 0); }
+  40% { transform: translate(calc(-1 * var(--x) + 26px), 70px) rotate(0); opacity: 1; }
+  75% { transform: translate(calc(-1 * var(--x) + 26px), 70px) rotate(-118deg); opacity: 1; }
+  100% { transform: translate(calc(-1 * var(--x) + 26px), 70px) rotate(-118deg); opacity: 0; }
+}
+.despejo-bequer {
+  position: absolute; bottom: 0; left: calc(50% - 60px); width: 120px; height: 120px; border: 3px solid #cfd9e6; border-top: 0;
+  border-radius: 0 0 12px 12px; overflow: hidden;
+}
+.despejo-bequer i { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: var(--cor); opacity: .9; transition: height 1.1s ease-out; }
+.despejo.enchendo .despejo-bequer i { height: 62%; }
+.despejo-texto { color: #ddeaf8; font-weight: 600; margin: 0; }
 .boas-vindas { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px 14px; margin-top: 10px; padding: 6px 10px; border: 1px solid var(--accent); border-radius: var(--radius); background: var(--panel2); font-size: .82rem; }
 .boas-vindas p { flex: 1 1 260px; }
 .boas-vindas > div { display: flex; gap: 6px; align-items: center; }

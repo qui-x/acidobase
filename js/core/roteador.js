@@ -10,12 +10,6 @@
 SIAB.telas = {};
 SIAB.rota = { nome: null, parametro: '' };
 
-// Subtítulo do cabeçalho (ao lado de "SIAB"): diz em que parte o usuário está.
-const SUBTITULOS = {
-  laboratorio: 'Bancada de testes', manual: 'Manual de uso', caderno: 'Caderno de laboratório',
-  aprender: 'Missões guiadas', desafios: 'Desafios', professor: 'Painel do professor', aula: 'Aula'
-};
-
 // Troca entre "só a bancada" e "completo" (missões, desafios e professor).
 // A escolha fica salva neste navegador (chave siab_modo).
 SIAB.definirModo = modo => {
@@ -57,8 +51,6 @@ SIAB.rotear = () => {
   tela.entrar(parametro);
   const titulo = tela.titulo ? tela.titulo(parametro) : '';
   document.title = `${titulo ? titulo + ' · ' : ''}SIAB — A química das cores`;
-  const sub = document.getElementById('header-sub');
-  if (sub) sub.textContent = SUBTITULOS[nome] || titulo || 'A química das cores';
   document.querySelectorAll('[data-nav]').forEach(link => {
     const ativo = link.dataset.nav === (tela.menu || nome);
     if (ativo) link.setAttribute('aria-current', 'page');

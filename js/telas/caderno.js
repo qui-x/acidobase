@@ -37,7 +37,7 @@ SIAB.telas.caderno = {
   titulo: () => 'Caderno',
   entrar() {
     const notas = SIAB.progresso.dados.caderno;
-    const TIPOS = { previsao: 'Previsão', missao: 'Missão', leitura: 'Leitura', desafio: 'Desafio' };
+    const TIPOS = { previsao: 'Previsão', missao: 'Missão', leitura: 'Leitura', desafio: 'Desafio', descoberta: 'Descoberta' };
     SIAB.$('caderno-csv').disabled = !notas.length;
     SIAB.$('caderno-limpar').disabled = !notas.length;
     SIAB.$('caderno-lista').innerHTML = notas.length

@@ -14,6 +14,7 @@ SIAB.criarBancada = () => ({
   level: 'explorar',      // explorar, medir ou calcular (controles visíveis)
   destination: 'tube',    // a prateleira coloca o frasco no tubo ou no conta-gotas
   verTab: 'grafico',      // aba do painel VER
+  vidraria: 'tubo',       // tubo, bequer ou erlenmeyer (sempre começa no tubo de ensaio)
   history: []             // pilha para desfazer ações
 });
 
@@ -35,12 +36,58 @@ SIAB.TUBE_DEFAULTS = {
   dropVolume: .05, indicator: 'btb', additions: [], group: null, temperature: 25
 };
 
+// Vidrarias da bancada. A escala é a mesma em todas (microescala, até 5 mL);
+// o que muda é o desenho e o nome ("Tubo 1", "Béquer 1"...).
+SIAB.VIDRARIAS = {
+  tubo: { nome: 'Tubo de ensaio', curto: 'Tubo',
+    dica: 'Tubo de ensaio: o clássico dos testes rápidos com poucas gotas.' },
+  bequer: { nome: 'Béquer', curto: 'Béquer',
+    dica: 'Béquer: boca larga, para misturar e aquecer. Suas marcas de volume são aproximadas.' },
+  erlenmeyer: { nome: 'Erlenmeyer', curto: 'Erlenmeyer',
+    dica: 'Erlenmeyer: o frasco das titulações; a boca estreita evita respingos ao agitar. Por ser cônico, as marcas se afastam perto do gargalo.' }
+};
+
 SIAB.newTube = (options = {}, bench = SIAB.state) => {
   const id = bench.nextId++;
-  const tube = { id, name: `Tubo ${id}`, ...SIAB.TUBE_DEFAULTS, ...options };
+  const tube = { id, name: `${SIAB.VIDRARIAS[bench.vidraria]?.curto || 'Tubo'} ${id}`, ...SIAB.TUBE_DEFAULTS, ...options };
   tube.additions = [...tube.additions];
   bench.tubes.push(tube);
   return tube;
+};
+
+// Capacidade do recipiente: 5 mL (microescala), ou a do béquer da mistura.
+SIAB.capacidade = tube => tube.capacidade || SIAB.CAPACITY_ML;
+
+// Mistura geral (modo secreto): junta tudo o que há nos tubos — soluções,
+// gotas e indicadores — num só recipiente. Função pura, sem mexer na bancada.
+// Componentes iguais (mesmo frasco, concentração e diluição) somam o volume.
+SIAB.misturarTubos = tubos => {
+  const componentes = new Map(), indicadores = new Map();
+  let total = 0;
+  for (const t of tubos) {
+    const partes = SIAB.chem.base(t).map(x => ({ ...x }));
+    const gotas = SIAB.chem.added(t);
+    if (gotas > 0) partes.push({ id: t.titrant, concentration: t.titrantConcentration, volume: gotas, dilution: t.titrantDilution });
+    for (const p of partes) {
+      if (!(p.volume > 0)) continue;
+      const chave = `${p.id}|${p.concentration}|${p.dilution || 1}`;
+      const atual = componentes.get(chave);
+      if (atual) atual.volume += p.volume;
+      else componentes.set(chave, { id: p.id, concentration: p.concentration, volume: p.volume, dilution: p.dilution || 1 });
+    }
+    const volume = partes.reduce((sum, p) => sum + p.volume, 0);
+    total += volume;
+    const deste = t.indicadores?.length ? t.indicadores : [{ id: t.indicator, fracao: 1 }];
+    for (const x of deste) indicadores.set(x.id, (indicadores.get(x.id) || 0) + x.fracao * volume);
+  }
+  const listaInd = [...indicadores].map(([id, v]) => ({ id, fracao: total ? v / total : 0 })).filter(x => x.fracao > 0);
+  const comCor = listaInd.filter(x => x.id !== 'none').sort((a, b) => b.fracao - a.fracao);
+  return {
+    volume: total,
+    componentes: [...componentes.values()],
+    indicadores: listaInd,
+    indicator: comCor[0]?.id || 'none'
+  };
 };
 
 // Desfazer: guarda uma cópia dos tubos antes de cada ação.

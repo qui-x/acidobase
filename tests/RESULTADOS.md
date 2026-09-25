@@ -1,4 +1,4 @@
-# Validação da versão 0.5.0 — 25/09/2026
+# Validação da versão 0.5.1 — 25/09/2026
 
 ## Resumo
 
@@ -8,13 +8,34 @@
 | Amostras do cotidiano (`cotidiano.test.cjs`) | 15 amostras: aprovado |
 | Sais, tampões, antiácidos, chuva, temperatura, espécies e funções (`sais-ambiente.test.cjs`) | 62 verificações: aprovado |
 | Missões (`missoes.test.cjs`) | 14 missões e 88 passos percorridos: aprovado |
-| Manual (`manual.test.cjs`) | 79 verificações de seções, links de ajuda, alvos e roteiros: aprovado |
-| PWA (`pwa.test.cjs`) | 224 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
-| Ponta a ponta no Chromium (`e2e.test.cjs`) | 104 de 104 testes: aprovado |
-| Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados: bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura; temas escuro, claro e alto contraste; computador e celular |
+| Manual (`manual.test.cjs`) | 83 verificações de seções, links de ajuda, alvos e roteiros: aprovado |
+| Mistura geral (`mistura.test.cjs`) | 18 verificações: HCl + NaOH = 7,00; diluição 2,30; tampão acetato 4,76; conservação; excesso de base 11,30; indicadores misturados: aprovado |
+| PWA (`pwa.test.cjs`) | 228 verificações de cache, arquivos, manifesto, ícones e versão: aprovado |
+| Ponta a ponta no Chromium (`e2e.test.cjs`) | 108 de 108 testes: aprovado |
+| Acessibilidade (axe-core 4, WCAG 2.2 A/AA) | nenhuma violação em 36 estados da 0.5.0 (bancada vazia e com tubo, menu ☰, painel de acessibilidade, prateleira no celular, trilhos, tour, caderno com tabela e abertura) e em mais 26 da 0.5.1 (frasco secreto, arco-íris, despejo, mistura, erlenmeyer e cartões flutuantes); temas escuro, claro e alto contraste; computador e celular |
 | Abrir como arquivo (`file://`) e HTML único (`npm run build`) | funcionam, com a animação de abertura e sem erros no console |
 
-## O que foi testado nesta versão (Chromium, Playwright)
+## Novidades da 0.5.1 testadas
+
+- **Nome por extenso:** "Simulador Interativo de Ácidos e Bases" embaixo da
+  sigla, em até duas linhas no celular, sem cortar.
+- **Painéis recolhidos como no SIMA:** o ícone traz só a parte escolhida
+  flutuando e a largura da bancada não muda. O cartão do VER fica aberto
+  enquanto se goteja. O mesmo ícone, o ×, Esc (com o foco de volta no ícone)
+  e um toque na bancada (prateleira) fecham. A escolha fica salva, e "fixar"
+  volta ao painel inteiro.
+- **Vidraria:** começa no tubo de ensaio e volta a ele ao recarregar. Béquer e
+  erlenmeyer mudam o desenho e o nome padrão ("Béquer 1"), mas não o pH. As
+  marcas do erlenmeyer se afastam para cima (cone). Nomes escolhidos pelo
+  estudante não mudam.
+- **Segredos:** 7 toques no logotipo e a busca "arco-íris" montam o Arco-íris
+  do pH (indicador universal, pH crescente e 7 cores diferentes); 6 toques com
+  pausa não bastam. A busca "misturar" despeja os tubos num béquer de 50 mL:
+  com HCl e NaOH na mesma quantidade o pH é 7,00 e o bromotimol fica verde. Com
+  um tubo só, o SIAB avisa. Dá para continuar gotejando, e "Desfazer" devolve
+  os tubos. A nota "Descoberta" vai para o caderno.
+
+## O que foi testado na 0.5.0 (Chromium, Playwright)
 
 - **Bancada vazia:** abre sem tubos, com o aviso "Bancada vazia"; leitura,
   conta-gotas, indicador e ajustes ficam escondidos. O primeiro frasco cria o

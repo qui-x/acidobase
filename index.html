@@ -13,8 +13,8 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="icon" type="image/svg+xml" href="assets/siab-icone.svg">
   <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png">
-  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.0">
-  <script src="a11y.js?v=0.5.0"></script>
+  <link rel="stylesheet" href="css/stylesiab.css?v=0.5.1">
+  <script src="a11y.js?v=0.5.1"></script>
   <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
   <script>try { if (localStorage.getItem('siab_abertura') === 'off') document.documentElement.dataset.abertura = 'off'; } catch (erro) { }</script>
 </head>
@@ -22,7 +22,7 @@
   <div id="abertura" class="abertura" aria-hidden="true">
     <div class="abertura-palco">
       <svg class="abertura-tubos" viewBox="0 0 400 215"></svg>
-      <div class="abertura-marca"><img src="assets/siab-icone.svg" alt="" width="46" height="46"><div><strong>SIAB</strong><span>A química das cores</span></div></div>
+      <div class="abertura-marca"><img src="assets/siab-icone.svg" alt="" width="46" height="46"><div><strong>SIAB</strong><span>Simulador Interativo de Ácidos e Bases</span><em>A química das cores</em></div></div>
     </div>
     <p class="abertura-pular">Toque ou aperte uma tecla para pular</p>
   </div>
@@ -39,9 +39,9 @@
     <button id="menu-btn" class="menu-btn" type="button" aria-haspopup="dialog" aria-controls="app-drawer" aria-expanded="false" aria-label="Abrir menu" title="Menu">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
     </button>
-    <a class="header-brand" href="#/" aria-label="SIAB — página principal">
+    <a class="header-brand" href="#/" aria-label="SIAB, Simulador Interativo de Ácidos e Bases: página principal">
       <img src="assets/siab-icone.svg" alt="" width="30" height="30">
-      <div><strong>SIAB</strong><span id="header-sub">Bancada de testes</span></div>
+      <div><strong>SIAB</strong><span id="header-nome">Simulador Interativo de Ácidos e Bases</span></div>
     </a>
     <nav class="main-nav" aria-label="Seções principais">
       <a href="#/aprender" data-nav="aprender" data-completo>Aprender</a>
@@ -210,97 +210,113 @@
       <aside id="controls" class="controls" aria-labelledby="controls-title">
         <div class="sheet-handle" aria-hidden="true"></div>
         <div class="trilho" id="trilho-controls" aria-label="Prateleira recolhida" role="group" hidden></div>
-        <div class="controls-heading">
-          <h2 id="controls-title">Prateleira</h2>
-          <a class="ajuda-link" href="#/manual/prateleira" aria-label="Ajuda: prateleira de frascos" title="Ajuda: prateleira de frascos">?</a>
-          <button type="button" class="recolher-btn" data-recolher="controls" aria-controls="controls" aria-expanded="true" aria-label="Recolher prateleira" title="Recolher prateleira"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M19 6v12"/></svg></button>
-          <button id="close-controls" type="button" class="icon-btn mobile-control" aria-label="Fechar painel">×</button>
-        </div>
-
-        <div id="painel-laboratorio">
-          <fieldset class="segmented" id="nivel-grupo">
-            <legend>Nível</legend>
-            <label><input type="radio" name="nivel" value="explorar"><span>Explorar</span></label>
-            <label><input type="radio" name="nivel" value="medir"><span>Medir</span></label>
-            <label><input type="radio" name="nivel" value="calcular"><span>Calcular</span></label>
-          </fieldset>
-          <p id="nivel-dica" class="field-hint"></p>
-
-          <fieldset class="segmented" id="destino-grupo">
-            <legend>Tocar em um frasco coloca no</legend>
-            <label><input type="radio" name="destino" value="tube"><span>Tubo</span></label>
-            <label><input type="radio" name="destino" value="titrant"><span>Conta-gotas</span></label>
-          </fieldset>
-          <label class="field shelf-search">Buscar frasco
-            <input id="shelf-search" type="search" autocomplete="off" placeholder="limão, vinagre, NaOH…">
-          </label>
-          <div id="shelf" class="shelf"></div>
-
-          <fieldset class="chips" id="indicator-group">
-            <legend>Indicador <a class="ajuda-link" href="#/manual/indicadores" aria-label="Ajuda: indicadores" title="Ajuda: indicadores">?</a></legend>
-            <div id="indicator-chips" class="chip-list"></div>
-          </fieldset>
-          <p id="indicator-range" class="field-hint"></p>
-          <label class="check-row indicator-mode"><input type="checkbox" id="indicator-only">Realçar indicador <span class="small">Oculta a cor própria da amostra</span></label>
-
-          <details id="ajustes" class="ajustes" open>
-            <summary>Ajustes de medida</summary>
-            <form id="prepare-form" novalidate>
-              <p class="field-hint">Números do preparo. <a href="#/manual/medidas">Como usar os ajustes</a></p>
-              <div class="field-pair">
-                <label class="field" id="concentration-field">Concentração no tubo <span class="unit">mol/L</span>
-                  <input id="concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
-                </label>
-                <label class="field" id="dilution-field">Diluição da amostra
-                  <select id="dilution-select" data-label="Diluição da amostra do tubo">
-                    <option value="1">Como preparada</option>
-                    <option value="2">1 parte + 1 de água</option>
-                    <option value="5">1 parte + 4 de água</option>
-                    <option value="10">1 parte + 9 de água</option>
-                  </select>
-                </label>
-                <label class="field">Volume inicial <span class="unit">mL</span>
-                  <input id="initial-volume" type="number" inputmode="decimal" min="0.1" max="4" step="any" required>
-                </label>
-              </div>
-              <div class="field-pair">
-                <label class="field" id="titrant-concentration-field">Concentração no conta-gotas <span class="unit">mol/L</span>
-                  <input id="titrant-concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
-                </label>
-                <label class="field" id="titrant-dilution-field">Diluição no conta-gotas
-                  <select id="titrant-dilution-select" data-label="Diluição do conta-gotas">
-                    <option value="1">Como preparada</option>
-                    <option value="2">1 parte + 1 de água</option>
-                    <option value="5">1 parte + 4 de água</option>
-                    <option value="10">1 parte + 9 de água</option>
-                  </select>
-                </label>
-                <label class="field">Volume da gota <span class="unit">mL</span>
-                  <select id="drop-volume" data-label="Volume de cada gota">
-                    <option value="0.01">0,01</option>
-                    <option value="0.02">0,02</option>
-                    <option value="0.05">0,05</option>
-                    <option value="0.1">0,10</option>
-                  </select>
-                </label>
-              </div>
-              <p id="prepare-error" class="form-error" role="alert" hidden></p>
-              <p class="field-hint">Aplicar as medidas recomeça as gotas do tubo. Você pode desfazer.</p>
-              <button class="secondary-btn full-width" type="submit">Aplicar medidas</button>
-            </form>
-          </details>
-
-          <div class="panel-actions">
-            <button id="compare-btn" type="button" class="secondary-btn">Comparar indicadores</button>
-            <button id="unlink-btn" type="button" class="quiet-btn" hidden>Desvincular este tubo</button>
-            <button id="restart-btn" type="button" class="quiet-btn">Recomeçar gotas</button>
-            <button id="remove-btn" type="button" class="quiet-btn danger">Remover tubo</button>
-            <a class="secondary-btn" href="#/manual/roteiros">Roteiros de teste prontos</a>
-            <button id="guide-btn" type="button" class="quiet-btn">Ideias para uma aula acessível</button>
+        <div class="painel-conteudo">
+          <div class="controls-heading">
+            <h2 id="controls-title">Prateleira</h2>
+            <a class="ajuda-link" href="#/manual/prateleira" aria-label="Ajuda: prateleira de frascos" title="Ajuda: prateleira de frascos">?</a>
+            <button type="button" class="recolher-btn" data-recolher="controls" aria-controls="controls" aria-expanded="true" aria-label="Recolher prateleira" title="Recolher prateleira"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 6-6 6 6 6M19 6v12"/></svg></button>
+            <button type="button" class="fechar-flutuante" aria-label="Fechar cartão" title="Fechar (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+            <button id="close-controls" type="button" class="icon-btn mobile-control" aria-label="Fechar painel">×</button>
           </div>
+          <div id="painel-laboratorio">
+            <div class="painel-secao" data-secao="nivel">
+              <fieldset class="segmented" id="nivel-grupo">
+                <legend>Nível</legend>
+                <label><input type="radio" name="nivel" value="explorar"><span>Explorar</span></label>
+                <label><input type="radio" name="nivel" value="medir"><span>Medir</span></label>
+                <label><input type="radio" name="nivel" value="calcular"><span>Calcular</span></label>
+              </fieldset>
+              <p id="nivel-dica" class="field-hint"></p>
+            </div>
+            <div class="painel-secao" data-secao="vidraria">
+              <fieldset class="vidraria-opcoes" id="vidraria-grupo">
+                <legend>Vidraria <a class="ajuda-link" href="#/manual/vidraria" aria-label="Ajuda: vidraria" title="Ajuda: vidraria">?</a></legend>
+                <label><input type="radio" name="vidraria" value="tubo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8.5 3h7M10 3v14.5a2 2 0 0 0 4 0V3"/></svg><span>Tubo de ensaio</span></label>
+                <label><input type="radio" name="vidraria" value="bequer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4c1 .3 2 1 2 2.5V19a1.5 1.5 0 0 0 1.5 1.5h9A1.5 1.5 0 0 0 18 19V4.5M9 10h3M9 14h3"/></svg><span>Béquer</span></label>
+                <label><input type="radio" name="vidraria" value="erlenmeyer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 3h6M10 3v6L5 19a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2L14 9V3"/></svg><span>Erlenmeyer</span></label>
+              </fieldset>
+              <p id="vidraria-dica" class="field-hint"></p>
+            </div>
+            <div class="painel-secao" data-secao="frascos">
+              <fieldset class="segmented" id="destino-grupo">
+                <legend>Tocar em um frasco coloca no</legend>
+                <label><input type="radio" name="destino" value="tube"><span>Tubo</span></label>
+                <label><input type="radio" name="destino" value="titrant"><span>Conta-gotas</span></label>
+              </fieldset>
+              <label class="field shelf-search">Buscar frasco
+                <input id="shelf-search" type="search" autocomplete="off" placeholder="limão, vinagre, NaOH…">
+              </label>
+              <div id="shelf" class="shelf"></div>
+            </div>
+            <div class="painel-secao" data-secao="indicador">
+              <fieldset class="chips" id="indicator-group">
+                <legend>Indicador <a class="ajuda-link" href="#/manual/indicadores" aria-label="Ajuda: indicadores" title="Ajuda: indicadores">?</a></legend>
+                <div id="indicator-chips" class="chip-list"></div>
+              </fieldset>
+              <p id="indicator-range" class="field-hint"></p>
+              <label class="check-row indicator-mode"><input type="checkbox" id="indicator-only">Realçar indicador <span class="small">Oculta a cor própria da amostra</span></label>
+            </div>
+            <div class="painel-secao" data-secao="ajustes">
+              <details id="ajustes" class="ajustes" open>
+                <summary>Ajustes de medida</summary>
+                <form id="prepare-form" novalidate>
+                  <p class="field-hint">Números do preparo. <a href="#/manual/medidas">Como usar os ajustes</a></p>
+                  <div class="field-pair">
+                    <label class="field" id="concentration-field">Concentração no tubo <span class="unit">mol/L</span>
+                      <input id="concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
+                    </label>
+                    <label class="field" id="dilution-field">Diluição da amostra
+                      <select id="dilution-select" data-label="Diluição da amostra do tubo">
+                        <option value="1">Como preparada</option>
+                        <option value="2">1 parte + 1 de água</option>
+                        <option value="5">1 parte + 4 de água</option>
+                        <option value="10">1 parte + 9 de água</option>
+                      </select>
+                    </label>
+                    <label class="field">Volume inicial <span class="unit">mL</span>
+                      <input id="initial-volume" type="number" inputmode="decimal" min="0.1" max="4" step="any" required>
+                    </label>
+                  </div>
+                  <div class="field-pair">
+                    <label class="field" id="titrant-concentration-field">Concentração no conta-gotas <span class="unit">mol/L</span>
+                      <input id="titrant-concentration" type="number" inputmode="decimal" min="0.0001" max="0.1" step="any" required>
+                    </label>
+                    <label class="field" id="titrant-dilution-field">Diluição no conta-gotas
+                      <select id="titrant-dilution-select" data-label="Diluição do conta-gotas">
+                        <option value="1">Como preparada</option>
+                        <option value="2">1 parte + 1 de água</option>
+                        <option value="5">1 parte + 4 de água</option>
+                        <option value="10">1 parte + 9 de água</option>
+                      </select>
+                    </label>
+                    <label class="field">Volume da gota <span class="unit">mL</span>
+                      <select id="drop-volume" data-label="Volume de cada gota">
+                        <option value="0.01">0,01</option>
+                        <option value="0.02">0,02</option>
+                        <option value="0.05">0,05</option>
+                        <option value="0.1">0,10</option>
+                      </select>
+                    </label>
+                  </div>
+                  <p id="prepare-error" class="form-error" role="alert" hidden></p>
+                  <p class="field-hint">Aplicar as medidas recomeça as gotas do tubo. Você pode desfazer.</p>
+                  <button class="secondary-btn full-width" type="submit">Aplicar medidas</button>
+                </form>
+              </details>
+            </div>
+            <div class="painel-secao" data-secao="acoes">
+              <div class="panel-actions">
+                <button id="compare-btn" type="button" class="secondary-btn">Comparar indicadores</button>
+                <button id="unlink-btn" type="button" class="quiet-btn" hidden>Desvincular este tubo</button>
+                <button id="restart-btn" type="button" class="quiet-btn">Recomeçar gotas</button>
+                <button id="remove-btn" type="button" class="quiet-btn danger">Remover tubo</button>
+                <a class="secondary-btn" href="#/manual/roteiros">Roteiros de teste prontos</a>
+                <button id="guide-btn" type="button" class="quiet-btn">Ideias para uma aula acessível</button>
+              </div>
+            </div>
+          </div>
+          <div id="painel-missao" class="painel-secao" data-secao="missao" hidden></div>
         </div>
-
-        <div id="painel-missao" hidden></div>
       </aside>
 
       <section id="experiment" class="experiment" aria-label="Bancada">
@@ -327,6 +343,11 @@
             </div>
           </div>
           <div id="group-notice" class="group-notice" hidden></div>
+          <div id="mistura-aviso" class="segredo mistura-aviso" hidden>
+            <p class="segredo-titulo"><span class="segredo-faixa-cores" aria-hidden="true"></span>Mistura secreta: <strong id="mistura-titulo"></strong></p>
+            <p id="mistura-texto"></p>
+            <button type="button" class="quiet-btn" id="mistura-fechar">Fechar</button>
+          </div>
           <p id="sample-model-note" class="sample-model-note" hidden></p>
           <div id="boas-vindas" class="boas-vindas" role="note" hidden>
             <p><strong>Primeira vez aqui?</strong> O tour mostra cada parte da bancada em 1 minuto. O manual explica tudo e traz testes prontos.</p>
@@ -365,7 +386,7 @@
               <span class="eyebrow">VOLUME</span>
               <strong id="volume-value"></strong>
               <span class="small">mL</span>
-              <span class="small capacity">capacidade<br>5,00 mL</span>
+              <span class="small capacity">capacidade<br><span id="capacity-value">5,00</span> mL</span>
               <span id="temperature-value" class="temperature-readout" hidden></span>
             </div>
           </div>
@@ -391,7 +412,13 @@
         </section>
 
         <section id="overview-view" class="overview-view" aria-labelledby="overview-title" hidden>
-          <div class="overview-heading"><h1 id="overview-title">Sua bancada</h1><p>Toque em um tubo para editar.</p></div>
+          <div class="overview-heading"><h1 id="overview-title" tabindex="-1">Sua bancada</h1><p>Toque em um tubo para editar.</p></div>
+          <div id="segredo" class="segredo" hidden>
+            <p class="segredo-titulo"><span class="segredo-faixa-cores" aria-hidden="true"></span>Descoberta secreta: <strong>Arco-íris do pH</strong></p>
+            <p>O indicador universal mistura vários indicadores: cada faixa de pH ganha uma cor, do vermelho (ácido forte) ao roxo (base forte). Estes 7 tubos vão do pH 1 ao 13. “Desfazer” volta aos tubos de antes.</p>
+            <ol id="segredo-faixa" class="segredo-faixa"></ol>
+            <button type="button" class="quiet-btn" id="segredo-fechar">Fechar</button>
+          </div>
           <div id="overview-grid" class="overview-grid"></div>
         </section>
 
@@ -407,14 +434,16 @@
 
       <aside id="ver-panel" class="ver-panel" aria-labelledby="ver-title">
         <div class="trilho" id="trilho-ver" aria-label="Painel VER recolhido" role="group" hidden></div>
-        <div class="ver-cabecalho"><button type="button" class="recolher-btn" data-recolher="ver-panel" aria-controls="ver-panel" aria-expanded="true" aria-label="Recolher painel VER" title="Recolher painel VER"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M5 6v12"/></svg></button><h2 id="ver-title" class="eyebrow">VER</h2><a class="ajuda-link" href="#/manual/ver" aria-label="Ajuda: painel VER" title="Ajuda: painel VER">?</a></div>
-        <div id="ver-tabs" class="ver-tabs" role="tablist" aria-labelledby="ver-title">
-          <button type="button" role="tab" id="tab-grafico" data-ver="grafico" aria-controls="ver-conteudo">Gráfico</button>
-          <button type="button" role="tab" id="tab-particulas" data-ver="particulas" aria-controls="ver-conteudo">Partículas</button>
-          <button type="button" role="tab" id="tab-equacao" data-ver="equacao" aria-controls="ver-conteudo">Equação</button>
-          <button type="button" role="tab" id="tab-historico" data-ver="historico" aria-controls="ver-conteudo">Histórico</button>
+        <div class="painel-conteudo">
+          <div class="ver-cabecalho"><button type="button" class="recolher-btn" data-recolher="ver-panel" aria-controls="ver-panel" aria-expanded="true" aria-label="Recolher painel VER" title="Recolher painel VER"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m10 6 6 6-6 6M5 6v12"/></svg></button><h2 id="ver-title" class="eyebrow">VER</h2><a class="ajuda-link" href="#/manual/ver" aria-label="Ajuda: painel VER" title="Ajuda: painel VER">?</a><button type="button" class="fechar-flutuante" aria-label="Fechar cartão" title="Fechar (Esc)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button></div>
+          <div id="ver-tabs" class="ver-tabs" role="tablist" aria-labelledby="ver-title">
+            <button type="button" role="tab" id="tab-grafico" data-ver="grafico" aria-controls="ver-conteudo">Gráfico</button>
+            <button type="button" role="tab" id="tab-particulas" data-ver="particulas" aria-controls="ver-conteudo">Partículas</button>
+            <button type="button" role="tab" id="tab-equacao" data-ver="equacao" aria-controls="ver-conteudo">Equação</button>
+            <button type="button" role="tab" id="tab-historico" data-ver="historico" aria-controls="ver-conteudo">Histórico</button>
+          </div>
+          <div id="ver-conteudo" class="ver-conteudo" role="tabpanel" tabindex="0"></div>
         </div>
-        <div id="ver-conteudo" class="ver-conteudo" role="tabpanel" tabindex="0"></div>
       </aside>
     </div>
   </main>
@@ -661,52 +690,53 @@
   <div id="toast" role="status" aria-live="polite" hidden></div>
   <div id="announcer" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
-  <script src="js/core/namespace.js?v=0.5.0"></script>
-  <script src="js/core/util.js?v=0.5.0"></script>
-  <script src="js/data/catalogo.js?v=0.5.0"></script>
-  <script src="js/data/cotidiano.js?v=0.5.0"></script>
-  <script src="js/data/sais.js?v=0.5.0"></script>
-  <script src="js/data/ambiente-saude.js?v=0.5.0"></script>
-  <script src="js/data/funcoes.js?v=0.5.0"></script>
-  <script src="js/simulation/quimica.js?v=0.5.0"></script>
-  <script src="js/core/estado.js?v=0.5.0"></script>
-  <script src="js/ui/abertura.js?v=0.5.0"></script>
-  <script src="js/core/loja.js?v=0.5.0"></script>
-  <script src="js/core/progresso.js?v=0.5.0"></script>
-  <script src="js/core/roteador.js?v=0.5.0"></script>
-  <script src="js/data/missoes.js?v=0.5.0"></script>
-  <script src="js/data/trilhas.js?v=0.5.0"></script>
-  <script src="js/data/manual.js?v=0.5.0"></script>
-  <script src="js/simulation/motor-missoes.js?v=0.5.0"></script>
-  <script src="js/ui/tubo.js?v=0.5.0"></script>
-  <script src="js/ui/regua-ph.js?v=0.5.0"></script>
-  <script src="js/ui/grafico.js?v=0.5.0"></script>
-  <script src="js/ui/lupa.js?v=0.5.0"></script>
-  <script src="js/ui/equacao.js?v=0.5.0"></script>
-  <script src="js/ui/som.js?v=0.5.0"></script>
-  <script src="js/ui/conta-gotas.js?v=0.5.0"></script>
-  <script src="js/ui/seletores.js?v=0.5.0"></script>
-  <script src="js/ui/prateleira.js?v=0.5.0"></script>
-  <script src="js/ui/render.js?v=0.5.0"></script>
-  <script src="js/ui/gaveta.js?v=0.5.0"></script>
-  <script src="js/ui/trilho.js?v=0.5.0"></script>
-  <script src="js/ui/tour.js?v=0.5.0"></script>
-  <script src="js/telas/bancada.js?v=0.5.0"></script>
-  <script src="js/telas/laboratorio.js?v=0.5.0"></script>
-  <script src="js/telas/missao.js?v=0.5.0"></script>
-  <script src="js/telas/inicio.js?v=0.5.0"></script>
-  <script src="js/telas/aprender.js?v=0.5.0"></script>
-  <script src="js/telas/desafios.js?v=0.5.0"></script>
-  <script src="js/telas/detetive.js?v=0.5.0"></script>
-  <script src="js/telas/titulacao.js?v=0.5.0"></script>
-  <script src="js/telas/trunfo.js?v=0.5.0"></script>
-  <script src="js/telas/regua.js?v=0.5.0"></script>
-  <script src="js/telas/construtor.js?v=0.5.0"></script>
-  <script src="js/telas/professor.js?v=0.5.0"></script>
-  <script src="js/telas/caderno.js?v=0.5.0"></script>
-  <script src="js/telas/manual.js?v=0.5.0"></script>
-  <script src="js/a11y/preferencias.js?v=0.5.0"></script>
-  <script src="js/init/pwa.js?v=0.5.0"></script>
-  <script src="js/init/app.js?v=0.5.0"></script>
+  <script src="js/core/namespace.js?v=0.5.1"></script>
+  <script src="js/core/util.js?v=0.5.1"></script>
+  <script src="js/data/catalogo.js?v=0.5.1"></script>
+  <script src="js/data/cotidiano.js?v=0.5.1"></script>
+  <script src="js/data/sais.js?v=0.5.1"></script>
+  <script src="js/data/ambiente-saude.js?v=0.5.1"></script>
+  <script src="js/data/funcoes.js?v=0.5.1"></script>
+  <script src="js/simulation/quimica.js?v=0.5.1"></script>
+  <script src="js/core/estado.js?v=0.5.1"></script>
+  <script src="js/ui/abertura.js?v=0.5.1"></script>
+  <script src="js/core/loja.js?v=0.5.1"></script>
+  <script src="js/core/progresso.js?v=0.5.1"></script>
+  <script src="js/core/roteador.js?v=0.5.1"></script>
+  <script src="js/data/missoes.js?v=0.5.1"></script>
+  <script src="js/data/trilhas.js?v=0.5.1"></script>
+  <script src="js/data/manual.js?v=0.5.1"></script>
+  <script src="js/simulation/motor-missoes.js?v=0.5.1"></script>
+  <script src="js/ui/tubo.js?v=0.5.1"></script>
+  <script src="js/ui/regua-ph.js?v=0.5.1"></script>
+  <script src="js/ui/grafico.js?v=0.5.1"></script>
+  <script src="js/ui/lupa.js?v=0.5.1"></script>
+  <script src="js/ui/equacao.js?v=0.5.1"></script>
+  <script src="js/ui/som.js?v=0.5.1"></script>
+  <script src="js/ui/conta-gotas.js?v=0.5.1"></script>
+  <script src="js/ui/seletores.js?v=0.5.1"></script>
+  <script src="js/ui/prateleira.js?v=0.5.1"></script>
+  <script src="js/ui/render.js?v=0.5.1"></script>
+  <script src="js/ui/gaveta.js?v=0.5.1"></script>
+  <script src="js/ui/trilho.js?v=0.5.1"></script>
+  <script src="js/ui/tour.js?v=0.5.1"></script>
+  <script src="js/ui/segredo.js?v=0.5.1"></script>
+  <script src="js/telas/bancada.js?v=0.5.1"></script>
+  <script src="js/telas/laboratorio.js?v=0.5.1"></script>
+  <script src="js/telas/missao.js?v=0.5.1"></script>
+  <script src="js/telas/inicio.js?v=0.5.1"></script>
+  <script src="js/telas/aprender.js?v=0.5.1"></script>
+  <script src="js/telas/desafios.js?v=0.5.1"></script>
+  <script src="js/telas/detetive.js?v=0.5.1"></script>
+  <script src="js/telas/titulacao.js?v=0.5.1"></script>
+  <script src="js/telas/trunfo.js?v=0.5.1"></script>
+  <script src="js/telas/regua.js?v=0.5.1"></script>
+  <script src="js/telas/construtor.js?v=0.5.1"></script>
+  <script src="js/telas/professor.js?v=0.5.1"></script>
+  <script src="js/telas/caderno.js?v=0.5.1"></script>
+  <script src="js/telas/manual.js?v=0.5.1"></script>
+  <script src="js/a11y/preferencias.js?v=0.5.1"></script>
+  <script src="js/init/pwa.js?v=0.5.1"></script>
+  <script src="js/init/app.js?v=0.5.1"></script>
 </body>
 </html>

@@ -1,4 +1,4 @@
-# Arquitetura do SIAB 0.5 — guia para quem está começando
+# Arquitetura do SIAB 0.5.1 — guia para quem está começando
 
 Este guia explica como o código está organizado e como fazer as mudanças mais
 comuns: criar uma missão, acrescentar um frasco à prateleira e criar um desafio.
@@ -58,6 +58,39 @@ escolha fica no armazenamento local `siab_modo`.
 - Uma tela com `completo: true` (por exemplo `SIAB.telas.desafios`) leva à
   bancada no modo bancada. Com `ligaCompleto: true` (a tela da aula), o
   endereço liga o modo completo sozinho.
+
+### Vidraria
+
+`SIAB.state.vidraria` vale `'tubo'` (padrão, e não fica salvo), `'bequer'` ou
+`'erlenmeyer'`. Os nomes e dicas estão em `SIAB.VIDRARIAS` (`js/core/estado.js`)
+e os desenhos, em `SIAB.VIDRO` (`js/ui/tubo.js`). Cada forma diz a altura do
+líquido para cada fração do volume: tubo e béquer são cilindros (reta); o
+erlenmeyer calcula o volume de um cone fatia por fatia, por isso as marcas não
+ficam igualmente espaçadas. Um tubo pode ter vidraria e capacidade próprias
+(`t.vidraria`, `t.capacidade`): é o caso do béquer de 50 mL da mistura geral.
+Use `SIAB.capacidade(t)` em vez de `SIAB.CAPACITY_ML`.
+
+### Painéis recolhidos (trilho)
+
+`js/ui/trilho.js` segue o trilho do SIMA: recolhido, cada ícone abre só uma
+`.painel-secao` (Nível, Vidraria, Frascos, Indicador, Ajustes, Ações) num
+cartão flutuante (`.flutuando`), ou a aba escolhida do VER. `SIAB.trilho.mostrar(painel, parte)`
+serve aos dois casos: flutua se estiver recolhido, rola até a parte se não. O
+tour chama `suspender()` e `retomar()`.
+
+### Mistura de vários componentes (motor)
+
+Um tubo pode ter `componentes: [{ id, concentration, volume, dilution }]` no
+lugar da solução inicial. O balanço de cargas soma todos, cada um diluído pelo
+volume total. `indicadores: [{ id, fracao }]` guarda vários indicadores, e
+`SIAB.chem.colorMix` mistura as cores na proporção de cada um.
+`SIAB.misturarTubos(tubos)` (função pura, em `estado.js`) junta tudo o que há
+nos tubos; os testes estão em `tests/mistura.test.cjs`.
+
+### Segredos
+
+`js/ui/segredo.js` guarda os dois segredos (Arco-íris do pH e Mistura geral),
+descritos no comentário do topo do arquivo. Eles não aparecem no manual.
 
 ### A bancada começa vazia
 
@@ -147,8 +180,8 @@ para salvar o recorde e anotar no caderno. Depois:
 
 | Comando | O que faz |
 | --- | --- |
-| `npm test` | química, amostras, sais e ambiente, todas as missões e o PWA (sem navegador) |
-| `npm run test:e2e` | 104 testes no Chromium: bancada (começando vazia), 14 missões, 5 desafios, professor, caderno, menu ☰, modos, acessibilidade, trilhos, tour, animação de abertura, celular, uso sem internet e atualização |
+| `npm test` | química, amostras, sais e ambiente, todas as missões, manual, mistura geral e o PWA (sem navegador) |
+| `npm run test:e2e` | 108 testes no Chromium: bancada (começando vazia), vidraria, 14 missões, 5 desafios, professor, caderno, menu ☰, modos, acessibilidade, painéis recolhidos, tour, animação de abertura, segredos, celular, uso sem internet e atualização |
 | `npm start` | servidor local em http://localhost:8080 |
 | `npm run build` | gera um HTML único (sem instalação como app) |
 
@@ -160,12 +193,12 @@ O navegador guarda arquivos no cache. Se o `index.html` for novo e o `app.js`
 continuar antigo, o app quebra. Para evitar isso, a versão aparece em três
 lugares, que precisam ser iguais:
 
-1. `js/core/namespace.js`: `version: '0.5.0'`;
-2. `index.html`: o final `?v=0.5.0` de cada `<script>` e do CSS;
-3. `sw.js`: `const VERSAO = 'siab-0.5.0'`.
+1. `js/core/namespace.js`: `version: '0.5.1'`;
+2. `index.html`: o final `?v=0.5.1` de cada `<script>` e do CSS;
+3. `sw.js`: `const VERSAO = 'siab-0.5.1'`.
 
 Ao publicar, troque os três (no `index.html`, use "substituir tudo" de
-`?v=0.5.0` pela versão nova). Arquivo `.js` novo? Acrescente também na lista
+`?v=0.5.1` pela versão nova). Arquivo `.js` novo? Acrescente também na lista
 `ARQUIVOS` do `sw.js`. O `npm test` avisa se algum ficou diferente. O
 service worker novo baixa tudo direto do servidor (`cache: 'reload'`), assume
 sozinho e a página mostra "Recarregar".

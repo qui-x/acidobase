@@ -672,11 +672,13 @@ async function teste(nome, fn) {
     for (const id of ['#menu-btn', '#prepare-btn', '#access-btn']) assert.equal(await m.isVisible(id), true, id);
     const altura = await estado(m, () => document.querySelector('.app-header').getBoundingClientRect().height);
     assert.ok(altura <= 60, `cabeçalho com ${altura}px`);
+    // Nome por extenso embaixo da sigla, em até duas linhas, sem cortar.
+    assert.equal(await texto(m, '#header-nome'), 'Simulador Interativo de Ácidos e Bases');
+    const nome = await estado(m, () => { const e = document.querySelector('#header-nome'); return { linhas: Math.round(e.getBoundingClientRect().height / parseFloat(getComputedStyle(e).lineHeight)), cortado: e.scrollWidth > e.clientWidth + 1 }; });
+    assert.ok(nome.linhas <= 2 && !nome.cortado, JSON.stringify(nome));
     await ir(m, '#/caderno');
     assert.equal(await m.isVisible('#prepare-btn'), false);
-    assert.equal(await texto(m, '#header-sub'), 'Caderno de laboratório');
     await ir(m, '#/laboratorio');
-    assert.equal(await texto(m, '#header-sub'), 'Bancada de testes');
   });
   await teste('celular: barra de chips fixa leva ao painel VER na aba escolhida', async () => {
     await ir(m, '#/laboratorio');
@@ -764,7 +766,8 @@ async function teste(nome, fn) {
     await b.click('.drawer-link[data-nav="manual"]');
     await b.waitForFunction(() => SIAB.rota.nome === 'manual');
     assert.equal(await estado(b, () => document.querySelector('#app-drawer').open), false);
-    assert.equal(await texto(b, '#header-sub'), 'Manual de uso');
+    assert.equal(await b.getAttribute('.main-nav a[data-nav="manual"]', 'aria-current'), 'page');
+    assert.equal(await texto(b, '#header-nome'), 'Simulador Interativo de Ácidos e Bases');
     // Toque fora (no fundo escurecido) também fecha.
     await b.click('#menu-btn');
     await b.mouse.click(1200, 450);
@@ -808,39 +811,87 @@ async function teste(nome, fn) {
     await b.evaluate(() => SIAB.definirModo('bancada'));
     await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
   });
-  await teste('painéis recolhem em trilho de ícones, reabrem na parte escolhida e ficam salvos', async () => {
+  await teste('painéis recolhidos como no SIMA: o ícone traz só aquela parte flutuando, sem mudar a bancada', async () => {
     await ir(b, '#/laboratorio');
     assert.equal(await estado(b, () => SIAB.state.tubes.length), 0);
-    await b.click('[data-recolher="controls"]');
-    // Bancada vazia: o trilho mostra só nível e frascos.
-    assert.deepEqual(await estado(b, () => [...document.querySelectorAll('#trilho-controls [data-item]')].map(x => x.dataset.item)), ['nivel', 'frascos']);
-    await b.click('#trilho-controls [data-item="frascos"]');
-    assert.equal(await estado(b, () => document.activeElement.id), 'shelf-search');
-    await b.click('#shelf [data-solution="lemon"]');
-    const largura = () => estado(b, () => document.querySelector('#experiment').getBoundingClientRect().width);
+    const largura = () => estado(b, () => Math.round(document.querySelector('#experiment').getBoundingClientRect().width));
+    const flutuante = () => estado(b, () => JSON.stringify(SIAB.trilho.flutuante));
     const antes = await largura();
     await b.click('[data-recolher="controls"]');
+    const recolhida = await largura();
+    assert.ok(recolhida > antes + 200, 'a bancada ganha espaço');
+    // Bancada vazia: o trilho mostra nível, vidraria e frascos.
+    assert.deepEqual(await estado(b, () => [...document.querySelectorAll('#trilho-controls [data-item]')].map(x => x.dataset.item)), ['nivel', 'vidraria', 'frascos']);
+    await b.click('#trilho-controls [data-item="frascos"]');
+    assert.equal(await flutuante(), '{"painel":"controls","item":"frascos"}');
+    assert.equal(await largura(), recolhida, 'o cartão flutua: a bancada não muda de largura');
+    assert.equal(await estado(b, () => document.activeElement.id), 'shelf-search');
+    assert.equal(await b.isVisible('#shelf'), true);
+    assert.equal(await b.isVisible('#nivel-grupo'), false, 'só a parte escolhida aparece');
+    assert.equal(await b.getAttribute('#trilho-controls [data-item="frascos"]', 'aria-expanded'), 'true');
+    await b.click('#shelf [data-solution="lemon"]');
+    assert.equal(await flutuante(), '{"painel":"controls","item":"frascos"}', 'continua aberto depois de escolher');
+    // Um toque na bancada fecha o cartão da prateleira.
+    await b.click('#experiment', { position: { x: 700, y: 500 } });
+    assert.equal(await flutuante(), 'null');
+    // Com um tubo, o trilho ganha indicador e ações; Esc fecha e devolve o foco ao ícone.
+    await b.click('#trilho-controls [data-item="indicador"]');
+    assert.equal(await estado(b, () => document.activeElement.closest('#indicator-group') !== null), true);
+    await b.keyboard.press('Escape');
+    assert.equal(await flutuante(), 'null');
+    assert.equal(await estado(b, () => document.activeElement.getAttribute('aria-label')), 'Indicador');
+    // VER flutuando continua aberto enquanto se goteja; o ícone da aba em uso fica marcado.
     await b.click('[data-recolher="ver-panel"]');
-    assert.equal(await b.isVisible('#trilho-controls'), true);
-    assert.equal(await b.isVisible('#shelf'), false);
-    assert.equal(await estado(b, () => document.activeElement.closest('#trilho-ver') !== null), true);
-    assert.ok(await largura() > antes + 500, 'a bancada ganha espaço');
+    await b.click('#trilho-ver [data-item="grafico"]');
+    await b.click('#drop5-btn');
+    assert.equal(await flutuante(), '{"painel":"ver-panel","item":"grafico"}');
+    assert.equal(await b.getAttribute('#trilho-ver [data-item="grafico"]', 'aria-current'), 'true');
+    await b.click('#trilho-ver [data-item="grafico"]');
+    assert.equal(await flutuante(), 'null', 'o mesmo ícone fecha');
+    // O × do cartão fecha; a escolha de recolher fica salva; o primeiro ícone fixa de novo.
+    await b.click('#trilho-ver [data-item="particulas"]');
+    assert.equal(await estado(b, () => SIAB.state.verTab), 'particulas');
+    await b.click('#ver-panel .fechar-flutuante');
+    assert.equal(await flutuante(), 'null');
     await b.reload();
     await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
-    // A escolha fica salva; a bancada volta vazia (não é guardada entre visitas).
     assert.equal(await b.isVisible('#trilho-controls'), true);
-    assert.equal(await b.locator('#trilho-controls [data-item="indicador"]').count(), 0);
-    await b.click('#trilho-controls [data-item="frascos"]');
-    await b.click('#shelf [data-solution="lemon"]');
-    await b.click('[data-recolher="controls"]');
-    await b.click('#trilho-controls [data-item="indicador"]');
+    assert.equal(await b.isVisible('#trilho-ver'), true);
+    await b.click('#trilho-controls [data-fixar]');
+    await b.click('#trilho-ver [data-fixar]');
     assert.equal(await b.isVisible('#shelf'), true);
-    assert.equal(await estado(b, () => document.activeElement.closest('#indicator-group') !== null), true);
-    await b.click('#trilho-ver [data-item="equacao"]');
-    assert.equal(await estado(b, () => SIAB.state.verTab), 'equacao');
-    assert.equal(await estado(b, () => document.activeElement.id), 'tab-equacao');
-    assert.equal(await b.isVisible('#trilho-ver'), false);
     assert.equal(await estado(b, () => JSON.stringify(SIAB.trilho.estado)), '{"controls":false,"ver-panel":false}');
+  });
+  await teste('vidraria: começa no tubo de ensaio; béquer e erlenmeyer mudam o desenho, não a química', async () => {
+    await ir(b, '#/laboratorio');
+    assert.equal(await estado(b, () => SIAB.state.vidraria), 'tubo');
+    assert.equal(await b.isChecked('input[name="vidraria"][value="tubo"]'), true);
+    if (!(await estado(b, () => SIAB.state.tubes.length))) await b.click('#vazia-agua');
+    await b.click('#shelf [data-solution="hcl"]');
+    const ph = await estado(b, () => SIAB.chem.solve(SIAB.current()).pH);
+    await b.check('input[name="vidraria"][value="bequer"]', { force: true });
+    assert.equal(await texto(b, '#tube-index'), await estado(b, () => `BÉQUER ${SIAB.state.tubes.indexOf(SIAB.current()) + 1} DE ${SIAB.state.tubes.length}`));
+    assert.match(await texto(b, '#tube-name'), /^Béquer \d+$/);
+    assert.equal(await b.locator('#large-tube svg.vidro-bequer').count(), 1);
+    assert.match(await texto(b, '#vidraria-dica'), /Béquer/);
+    await b.check('input[name="vidraria"][value="erlenmeyer"]', { force: true });
+    assert.match(await texto(b, '#tube-name'), /^Erlenmeyer \d+$/);
+    // Erlenmeyer é cônico: as marcas de 1 a 5 mL se afastam perto do gargalo.
+    const ys = await estado(b, () => [...document.querySelectorAll('#large-tube .tube-tick')].map(p => parseFloat(p.getAttribute('d').split(' ')[1])));
+    const passos = ys.slice(1).map((y, i) => ys[i] - y);
+    assert.equal(ys.length, 5);
+    assert.ok(passos.every((p, i) => i === 0 || p > passos[i - 1]), `espaços ${passos.map(p => p.toFixed(1))}`);
+    assert.equal(await estado(b, () => SIAB.chem.solve(SIAB.current()).pH), ph, 'o pH não muda com a vidraria');
+    // Nome escolhido pelo estudante não muda; ao recarregar, volta o tubo de ensaio.
+    await b.click('#rename-btn');
+    await b.fill('#new-name', 'Meu teste');
+    await b.click('#rename-form button[type="submit"]');
+    await b.check('input[name="vidraria"][value="tubo"]', { force: true });
+    assert.equal(await texto(b, '#tube-name'), 'Meu teste');
+    await b.check('input[name="vidraria"][value="bequer"]', { force: true });
+    await b.reload();
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio');
+    assert.equal(await estado(b, () => SIAB.state.vidraria), 'tubo');
   });
   await teste('tour guiado: passos com contorno, voltar, próximo e Esc', async () => {
     await b.evaluate(() => SIAB.tour.iniciar());
@@ -999,6 +1050,80 @@ async function teste(nome, fn) {
     await b.evaluate(() => { window.print = () => { window.__impresso = true; }; });
     await b.click('#manual-imprimir');
     assert.ok(await estado(b, () => window.__impresso));
+  });
+  await teste('segredo: 7 toques no logotipo montam o Arco-íris do pH (indicador universal, pH 1 a 13)', async () => {
+    await ir(b, '#/caderno');
+    const antes = await estado(b, () => SIAB.state.tubes.map(t => t.name));
+    for (let i = 0; i < 7; i++) await b.click('.header-brand');
+    await b.waitForFunction(() => SIAB.rota.nome === 'laboratorio' && SIAB.state.tubes.length === 7);
+    const tubos = await estado(b, () => SIAB.state.tubes.map(t => ({ ind: t.indicator, pH: SIAB.chem.solve(t).pH, cor: SIAB.chem.liquid(t, false, SIAB.chem.solve(t)).name })));
+    assert.ok(tubos.every(t => t.ind === 'universal'));
+    assert.ok(tubos.every((t, i) => i === 0 || t.pH > tubos[i - 1].pH), 'pH crescente');
+    assert.ok(tubos[0].pH < 1.5 && tubos[6].pH > 12.5);
+    assert.equal(new Set(tubos.map(t => t.cor)).size, 7, 'sete cores diferentes');
+    assert.equal(await estado(b, () => SIAB.state.view), 'overview');
+    assert.equal(await b.isVisible('#segredo'), true);
+    assert.equal(await b.locator('#segredo-faixa li').count(), 7);
+    assert.ok(await estado(b, () => SIAB.progresso.dados.caderno.some(n => n.tipo === 'descoberta')));
+    // Com a bancada vazia antes, "Desfazer" volta ao vazio; o aviso some fora da visão geral.
+    await b.click('#focus-tab');
+    assert.equal(await b.isVisible('#segredo'), false);
+    await b.click('#undo-btn');
+    assert.deepEqual(await estado(b, () => SIAB.state.tubes.map(t => t.name)), antes);
+  });
+  await teste('segredo: "arco-íris" na busca mostra o frasco secreto; 6 toques não bastam', async () => {
+    await ir(b, '#/laboratorio');
+    await b.fill('#shelf-search', 'arco');
+    assert.equal(await b.locator('[data-segredo]').count(), 0);
+    await b.fill('#shelf-search', 'Arco-íris');
+    await b.click('[data-segredo]');
+    await b.waitForFunction(() => SIAB.state.tubes.length === 7 && SIAB.state.view === 'overview');
+    assert.equal(await b.inputValue('#shelf-search'), '');
+    assert.equal(await estado(b, () => SIAB.progresso.dados.caderno.filter(n => n.tipo === 'descoberta').length), 1, 'a nota não se repete');
+    await b.click('#segredo-fechar');
+    assert.equal(await b.isVisible('#segredo'), false);
+    await b.click('#focus-tab');
+    await b.click('#undo-btn');
+    const n = await estado(b, () => SIAB.state.tubes.length);
+    for (let i = 0; i < 6; i++) await b.click('.header-brand');
+    await b.waitForTimeout(1600);
+    await b.click('.header-brand');
+    assert.equal(await estado(b, () => SIAB.state.tubes.length), n, 'com pausa, a contagem recomeça');
+  });
+  await teste('segredo: "misturar" despeja todos os tubos num béquer de 50 mL e o motor calcula a mistura', async () => {
+    await ir(b, '#/laboratorio');
+    await b.evaluate(() => { SIAB.state.tubes = []; SIAB.state.activeId = null; SIAB.loja.avisar(); });
+    await b.click('#vazia-agua');
+    await b.click('#shelf [data-solution="hcl"]');
+    await b.fill('#shelf-search', 'misturar');
+    await b.click('[data-segredo="mistura"]');
+    await b.waitForFunction(() => /pelo menos 2 tubos/.test(document.querySelector('#toast').textContent));
+    assert.equal(await estado(b, () => SIAB.state.tubes.length), 1);
+    await b.click('#add-tube-btn');
+    await b.click('#shelf [data-solution="naoh"]');
+    await b.check('#indicator-chips input[value="btb"]', { force: true });
+    await b.fill('#shelf-search', 'Misturar tudo');
+    await b.click('[data-segredo="mistura"]');
+    await b.waitForFunction(() => SIAB.state.tubes.length === 1 && SIAB.current().componentes?.length === 2);
+    const m = await estado(b, () => { const t = SIAB.current(), r = SIAB.chem.solve(t); return { nome: t.name, vidro: t.vidraria, cap: t.capacidade, pH: r.pH, vol: r.volume, cor: SIAB.chem.liquid(t, false, r).name }; });
+    assert.equal(m.nome, 'Mistura');
+    assert.equal(m.vidro, 'bequer');
+    assert.equal(m.cap, 50);
+    assert.ok(Math.abs(m.pH - 7) < .01, `HCl + NaOH na mesma quantidade: pH ${m.pH}`);
+    assert.equal(m.vol, 2);
+    assert.equal(m.cor, 'verde', 'bromotimol em meio neutro');
+    await b.waitForSelector('#mistura-aviso:not([hidden])', { timeout: 5000 });
+    assert.equal(await texto(b, '#capacity-value'), '50,00');
+    await b.click('#tab-equacao');
+    assert.match(await texto(b, '#ver-conteudo'), /Na mistura · 2 componentes[\s\S]*H₃O⁺ \+ OH⁻ → 2 H₂O/);
+    assert.ok(await estado(b, () => SIAB.progresso.dados.caderno.some(n => n.titulo === 'Descoberta secreta · Mistura geral')));
+    // Dá para continuar gotejando no béquer; "Desfazer" devolve os dois tubos.
+    await b.click('#drop5-btn');
+    assert.equal(await estado(b, () => SIAB.current().additions.length), 5);
+    await b.click('#undo-btn');
+    await b.click('#undo-btn');
+    assert.equal(await estado(b, () => SIAB.state.tubes.length), 2);
+    assert.equal(await b.isVisible('#mistura-aviso'), false);
   });
   await ctxB.close();
 

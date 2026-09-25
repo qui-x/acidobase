@@ -78,7 +78,10 @@ SIAB.tour = (() => {
   }
 
   function comecar() {
+    // Painéis recolhidos ficam fixos durante o tour (os alvos moram neles).
+    SIAB.trilho.suspender();
     passos = PASSOS.filter(alvoDe);
+    if (!passos.length) SIAB.trilho.retomar();
     if (!passos.length) return;
     $('tour').showModal();
     mostrar(0);
@@ -105,6 +108,7 @@ SIAB.tour = (() => {
     $('tour-voltar').addEventListener('click', () => mostrar(Math.max(0, atual - 1)));
     $('tour-pular').addEventListener('click', encerrar);
     $('tour').addEventListener('close', () => {
+      SIAB.trilho.retomar();
       SIAB.ajuda.marcarVisto();
       $('boas-vindas').hidden = true;
       // O foco volta ao botão que abriu o tour; se ele sumiu, vai para o nome do tubo.

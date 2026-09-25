@@ -55,12 +55,28 @@ SIAB.equacao = (() => {
     const b = { id: tube.titrant, ...SIAB.solutions[tube.titrant] };
     const blocos = [];
     const ionizacao = s => s.ionization || (s.kind === 'sample' ? 'Mistura com equilíbrios representativos (ver nota da amostra).' : '');
-    blocos.push(`<section class="eq-bloco"><h3>No tubo · ${SIAB.escape(a.name)}</h3><p class="eq-formula">${SIAB.escape(ionizacao(a))}</p>${a.hydrolysis ? `<p class="eq-formula">${SIAB.escape(a.hydrolysis)}</p>` : ''}${a.explain ? `<p class="small">${SIAB.escape(a.explain)}</p>` : ''}</section>`);
+    const componentes = tube.componentes || [];
+    if (componentes.length) {
+      // Mistura geral: o que foi despejado e a neutralização entre ácidos e bases.
+      const papel = s => (['strongAcid', 'weakAcid'].includes(s.kind) ? 'ácido' : ['strongBase', 'weakBase', 'suspension'].includes(s.kind) ? 'base' : '');
+      const itens = componentes.map(x => {
+        const s = SIAB.solutions[x.id];
+        return `<li><strong>${SIAB.escape(SIAB.solutionSummary(x.id, x.concentration, x.dilution))}</strong> · ${SIAB.format(x.volume)} mL${papel(s) ? ` · ${papel(s)}` : ''}${ionizacao(s) ? `<br><span class="eq-formula">${SIAB.escape(ionizacao(s))}</span>` : ''}</li>`;
+      }).join('');
+      blocos.push(`<section class="eq-bloco"><h3>Na mistura · ${componentes.length} componentes</h3><ul class="eq-lista">${itens}</ul></section>`);
+      const temAcido = componentes.some(x => papel(SIAB.solutions[x.id]) === 'ácido');
+      const temBase = componentes.some(x => papel(SIAB.solutions[x.id]) === 'base');
+      if (temAcido && temBase) {
+        blocos.push('<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3><p class="eq-formula">H₃O⁺ + OH⁻ → 2 H₂O</p><p class="small">Ácidos e bases se neutralizam na proporção das quantidades em mol, não do número de tubos. O pH final mostra o que sobrou em excesso.</p></section>');
+      }
+    } else {
+      blocos.push(`<section class="eq-bloco"><h3>No tubo · ${SIAB.escape(a.name)}</h3><p class="eq-formula">${SIAB.escape(ionizacao(a))}</p>${a.hydrolysis ? `<p class="eq-formula">${SIAB.escape(a.hydrolysis)}</p>` : ''}${a.explain ? `<p class="small">${SIAB.escape(a.explain)}</p>` : ''}</section>`);
+    }
     if (result.added > 0 || tube.titrant !== 'water') {
       blocos.push(`<section class="eq-bloco"><h3>No conta-gotas · ${SIAB.escape(b.name)}</h3><p class="eq-formula">${SIAB.escape(ionizacao(b))}</p></section>`);
     }
-    const ionica = reacaoIonica(a, b);
-    const completa = reacaoCompleta(a, b);
+    const ionica = componentes.length ? null : reacaoIonica(a, b);
+    const completa = componentes.length ? null : reacaoCompleta(a, b);
     if (ionica || completa) {
       blocos.push(`<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3>${completa ? `<p class="eq-formula">${SIAB.escape(completa.equacao)}</p><p class="small">Sal formado: ${SIAB.escape(completa.nomeSal)}.</p>` : ''}${ionica ? `<p class="eq-formula">${SIAB.escape(ionica)}</p><p class="small">Equação iônica: só as partículas que reagem.</p>` : ''}</section>`);
     }

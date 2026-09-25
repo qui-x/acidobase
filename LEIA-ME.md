@@ -1,4 +1,4 @@
-# SIAB — A química das cores · versão 0.5.0
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.1
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.0`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.1`), o que evita
 essa mistura.
 
 ## O que há na versão 0.5
@@ -33,13 +33,19 @@ essa mistura.
 O SIAB abre na **bancada de testes**, e ela **começa vazia**: você toca num
 frasco da prateleira e ele vira o "Tubo 1".
 
+- **Vidraria:** tubo de ensaio (sempre o padrão ao abrir), béquer ou
+  erlenmeyer. A química é a mesma; muda o desenho. No erlenmeyer, que é
+  cônico, as marcas de 1 a 5 mL se afastam perto do gargalo, como no vidro de
+  verdade.
+
 - **Animação de abertura:** ao abrir o app ou recarregar a página, cinco tubos
   de ensaio (fenolftaleína, bromotimol, repolho roxo, metilorange e universal)
   recebem gotas e trocam de composto, de ácido a neutro e depois a básico. As
   cores e os pH vêm do próprio motor químico. Um toque ou uma tecla pula a
   animação. Ela não toca com "Reduzir animações" e pode ser desligada.
-- **Barra superior compacta** (inspirada no Laboratório Virtual): botão ☰, marca
-  com o nome da tela atual e botão de acessibilidade. No celular, também um
+- **Barra superior compacta** (inspirada no Laboratório Virtual): botão ☰, a sigla
+  SIAB com o nome por extenso (Simulador Interativo de Ácidos e Bases) e o botão
+  de acessibilidade. No celular, também um
   botão para a prateleira. Se faltar espaço (texto ampliado), os botões ficam só
   com o ícone e as abas descem para uma segunda linha.
 - **Menu ☰ (gaveta lateral):** navegar, os 10 roteiros de teste (montam com um
@@ -50,12 +56,29 @@ frasco da prateleira e ele vira o "Tubo 1".
   de Libras (VLibras, precisa de internet) e restaurar padrões.
 - **Celular:** barra de chips rolável e presa abaixo do cabeçalho, que leva ao
   painel VER. A prateleira fecha sozinha depois de escolher o frasco.
-- **Computador:** a prateleira e o painel VER recolhem num trilho de ícones. Um
-  ícone reabre o painel já na parte escolhida.
+- **Computador:** a prateleira e o painel VER recolhem num trilho de ícones,
+  como no SIMA. Um ícone traz só aquela parte, num cartão que flutua por cima
+  da bancada sem mudar o tamanho dela: dá para deixar o gráfico flutuando e
+  gotejar enquanto ele muda. O mesmo ícone, o ×, Esc ou um toque na bancada
+  fecham o cartão; o primeiro ícone fixa o painel de novo.
 - **Tour guiado da bancada:** contorna cada parte e explica em um cartão.
 - **Caderno:** a tabela de gotas fica guardada como tabela de verdade, com
   colunas, na tela, na impressão e no CSV. As notas antigas são convertidas
   sozinhas.
+
+### Segredos da bancada (para professores: não conte aos alunos)
+
+- **Arco-íris do pH:** toque 7 vezes seguidas no logotipo (7 é o pH neutro) ou
+  digite "arco-íris" na busca da prateleira. Aparecem 7 tubos com indicador
+  universal, do pH 1 ao 13.
+- **Mistura geral:** digite "misturar" na busca da prateleira ou, no celular,
+  agite o aparelho três vezes. Todos os tubos da bancada são despejados num
+  béquer de 50 mL e o motor calcula a mistura de verdade: soluções, gotas e
+  indicadores. Por exemplo, o arco-íris inteiro misturado dá pH 9,25, o pKa do
+  par NH₄⁺/NH₃ que sobra depois da neutralização.
+
+Os dois ficam no caderno como "Descoberta", e "Desfazer" volta aos tubos de
+antes.
 
 ### Como acessar missões, desafios e professor
 
@@ -122,7 +145,7 @@ e a vibração na viragem são opcionais.
 npm test            # química, sais, missões e PWA, sem navegador
 npm install         # uma vez, para os testes no navegador
 npx playwright install chromium
-npm run test:e2e    # 104 testes no Chromium: bancada, menu, modos, trilhos, tour, abertura, celular, sem internet e atualização
+npm run test:e2e    # 108 testes no Chromium: bancada, vidraria, menu, modos, painéis, tour, abertura, segredos, celular, sem internet e atualização
 ```
 
 Resultados da última validação: `tests/RESULTADOS.md`.

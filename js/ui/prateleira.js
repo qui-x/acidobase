@@ -36,7 +36,9 @@ SIAB.prateleira = (() => {
       }).join('');
       return `<div class="shelf-group"><h3 class="shelf-title">${SIAB.escape(rotulo)}</h3><div class="shelf-bottles">${botoes}</div></div>`;
     }).join('');
-    box.innerHTML = grupos || '<p class="empty-choice">Nenhum frasco com esse nome. Tente outra busca.</p>';
+    // Frasco secreto (easter egg, ver js/ui/segredo.js).
+    const secreto = SIAB.segredo?.frascoSecreto(query) || '';
+    box.innerHTML = secreto + grupos || '<p class="empty-choice">Nenhum frasco com esse nome. Tente outra busca.</p>';
   }
 
   function renderIndicadores() {

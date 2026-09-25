@@ -74,7 +74,7 @@ SIAB.bancada = (() => {
 
   /* ---------- Gotas ---------- */
   function cabeMaisUma() {
-    return !SIAB.targets(SIAB.current()).some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.CAPACITY_ML + 1e-9);
+    return !SIAB.targets(SIAB.current()).some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.capacidade(x) + 1e-9);
   }
 
   function animarGota() {
@@ -88,7 +88,7 @@ SIAB.bancada = (() => {
 
   function leitura() {
     const t = SIAB.current(), r = SIAB.chem.solve(t);
-    return { pH: r.pH, cor: SIAB.chem.color(t.indicator, r.pH).name, r };
+    return { pH: r.pH, cor: SIAB.chem.indicatorColor(t, r.pH).name, r };
   }
 
   // Uma sequência de gotas (um toque, um "segurar" ou +5) vira uma única ação de desfazer.
@@ -178,6 +178,9 @@ SIAB.bancada = (() => {
       }
       SIAB.targets(SIAB.current()).forEach(tubo => {
         if (alvo === 'tube') {
+          // Um frasco novo substitui o conteúdo (também o de uma mistura).
+          delete tubo.componentes;
+          delete tubo.indicadores;
           tubo.solution = id;
           tubo.dilution = 1;
           if (eReagente(id) && !(tubo.concentration > 0)) tubo.concentration = .01;
@@ -253,6 +256,24 @@ SIAB.bancada = (() => {
     });
     closeSheet();
     SIAB.notice(SIAB.targets(t).length > 1 ? 'Medidas aplicadas aos tubos vinculados.' : 'Medidas aplicadas. Use Desfazer para voltar.');
+  }
+
+  /* ---------- Vidraria ---------- */
+  // Troca o desenho de todos os recipientes. Nomes padrão acompanham
+  // ("Tubo 2" vira "Béquer 2"); nomes dados pelo estudante ficam como estão.
+  function trocarVidraria(valor) {
+    const s = SIAB.state;
+    if (!SIAB.VIDRARIAS[valor] || s.vidraria === valor) return;
+    const curtos = Object.values(SIAB.VIDRARIAS).map(x => x.curto).join('|');
+    const padrao = new RegExp(`^(${curtos}) (\\d+)$`);
+    s.vidraria = valor;
+    s.tubes.forEach(t => {
+      const m = t.name.match(padrao);
+      if (m && !t.vidraria) t.name = `${SIAB.VIDRARIAS[valor].curto} ${m[2]}`;
+    });
+    SIAB.render(true);
+    SIAB.loja.avisar();
+    SIAB.announce(`Vidraria: ${SIAB.VIDRARIAS[valor].nome}.`);
   }
 
   /* ---------- Tubos ---------- */
@@ -363,7 +384,7 @@ SIAB.bancada = (() => {
     const cores = t.indicator === 'none' ? [] : SIAB.chem.colorNames(t.indicator);
     $('poe-cor-grupo').hidden = !cores.length;
     $('poe-cores').innerHTML = [...cores, 'não sei'].map((nome, n) => `<label class="chip"><input type="radio" name="poe-cor" value="${SIAB.escape(nome)}" ${n === cores.length ? 'checked' : ''}><span>${SIAB.escape(nome)}</span></label>`).join('');
-    const livre = (SIAB.CAPACITY_ML - SIAB.chem.solve(t).volume) / t.dropVolume;
+    const livre = (SIAB.capacidade(t) - SIAB.chem.solve(t).volume) / t.dropVolume;
     document.querySelectorAll('input[name="poe-gotas"]').forEach(x => {
       x.disabled = Number(x.value) > livre + 1e-9;
       if (x.disabled && x.checked) x.checked = false;
@@ -394,7 +415,7 @@ SIAB.bancada = (() => {
     const t = SIAB.current();
     const feitas = gotejar(gotas);
     const r = SIAB.chem.solve(t);
-    const corReal = SIAB.chem.color(t.indicator, r.pH).name;
+    const corReal = SIAB.chem.indicatorColor(t, r.pH).name;
     const acertouMeio = meio === r.phase;
     const acertouCor = cor === 'não sei' ? null : cor === corReal;
     const marca = ok => (ok ? '✓' : '✗');
@@ -465,7 +486,7 @@ SIAB.bancada = (() => {
     $('vazia-desfazer').addEventListener('click', desfazer);
     $('vazia-prateleira').addEventListener('click', () => {
       if (mobile.matches) openSheet();
-      else SIAB.trilho.expandir('controls', 'frascos');
+      else SIAB.trilho.mostrar('controls', 'frascos');
     });
 
     $('rename-btn').addEventListener('click', () => {
@@ -498,7 +519,8 @@ SIAB.bancada = (() => {
     $('indicator-chips').addEventListener('change', evento => {
       if (evento.target.name !== 'indicador') return;
       const valor = evento.target.value;
-      SIAB.alterar('trocar indicador', () => { SIAB.current().indicator = valor; });
+      // Escolher um indicador substitui a mistura de indicadores, se houver.
+      SIAB.alterar('trocar indicador', () => { SIAB.current().indicator = valor; delete SIAB.current().indicadores; });
       SIAB.announce(`Indicador: ${SIAB.indicators[valor].name}.`);
       document.querySelector(`#indicator-chips input[value="${valor}"]`)?.focus();
     });
@@ -507,6 +529,7 @@ SIAB.bancada = (() => {
       SIAB.render(true);
       SIAB.announce(SIAB.NIVEIS[x.value]);
     }));
+    document.querySelectorAll('input[name="vidraria"]').forEach(x => x.addEventListener('change', () => trocarVidraria(x.value)));
     document.querySelectorAll('input[name="destino"]').forEach(x => x.addEventListener('change', () => {
       SIAB.state.destination = x.value;
       SIAB.prateleira.render();
@@ -570,7 +593,7 @@ SIAB.bancada = (() => {
             ['Tubo', SIAB.solutionSummary(t.solution, t.concentration, t.dilution)],
             ['Conta-gotas', SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)],
             ['Gotas', `${r.drops} (${SIAB.format(r.added)} mL)`],
-            ['Indicador', `${SIAB.indicators[t.indicator].name}: ${SIAB.chem.color(t.indicator, r.pH).name}`],
+            ['Indicador', `${SIAB.nomeIndicador(t)}: ${SIAB.chem.indicatorColor(t, r.pH).name}`],
             ['pH', SIAB.state.showPH ? SIAB.phFormat(r) : 'oculto']
           ],
           tabela: SIAB.historicoTabela(t)
@@ -604,5 +627,5 @@ SIAB.bancada = (() => {
     responsive();
   }
 
-  return { config, configurar, ligar, gotejar, colocar, selecionarTubo, openSheet, closeSheet, responsive, TODOS, mobile };
+  return { config, configurar, ligar, gotejar, colocar, selecionarTubo, trocarVidraria, openSheet, closeSheet, responsive, TODOS, mobile };
 })();
