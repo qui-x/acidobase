@@ -50,16 +50,26 @@ SIAB.selecaoTubos = (() => {
     const podeVincular = SIAB.bancada.config.controles.has('tubos');
     const primeiro = escolhidos[0];
     const mesmoGrupo = primeiro?.group && escolhidos.every(t => t.group === primeiro.group) && SIAB.targets(primeiro).length === quantidade;
+    const opcoes = opcoesVinculo();
+    const igual = quantidade >= 2 && SIAB.bancada.vinculoIgual(escolhidos, opcoes);
     $('selecao-vincular-btn').hidden = !podeVincular;
     $('selecao-desvincular-btn').hidden = !podeVincular;
-    $('selecao-vincular-btn').disabled = quantidade < 2 || Boolean(mesmoGrupo);
+    $('selecao-vincular-btn').disabled = quantidade < 2 || igual;
+    // Os mesmos tubos já vinculados, com outras partes marcadas: atualiza o vínculo.
+    $('selecao-vincular-btn').textContent = mesmoGrupo && !igual ? 'Atualizar vínculo' : 'Vincular tubos';
     $('selecao-desvincular-btn').disabled = !escolhidos.some(t => t.group);
+    $('selecao-vinculo-opcoes').hidden = !e.ativa || !podeVincular || quantidade < 2;
     $('selecao-vinculo-dica').hidden = !e.ativa || !podeVincular;
-    const referencia = escolhidos.find(t => t.id === s.activeId) || primeiro;
+    const referencia = quantidade ? SIAB.bancada.referenciaDe(escolhidos) : null;
+    const partes = [opcoes.substancia && 'a substância do tubo', opcoes.contaGotas && 'o conta-gotas'].filter(Boolean);
+    const recomecam = quantidade >= 2 ? SIAB.bancada.mudariam(escolhidos, opcoes) : [];
     $('selecao-vinculo-dica').textContent = quantidade < 2
       ? 'Marque pelo menos dois tubos para vincular o gotejamento.'
-      : mesmoGrupo ? `Os tubos selecionados já formam o ${SIAB.nomeGrupo(primeiro)}.`
-        : `Vincular reúne somente os tubos marcados, com gotas de ${SIAB.format(referencia.dropVolume)} mL (como em ${referencia.name}). Cada um mantém sua amostra, seu indicador e seu conta-gotas.`;
+      : igual ? `Os tubos selecionados já formam o ${SIAB.nomeGrupo(primeiro)}${SIAB.textoCompartilhado(primeiro) ? `, compartilhando ${SIAB.textoCompartilhado(primeiro)}` : ''}.`
+        : `Vincular reúne somente os tubos marcados, com gotas de ${SIAB.format(referencia.dropVolume)} mL (como em ${referencia.name}). `
+          + (partes.length
+            ? `Todos passam a usar ${partes.join(' e ')} de ${referencia.name}${recomecam.length ? `; ${recomecam.map(t => t.name).join(', ')} ${recomecam.length === 1 ? 'recomeça' : 'recomeçam'} as gotas` : ''}. Cada um mantém o indicador.`
+            : 'Cada um mantém sua amostra, seu indicador e seu conta-gotas.');
     $('overview-grid').classList.toggle('selecting', e.ativa);
     $('workspace').classList.toggle('selecting-tubes', e.ativa);
     const incluidos = new Set(s.relatorioIds || []);
@@ -97,6 +107,11 @@ SIAB.selecaoTubos = (() => {
     $('relatorio-selecao-resumo').textContent = idsImpressao !== null
       ? `${quantidadeImpressao} ${quantidadeImpressao === 1 ? 'tubo escolhido' : 'tubos escolhidos'} na visão geral. Cada um terá preparo, leitura, gráfico e histórico.`
       : 'Resumo da bancada e detalhes do tubo em foco. Escolha tubos na visão geral para personalizar.';
+  }
+
+  // Partes marcadas para compartilhar ao vincular (além das gotas).
+  function opcoesVinculo() {
+    return { substancia: Boolean($('vincular-substancia')?.checked), contaGotas: Boolean($('vincular-contagotas')?.checked) };
   }
 
   // O botão lateral e Ctrl+P usam a seleção em andamento, quando houver;
@@ -160,10 +175,12 @@ SIAB.selecaoTubos = (() => {
       grade.querySelector('button')?.focus();
     });
     $('selecao-todos-btn').addEventListener('click', todos);
+    // Marcar ou desmarcar uma parte atualiza o texto e o botão de vincular.
+    $('selecao-vinculo-opcoes').addEventListener('change', atualizar);
     $('selecao-cancelar-btn').addEventListener('click', () => sair(true));
     $('selecao-relatorio-btn').addEventListener('click', adicionar);
     $('selecao-vincular-btn').addEventListener('click', () => {
-      if (SIAB.bancada.vincularTubos([...normalizar().ids])) $('selecao-desvincular-btn').focus();
+      if (SIAB.bancada.vincularTubos([...normalizar().ids], opcoesVinculo())) $('selecao-desvincular-btn').focus();
     });
     $('selecao-desvincular-btn').addEventListener('click', () => {
       if (SIAB.bancada.desvincularTubos([...normalizar().ids])) {

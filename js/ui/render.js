@@ -144,7 +144,9 @@ SIAB.render = (syncForm = false) => {
   if (SIAB.chem.co2(t, r).excesso > 0) notas.push('Bolhas de CO₂ (ilustração: o cálculo do pH mantém o gás dissolvido).');
   $('vidro-nota').textContent = notas.join(' ');
   $('group-notice').hidden = !t.group;
-  $('group-notice').textContent = t.group ? `${SIAB.nomeGrupo(t)} · ${targets.length} tubos recebem gotas de ${SIAB.format(t.dropVolume)} mL juntos.${t.groupMode === 'drops' ? ' Cada tubo usa seu próprio conta-gotas e mantém preparo e indicador individuais.' : ' Preparo compartilhado para comparar indicadores.'}` : '';
+  $('group-notice').textContent = t.group ? `${SIAB.nomeGrupo(t)} · ${targets.length} tubos recebem gotas de ${SIAB.format(t.dropVolume)} mL juntos.${t.groupMode !== 'drops' ? ' Preparo compartilhado para comparar indicadores.'
+    : SIAB.textoCompartilhado(t) ? ` Compartilham ${SIAB.textoCompartilhado(t)}; cada tubo mantém o indicador.`
+    : ' Cada tubo usa seu próprio conta-gotas e mantém preparo e indicador individuais.'}` : '';
 
   // Tira de tubos e visão geral.
   $('add-tube-btn').hidden = !pode('tubos');
@@ -169,7 +171,7 @@ SIAB.render = (syncForm = false) => {
     $('overview-regua').innerHTML = ordenar ? SIAB.reguaDaBancada(lista) : '';
     $('overview-grid').innerHTML = lista.map(({ x, n, v }) => {
       const cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span>${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · ${SIAB.targets(x).length} tubos</span>` : ''}</button>`;
+      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span>${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · ${SIAB.targets(x).length} tubos${x.groupMode === 'drops' && SIAB.textoCompartilhado(x) ? ` · ${SIAB.textoCompartilhado(x)}` : ''}</span>` : ''}</button>`;
     }).join('');
   }
 

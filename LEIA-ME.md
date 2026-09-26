@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.0
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.1
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.0`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.1`), o que evita
 essa mistura.
 
 ## O que há na versão 0.7: muito mais substâncias
@@ -110,6 +110,17 @@ até recarregar a página e fica separada entre laboratório livre e missão.
 Selecione pelo menos dois tubos e use **Vincular tubos**. Os cartões, a tira
 da bancada e o tubo em foco mostram **Grupo 1**, **Grupo 2** etc. Cada comando
 de gotejamento adiciona a mesma dose a todos os integrantes do grupo.
+
+**Compartilhar também (0.7.1):** antes de vincular, marque **Substância do
+tubo** e/ou **Conta-gotas**.
+- Todos passam a usar o que está no tubo de referência.
+- Quem mudar de reagente recomeça as gotas.
+- Depois, trocar o frasco ou o preparo dessa parte em qualquer tubo muda o
+  grupo inteiro.
+- O indicador continua de cada tubo.
+- Sem as opções, vale o vínculo só das gotas descrito abaixo.
+- Com os mesmos tubos selecionados, **Atualizar vínculo** muda o que o grupo
+  compartilha.
 
 - Amostra, indicador, conta-gotas e gotas anteriores são preservados.
 - O volume de cada nova gota é igualado ao do tubo em foco, se ele estiver

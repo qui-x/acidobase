@@ -274,13 +274,62 @@ async function verificar(largura) {
     assert.ok(copias.every(t => t.solution === 'acetic' && !t.additions.length));
     assert.equal(tubo(novos[4]).solution, 'nacl');
 
+    // Vínculo com substância e conta-gotas compartilhados (opções da seleção).
+    const bancadaAnterior = S.benches.lab;
+    S.benches.lab = S.criarBancada();
+    const c = S.state;
+    const partes = [['hcl', 'naoh', 'btb'], ['acetic', 'koh', 'phenol'], ['lemon', 'ammonia', 'cabbage']].map(([solution, titrant, indicator], i) =>
+      S.newTube({ name: `Parte ${i + 1}`, solution, titrant, indicator, concentration: .01, titrantConcentration: .01, additions: i ? [.05, .05] : [.05], dropVolume: .05 }).id);
+    const tp = id => c.tubes.find(t => t.id === id);
+    const marcarOpcao = (id, valor) => { $(id).checked = valor; $(id).dispatchEvent(new w.Event('change', { bubbles: true })); };
+    c.activeId = partes[0]; S.render(true);
+    marcar(partes);
+    assert.equal($('selecao-vinculo-opcoes').hidden, false);
+    marcarOpcao('vincular-substancia', true);
+    assert.match($('selecao-vinculo-dica').textContent, /a substância do tubo de Parte 1/);
+    assert.match($('selecao-vinculo-dica').textContent, /Parte 2, Parte 3 recomeçam as gotas/);
+    marcarOpcao('vincular-contagotas', true);
+    clicar('selecao-vincular-btn');
+    assert.ok(partes.every(id => tp(id).solution === 'hcl' && tp(id).titrant === 'naoh' && tp(id).group === tp(partes[0]).group));
+    assert.deepEqual(partes.map(id => tp(id).indicator), ['btb', 'phenol', 'cabbage'], 'cada tubo mantém o indicador');
+    assert.deepEqual(Array.from(tp(partes[0]).additions), [.05], 'a referência mantém as gotas');
+    assert.ok(partes.slice(1).every(id => !tp(id).additions.length), 'quem mudou de reagente recomeça as gotas');
+    assert.equal($('selecao-vincular-btn').disabled, true, 'mesmo vínculo, mesmas opções: nada a fazer');
+    // Trocar o frasco do tubo ou do conta-gotas em um tubo troca em todo o grupo.
+    clicar('focus-tab'); c.activeId = partes[1]; S.render(true);
+    c.destination = 'tube'; S.bancada.colocar('h2so4');
+    assert.ok(partes.every(id => tp(id).solution === 'h2so4'));
+    c.destination = 'titrant'; S.bancada.colocar('baoh2');
+    assert.ok(partes.every(id => tp(id).titrant === 'baoh2'));
+    assert.match($('group-notice').textContent, /substância e conta-gotas/);
+    // O preparo (módulo Calcular) vale para o grupo inteiro.
+    c.level = 'calcular'; S.render(true);
+    $('concentration').value = '0.05'; $('titrant-concentration').value = '0.02';
+    $('prepare-form').dispatchEvent(new w.Event('submit', { bubbles: true, cancelable: true }));
+    assert.ok(partes.every(id => tp(id).concentration === .05 && tp(id).titrantConcentration === .02));
+    assert.match(folha().textContent, /substância e conta-gotas compartilhados/);
+    // Atualizar o vínculo: só a substância; o conta-gotas volta a ser de cada tubo.
+    const antesAtualizar = JSON.stringify(c.tubes);
+    marcar(partes);
+    marcarOpcao('vincular-contagotas', false);
+    assert.equal($('selecao-vincular-btn').textContent, 'Atualizar vínculo');
+    clicar('selecao-vincular-btn');
+    assert.ok(partes.every(id => tp(id).groupShare.substancia && !tp(id).groupShare.contaGotas));
+    clicar('focus-tab'); c.destination = 'titrant'; S.bancada.colocar('naoh');
+    assert.equal(tp(c.activeId).titrant, 'naoh');
+    assert.ok(partes.filter(id => id !== c.activeId).every(id => tp(id).titrant === 'baoh2'));
+    clicar('undo-btn'); clicar('undo-btn');
+    assert.equal(JSON.stringify(c.tubes), antesAtualizar, 'Desfazer volta ao vínculo anterior');
+    marcarOpcao('vincular-substancia', false);
+    S.benches.lab = bancadaAnterior; S.render(true);
+
     // Missões mantêm suas restrições e continuam acessando a mesma impressão lateral.
     S.bancada.configurar({ modo: 'missao', controles: ['gotas'] }); abrir(); clicar('selecionar-tubos-btn');
     assert.equal($('selecao-vincular-btn').hidden, true);
     assert.equal(S.bancada.vincularTubos(novos.slice(0, 2)), false);
     assert.equal($('imprimir-relatorio').closest('#painel-laboratorio'), null);
     assert.deepEqual(erros, [], 'Nenhum erro de execução nos eventos');
-    console.log(`OK: ${largura}px — seleção e gestos, impressão lateral, vínculos manuais, preparos individuais, desfazer, capacidade do grupo e comparação de indicadores.`);
+    console.log(`OK: ${largura}px — seleção e gestos, impressão lateral, vínculos manuais, preparos individuais ou compartilhados, desfazer, capacidade do grupo e comparação de indicadores.`);
   } finally { w.close(); }
 }
 (async () => { await verificar(1440); await verificar(390); })().catch(erro => { console.error(erro); process.exitCode = 1; });

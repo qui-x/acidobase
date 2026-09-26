@@ -114,7 +114,7 @@ SIAB.impressao = (() => {
         linha('Conta-gotas', esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))),
         linha('Volume da gota', `${SIAB.format(t.dropVolume)} mL`),
         linha('Indicador', esc(SIAB.nomeIndicador(t))),
-        t.group ? linha('Vínculo', `${esc(SIAB.nomeGrupo(t))} · adições sincronizadas`) : '',
+        t.group ? linha('Vínculo', `${esc(SIAB.nomeGrupo(t))} · adições sincronizadas${t.groupMode === 'drops' && SIAB.textoCompartilhado(t) ? `; ${esc(SIAB.textoCompartilhado(t))} compartilhados` : ''}`) : '',
         r.temperature !== 25 ? linha('Temperatura', `${SIAB.format(r.temperature, 0)} °C`) : ''
       ].join('');
       const leitura = [

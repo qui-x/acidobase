@@ -31,15 +31,25 @@ SIAB.usarBancada = nome => { SIAB.activeBench = nome; };
 SIAB.current = () => SIAB.state.tubes.find(t => t.id === SIAB.state.activeId);
 // Tubos vinculados recebem as mesmas gotas.
 SIAB.targets = tube => (tube.group ? SIAB.state.tubes.filter(t => t.group === tube.group) : [tube]);
-// Vínculos criados pela seleção sincronizam as doses e mantêm preparos
-// individuais. A comparação de indicadores continua compartilhando o preparo.
-SIAB.preparoTargets = tube => tube.groupMode === 'drops' ? [tube] : SIAB.targets(tube);
+// Partes do preparo de um grupo:
+// - Comparar indicadores (groupMode ausente): o grupo compartilha tudo.
+// - Vínculo manual (groupMode 'drops'): as gotas sempre; a substância do
+//   tubo e o conta-gotas só se escolhidos ao vincular (groupShare).
+// parte: 'substancia' (frasco, concentração, volume inicial, diluição) ou
+// 'contaGotas' (frasco, concentração e diluição do conta-gotas).
+SIAB.compartilha = (tube, parte) => Boolean(tube?.group) && (tube.groupMode !== 'drops' || Boolean(tube.groupShare?.[parte]));
+SIAB.preparoTargets = (tube, parte = 'substancia') => (SIAB.compartilha(tube, parte) ? SIAB.targets(tube) : [tube]);
+// O que um grupo manual compartilha, em texto ("substância e conta-gotas").
+SIAB.textoCompartilhado = tube => {
+  const partes = [SIAB.compartilha(tube, 'substancia') && 'substância', SIAB.compartilha(tube, 'contaGotas') && 'conta-gotas'].filter(Boolean);
+  return partes.join(' e ');
+};
 SIAB.nomeGrupo = tube => tube.group ? `Grupo ${tube.group}` : '';
 SIAB.limparGrupos = (bench = SIAB.state) => {
   const tamanhos = new Map();
   bench.tubes.forEach(t => { if (t.group) tamanhos.set(t.group, (tamanhos.get(t.group) || 0) + 1); });
   bench.tubes.forEach(t => {
-    if (!t.group || tamanhos.get(t.group) < 2) { t.group = null; delete t.groupMode; }
+    if (!t.group || tamanhos.get(t.group) < 2) { t.group = null; delete t.groupMode; delete t.groupShare; }
   });
 };
 
