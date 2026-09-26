@@ -1,8 +1,9 @@
 /* Service worker do SIAB: guarda os arquivos do app para funcionar sem internet.
-   Ao publicar uma versão nova, mude VERSAO: o navegador baixa tudo de novo e
-   o app mostra "Nova versão disponível". A lista ARQUIVOS precisa conter todo
-   arquivo usado pela página (o teste tests/pwa.test.cjs confere isso). */
-const VERSAO = 'siab-0.3.0';
+   Ao publicar uma versão nova, mude VERSAO (igual a SIAB.version e ao ?v= do
+   index.html): o navegador baixa tudo de novo, a versão nova assume e o app
+   avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
+   página. */
+const VERSAO = 'siab-0.6.4';
 const ARQUIVOS = [
   './',
   './index.html',
@@ -24,23 +25,34 @@ const ARQUIVOS = [
   './js/data/ambiente-saude.js',
   './js/data/funcoes.js',
   './js/simulation/quimica.js',
+  './js/simulation/condutividade.js',
   './js/core/estado.js',
+  './js/ui/abertura.js',
   './js/core/loja.js',
   './js/core/progresso.js',
   './js/core/roteador.js',
   './js/data/missoes.js',
   './js/data/trilhas.js',
+  './js/data/manual.js',
   './js/simulation/motor-missoes.js',
   './js/ui/tubo.js',
   './js/ui/regua-ph.js',
   './js/ui/grafico.js',
   './js/ui/lupa.js',
+  './js/ui/condutimetro.js',
   './js/ui/equacao.js',
   './js/ui/som.js',
   './js/ui/conta-gotas.js',
   './js/ui/seletores.js',
   './js/ui/prateleira.js',
+  './js/ui/modulos.js',
   './js/ui/render.js',
+  './js/ui/gaveta.js',
+  './js/ui/trilho.js',
+  './js/ui/tour.js',
+  './js/ui/segredo.js',
+  './js/ui/impressao.js',
+  './js/ui/selecao-tubos.js',
   './js/telas/bancada.js',
   './js/telas/laboratorio.js',
   './js/telas/missao.js',
@@ -54,13 +66,21 @@ const ARQUIVOS = [
   './js/telas/construtor.js',
   './js/telas/professor.js',
   './js/telas/caderno.js',
+  './js/telas/manual.js',
   './js/a11y/preferencias.js',
   './js/init/pwa.js',
   './js/init/app.js'
 ];
 
+// cache: 'reload' busca cada arquivo no servidor, sem usar o cache do navegador.
+// Sem isso, uma versão nova podia guardar arquivos antigos misturados aos novos.
+// skipWaiting: a versão nova assume logo; a página avisa para recarregar.
 self.addEventListener('install', evento => {
-  evento.waitUntil(caches.open(VERSAO).then(cache => cache.addAll(ARQUIVOS)));
+  evento.waitUntil(
+    caches.open(VERSAO)
+      .then(cache => cache.addAll(ARQUIVOS.map(url => new Request(url, { cache: 'reload' }))))
+      .then(() => self.skipWaiting())
+  );
 });
 
 // Remove caches de versões antigas.
@@ -70,11 +90,6 @@ self.addEventListener('activate', evento => {
       .then(chaves => Promise.all(chaves.filter(chave => chave.startsWith('siab-') && chave !== VERSAO).map(chave => caches.delete(chave))))
       .then(() => self.clients.claim())
   );
-});
-
-// A página pede para ativar a versão nova (botão "Atualizar").
-self.addEventListener('message', evento => {
-  if (evento.data?.tipo === 'ATUALIZAR') self.skipWaiting();
 });
 
 // Primeiro o cache; se não houver, a rede (e guarda a resposta para depois).

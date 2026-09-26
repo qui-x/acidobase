@@ -4,7 +4,7 @@
    de pKa) e a carga fixa dos íons que não reagem com a água.
    A carga de referência é a da espécie mais protonada de cada sistema:
    NH₄⁺ tem carga +1, por isso o NH₄Cl tem carga fixa 0 (+1 do NH₄⁺, −1 do Cl⁻).
-   Constantes a 25 °C; fontes em docs/modelo-quimico.md. */
+   Constantes a 25 °C; fontes em "Sobre o SIAB" → Referências (OpenStax). */
 SIAB.solutionGroups = {
   fruits: 'Frutas e sucos', kitchen: 'Alimentos e bebidas', home: 'Soluções do cotidiano',
   lab: 'Reagentes de laboratório', salts: 'Sais e tampões', health: 'Saúde e ambiente',

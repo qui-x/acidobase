@@ -5,13 +5,13 @@
 Object.assign(SIAB.solutions, {
   mgoh2: {
     name: 'Hidróxido de magnésio', formula: 'Mg(OH)₂', kind: 'suspension', label: 'Base pouco solúvel (suspensão)',
-    group: 'health', ksp: 8.9e-12, n: 2, cation: 'Mg²⁺',
+    group: 'health', ksp: 8.9e-12, n: 2, cation: 'Mg²⁺', massaMolar: 58.32,
     ionization: 'Mg(OH)₂(s) ⇌ Mg²⁺ + 2 OH⁻',
     note: 'Suspensão didática, como no leite de magnésia. A concentração indica o total de Mg(OH)₂ por litro, dissolvido ou não. Dissolve à medida que o ácido consome OH⁻ (Kps = 8,9 × 10⁻¹²).'
   },
   aloh3: {
     name: 'Hidróxido de alumínio', formula: 'Al(OH)₃', kind: 'suspension', label: 'Base pouco solúvel (suspensão)',
-    group: 'health', ksp: 2e-32, n: 3, cation: 'Al³⁺',
+    group: 'health', ksp: 2e-32, n: 3, cation: 'Al³⁺', massaMolar: 78.00,
     ionization: 'Al(OH)₃(s) ⇌ Al³⁺ + 3 OH⁻',
     note: 'Suspensão didática usada em antiácidos. Kps = 2 × 10⁻³². Hidrólise do Al³⁺, complexos e a forma do sólido não são modelados.'
   },

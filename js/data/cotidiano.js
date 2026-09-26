@@ -1,7 +1,7 @@
 'use strict';
 /* Amostras representativas, não análises de marcas ou receitas padronizadas.
-   Concentrações dos sistemas abaixo são parâmetros didáticos declarados em
-   docs/cotidiano.md. Um pH inicial não determina a capacidade de neutralização. */
+   Concentrações dos sistemas abaixo são parâmetros didáticos (valores
+   representativos, não medidos). Um pH inicial não determina a capacidade de neutralização. */
 SIAB.solutionGroups = {
   fruits: 'Frutas e sucos', kitchen: 'Alimentos e bebidas',
   home: 'Soluções do cotidiano', lab: 'Reagentes de laboratório', reference: 'Referência'

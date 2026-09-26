@@ -59,6 +59,12 @@ SIAB.armazenamento = {
 };
 
 // Baixa um texto como arquivo (CSV do caderno e do histórico).
+// Campo de CSV: vai entre aspas só quando tem ; aspas ou quebra de linha.
+SIAB.csvCampo = valor => {
+  const texto = String(valor ?? '');
+  return /[;"\n\r]/.test(texto) ? `"${texto.replace(/"/g, '""')}"` : texto;
+};
+
 SIAB.baixarArquivo = (nome, conteudo, tipo = 'text/csv;charset=utf-8') => {
   const blob = new Blob(['﻿' + conteudo], { type: tipo });
   const url = URL.createObjectURL(blob);

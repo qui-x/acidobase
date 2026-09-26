@@ -4,7 +4,7 @@
    cargas (eletroneutralidade), com balanços de massa, diluição e autoionização
    da água. A temperatura padrão é 25 °C; só a missão "Neutro nem sempre é 7"
    altera Kw. Amostras do cotidiano usam equilíbrios representativos.
-   Fontes e limites: docs/modelo-quimico.md e docs/cotidiano.md. */
+   Fontes: "Sobre o SIAB" → Referências. Limites: seção "Limites do modelo" do manual. */
 SIAB.chem = (() => {
   const KW = 1e-14;
 
@@ -59,12 +59,22 @@ SIAB.chem = (() => {
     return { systems, fixedCharge };
   }
 
-  // Reúne o que há no tubo depois da mistura: a solução inicial e as gotas.
+  // O que foi posto no recipiente antes das gotas: a solução inicial ou, depois
+  // de misturar tubos, a lista de componentes { id, concentration, volume, dilution }.
+  function base(tube) {
+    return tube.componentes?.length
+      ? tube.componentes
+      : [{ id: tube.solution, concentration: tube.concentration, volume: tube.initialVolume, dilution: tube.dilution }];
+  }
+
+  // Reúne o que há no tubo depois da mistura: a base e as gotas.
+  // Cada componente entra no balanço de cargas diluído pelo volume total.
   function mixture(tube) {
     const va = added(tube);
-    const volume = tube.initialVolume + va;
+    const inicio = base(tube);
+    const volume = inicio.reduce((sum, x) => sum + x.volume, 0) + va;
     const sources = [
-      { role: 'inicial', id: tube.solution, concentration: tube.concentration, volume: tube.initialVolume, dilution: tube.dilution },
+      ...inicio.map(x => ({ role: tube.componentes?.length ? 'mistura' : 'inicial', ...x })),
       { role: 'gotas', id: tube.titrant, concentration: tube.titrantConcentration, volume: va, dilution: tube.titrantDilution }
     ];
     const terms = { positive: 0, negative: 0, acids: [], bases: [], systems: [], suspensions: [], spectators: [] };
@@ -145,12 +155,13 @@ SIAB.chem = (() => {
     const initial = SIAB.solutions[tube.solution];
     const drops = SIAB.solutions[tube.titrant];
     const a = role(initial), b = role(drops);
-    const opposite = Boolean(a && b && a.type !== b.type);
+    // Numa mistura de vários tubos não há uma única "equivalência" prevista.
+    const opposite = Boolean(a && b && a.type !== b.type && !tube.componentes?.length);
     const equivalenceVolume = opposite && tube.titrantConcentration > 0
       ? tube.concentration * a.n * tube.initialVolume / (tube.titrantConcentration * b.n)
       : null;
     const weak = initial && (initial.kind === 'weakAcid' || initial.kind === 'weakBase');
-    const approximate = initial?.kind === 'sample' || (va > 0 && drops?.kind === 'sample');
+    const approximate = base(tube).some(x => SIAB.solutions[x.id]?.kind === 'sample') || (va > 0 && drops?.kind === 'sample');
     const neutralPH = pkw / 2;
     return {
       pH, pOH: pkw - pH, pKw: pkw, neutralPH, temperature,
@@ -169,15 +180,16 @@ SIAB.chem = (() => {
     const { terms } = mixture(tube);
     const h = result.h, oh = result.oh;
     const list = [];
-    const add = (formula, conc, type) => {
+    const add = (formula, conc, type, extra = {}) => {
       if (!(conc > 0)) return;
       const found = list.find(x => x.formula === formula);
       if (found) found.conc += conc;
-      else list.push({ formula, conc, type });
+      else list.push({ formula, conc, type, ...extra });
     };
     add('H₃O⁺', h, 'ion');
     add('OH⁻', oh, 'ion');
-    terms.spectators.forEach(x => add(x.formula, x.conc, 'ion'));
+    // Íons espectadores (Na⁺, Cl⁻…): estão na solução, mas não trocam prótons.
+    terms.spectators.forEach(x => add(x.formula, x.conc, 'ion', { espectador: true }));
     terms.acids.forEach(x => {
       add(x.solution.acidForm, x.c * h / (x.ka + h), 'molecule');
       add(x.solution.baseForm, x.c * x.ka / (x.ka + h), 'ion');
@@ -199,6 +211,58 @@ SIAB.chem = (() => {
       add(`${x.solution.formula} sólido`, x.c - d, 'solid');
     });
     return list.sort((p, q) => q.conc - p.conc);
+  }
+
+  // Zona onde uma gota acabou de cair, antes de se misturar: a gota e um
+  // pouco (vZona) do líquido que já estava no recipiente. Tem as mesmas
+  // proporções que o recipiente todo recebendo dv·V/vZona de gotas; por isso
+  // basta "fingir" essa quantidade de gotas. É o que deixa a fenolftaleína
+  // rosa onde a gota de NaOH cai, mesmo com o resto ainda ácido.
+  function zona(tube, vZona) {
+    const va = added(tube);
+    const dv = tube.additions.at(-1) || 0;
+    const antes = base(tube).reduce((sum, x) => sum + x.volume, 0) + va - dv;
+    const local = { ...tube, additions: dv > 0 && vZona > 0 ? [va - dv + dv * antes / Math.min(vZona, antes)] : tube.additions };
+    return { tubo: local, r: solve(local) };
+  }
+
+  // Sistemas ácido-base do recipiente, para o diagrama de distribuição:
+  // nomes das espécies (da mais protonada à menos protonada), pKa e
+  // concentração total. Sistemas iguais (ácido acético e acetato de sódio,
+  // por exemplo) somam. Do mais concentrado ao menos concentrado.
+  function sistemas(tube) {
+    const { terms } = mixture(tube);
+    const lista = [];
+    const juntar = (nomes, pKa, total) => {
+      const chave = nomes.join('|');
+      const achado = lista.find(x => x.chave === chave);
+      if (achado) achado.total += total;
+      else lista.push({ chave, nomes, pKa, total });
+    };
+    [...terms.acids, ...terms.bases].forEach(x => juntar([x.solution.acidForm, x.solution.baseForm], [-Math.log10(x.ka)], x.c));
+    terms.systems.forEach(x => juntar(SIAB.familySpecies?.[x.family] || [...x.pKa, 0].map((_, i) => `${x.family} (${i})`), x.pKa, x.total));
+    return lista.filter(x => x.total > 0).sort((p, q) => q.total - p.total);
+  }
+
+  // CO₂ dissolvido (H₂CO₃*, a forma mais protonada do sistema carbonato), em
+  // mol/L. Acima da solubilidade do CO₂ (cerca de 0,034 mol/L a 25 °C e
+  // 1 atm, pela lei de Henry) o gás sairia em bolhas. O modelo é fechado: o
+  // CO₂ continua no cálculo do pH; as bolhas são só uma ilustração.
+  const SOLUBILIDADE_CO2 = .034;
+  function co2(tube, result = solve(tube)) {
+    const { terms } = mixture(tube);
+    const conc = terms.systems.filter(x => x.family === 'carbonate')
+      .reduce((sum, x) => sum + x.total * fractions(result.pH, x.pKa)[0], 0);
+    return { conc, solubilidade: SOLUBILIDADE_CO2, excesso: Math.max(0, conc / SOLUBILIDADE_CO2 - 1) };
+  }
+
+  // Sólido que não dissolveu (suspensões como o Mg(OH)₂), em mol/L e g/L.
+  function solidos(tube, result = solve(tube)) {
+    const { terms } = mixture(tube);
+    return terms.suspensions.map(x => {
+      const mol = Math.max(0, x.c - dissolved(x, result.oh));
+      return { formula: x.solution.formula, mol, gL: mol * (x.solution.massaMolar || 60) };
+    }).filter(x => x.mol > 1e-7);
   }
 
   // Grau de ionização de um ácido fraco monoprótico: α = Ka / (Ka + [H₃O⁺]).
@@ -223,12 +287,45 @@ SIAB.chem = (() => {
       return { rgb: mix(stops[i][1], stops[i + 1][1], t), opacity: .86, name: t < .5 ? stops[i][2] : stops[i + 1][2], progress: null };
     }
     const ind = SIAB.indicators[indicator];
-    // Interpolação visual suave APENAS da cor, na faixa declarada.
-    let t = clamp((pH - ind.low) / (ind.high - ind.low), 0, 1);
-    t = t * t * (3 - 2 * t);
-    const rgb = t < .5 ? mix(ind.acid, ind.middle, t * 2) : mix(ind.middle, ind.base, (t - .5) * 2);
-    const name = t < .02 ? ind.acidName : t > .98 ? ind.baseName : ind.middleName;
-    return { rgb, opacity: indicator === 'phenol' ? .14 + .74 * t : .86, name, progress: t };
+    // Fração da forma básica do indicador (In⁻): Henderson–Hasselbalch.
+    const a = fracaoBasica(ind, pH);
+    // Cor transmitida: soma das absorbâncias das duas formas (Beer–Lambert).
+    // É isso que faz o bromotimol passar por verde e o tornassol por violeta.
+    const A = absorbancia(ind.acid).map((x, i) => (1 - a) * x + a * absorbancia(ind.base)[i]);
+    const T = A.map(x => 10 ** -x);
+    const rgb = T.map(x => Math.round(255 * x));
+    // Nome pela faixa declarada (a mesma usada nas missões e no manual).
+    const name = pH < ind.low ? ind.acidName : pH > ind.high ? ind.baseName : ind.middleName;
+    return { rgb, opacity: clamp(1 - Math.min(...T), .14, .97), name, progress: a };
+  }
+
+  // Absorbância de cada canal (R, G, B) de uma cor transmitida: A = −log₁₀ T.
+  function absorbancia(rgb) { return rgb.map(v => -Math.log10(Math.max(v, 8) / 255)); }
+  // α = [In⁻] / ([HIn] + [In⁻]) = 1 / (1 + 10^(pKIn − pH)).
+  function fracaoBasica(ind, pH) {
+    const pk = ind.pKIn ?? (ind.low + ind.high) / 2;
+    return 1 / (1 + 10 ** (pk - pH));
+  }
+
+  // Vários indicadores no mesmo recipiente (depois de misturar tubos): cada um
+  // contribui com a própria cor na proporção do volume que trouxe; tubo sem
+  // indicador não contribui, e a fenolftaleína incolor (meio ácido) também não.
+  // Aproximação didática da mistura de corantes.
+  function colorMix(indicadores, pH) {
+    const partes = indicadores.filter(x => x.id !== 'none' && x.fracao > 0).map(x => {
+      const c = color(x.id, pH);
+      return { c, peso: x.fracao * (x.id === 'phenol' ? (c.progress || 0) : 1) };
+    });
+    const forca = partes.reduce((sum, x) => sum + x.peso, 0);
+    if (forca < .02) return { ...color('none', pH), forca: 0 };
+    const rgb = [0, 1, 2].map(i => Math.round(partes.reduce((sum, x) => sum + x.c.rgb[i] * x.peso, 0) / forca));
+    const principal = partes.reduce((a, b) => (b.peso > a.peso ? b : a));
+    return { rgb, opacity: .14 + .72 * Math.min(1, forca), name: principal.peso / forca > .8 ? principal.c.name : 'cor composta', progress: null, forca };
+  }
+
+  // Cor do indicador de um recipiente: um indicador, ou a mistura deles.
+  function indicatorColor(tube, pH) {
+    return tube.indicadores?.length > 1 ? colorMix(tube.indicadores, pH) : color(tube.indicator, pH);
   }
 
   // Faixa de pH (entre 0 e 14) em que um indicador exibe uma cor com esse nome.
@@ -256,15 +353,16 @@ SIAB.chem = (() => {
   }
 
   function liquid(tube, indicatorOnly = false, result = solve(tube)) {
-    const indicator = color(tube.indicator, result.pH);
-    const components = [[tube.solution, tube.initialVolume, tube.dilution], [tube.titrant, result.added, tube.titrantDilution]]
+    const misto = tube.indicadores?.length > 1;
+    const indicator = indicatorColor(tube, result.pH);
+    const components = [...base(tube).map(x => [x.id, x.volume, x.dilution]), [tube.titrant, result.added, tube.titrantDilution]]
       .map(([id, v, dilution]) => ({ natural: SIAB.solutions[id].natural, fraction: v / result.volume / (dilution || 1) }))
       .filter(x => x.natural && x.fraction > 0 && x.natural.opacity > .025);
     const weight = components.reduce((sum, x) => sum + x.natural.opacity * x.fraction, 0);
     if (!weight || (indicatorOnly && tube.indicator !== 'none')) return { ...indicator, indicatorName: indicator.name, masked: false };
     const rgb = [0,1,2].map(i => Math.round(components.reduce((sum, x) => sum + x.natural.rgb[i] * x.natural.opacity * x.fraction, 0) / weight));
     const pigmentName = components.length === 1 ? components[0].natural.name : 'cor das amostras';
-    const dye = tube.indicator === 'none' ? 0 : tube.indicator === 'phenol' ? (indicator.progress || 0) * .8 : .75;
+    const dye = misto ? .75 * Math.min(1, indicator.forca) : tube.indicator === 'none' ? 0 : tube.indicator === 'phenol' ? (indicator.progress || 0) * .8 : .75;
     return {
       rgb: mix(rgb, indicator.rgb, dye / (dye + weight)),
       opacity: Math.max(.14, Math.min(.97, weight + dye * (1 - weight))),
@@ -273,5 +371,5 @@ SIAB.chem = (() => {
     };
   }
 
-  return { solve, color, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge };
+  return { solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base, zona, fracaoBasica, sistemas, co2, solidos };
 })();

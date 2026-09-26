@@ -1,16 +1,11 @@
 {
   "name": "siab-acidobase",
-  "version": "0.3.0",
+  "version": "0.6.4",
   "private": true,
   "description": "SIAB — A química das cores: simulador de ácidos e bases para o ensino médio (missões, desafios, laboratório e PWA).",
   "license": "GPL-3.0-only",
   "scripts": {
-    "start": "node tools/servidor.cjs 8080",
-    "test": "node tests/quimica.test.cjs && node tests/cotidiano.test.cjs && node tests/sais-ambiente.test.cjs && node tests/missoes.test.cjs && node tests/pwa.test.cjs",
-    "test:e2e": "node tests/e2e.test.cjs",
+    "start": "python3 -m http.server 8080",
     "build": "python3 build_standalone.py"
-  },
-  "devDependencies": {
-    "playwright": "^1.56.1"
   }
 }

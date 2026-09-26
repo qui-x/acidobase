@@ -302,6 +302,7 @@ SIAB.missaoTela = (() => {
 })();
 
 SIAB.telas.missao = {
+  completo: true,
   secao: 'bancada',
   menu: 'aprender',
   titulo: id => SIAB.missoes.find(m => m.id === id)?.titulo || 'Missão',

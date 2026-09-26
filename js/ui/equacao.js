@@ -1,6 +1,6 @@
 'use strict';
 /* Painel "Equação": nível simbólico. Mostra ionização, reação ao misturar e,
-   conforme o nível, os números do equilíbrio (pH, pOH, concentrações, α, Ka). */
+   conforme o módulo, os números do equilíbrio (pH, pOH, concentrações, α, Ka). */
 SIAB.equacao = (() => {
   // Equação iônica da reação entre o que está no tubo e o que cai do conta-gotas.
   function reacaoIonica(a, b) {
@@ -46,23 +46,109 @@ SIAB.equacao = (() => {
     return null;
   }
 
+  /* Equação com as partículas "clicáveis" e a seta de transferência de próton.
+     - Cada espécie que também está na lupa vira um botão: tocar leva à aba
+       Partículas com aquela espécie em destaque (ponte entre o simbólico e o
+       submicroscópico).
+     - Doador e receptor de H⁺ são achados comparando reagentes e produtos: o
+       doador perde um H e o receptor ganha um, com o resto da fórmula igual
+       (CH₃COOH → CH₃COO⁻; H₂O → H₃O⁺). Uma seta curva vai do doador ao
+       receptor, com "H⁺" (desenhada por setas(), depois de a tela montar). */
+  const SUB = { '₀': 0, '₁': 1, '₂': 2, '₃': 3, '₄': 4, '₅': 5, '₆': 6, '₇': 7, '₈': 8, '₉': 9 };
+  const hidrogenios = f => [...f.matchAll(/H([₀-₉]*)/g)].reduce((sum, m) => sum + (m[1] ? Number([...m[1]].map(d => SUB[d]).join('')) : 1), 0);
+  const esqueleto = f => f.replace(/H[₀-₉]*/g, '').replace(/[⁺⁻⁰¹²³⁴⁵⁶⁷⁸⁹]/g, '');
+  function partes(token) {
+    const m = token.trim().match(/^(\d+\s)?(.+?)(\((?:s|aq|l|g)\))?$/);
+    return { coef: m[1] || '', formula: m[2], estado: m[3] || '' };
+  }
+  function formulaHTML(texto, presentes = new Set()) {
+    const principal = texto.split(/\s+\((?=[^)]*\s)/)[0];
+    const resto = texto.slice(principal.length);
+    const m = principal.match(/^(.*?)\s(→|⇌)\s(.*)$/);
+    if (!m) return { html: SIAB.escape(texto), seta: false };
+    const esquerda = m[1].split(' + ').map(partes), direita = m[3].split(' + ').map(partes);
+    let doador = -1, receptor = -1;
+    esquerda.forEach((r, i) => {
+      direita.forEach(p => {
+        if (esqueleto(r.formula) !== esqueleto(p.formula)) return;
+        const d = hidrogenios(p.formula) - hidrogenios(r.formula);
+        if (d === -1 && doador < 0) doador = i;
+        if (d === 1 && receptor < 0) receptor = i;
+      });
+    });
+    const seta = doador >= 0 && receptor >= 0 && doador !== receptor;
+    const token = (x, papel) => {
+      const f = SIAB.escape(x.formula);
+      const nucleo = presentes.has(x.formula)
+        ? `<button type="button" class="eq-especie" data-acao="destacar" data-especie="${f}" title="Ver ${f} na lupa">${f}</button>` : f;
+      return `<span class="eq-token"${papel ? ` data-papel="${papel}"` : ''}>${SIAB.escape(x.coef)}${nucleo}${SIAB.escape(x.estado)}</span>`;
+    };
+    const lado = (lista, eEsquerda) => lista.map((x, i) => token(x, eEsquerda && seta ? (i === doador ? 'doador' : i === receptor ? 'receptor' : '') : '')).join(' + ');
+    const leitura = seta ? `<span class="sr-only"> (${SIAB.escape(esquerda[doador].formula)} doa H⁺ para ${SIAB.escape(esquerda[receptor].formula)})</span>` : '';
+    return { html: `${lado(esquerda, true)} ${m[2]} ${lado(direita, false)}${SIAB.escape(resto)}${leitura}`, seta };
+  }
+  const formula = (texto, presentes) => {
+    const f = formulaHTML(texto, presentes);
+    return `<p class="eq-formula${f.seta ? ' com-seta' : ''}">${f.html}</p>`;
+  };
+
+  // Desenha as setas curvas de transferência de próton (depois de a tela montar).
+  function setas(caixa) {
+    caixa.querySelectorAll('.eq-formula.com-seta').forEach(p => {
+      p.querySelector('.eq-seta')?.remove();
+      const de = p.querySelector('[data-papel="doador"]'), para = p.querySelector('[data-papel="receptor"]');
+      if (!de || !para) return;
+      const base = p.getBoundingClientRect();
+      const a = de.getBoundingClientRect(), b = para.getBoundingClientRect();
+      if (!base.width || !a.width) return;
+      const x1 = a.left + a.width / 2 - base.left, x2 = b.left + b.width / 2 - base.left;
+      const y1 = a.top - base.top + 1, y2 = b.top - base.top + 1;
+      const topo = Math.min(y1, y2) - 14;
+      const svg = `<svg class="eq-seta" width="${base.width}" height="${base.height}" viewBox="0 0 ${base.width} ${base.height}" aria-hidden="true">
+        <defs><marker id="eq-ponta-${Math.round(x1)}-${Math.round(y1)}" viewBox="0 0 8 8" refX="6" refY="4" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 8 4 0 8Z"/></marker></defs>
+        <path d="M${x1.toFixed(1)} ${y1.toFixed(1)}C${x1.toFixed(1)} ${topo.toFixed(1)} ${x2.toFixed(1)} ${topo.toFixed(1)} ${x2.toFixed(1)} ${(y2 - 1).toFixed(1)}" marker-end="url(#eq-ponta-${Math.round(x1)}-${Math.round(y1)})"/>
+        <text x="${((x1 + x2) / 2).toFixed(1)}" y="${(topo + 4).toFixed(1)}" text-anchor="middle">H⁺</text>
+      </svg>`;
+      p.insertAdjacentHTML('afterbegin', svg);
+    });
+  }
+
   function linha(rotulo, valor) {
     return `<div class="eq-linha"><dt>${rotulo}</dt><dd>${valor}</dd></div>`;
   }
 
   function html(tube, { nivel = 'explorar', result = SIAB.chem.solve(tube) } = {}) {
+    // Espécies que a lupa mostra agora (só com a aba Partículas disponível).
+    const presentes = SIAB.lupa.disponivel() ? new Set(SIAB.chem.species(tube, result).map(e => e.formula)) : new Set();
     const a = { id: tube.solution, ...SIAB.solutions[tube.solution] };
     const b = { id: tube.titrant, ...SIAB.solutions[tube.titrant] };
     const blocos = [];
     const ionizacao = s => s.ionization || (s.kind === 'sample' ? 'Mistura com equilíbrios representativos (ver nota da amostra).' : '');
-    blocos.push(`<section class="eq-bloco"><h3>No tubo · ${SIAB.escape(a.name)}</h3><p class="eq-formula">${SIAB.escape(ionizacao(a))}</p>${a.hydrolysis ? `<p class="eq-formula">${SIAB.escape(a.hydrolysis)}</p>` : ''}${a.explain ? `<p class="small">${SIAB.escape(a.explain)}</p>` : ''}</section>`);
-    if (result.added > 0 || tube.titrant !== 'water') {
-      blocos.push(`<section class="eq-bloco"><h3>No conta-gotas · ${SIAB.escape(b.name)}</h3><p class="eq-formula">${SIAB.escape(ionizacao(b))}</p></section>`);
+    const componentes = tube.componentes || [];
+    if (componentes.length) {
+      // Mistura geral: o que foi despejado e a neutralização entre ácidos e bases.
+      const papel = s => (['strongAcid', 'weakAcid'].includes(s.kind) ? 'ácido' : ['strongBase', 'weakBase', 'suspension'].includes(s.kind) ? 'base' : '');
+      const itens = componentes.map(x => {
+        const s = SIAB.solutions[x.id];
+        return `<li><strong>${SIAB.escape(SIAB.solutionSummary(x.id, x.concentration, x.dilution))}</strong> · ${SIAB.format(x.volume)} mL${papel(s) ? ` · ${papel(s)}` : ''}${ionizacao(s) ? formula(ionizacao(s), presentes) : ''}</li>`;
+      }).join('');
+      blocos.push(`<section class="eq-bloco"><h3>Na mistura · ${componentes.length} componentes</h3><ul class="eq-lista">${itens}</ul></section>`);
+      const temAcido = componentes.some(x => papel(SIAB.solutions[x.id]) === 'ácido');
+      const temBase = componentes.some(x => papel(SIAB.solutions[x.id]) === 'base');
+      if (temAcido && temBase) {
+        blocos.push(`<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3>${formula('H₃O⁺ + OH⁻ → 2 H₂O', presentes)}<p class="small">Ácidos e bases se neutralizam na proporção das quantidades em mol, não do número de tubos. O pH final mostra o que sobrou em excesso.</p></section>`);
+      }
+    } else {
+      blocos.push(`<section class="eq-bloco"><h3>No tubo · ${SIAB.escape(a.name)}</h3>${formula(ionizacao(a), presentes)}${a.hydrolysis ? formula(a.hydrolysis, presentes) : ''}${a.explain ? `<p class="small">${SIAB.escape(a.explain)}</p>` : ''}</section>`);
     }
-    const ionica = reacaoIonica(a, b);
-    const completa = reacaoCompleta(a, b);
+    if (result.added > 0 || tube.titrant !== 'water') {
+      const fonte = (tube.vidraria || SIAB.state.vidraria) === 'erlenmeyer' ? 'Na bureta' : 'No conta-gotas';
+      blocos.push(`<section class="eq-bloco"><h3>${fonte} · ${SIAB.escape(b.name)}</h3>${formula(ionizacao(b), presentes)}</section>`);
+    }
+    const ionica = componentes.length ? null : reacaoIonica(a, b);
+    const completa = componentes.length ? null : reacaoCompleta(a, b);
     if (ionica || completa) {
-      blocos.push(`<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3>${completa ? `<p class="eq-formula">${SIAB.escape(completa.equacao)}</p><p class="small">Sal formado: ${SIAB.escape(completa.nomeSal)}.</p>` : ''}${ionica ? `<p class="eq-formula">${SIAB.escape(ionica)}</p><p class="small">Equação iônica: só as partículas que reagem.</p>` : ''}</section>`);
+      blocos.push(`<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3>${completa ? `<p class="eq-formula">${SIAB.escape(completa.equacao)}</p><p class="small">Sal formado: ${SIAB.escape(completa.nomeSal)}.</p>` : ''}${ionica ? `${formula(ionica, presentes)}<p class="small">Equação iônica: só as partículas que reagem. A seta curva mostra o H⁺ passando do ácido para a base.</p>` : ''}</section>`);
     }
 
     const numeros = [];
@@ -88,9 +174,10 @@ SIAB.equacao = (() => {
         numeros.push(linha('Volume de equivalência', `V = ${SIAB.format(result.equivalenceVolume, 3)} mL`));
       }
     }
-    blocos.push(`<section class="eq-bloco"><h3>Números</h3><dl class="eq-numeros">${numeros.join('')}</dl>${nivel === 'explorar' ? '<p class="field-hint">Mais números nos níveis Medir e Calcular.</p>' : ''}${result.temperature !== 25 ? `<p class="field-hint">A ${SIAB.format(result.temperature, 0)} °C, o neutro é pH ${SIAB.format(result.neutralPH)}.</p>` : ''}</section>`);
-    return `<div class="equacao">${blocos.join('')}</div>`;
+    blocos.push(`<section class="eq-bloco"><h3>Números</h3><dl class="eq-numeros">${numeros.join('')}</dl>${nivel === 'explorar' ? '<p class="field-hint">Mais números nos módulos Medir e Calcular.</p>' : ''}${result.temperature !== 25 ? `<p class="field-hint">A ${SIAB.format(result.temperature, 0)} °C, o neutro é pH ${SIAB.format(result.neutralPH)}.</p>` : ''}</section>`);
+    const dica = presentes.size ? '<p class="field-hint">Toque numa fórmula para vê-la na lupa de partículas.</p>' : '';
+    return `<div class="equacao">${blocos.join('')}${dica}</div>`;
   }
 
-  return { html, reacaoIonica, reacaoCompleta };
+  return { html, reacaoIonica, reacaoCompleta, formulaHTML, setas };
 })();

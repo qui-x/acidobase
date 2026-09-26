@@ -1,6 +1,7 @@
 'use strict';
 /* Tela inicial: quatro caminhos e "continuar de onde parei". */
 SIAB.telas.inicio = {
+  completo: true,
   secao: 'inicio',
   titulo: () => '',
   entrar() {

@@ -13,6 +13,7 @@ SIAB.itemDaTrilha = item => {
 };
 
 SIAB.telas.aprender = {
+  completo: true,
   secao: 'aprender',
   titulo: () => 'Aprender',
   entrar() {
