@@ -123,9 +123,14 @@ SIAB.render = (syncForm = false) => {
   const ultima = s.history.at(-1);
   $('undo-btn').disabled = !ultima;
   $('undo-btn').title = ultima ? `Desfazer: ${ultima.descricao}` : 'Nada para desfazer';
+  // Ponto final observado (onde a cor do indicador mudou e ficou) e, nos
+  // módulos Medir e Calcular, a equivalência calculada: nem sempre coincidem.
+  const pf = SIAB.pontoFinal(t);
+  const eqCalc = nivelDose !== 'explorar' && r.equivalenceVolume !== null ? ` · equivalência calculada: ${SIAB.format(r.equivalenceVolume)} mL` : '';
   $('equivalence-note').textContent = r.atEquivalence && s.showPH
     ? 'Ponto de equivalência · quantidades estequiométricas'
-    : cheio ? `${vidro.curto} cheio: ${SIAB.format(capacidade, 0)} mL.` : '';
+    : cheio ? `${vidro.curto} cheio: ${SIAB.format(capacidade, 0)} mL.`
+    : pf ? `Ponto final observado: ${pf.de} → ${pf.para} com ${SIAB.format(pf.volume)} mL${eqCalc}` : '';
   $('group-notice').hidden = !t.group;
   $('group-notice').textContent = t.group ? `Adições vinculadas · ${targets.length} tubos recebem as mesmas gotas.` : '';
 
@@ -275,6 +280,30 @@ SIAB.renderVer = () => {
   if (s.verTab === 'equacao') conteudo = SIAB.equacao.html(t, { nivel, result: r });
   if (s.verTab === 'historico') conteudo = SIAB.historicoHTML(t);
   $('ver-conteudo').innerHTML = conteudo;
+  if (s.verTab === 'particulas') SIAB.lupa.equilibrio($('ver-conteudo'));
+};
+
+// Ponto final observado: a primeira gota em que o nome da cor do indicador
+// mudou (para indicadores de duas cores). Calculado das gotas, sem guardar
+// nada; com cache, porque a tela redesenha a cada gota.
+const cachePontoFinal = new Map();
+SIAB.pontoFinal = t => {
+  const ind = SIAB.indicators[t.indicator];
+  if (!t.additions.length || !ind?.acid || (t.indicadores || []).filter(x => x.id !== 'none').length > 1) return null;
+  const chave = [t.id, t.solution, t.concentration, t.initialVolume, t.dilution, t.titrant, t.titrantConcentration, t.titrantDilution,
+    t.indicator, t.temperature, t.additions.length, SIAB.chem.added(t), JSON.stringify(t.componentes || 0)].join('|');
+  if (cachePontoFinal.has(chave)) return cachePontoFinal.get(chave);
+  let soma = 0, resposta = null;
+  const nome = v => SIAB.chem.indicatorColor(t, SIAB.chem.solve({ ...t, additions: v > 0 ? [v] : [] }).pH).name;
+  const inicio = nome(0);
+  for (let i = 0; i < t.additions.length; i++) {
+    soma += t.additions[i];
+    const agora = nome(soma);
+    if (agora !== inicio) { resposta = { gotas: i + 1, volume: soma, de: inicio, para: agora }; break; }
+  }
+  if (cachePontoFinal.size > 200) cachePontoFinal.clear();
+  cachePontoFinal.set(chave, resposta);
+  return resposta;
 };
 
 // Escala de pH no topo do painel VER: leitura, marcador, neutro e faixa de
@@ -288,7 +317,8 @@ SIAB.renderRegua = t => {
   const mistura = (t.indicadores || []).filter(x => x.id !== 'none').length > 1;
   const faixa = !mistura && ind?.acid && Number.isFinite(ind.low) ? { low: ind.low, high: ind.high, nome: ind.name } : null;
   box.innerHTML = `<p class="ver-regua-titulo"><span>Escala de pH</span><strong>${SIAB.phFormat(r)} · ${r.phase.toLowerCase()}</strong></p>
-    ${SIAB.regua.svg(r.pH, { neutro: r.neutralPH, faixa, rotulo: 'Escala de pH' })}
+    ${SIAB.regua.svg(r.pH, { neutro: r.neutralPH, faixa, rotulo: 'Escala de pH', concentracao: true })}
+    <p class="ver-regua-conc">[H₃O⁺] ≈ ${SIAB.cientifico(r.h)} mol/L · <span>cada unidade de pH = 10× em [H₃O⁺]</span></p>
     ${faixa ? `<p class="ver-regua-faixa"><span class="regua-faixa-amostra" aria-hidden="true"></span>Viragem ${SIAB.escape(ind.short)}: pH ${SIAB.format(ind.low, 1)} a ${SIAB.format(ind.high, 1)}</p>` : ''}`;
 };
 

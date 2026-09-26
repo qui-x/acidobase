@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.5.9
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.0
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,8 +25,47 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.5.9`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.0`), o que evita
 essa mistura.
+
+## O que há na versão 0.6
+
+Melhorias didáticas nas animações e visualizações, cada uma apoiada no que a
+pesquisa em ensino de química aponta como difícil de enxergar (a ligação entre
+o que se vê, as partículas e os símbolos; a escala logarítmica; o equilíbrio
+dinâmico; a diferença entre ponto final e ponto de equivalência).
+
+- **Cor onde a gota cai:** antes de se misturar, a gota forma uma zona com pH
+  próprio. O simulador calcula essa zona em etapas (a gota misturada a 1,5, 3,
+  6… 96 vezes o próprio volume) e mostra a cor de cada etapa até o recipiente
+  todo. Numa titulação com fenolftaleína, o rosa some logo longe do ponto
+  final, demora perto dele e fica depois dele: é o critério usado no
+  laboratório (a cor clara que dura cerca de 30 s).
+- **Agitar:** botão ao lado da cor que termina a mistura na hora, girando o
+  recipiente como se gira o erlenmeyer.
+- **Ponto final observado × equivalência calculada:** a bancada anota a gota em
+  que a cor do indicador mudou ("incolor → rosa claro com 10,05 mL") e, nos
+  módulos Medir e Calcular, a equivalência calculada ao lado. A diferença é o
+  erro de titulação.
+- **Cor do indicador pela química:** a fração da forma básica vem do pKIn
+  (α = 1 / (1 + 10^(pKIn − pH))) e a cor soma as absorções das duas formas
+  (lei de Beer–Lambert). Assim o bromotimol passa por verde, o tornassol por
+  violeta e o alaranjado de metila por laranja, sem cores inventadas. A cor
+  não escurece nos recipientes largos, porque no laboratório a quantidade de
+  indicador acompanha o recipiente.
+- **Lupa de partículas:**
+  - escala logarítmica opcional (cada 3 partículas = 10 vezes), que mostra os
+    íons raros, como o OH⁻ em meio ácido;
+  - íons espectadores vazados (Na⁺, Cl⁻);
+  - partículas que se movem devagar (difusão);
+  - depois das gotas, partículas entram e reagem (H₃O⁺ + OH⁻ → 2 H₂O, ou o
+    ácido fraco com o OH⁻);
+  - com ácido fraco e base conjugada, um próton pula de uma partícula para
+    outra sem mudar as quantidades (equilíbrio dinâmico).
+- **Escala de pH com [H₃O⁺]:** uma segunda linha mostra 10⁰, 10⁻⁷ e
+  10⁻¹⁴ mol/L sob pH 0, 7 e 14 (cada unidade de pH = 10 vezes em [H₃O⁺]).
+- **Celular:** o conta-gotas fica preso acima da barra de baixo mesmo quando
+  você rola até o painel VER.
 
 ## O que há na versão 0.5
 

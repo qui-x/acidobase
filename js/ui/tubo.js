@@ -151,6 +151,7 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
   return `<svg class="tube-svg vidro-${v.tipo}${foco ? ' vidro-foco' : ''}" viewBox="${caixa}" role="img" aria-label="${SIAB.escape(v.rotulo)}">
     <defs><clipPath id="${id}"><path d="${forma.interno}"/></clipPath>${foco ? `<clipPath id="${id}-abaixo"><rect x="0" y="0" width="${forma.largura.toFixed(1)}" height="400"/></clipPath>` : ''}</defs>
     ${contaGotas}
+    <g class="vidro-corpo" style="transform-origin:${cx.toFixed(1)}px ${forma.BASE}px">
     <path class="tube-outline" d="${forma.contorno}" stroke-width="2"/>
     <g clip-path="url(#${id})">
       <g class="liquido" style="transform:translateY(${y.toFixed(1)}px)">
@@ -162,6 +163,7 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
     <path d="${forma.borda}" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
     <path class="tube-reflection" d="${forma.reflexo}" stroke-width="3" fill="none" stroke-linecap="round"/>
     ${ticks}
+    </g>
     <ellipse cx="${cx.toFixed(1)}" cy="${forma.BASE + 5}" rx="${forma.sombra.toFixed(1)}" ry="4" fill="currentColor" opacity=".08"/>
     ${foco ? '<g class="efeitos"></g>' : ''}
   </svg>`;
@@ -177,6 +179,29 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
    "Reduzir animações" ou "Leitura simples". */
 SIAB.vidro = (() => {
   const NS = 'http://www.w3.org/2000/svg';
+  const DURACAO_ZONA = 360;   // ms por etapa da mistura da gota
+
+  /* Cor da zona da gota enquanto ela se mistura: a gota com 1,5, 3, 6… 96
+     gotas de volume do líquido que já estava lá, até o recipiente todo. Cada
+     etapa é calculada pelo motor (SIAB.chem.zona). Longe do ponto final, a cor
+     local some logo; perto dele, demora; depois dele, fica. É o sinal que se
+     usa no laboratório: o ponto final é quando a cor dura (cerca de 30 s,
+     agitando). */
+  function coresDaZona(tube) {
+    const dv = tube.additions.at(-1) || tube.dropVolume;
+    const r = SIAB.chem.solve(tube);
+    const antes = r.volume - dv;
+    const lista = [];
+    for (const k of [1.5, 3, 6, 12, 24, 48, 96]) {
+      if (k * dv >= antes) break;
+      const z = SIAB.chem.zona(tube, k * dv);
+      const c = SIAB.chem.liquid(z.tubo, SIAB.state.indicatorOnly, z.r);
+      lista.push({ rgb: `rgb(${c.rgb.join(',')})`, opacity: c.opacity, k, pH: z.r.pH });
+    }
+    const final = SIAB.chem.liquid(tube, SIAB.state.indicatorOnly, r);
+    lista.push({ rgb: `rgb(${final.rgb.join(',')})`, opacity: final.opacity, k: 96, pH: r.pH });
+    return lista;
+  }
   let impacto = 0, pendente = null, proximaGota = 0, fimPingando = null;
 
   const semMovimento = () => {
@@ -275,12 +300,22 @@ SIAB.vidro = (() => {
         { transform: `translate(${cx}px, 0) scale(1, 1.3)`, opacity: 0 }
       ], { duration: 520, delay: chegada + atraso, easing: 'cubic-bezier(.2, .7, .3, 1)', fill: 'forwards' }));
     });
-    const nuvem = criar(dentro, 'circle', { class: 'nuvem-cor', cx: 0, cy: 0, r: Math.min(w, 34), fill: v.rgb });
+    // Nuvem com a cor do pH LOCAL (ver coresDaZona): a zona da gota cresce até
+    // virar o recipiente todo; enquanto o pH local está do outro lado da
+    // viragem, a cor é outra (a fenolftaleína fica rosa onde o NaOH cai).
+    const zona = coresDaZona(tube);
+    const ultimo = zona.length - 1;
+    const alcance = Math.min(w * 1.8, 60);
+    const nuvem = criar(dentro, 'circle', { class: 'nuvem-cor', cx: 0, cy: 0, r: 10 });
     nuvem.style.opacity = 0;
-    sumir(nuvem, nuvem.animate([
-      { transform: `translate(${cx}px, 6px) scale(.08)`, opacity: viragem ? .95 : .6 },
-      { transform: `translate(${cx}px, ${viragem ? 40 : 24}px) scale(${viragem ? 2.6 : 1.3})`, opacity: 0 }
-    ], { duration: viragem ? 1100 : 650, delay: chegada, easing: 'ease-out', fill: 'forwards' }));
+    sumir(nuvem, nuvem.animate(zona.map((c, i) => ({
+      offset: i / (ultimo || 1),
+      fill: c.rgb,
+      // A zona cresce como o volume misturado (raio ∝ raiz cúbica).
+      transform: `translate(${cx}px, ${(6 + 22 * Math.cbrt(i / (ultimo || 1))).toFixed(1)}px) scale(${((.25 + (alcance / 10 - .25) * Math.cbrt(Math.min(1, c.k / 96))) * (viragem ? 1.25 : 1)).toFixed(2)})`,
+      // Zona incolor: só um leve véu da mistura; zona colorida: bem visível.
+      opacity: i === ultimo ? 0 : c.opacity < .2 ? .12 : Math.min(.95, c.opacity + .2)
+    })), { duration: DURACAO_ZONA * ultimo, delay: chegada, easing: 'linear', fill: 'forwards' }));
     [-1, 1, 0].forEach((lado, i) => {
       const pingo = criar(svg.querySelector('.efeitos'), 'circle', { class: 'respingo', cx: 0, cy: 0, r: i === 2 ? 1.3 : 1.7, fill: v.corGota });
       pingo.style.opacity = 0;
@@ -297,5 +332,26 @@ SIAB.vidro = (() => {
     return chegada;
   }
 
-  return { desenhar, gota, pingando };
+  // Agitar (girar o erlenmeyer, mexer o béquer, sacudir o tubo): o vidro
+  // balança e a mistura termina na hora; as nuvens de cor local somem na cor
+  // do recipiente todo. Devolve em quantos ms a mistura acaba.
+  function agitar(caixa) {
+    const svg = caixa.querySelector('svg.vidro-foco');
+    if (!svg) return 0;
+    svg.querySelectorAll('.nuvem-cor').forEach(n => n.getAnimations().forEach(a => { a.playbackRate = 10; }));
+    if (semMovimento() || !svg.animate) {
+      svg.querySelectorAll('.nuvem-cor').forEach(n => n.remove());
+      return 0;
+    }
+    svg.querySelector('.vidro-corpo')?.animate([
+      { transform: 'rotate(0deg)' }, { transform: 'rotate(-4deg)' }, { transform: 'rotate(3.5deg)' },
+      { transform: 'rotate(-2.5deg)' }, { transform: 'rotate(1.5deg)' }, { transform: 'rotate(0deg)' }
+    ], { duration: 900, easing: 'ease-in-out' });
+    svg.querySelector('.liquido-superficie')?.animate([
+      { transform: 'scale(1, 1)' }, { transform: 'scale(1, 3)' }, { transform: 'scale(1, 1.8)' }, { transform: 'scale(1, 1)' }
+    ], { duration: 900, easing: 'ease-in-out' });
+    return 900;
+  }
+
+  return { desenhar, gota, pingando, agitar, coresDaZona };
 })();

@@ -733,6 +733,10 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .ver-regua-titulo { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: .74rem; color: var(--muted); font-weight: 700; letter-spacing: .03em; }
 .ver-regua-titulo strong { font-size: .85rem; color: var(--text); letter-spacing: 0; text-transform: none; font-family: Consolas, monospace; }
 .ver-regua .regua-svg { margin-top: 2px; }
+.regua-conc, .regua-conc-titulo { font: 8.5px Consolas, monospace; fill: var(--secondary); }
+.regua-conc-titulo { font-family: 'Segoe UI', system-ui, sans-serif; font-size: 7.5px; fill: var(--muted); }
+.ver-regua-conc { font-size: .74rem; color: var(--text); margin: 2px 0 0; font-family: Consolas, monospace; }
+.ver-regua-conc span { font-family: 'Segoe UI', system-ui, sans-serif; color: var(--secondary); }
 .ver-regua-faixa { display: flex; align-items: center; gap: 6px; font-size: .72rem; color: var(--secondary); margin: 0; }
 .regua-faixa { fill: none; stroke: var(--text); stroke-width: 1.4; }
 .regua-faixa-amostra { width: 16px; height: 6px; border: 1.4px solid var(--text); border-top: 0; }
@@ -784,6 +788,10 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .color-reading .small { font-size: .75rem; overflow-wrap: anywhere; }
 .equivalence-note { font-size: .75rem; text-align: center; color: var(--accent); margin: 4px 0; }
 .equivalence-note:empty { display: none; }
+/* Agitar: ao lado da cor observada (a mistura deixa a cor igual em todo o líquido). */
+.agitar-btn { display: inline-flex; align-items: center; gap: 5px; min-height: 32px; padding: 4px 10px; margin-left: 6px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel2); color: var(--secondary); font-size: .75rem; font-weight: 600; flex-shrink: 0; }
+.agitar-btn:hover { color: var(--text); border-color: var(--accent); }
+.agitar-btn svg { width: 15px; height: 15px; }
 /* Conta-gotas: uma linha de informação e uma barra de botões (quebra em 2 linhas se faltar espaço). */
 .dose-area { padding-top: 8px; border-top: 1px solid var(--border); flex: none; }
 .dose-info { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; font-size: .72rem; color: var(--secondary); margin-bottom: 6px; }
@@ -865,7 +873,22 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 
 .lupa-svg { width: 100%; height: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); }
 .particula text { font: 700 10px 'Segoe UI', system-ui, sans-serif; fill: #111; }
-.particula { animation: tremer 2.4s ease-in-out infinite alternate; transform-box: fill-box; }
+/* Difusão: cada partícula passeia devagar por um caminho próprio (variáveis no HTML). */
+.particula { animation: difundir 7s ease-in-out infinite; }
+@keyframes difundir {
+  0%, 100% { transform: translate(0, 0); }
+  33% { transform: translate(var(--dx1, 2px), var(--dy1, -2px)); }
+  66% { transform: translate(var(--dx2, -2px), var(--dy2, 2px)); }
+}
+.particula text.carga-vazada { fill: var(--text); }
+.lupa-barra { display: flex; justify-content: flex-end; margin-bottom: 6px; }
+.lupa-escala { min-height: 32px; padding: 4px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel2); color: var(--secondary); font-size: .74rem; font-weight: 600; }
+.lupa-escala[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+/* Acontecimentos: partículas das gotas, produtos e o próton do equilíbrio. */
+.evento circle { stroke: rgba(0, 0, 0, .35); stroke-width: 1; }
+.evento-rotulo { font: 700 8px 'Segoe UI', system-ui, sans-serif; fill: var(--text); }
+.proton { fill: #fde047; stroke: #854d0e; stroke-width: .8; }
+.lupa-evento { min-height: 1.3em; margin: 4px 0 0; text-align: center; font: 600 .82rem Consolas, monospace; color: var(--accent); opacity: 0; }
 .particula.solido { animation: none; stroke: var(--text); stroke-width: 1; }
 .lupa-destaque { font-size: .82rem; margin: 10px 0 6px; padding: 8px 10px; background: var(--panel2); border-left: 3px solid var(--accent); border-radius: 4px; }
 .lupa-legenda { list-style: none; padding: 0; margin: 8px 0; display: grid; gap: 5px; font-size: .8rem; }
@@ -873,6 +896,7 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .legenda-cor { width: 14px; height: 14px; border-radius: 50%; flex: none; }
 .legenda-cor.molecule { box-shadow: 0 0 0 1.5px var(--text); }
 .legenda-cor.solid { border-radius: 2px; }
+.legenda-cor.espectador { background: transparent; border: 2.5px solid; }
 
 .equacao { display: grid; gap: 10px; }
 .eq-bloco { border: 1px solid var(--border); border-radius: var(--radius); padding: 10px 12px; background: var(--bg); }
@@ -1269,6 +1293,10 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
   .dose-actions button { min-height: 48px; }
   .focus-view .dose-area { margin: 6px -16px 0; }
+  /* Celular: a barra do conta-gotas fica FIXA acima da navegação (sticky soltava
+     quando se rolava até o painel VER). A página reserva a altura dela no fim. */
+  .workspace:not(.vazia) .dose-area { position: fixed; left: 0; right: 0; bottom: var(--bottom-h); margin: 0; }
+  .workspace:not(.vazia):not([hidden]) { padding-bottom: var(--dose-h, 180px); }
   .color-reading { margin-top: 2px; }
   .detetive-grade, .titulacao-bancada { grid-template-columns: 1fr; }
   .detetive-tubo .tube-svg, .titulacao-tubo .tube-svg { max-height: 190px; margin: 0 auto; width: auto; }

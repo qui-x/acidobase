@@ -102,14 +102,9 @@ SIAB.bancada = (() => {
     const chegada = SIAB.vidro.gota($('large-tube'), SIAB.current(), SIAB.state.vidraria, { viragem: virou });
     if (virou) {
       sequencia.viragem = `${sequencia.cor} → ${agora.cor}`;
-      // O contorno pisca quando a gota da viragem chega ao líquido.
-      setTimeout(() => {
-        SIAB.som.vibrar();
-        const tubo = $('large-tube');
-        tubo.classList.remove('viragem');
-        void tubo.offsetWidth;
-        tubo.classList.add('viragem');
-      }, chegada);
+      // Viragem: a cor mudou e ficou (ponto final observado). Sem piscar o
+      // contorno: o sinal é a própria cor, que agora não some ao misturar.
+      setTimeout(() => SIAB.som.vibrar(), chegada);
     }
     // Numa rajada (+5 gotas, +1 mL, +5 mL) a tela e o som ficam para o fim.
     if (!emLote) {
@@ -131,7 +126,9 @@ SIAB.bancada = (() => {
     const s = SIAB.state, t = SIAB.current(), agora = leitura();
     const cor = SIAB.chem.liquid(t, s.indicatorOnly, agora.r);
     mostrarDelta(feita.pH, agora.pH, feita.n);
-    const texto = `${feita.n} ${feita.n === 1 ? 'gota' : 'gotas'}${t.group ? ' em cada tubo vinculado' : ''}. Total ${agora.r.drops}. Cor ${cor.name}.${s.showPH ? ' pH ' + SIAB.phFormat(agora.r) + '.' : ''}${feita.viragem ? ' Viragem: ' + feita.viragem + '.' : ''}`;
+    // Na lupa, as partículas das gotas entram e reagem.
+    if (s.verTab === 'particulas') requestAnimationFrame(() => SIAB.lupa.reagir($('ver-conteudo'), t));
+    const texto = `${feita.n} ${feita.n === 1 ? 'gota' : 'gotas'}${t.group ? ' em cada tubo vinculado' : ''}. Total ${agora.r.drops}. Cor ${cor.name}.${s.showPH ? ' pH ' + SIAB.phFormat(agora.r) + '.' : ''}${feita.viragem ? ` Viragem: ${feita.viragem}. A cor ficou: ponto final com ${SIAB.format(agora.r.added)} mL.` : ''}`;
     SIAB.announce(texto);
     SIAB.loja.avisar();
   }
@@ -151,6 +148,15 @@ SIAB.bancada = (() => {
     if (feitas > 0) SIAB.som.tocar(leitura().pH);
     fimSequencia();
     return feitas;
+  }
+
+  // Agitar: termina a mistura (as cores locais das gotas somem na cor do todo).
+  function agitar() {
+    const t = SIAB.current();
+    if (!t) return;
+    const ms = SIAB.vidro.agitar($('large-tube'));
+    const c = SIAB.chem.liquid(t, SIAB.state.indicatorOnly);
+    setTimeout(() => SIAB.announce(`Agitado: a cor ficou ${c.name} por igual no recipiente.`), ms);
   }
 
   function mostrarDelta(antes, depois, n) {
@@ -521,6 +527,13 @@ SIAB.bancada = (() => {
     $('poe-form').addEventListener('submit', conferirPrevisao);
     $('poe-resultado').addEventListener('submit', salvarExplicacao);
     $('undo-btn').addEventListener('click', desfazer);
+    $('agitar-btn').addEventListener('click', agitar);
+    // Altura da barra do conta-gotas (fixa no celular): a página reserva esse espaço.
+    if (typeof ResizeObserver !== 'undefined') {
+      new ResizeObserver(() => {
+        document.documentElement.style.setProperty('--dose-h', `${Math.ceil($('dose-area').getBoundingClientRect().height)}px`);
+      }).observe($('dose-area'));
+    }
 
     $('focus-tab').addEventListener('click', () => { closeSheet(false); SIAB.state.view = 'focus'; SIAB.render(true); });
     $('overview-tab').addEventListener('click', () => { closeSheet(false); SIAB.state.view = 'overview'; SIAB.render(true); });
@@ -625,6 +638,13 @@ SIAB.bancada = (() => {
       const botao = evento.target.closest('[data-acao]');
       if (!botao) return;
       const t = SIAB.current();
+      if (botao.dataset.acao === 'lupa-escala') {
+        SIAB.state.lupaLog = !SIAB.state.lupaLog;
+        SIAB.loja.avisar();
+        SIAB.$('ver-conteudo').querySelector('[data-acao="lupa-escala"]')?.focus();
+        SIAB.announce(SIAB.state.lupaLog ? 'Lupa em escala logarítmica: os íons raros aparecem.' : 'Lupa em escala linear.');
+        return;
+      }
       if (botao.dataset.acao === 'csv') {
         const nome = SIAB.normalizar(t.name).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'tubo';
         SIAB.baixarArquivo(`siab-${nome}.csv`, SIAB.historyCSV(t));
@@ -673,5 +693,5 @@ SIAB.bancada = (() => {
     responsive();
   }
 
-  return { config, configurar, ligar, gotejar, colocar, selecionarTubo, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
+  return { config, configurar, ligar, gotejar, agitar, colocar, selecionarTubo, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
 })();

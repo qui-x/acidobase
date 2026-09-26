@@ -122,7 +122,8 @@ SIAB.manual = [
         'Realçar indicador: esconde a cor própria de alimentos como café e suco de morango, para ler só o indicador. Não muda o pH.',
         'Nome da cor: aparece sempre em texto, abaixo do tubo. “Cor composta” quer dizer que a amostra também tem cor própria.'
       ] },
-      { dica: 'Repolho roxo e indicador universal são cartas aproximadas: servem para comparar amostras, não para medir o pH exato.' }
+      { p: 'Como a cor é calculada: o indicador é um ácido fraco (HIn ⇌ H⁺ + In⁻) cujas duas formas têm cores diferentes. A fração da forma básica é α = 1 / (1 + 10^(pKIn − pH)) (equação de Henderson–Hasselbalch; pKIn ≈ 9,4 na fenolftaleína, 7,1 no bromotimol, 6,5 no tornassol e 3,7 no alaranjado de metila). A cor vista é a soma das absorções das duas formas (lei de Beer–Lambert): por isso o bromotimol passa por verde (amarelo + azul), o tornassol por violeta e o alaranjado de metila por laranja. O olho percebe a troca quando uma forma é cerca de 10 vezes mais abundante que a outra: daí a faixa de viragem de mais ou menos 1 unidade em torno do pKIn.' },
+      { dica: 'Repolho roxo e indicador universal são cartas aproximadas: servem para comparar amostras, não para medir o pH exato. A cor também não escurece nos recipientes largos: no laboratório, a quantidade de indicador acompanha o recipiente (poucas gotas no tubo, algumas a mais no béquer), e assim a intensidade fica parecida.' }
     ]
   },
   {
@@ -156,6 +157,7 @@ SIAB.manual = [
         'Escala de pH: fica no painel VER, acima das abas (veja “Painel VER”).',
         'Volume: quanto líquido há no recipiente e a capacidade dele (5 mL no tubo de ensaio).',
         'Cor: nome da cor e do indicador, abaixo do tubo.',
+        'Ponto final observado: quando a cor do indicador muda e fica, aparece “Ponto final observado: incolor → rosa claro com 10,05 mL”. Nos módulos Medir e Calcular, vem junto a equivalência calculada (quantidades estequiométricas). Os dois nem sempre coincidem: a diferença é o erro de titulação, e depende do indicador escolhido.',
         'Ponto de equivalência: aviso que aparece quando uma gota atinge exatamente a quantidade de base que reage com todo o ácido (ou o contrário).'
       ] },
       { dica: 'Equivalência (quantidades) e viragem (mudança de cor do indicador) são coisas diferentes e podem acontecer em gotas diferentes.' }
@@ -171,7 +173,9 @@ SIAB.manual = [
         'Desfazer: desfaz a última ação inteira (uma sequência de gotas, a troca de frasco, as medidas, a remoção de um tubo…).',
         'Linha acima do botão: o que está no conta-gotas, quantas gotas já caíram, o volume e o tamanho de cada gota.',
         'Capacidade: quando o recipiente fica cheio, os botões de gotejar ficam desativados.',
-        'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas e espalha a nova cor; o nível sobe nesse momento. Na viragem do indicador, a cor se espalha mais e o contorno pisca. “Reduzir animações” desliga esse movimento.'
+        'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas; o nível sobe nesse momento. “Reduzir animações” desliga esse movimento.',
+        'Cor onde a gota cai: antes de se misturar, a gota forma uma zona com pH próprio. Numa titulação com fenolftaleína, o NaOH deixa essa zona rosa mesmo com o resto ainda ácido; o rosa some quando a gota se mistura. Longe do ponto final, some logo; perto dele, demora; depois dele, fica. O simulador calcula essa zona em etapas (a gota com 1,5, 3, 6… 96 gotas de volume do líquido), até virar o recipiente todo.',
+        'Agitar (ao lado da cor): termina a mistura na hora, como girar o erlenmeyer ou mexer o béquer. No laboratório, o ponto final é quando a cor clara dura cerca de 30 segundos, agitando.'
       ] },
       { teclas: [['Enter', 'adiciona 1 gota'], ['Espaço (segurar)', 'goteja sem parar até soltar'], ['Tab', 'passa para o próximo controle']] },
       { dica: 'Tubos vinculados (veja “Tubos da bancada”) recebem as mesmas gotas ao mesmo tempo.' }
@@ -195,10 +199,12 @@ SIAB.manual = [
     id: 'ver', titulo: 'Painel VER', alvo: '#ver-panel',
     resumo: 'Escala de pH, gráfico, partículas, equação e histórico do tubo selecionado.',
     blocos: [
-      { p: 'No alto do painel fica a Escala de pH: o triângulo marca o pH na escala de 0 a 14, o tracejado marca o neutro e o colchete embaixo mostra a faixa de viragem do indicador (onde ele muda de cor). Com o pH oculto, a escala some junto com o número e o gráfico.' },
+      { p: 'No alto do painel fica a Escala de pH: o triângulo marca o pH na escala de 0 a 14, o tracejado marca o neutro e o colchete embaixo mostra a faixa de viragem do indicador (onde ele muda de cor). A segunda linha mostra [H₃O⁺] em potências de 10 (10⁰, 10⁻⁷, 10⁻¹⁴ mol/L): a escala de pH é logarítmica, e cada unidade de pH é 10 vezes mais ou menos H₃O⁺. Com o pH oculto, a escala some junto com o número e o gráfico.' },
       { lista: [
         'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência. Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca). Tracejado horizontal: pH neutro.',
-        'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece.',
+        'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; círculo vazado: íon espectador (Na⁺, Cl⁻…, que não troca prótons); quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece. As partículas passeiam devagar (difusão).',
+        'Escala logarítmica (botão na lupa): o número de partículas passa a acompanhar o expoente da concentração (cada 3 partículas = 10 vezes), e aparecem os íons raros, como o OH⁻ em meio ácido.',
+        'Acontecimentos na lupa: depois das gotas, partículas do conta-gotas entram e reagem (H₃O⁺ + OH⁻ → 2 H₂O, ou CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O com um ácido fraco). Com um ácido fraco e sua base conjugada presentes, um próton pula de uma partícula para a outra de tempos em tempos e as quantidades não mudam: o equilíbrio é dinâmico.',
         'Equação: ionização do que está no tubo e no conta-gotas, reação ao misturar e números. pOH aparece no módulo Medir; [H₃O⁺], Ka, α e quantidades em mmol, no módulo Calcular.',
         'Histórico: tabela gota a gota. “Baixar tabela (CSV)” abre em planilha (ponto e vírgula, vírgula decimal). “Registrar no caderno” guarda a leitura atual.'
       ] },

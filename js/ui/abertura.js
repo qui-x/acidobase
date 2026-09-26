@@ -31,7 +31,7 @@ SIAB.abertura = (() => {
     const tubo = { ...SIAB.TUBE_DEFAULTS, solution: solucao, indicator: indicador, concentration: .01, additions: [] };
     const r = SIAB.chem.solve(tubo);
     const cor = SIAB.chem.liquid(tubo, false, r);
-    return { pH: r.pH, cor: `rgba(${cor.rgb.map(Math.round).join(',')},${Math.max(cor.opacity, .22)})`, nome: cor.name };
+    return { pH: r.pH, cor: `rgba(${cor.rgb.map(Math.round).join(',')},${Math.round(Math.max(cor.opacity, .22) * 100) / 100})`, nome: cor.name };
   }
 
   const X = n => 50 + n * 75;

@@ -180,15 +180,16 @@ SIAB.chem = (() => {
     const { terms } = mixture(tube);
     const h = result.h, oh = result.oh;
     const list = [];
-    const add = (formula, conc, type) => {
+    const add = (formula, conc, type, extra = {}) => {
       if (!(conc > 0)) return;
       const found = list.find(x => x.formula === formula);
       if (found) found.conc += conc;
-      else list.push({ formula, conc, type });
+      else list.push({ formula, conc, type, ...extra });
     };
     add('H₃O⁺', h, 'ion');
     add('OH⁻', oh, 'ion');
-    terms.spectators.forEach(x => add(x.formula, x.conc, 'ion'));
+    // Íons espectadores (Na⁺, Cl⁻…): estão na solução, mas não trocam prótons.
+    terms.spectators.forEach(x => add(x.formula, x.conc, 'ion', { espectador: true }));
     terms.acids.forEach(x => {
       add(x.solution.acidForm, x.c * h / (x.ka + h), 'molecule');
       add(x.solution.baseForm, x.c * x.ka / (x.ka + h), 'ion');
@@ -210,6 +211,19 @@ SIAB.chem = (() => {
       add(`${x.solution.formula} sólido`, x.c - d, 'solid');
     });
     return list.sort((p, q) => q.conc - p.conc);
+  }
+
+  // Zona onde uma gota acabou de cair, antes de se misturar: a gota e um
+  // pouco (vZona) do líquido que já estava no recipiente. Tem as mesmas
+  // proporções que o recipiente todo recebendo dv·V/vZona de gotas; por isso
+  // basta "fingir" essa quantidade de gotas. É o que deixa a fenolftaleína
+  // rosa onde a gota de NaOH cai, mesmo com o resto ainda ácido.
+  function zona(tube, vZona) {
+    const va = added(tube);
+    const dv = tube.additions.at(-1) || 0;
+    const antes = base(tube).reduce((sum, x) => sum + x.volume, 0) + va - dv;
+    const local = { ...tube, additions: dv > 0 && vZona > 0 ? [va - dv + dv * antes / Math.min(vZona, antes)] : tube.additions };
+    return { tubo: local, r: solve(local) };
   }
 
   // Grau de ionização de um ácido fraco monoprótico: α = Ka / (Ka + [H₃O⁺]).
@@ -234,12 +248,24 @@ SIAB.chem = (() => {
       return { rgb: mix(stops[i][1], stops[i + 1][1], t), opacity: .86, name: t < .5 ? stops[i][2] : stops[i + 1][2], progress: null };
     }
     const ind = SIAB.indicators[indicator];
-    // Interpolação visual suave APENAS da cor, na faixa declarada.
-    let t = clamp((pH - ind.low) / (ind.high - ind.low), 0, 1);
-    t = t * t * (3 - 2 * t);
-    const rgb = t < .5 ? mix(ind.acid, ind.middle, t * 2) : mix(ind.middle, ind.base, (t - .5) * 2);
-    const name = t < .02 ? ind.acidName : t > .98 ? ind.baseName : ind.middleName;
-    return { rgb, opacity: indicator === 'phenol' ? .14 + .74 * t : .86, name, progress: t };
+    // Fração da forma básica do indicador (In⁻): Henderson–Hasselbalch.
+    const a = fracaoBasica(ind, pH);
+    // Cor transmitida: soma das absorbâncias das duas formas (Beer–Lambert).
+    // É isso que faz o bromotimol passar por verde e o tornassol por violeta.
+    const A = absorbancia(ind.acid).map((x, i) => (1 - a) * x + a * absorbancia(ind.base)[i]);
+    const T = A.map(x => 10 ** -x);
+    const rgb = T.map(x => Math.round(255 * x));
+    // Nome pela faixa declarada (a mesma usada nas missões e no manual).
+    const name = pH < ind.low ? ind.acidName : pH > ind.high ? ind.baseName : ind.middleName;
+    return { rgb, opacity: clamp(1 - Math.min(...T), .14, .97), name, progress: a };
+  }
+
+  // Absorbância de cada canal (R, G, B) de uma cor transmitida: A = −log₁₀ T.
+  function absorbancia(rgb) { return rgb.map(v => -Math.log10(Math.max(v, 8) / 255)); }
+  // α = [In⁻] / ([HIn] + [In⁻]) = 1 / (1 + 10^(pKIn − pH)).
+  function fracaoBasica(ind, pH) {
+    const pk = ind.pKIn ?? (ind.low + ind.high) / 2;
+    return 1 / (1 + 10 ** (pk - pH));
   }
 
   // Vários indicadores no mesmo recipiente (depois de misturar tubos): cada um
@@ -306,5 +332,5 @@ SIAB.chem = (() => {
     };
   }
 
-  return { solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base };
+  return { solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base, zona, fracaoBasica };
 })();
