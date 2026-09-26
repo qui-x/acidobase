@@ -6,7 +6,8 @@
 
    - Bancada (laboratório ou missão): em vez dos botões e painéis, sai um
      RELATÓRIO DA BANCADA: resumo de todos os recipientes, o recipiente em foco
-     (desenho, preparo, leitura, gráfico e tabela de gotas), espaço para
+     (desenho, preparo, leitura, gráfico e tabela de gotas), ou todos os
+     recipientes escolhidos na visão geral, cada um com seus detalhes. Espaço para
      observações e a nota sobre o modelo químico.
    - Caderno, manual e demais telas: o conteúdo da tela, com o cabeçalho da folha.
    Funciona pelo botão "Imprimir relatório", pelos botões de imprimir de cada
@@ -81,15 +82,18 @@ SIAB.impressao = (() => {
   // Relatório da bancada em uso (laboratório livre ou missão).
   function relatorioBancada() {
     const s = SIAB.state, foco = SIAB.current();
+    const personalizado = Array.isArray(s.relatorioIds);
+    const tubos = personalizado ? s.tubes.filter(t => s.relatorioIds.includes(t.id)) : s.tubes;
     const missao = SIAB.bancada.config.modo === 'missao';
     const nivel = missao ? SIAB.bancada.config.nivel : s.level;
     const titulo = missao ? TITULOS.missao : TITULOS.laboratorio;
     const subtitulo = missao ? $('mission-bar')?.textContent.trim() || '' : `Módulo ${SIAB.MODULOS[nivel]?.nome || ''}`;
-    if (!foco) {
-      return `${cabecalho(titulo, { subtitulo })}<p class="folha-vazia">A bancada está vazia: nenhum recipiente para relatar.</p>`;
+    if (!tubos.length || (!personalizado && !foco)) {
+      return `${cabecalho(titulo, { subtitulo })}<p class="folha-vazia">${personalizado ? 'Nenhum dos recipientes escolhidos está na bancada. Selecione tubos na visão geral para atualizar o relatório.' : 'A bancada está vazia: nenhum recipiente para relatar.'}</p>`;
     }
     const ph = r => (s.showPH ? `${SIAB.phFormat(r)} <span class="folha-fase">(${r.phase.toLowerCase()})</span>` : 'oculto');
-    const resumo = s.tubes.map((t, n) => {
+    const resumo = tubos.map(t => {
+      const n = s.tubes.indexOf(t);
       const r = SIAB.chem.solve(t), c = SIAB.chem.liquid(t, s.indicatorOnly, r);
       const cap = SIAB.capacidade(t), vid = SIAB.VIDRARIAS[t.vidraria || s.vidraria]?.curto || 'Tubo';
       return `<tr${t.id === s.activeId ? ' class="folha-em-foco"' : ''}><td class="num">${n + 1}</td><td>${esc(t.name)}</td><td>${esc(`${vid} ${cap} mL`)}</td>
@@ -98,43 +102,47 @@ SIAB.impressao = (() => {
         <td class="num">${ph(r)}</td><td><span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}</td></tr>`;
     }).join('');
 
-    const t = foco, r = SIAB.chem.solve(t), c = SIAB.chem.liquid(t, s.indicatorOnly, r);
-    const cap = SIAB.capacidade(t);
-    const preparo = [
-      linha('Recipiente', esc(nomeRecipiente(t, s))),
-      linha('Conteúdo inicial', esc(SIAB.resumoConteudo(t))),
-      linha('Conta-gotas', esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))),
-      linha('Volume da gota', `${SIAB.format(t.dropVolume)} mL`),
-      linha('Indicador', esc(SIAB.nomeIndicador(t))),
-      r.temperature !== 25 ? linha('Temperatura', `${SIAB.format(r.temperature, 0)} °C`) : ''
-    ].join('');
-    const leitura = [
-      linha('pH', ph(r)),
-      nivel === 'calcular' && s.showPH ? linha('[H₃O⁺]', `${SIAB.cientifico(r.h)} mol/L`) : '',
-      linha('Cor', `<span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}`),
-      linha('Volume no recipiente', `${SIAB.volumeTexto(r.volume, cap)} mL de ${cap} mL`),
-      linha('Adicionado', `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL`),
-      nivel !== 'explorar' && r.equivalenceVolume !== null ? linha('Equivalência prevista', `${SIAB.format(r.equivalenceVolume)} mL`) : ''
-    ].join('');
-    const grafico = s.showPH && t.additions.length
-      ? `<figure class="folha-grafico">${SIAB.grafico.svg(t, { pontoFinal: SIAB.pontoFinal(t) })}<figcaption>Curva de pH × volume adicionado. Faixa colorida: viragem do indicador; linha tracejada: pH neutro; losango: ponto final observado.</figcaption></figure>`
-      : `<p class="folha-nota">${s.showPH ? 'Sem gotas ainda: o gráfico aparece depois das primeiras gotas.' : 'O pH estava oculto na bancada; o gráfico não foi impresso.'}</p>`;
+    const detalhes = (personalizado ? tubos : [foco]).map(t => {
+      const r = SIAB.chem.solve(t), c = SIAB.chem.liquid(t, s.indicatorOnly, r);
+      const cap = SIAB.capacidade(t);
+      const preparo = [
+        linha('Recipiente', esc(nomeRecipiente(t, s))),
+        linha('Conteúdo inicial', esc(SIAB.resumoConteudo(t))),
+        linha('Conta-gotas', esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))),
+        linha('Volume da gota', `${SIAB.format(t.dropVolume)} mL`),
+        linha('Indicador', esc(SIAB.nomeIndicador(t))),
+        r.temperature !== 25 ? linha('Temperatura', `${SIAB.format(r.temperature, 0)} °C`) : ''
+      ].join('');
+      const leitura = [
+        linha('pH', ph(r)),
+        nivel === 'calcular' && s.showPH ? linha('[H₃O⁺]', `${SIAB.cientifico(r.h)} mol/L`) : '',
+        linha('Cor', `<span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}`),
+        linha('Volume no recipiente', `${SIAB.volumeTexto(r.volume, cap)} mL de ${cap} mL`),
+        linha('Adicionado', `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL`),
+        nivel !== 'explorar' && r.equivalenceVolume !== null ? linha('Equivalência prevista', `${SIAB.format(r.equivalenceVolume)} mL`) : ''
+      ].join('');
+      const grafico = s.showPH && t.additions.length
+        ? `<figure class="folha-grafico">${SIAB.grafico.svg(t, { pontoFinal: SIAB.pontoFinal(t) })}<figcaption>Curva de pH × volume adicionado. Faixa colorida: viragem do indicador; linha tracejada: pH neutro; losango: ponto final observado.</figcaption></figure>`
+        : `<p class="folha-nota">${s.showPH ? 'Sem gotas ainda: o gráfico aparece depois das primeiras gotas.' : 'O pH estava oculto na bancada; o gráfico não foi impresso.'}</p>`;
+
+      return `<section class="folha-secao folha-detalhe${personalizado ? ' folha-selecionado' : ''}">
+          <h2>${personalizado ? `Recipiente ${s.tubes.indexOf(t) + 1}` : 'Em foco'}: ${esc(t.name)}</h2>
+          <div class="folha-foco">
+            <figure class="folha-vidro">${SIAB.tubeSVG(t, 'impressao', false, s.vidraria)}<figcaption>${esc(c.name)}</figcaption></figure>
+            <div class="folha-dados"><h3>Preparo</h3><dl>${preparo}</dl><h3>Leitura</h3><dl>${leitura}</dl></div>
+          </div>
+          ${grafico}
+          <div class="folha-bloco"><h3>Tabela de gotas</h3>
+          ${tabelaGotas(t)}</div>
+        </section>`;
+    }).join('');
 
     return `${cabecalho(titulo, { subtitulo })}
       <section class="folha-secao">
-        <h2>Recipientes na bancada</h2>
+        <h2>${personalizado ? `Recipientes selecionados (${tubos.length})` : 'Recipientes na bancada'}</h2>
         <table class="folha-tabela folha-resumo"><thead><tr><th scope="col">#</th><th scope="col">Nome</th><th scope="col">Recipiente</th><th scope="col">Conteúdo</th><th scope="col">Conta-gotas</th><th scope="col">Indicador</th><th scope="col">Gotas</th><th scope="col">pH</th><th scope="col">Cor</th></tr></thead><tbody>${resumo}</tbody></table>
       </section>
-      <section class="folha-secao folha-detalhe">
-        <h2>Em foco: ${esc(t.name)}</h2>
-        <div class="folha-foco">
-          <figure class="folha-vidro">${SIAB.tubeSVG(t, 'impressao', false, s.vidraria)}<figcaption>${esc(c.name)}</figcaption></figure>
-          <div class="folha-dados"><h3>Preparo</h3><dl>${preparo}</dl><h3>Leitura</h3><dl>${leitura}</dl></div>
-        </div>
-        ${grafico}
-        <div class="folha-bloco"><h3>Tabela de gotas</h3>
-        ${tabelaGotas(t)}</div>
-      </section>
+      ${detalhes}
       <section class="folha-secao folha-observacoes">
         <h2>Observações e conclusão</h2>
         <div class="folha-linhas" aria-hidden="true">${'<span></span>'.repeat(5)}</div>

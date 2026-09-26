@@ -18,6 +18,7 @@
   SIAB.tour.ligar();
   SIAB.segredo.ligar();
   SIAB.impressao.ligar();
+  SIAB.selecaoTubos.ligar();
   SIAB.missaoTela.ligar();
   SIAB.telas.caderno.ligar();
   SIAB.professor.ligar();

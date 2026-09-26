@@ -171,6 +171,8 @@ SIAB.render = (syncForm = false) => {
     }).join('');
   }
 
+  SIAB.selecaoTubos.atualizar();
+
   // Painel do laboratório.
   if (cfg.modo === 'laboratorio') {
     SIAB.modulos.render();
@@ -201,6 +203,7 @@ SIAB.render = (syncForm = false) => {
 SIAB.renderVazia = () => {
   const $ = SIAB.$, s = SIAB.state;
   s.view = 'focus';
+  SIAB.selecaoTubos.atualizar();
   $('workspace').dataset.modo = SIAB.bancada.config.modo;
   $('workspace').classList.add('vazia');
   $('workspace').classList.remove('overview');

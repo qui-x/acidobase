@@ -9,6 +9,7 @@ SIAB.criarBancada = () => ({
   nextId: 1,
   nextGroup: 1,
   view: 'focus',          // 'focus' (tubo em foco) ou 'overview' (visão geral)
+  relatorioIds: null,     // null: relatório padrão; lista: apenas estes recipientes
   showPH: true,
   indicatorOnly: false,   // "Realçar indicador": oculta a cor própria da amostra
   level: 'explorar',      // explorar, medir ou calcular (controles visíveis)

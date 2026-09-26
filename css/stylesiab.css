@@ -875,6 +875,27 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .overview-tube .small { font-size: .75rem; display: block; }
 .overview-heading { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 14px; }
 .overview-heading p { flex: 1 1 auto; }
+.overview-heading-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-left: auto; }
+.overview-heading #overview-hint { flex-basis: 100%; margin-bottom: 14px; }
+.overview-heading-actions .ordenar-ph-btn { min-height: 44px; }
+.overview-selection, .overview-report {
+  margin-bottom: 16px; padding: 12px; border: 1px solid var(--border); border-radius: var(--radius);
+  background: var(--panel2); display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+}
+.overview-selection { border-color: var(--accent); }
+.overview-selection > p, .overview-report > div:first-child { flex: 1 1 12rem; font-size: .875rem; font-weight: 600; }
+.overview-report .small { font-weight: 400; }
+.overview-selection-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.overview-selection-actions .quiet-btn { min-height: 44px; }
+.overview-tube { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; touch-action: manipulation; }
+.overview-check {
+  position: absolute; top: 8px; right: 8px; width: 26px; height: 26px; border: 2px solid var(--secondary);
+  border-radius: 5px; display: grid; place-items: center; background: var(--panel); color: var(--text); font-weight: 700;
+}
+.overview-grid.selecting .overview-tube { border-color: var(--border); }
+.overview-grid.selecting .overview-tube[aria-pressed=true] { border: 2px solid var(--accent); padding: 13px 9px; background: var(--hover); }
+.overview-tube[aria-pressed=true] .overview-check { border-color: var(--accent); color: var(--accent); }
+.overview-report-mark { display: block; color: var(--accent); font-size: .75rem; margin-top: 6px; font-weight: 600; }
 .ordenar-ph-btn { min-height: 36px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel2); color: var(--secondary); font-size: .8rem; font-weight: 600; }
 .ordenar-ph-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 .ordenar-ph-btn:disabled { opacity: .55; }
@@ -1379,6 +1400,32 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .tube-strip { padding: 8px 12px; }
   .strip-heading { display: none; }
   .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+  .overview-view { padding: 16px; }
+  .overview-heading-actions { width: 100%; margin: 10px 0 0; }
+  .overview-selection-actions { width: 100%; }
+  .overview-selection-actions > button { flex: 1 1 8rem; min-width: 0; }
+  .overview-selection-actions .primary-btn { flex-basis: 100%; }
+  .overview-readout { flex-wrap: wrap; }
+  /* Na seleção, cada recipiente vira uma linha inteira para tocar e rolar. */
+  .overview-grid.selecting { grid-template-columns: minmax(0, 1fr); }
+  .overview-grid.selecting .overview-tube {
+    display: grid; grid-template-columns: 26px 48px minmax(0, 1fr); column-gap: 10px;
+    text-align: left; align-items: center; padding: 12px; min-height: 112px;
+  }
+  .overview-grid.selecting .overview-tube[aria-pressed=true] { padding: 11px; }
+  .overview-grid.selecting .overview-tube > :not(.tube-svg):not(.overview-check):not(.overview-num) { grid-column: 3; min-width: 0; overflow-wrap: anywhere; }
+  .overview-grid.selecting .overview-tube > strong { margin-top: 0; }
+  .overview-grid.selecting .overview-check { position: static; grid-column: 1; grid-row: 1 / span 8; }
+  .overview-grid.selecting .tube-svg { grid-column: 2; grid-row: 1 / span 8; width: 48px; height: 100px; }
+  .overview-grid.selecting .overview-num { display: none; }
+  .overview-grid.selecting .overview-color, .overview-grid.selecting .overview-readout { justify-content: flex-start; }
+  .workspace.selecting-tubes { padding-bottom: calc(var(--selection-h, 200px) + 16px) !important; }
+  .workspace.selecting-tubes .overview-selection {
+    position: fixed; left: 0; right: 0; bottom: var(--bottom-h); z-index: 40;
+    margin: 0; border-radius: 12px 12px 0 0; padding: 10px 16px; background: var(--panel);
+    max-height: 45vh; max-height: 45dvh; overflow-y: auto;
+  }
+  html:has(.workspace.selecting-tubes) { scroll-padding-bottom: calc(var(--bottom-h) + var(--selection-h, 200px) + 16px); }
   .dose-actions button { min-height: 48px; }
   .focus-view .dose-area { margin: 6px -16px 0; }
   /* Celular: a barra do conta-gotas fica FIXA acima da navegação (sticky soltava
@@ -1489,6 +1536,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .folha h2 { font-size: 11.5pt; margin: 0 0 2.5mm; padding-bottom: 1mm; border-bottom: .6pt solid #999; color: #111; }
   .folha h3 { font-size: 9.5pt; margin: 3mm 0 1.5mm; color: #6b2185; text-transform: uppercase; letter-spacing: .06em; }
   .folha-secao { margin-bottom: 6mm; }
+  .folha-selecionado { break-before: page; }
   .folha-vazia { font-size: 11pt; margin-top: 10mm; }
   .folha-tabela { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
   .folha-tabela th { text-align: left; font-weight: 700; background: #eef0f4; border-bottom: .8pt solid #555; padding: 1.2mm 2mm; }
