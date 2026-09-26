@@ -896,6 +896,8 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .overview-grid.selecting .overview-tube[aria-pressed=true] { border: 2px solid var(--accent); padding: 13px 9px; background: var(--hover); }
 .overview-tube[aria-pressed=true] .overview-check { border-color: var(--accent); color: var(--accent); }
 .overview-report-mark { display: block; color: var(--accent); font-size: .75rem; margin-top: 6px; font-weight: 600; }
+.overview-link-hint { margin: 0 0 14px; }
+.overview-tube .overview-group { color: var(--accent); font-weight: 600; margin-top: 6px; }
 .ordenar-ph-btn { min-height: 36px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel2); color: var(--secondary); font-size: .8rem; font-weight: 600; }
 .ordenar-ph-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 .ordenar-ph-btn:disabled { opacity: .55; }

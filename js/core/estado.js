@@ -31,6 +31,17 @@ SIAB.usarBancada = nome => { SIAB.activeBench = nome; };
 SIAB.current = () => SIAB.state.tubes.find(t => t.id === SIAB.state.activeId);
 // Tubos vinculados recebem as mesmas gotas.
 SIAB.targets = tube => (tube.group ? SIAB.state.tubes.filter(t => t.group === tube.group) : [tube]);
+// Vínculos criados pela seleção sincronizam as doses e mantêm preparos
+// individuais. A comparação de indicadores continua compartilhando o preparo.
+SIAB.preparoTargets = tube => tube.groupMode === 'drops' ? [tube] : SIAB.targets(tube);
+SIAB.nomeGrupo = tube => tube.group ? `Grupo ${tube.group}` : '';
+SIAB.limparGrupos = (bench = SIAB.state) => {
+  const tamanhos = new Map();
+  bench.tubes.forEach(t => { if (t.group) tamanhos.set(t.group, (tamanhos.get(t.group) || 0) + 1); });
+  bench.tubes.forEach(t => {
+    if (!t.group || tamanhos.get(t.group) < 2) { t.group = null; delete t.groupMode; }
+  });
+};
 
 SIAB.TUBE_DEFAULTS = {
   solution: 'hcl', concentration: .01, initialVolume: 1, dilution: 1,

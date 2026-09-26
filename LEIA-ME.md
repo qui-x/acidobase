@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.4
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.5
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,31 +25,70 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.4`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.5`), o que evita
 essa mistura.
 
-## Seleção de tubos para relatório · 0.6.4
+## Seleção, vínculos e relatório · 0.6.5
 
 Na **Visão geral**, use **Ctrl + clique** (⌘ + clique no Mac), pressione um
-recipiente por cerca de meio segundo ou use **Selecionar tubos**. O modo de
-seleção permite marcar e desmarcar com um toque e **Selecionar todos** os
-recipientes presentes na bancada. Arrastar ou rolar cancela a espera do gesto.
+recipiente por cerca de meio segundo ou use **Selecionar tubos**. Marque e
+desmarque com um toque, ou use **Selecionar todos**. Arrastar ou rolar cancela
+a espera do gesto. Uma nova seleção começa vazia; **Revisar seleção** recupera
+somente a lista já confirmada para o relatório.
 
 No celular (até 900 px), os recipientes se organizam em **lista vertical, um
 por linha**, com miniatura, nome e marca de seleção. As ações ficam na parte
 inferior da tela, acima da navegação; a lista reserva espaço para essa barra.
 No computador, a seleção mantém a grade da visão geral.
 
-**Adicionar ao relatório** confirma a seleção. **Imprimir relatório** passa a
-incluir somente os recipientes escolhidos, com preparo, leitura, gráfico e
-histórico de cada um. **Revisar seleção** permite trocar os recipientes;
-**Usar relatório padrão** volta ao resumo de toda a bancada e ao detalhe do
-recipiente em foco. O relatório usa as leituras atuais; não é um registro
-congelado nem uma nota do caderno. A seleção vale enquanto a bancada estiver
-aberta e fica separada entre laboratório livre e missão.
+### Imprimir pelo botão da barra lateral
+
+O único botão **Imprimir relatório** fica no painel esquerdo (no celular,
+abra **Prateleira**). Ele usa os tubos marcados na seleção em andamento,
+inclusive antes de usar **Adicionar ao relatório**. O contador no próprio
+botão informa quantos recipientes serão impressos. Uma seleção vazia não
+imprime todos por engano; Ctrl+P segue o mesmo critério.
+
+**Adicionar ao relatório** confirma a lista para uso posterior e mostra esse
+mesmo botão na prateleira. Cada recipiente escolhido ganha preparo, leitura,
+gráfico e histórico no documento. **Revisar seleção** permite trocar a lista;
+**Usar relatório padrão** volta ao resumo da bancada e ao detalhe do tubo em
+foco. São usadas as leituras atuais, não um registro congelado. A lista vale
+até recarregar a página e fica separada entre laboratório livre e missão.
+
+### Vincular tubos já preparados
+
+Selecione pelo menos dois tubos e use **Vincular tubos**. Os cartões, a tira
+da bancada e o tubo em foco mostram **Grupo 1**, **Grupo 2** etc. Cada comando
+de gotejamento adiciona a mesma dose a todos os integrantes do grupo.
+
+- Amostra, indicador, conta-gotas e gotas anteriores são preservados.
+- O volume de cada nova gota é igualado ao do tubo em foco, se ele estiver
+  selecionado; caso contrário, ao primeiro selecionado na ordem da bancada.
+  O texto da seleção informa a referência antes de vincular.
+- Cada tubo utiliza seu próprio reagente do conta-gotas. Para comparar amostras
+  usando o mesmo titulante, prepare esse conta-gotas nos tubos desejados.
+- Nos vínculos manuais, trocar frasco ou aplicar preparo afeta só o tubo em
+  foco. O volume da gota continua comum ao grupo. Recomeçar gotas afeta só o
+  tubo em foco. **Comparar indicadores** mantém o preparo compartilhado das
+  três cópias, como antes.
+- **Desvincular**, na seleção, retira os tubos marcados dos grupos.
+  **Desvincular este tubo**, na prateleira, retira apenas o tubo em foco.
+  Grupos que ficarem com um único integrante são desfeitos automaticamente.
+- Ao vincular integrantes de grupos diferentes, só os marcados formam o novo
+  grupo; os demais mantêm seus vínculos se ainda houver pelo menos dois.
+- **Desfazer** restaura vínculos e volume de gota anteriores. Se algum tubo não
+  comportar uma dose, ela não é adicionada a nenhum integrante do grupo.
+
+Nas missões, os vínculos definidos pelo roteiro continuam protegidos.
 
 Teclado: Tab navega pelos controles; Enter/Espaço marca um cartão em modo de
 seleção; Ctrl/⌘ + A seleciona todos quando o foco está nessa área; Esc cancela.
+
+Verificação: `tests/selecao-relatorio.test.cjs` cobre seleção, gestos, impressão
+pelo painel, vinculação, desfazer e capacidade dos grupos com jsdom. Esses
+testes verificam eventos e estado; não substituem inspeção visual e uso em
+um aparelho com tela de toque.
 
 ## O que há na versão 0.6
 

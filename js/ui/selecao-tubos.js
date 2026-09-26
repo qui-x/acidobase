@@ -46,13 +46,28 @@ SIAB.selecaoTubos = (() => {
     $('selecao-todos-btn').disabled = !total;
     $('selecao-relatorio-btn').disabled = !quantidade;
     $('selecao-relatorio-btn').textContent = Array.isArray(s.relatorioIds) ? 'Atualizar relatório' : 'Adicionar ao relatório';
+    const escolhidos = s.tubes.filter(t => e.ids.has(t.id));
+    const podeVincular = SIAB.bancada.config.controles.has('tubos');
+    const primeiro = escolhidos[0];
+    const mesmoGrupo = primeiro?.group && escolhidos.every(t => t.group === primeiro.group) && SIAB.targets(primeiro).length === quantidade;
+    $('selecao-vincular-btn').hidden = !podeVincular;
+    $('selecao-desvincular-btn').hidden = !podeVincular;
+    $('selecao-vincular-btn').disabled = quantidade < 2 || Boolean(mesmoGrupo);
+    $('selecao-desvincular-btn').disabled = !escolhidos.some(t => t.group);
+    $('selecao-vinculo-dica').hidden = !e.ativa || !podeVincular;
+    const referencia = escolhidos.find(t => t.id === s.activeId) || primeiro;
+    $('selecao-vinculo-dica').textContent = quantidade < 2
+      ? 'Marque pelo menos dois tubos para vincular o gotejamento.'
+      : mesmoGrupo ? `Os tubos selecionados já formam o ${SIAB.nomeGrupo(primeiro)}.`
+        : `Vincular reúne somente os tubos marcados, com gotas de ${SIAB.format(referencia.dropVolume)} mL (como em ${referencia.name}). Cada um mantém sua amostra, seu indicador e seu conta-gotas.`;
     $('overview-grid').classList.toggle('selecting', e.ativa);
     $('workspace').classList.toggle('selecting-tubes', e.ativa);
     const incluidos = new Set(s.relatorioIds || []);
     $('overview-grid').querySelectorAll('.overview-tube').forEach(botao => {
       const id = Number(botao.dataset.tube), tubo = s.tubes.find(t => t.id === id);
       if (!tubo) return;
-      botao.setAttribute('aria-label', e.ativa ? tubo.name : `Abrir ${tubo.name}${incluidos.has(id) ? ', incluído no relatório' : ''}`);
+      const nome = `${tubo.name}${tubo.group ? ', ' + SIAB.nomeGrupo(tubo) : ''}`;
+      botao.setAttribute('aria-label', e.ativa ? nome : `Abrir ${nome}${incluidos.has(id) ? ', incluído no relatório' : ''}`);
       if (e.ativa) botao.setAttribute('aria-pressed', String(e.ids.has(id)));
       else botao.removeAttribute('aria-pressed');
       let marca = botao.querySelector('.overview-check');
@@ -76,16 +91,26 @@ SIAB.selecaoTubos = (() => {
     const personalizado = Array.isArray(s.relatorioIds), n = incluidos.size;
     $('overview-relatorio').hidden = !personalizado || e.ativa;
     $('relatorio-tubos-contagem').textContent = `${n} ${n === 1 ? 'tubo no relatório' : 'tubos no relatório'}`;
-    $('relatorio-imprimir-btn').disabled = !n;
-    $('imprimir-relatorio').disabled = personalizado ? !n : !total;
-    $('imprimir-relatorio').textContent = personalizado ? `Imprimir relatório (${n})` : 'Imprimir relatório';
+    const idsImpressao = idsRelatorio(), quantidadeImpressao = idsImpressao?.length;
+    $('imprimir-relatorio').disabled = idsImpressao !== null ? !quantidadeImpressao : !total;
+    $('imprimir-relatorio').textContent = idsImpressao !== null ? `Imprimir relatório (${quantidadeImpressao})` : 'Imprimir relatório';
+    $('relatorio-selecao-resumo').textContent = idsImpressao !== null
+      ? `${quantidadeImpressao} ${quantidadeImpressao === 1 ? 'tubo escolhido' : 'tubos escolhidos'} na visão geral. Cada um terá preparo, leitura, gráfico e histórico.`
+      : 'Resumo da bancada e detalhes do tubo em foco. Escolha tubos na visão geral para personalizar.';
   }
 
-  function iniciar() {
+  // O botão lateral e Ctrl+P usam a seleção em andamento, quando houver;
+  // fora dela, usam a lista já confirmada pelo estudante.
+  function idsRelatorio() {
+    const e = normalizar();
+    return e.ativa && visivel() ? [...e.ids] : SIAB.state.relatorioIds ?? null;
+  }
+
+  function iniciar(doRelatorio = false) {
     const e = normalizar();
     if (!e.ativa) {
       e.ativa = true;
-      e.ids = new Set(SIAB.state.relatorioIds || []);
+      e.ids = new Set(doRelatorio ? SIAB.state.relatorioIds || [] : []);
     }
     return e;
   }
@@ -114,9 +139,13 @@ SIAB.selecaoTubos = (() => {
     if (!e.ativa || !e.ids.size) return;
     SIAB.state.relatorioIds = SIAB.state.tubes.filter(t => e.ids.has(t.id)).map(t => t.id);
     const n = SIAB.state.relatorioIds.length;
-    sair();
-    $('relatorio-imprimir-btn').focus();
-    SIAB.notice(`${n} ${n === 1 ? 'tubo incluído' : 'tubos incluídos'} no relatório, com preparo, leitura, gráfico e histórico.`);
+    sair(true);
+    // Conduz ao mesmo botão do painel esquerdo, inclusive no painel móvel.
+    if (SIAB.bancada.mobile.matches) SIAB.bancada.openSheet();
+    else SIAB.trilho.mostrar('controls', 'relatorio');
+    $('imprimir-relatorio').scrollIntoView({ block: 'nearest' });
+    $('imprimir-relatorio').focus({ preventScroll: true });
+    SIAB.notice(`${n} ${n === 1 ? 'tubo incluído' : 'tubos incluídos'}. Use “Imprimir relatório” no painel da prateleira.`);
   }
 
   function ligar() {
@@ -133,9 +162,16 @@ SIAB.selecaoTubos = (() => {
     $('selecao-todos-btn').addEventListener('click', todos);
     $('selecao-cancelar-btn').addEventListener('click', () => sair(true));
     $('selecao-relatorio-btn').addEventListener('click', adicionar);
-    $('relatorio-imprimir-btn').addEventListener('click', () => SIAB.impressao.imprimir());
+    $('selecao-vincular-btn').addEventListener('click', () => {
+      if (SIAB.bancada.vincularTubos([...normalizar().ids])) $('selecao-desvincular-btn').focus();
+    });
+    $('selecao-desvincular-btn').addEventListener('click', () => {
+      if (SIAB.bancada.desvincularTubos([...normalizar().ids])) {
+        ($('selecao-vincular-btn').disabled ? $('selecao-todos-btn') : $('selecao-vincular-btn')).focus();
+      }
+    });
     $('relatorio-editar-btn').addEventListener('click', () => {
-      iniciar(); atualizar();
+      iniciar(true); atualizar();
       grade.querySelector('button')?.focus();
     });
     $('relatorio-limpar-btn').addEventListener('click', () => {
@@ -210,7 +246,7 @@ SIAB.selecaoTubos = (() => {
       }
     });
     document.addEventListener('keydown', evento => {
-      if (!visivel() || !estado().ativa || document.querySelector('dialog[open]')) return;
+      if (!visivel() || !estado().ativa || $('controls').classList.contains('open') || document.querySelector('dialog[open]')) return;
       if (evento.key === 'Escape') { evento.preventDefault(); sair(true); }
       else if ((evento.ctrlKey || evento.metaKey) && evento.key.toLowerCase() === 'a' && evento.target.closest('#overview-view')) {
         evento.preventDefault();
@@ -219,5 +255,5 @@ SIAB.selecaoTubos = (() => {
       }
     });
   }
-  return { ligar, atualizar, sair };
+  return { ligar, atualizar, sair, idsRelatorio };
 })();

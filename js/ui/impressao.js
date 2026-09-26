@@ -82,14 +82,15 @@ SIAB.impressao = (() => {
   // Relatório da bancada em uso (laboratório livre ou missão).
   function relatorioBancada() {
     const s = SIAB.state, foco = SIAB.current();
-    const personalizado = Array.isArray(s.relatorioIds);
-    const tubos = personalizado ? s.tubes.filter(t => s.relatorioIds.includes(t.id)) : s.tubes;
+    const ids = SIAB.selecaoTubos.idsRelatorio();
+    const personalizado = Array.isArray(ids);
+    const tubos = personalizado ? s.tubes.filter(t => ids.includes(t.id)) : s.tubes;
     const missao = SIAB.bancada.config.modo === 'missao';
     const nivel = missao ? SIAB.bancada.config.nivel : s.level;
     const titulo = missao ? TITULOS.missao : TITULOS.laboratorio;
     const subtitulo = missao ? $('mission-bar')?.textContent.trim() || '' : `Módulo ${SIAB.MODULOS[nivel]?.nome || ''}`;
     if (!tubos.length || (!personalizado && !foco)) {
-      return `${cabecalho(titulo, { subtitulo })}<p class="folha-vazia">${personalizado ? 'Nenhum dos recipientes escolhidos está na bancada. Selecione tubos na visão geral para atualizar o relatório.' : 'A bancada está vazia: nenhum recipiente para relatar.'}</p>`;
+      return `${cabecalho(titulo, { subtitulo })}<p class="folha-vazia">${personalizado ? 'Nenhum recipiente selecionado para este relatório. Marque tubos na visão geral para atualizar o relatório.' : 'A bancada está vazia: nenhum recipiente para relatar.'}</p>`;
     }
     const ph = r => (s.showPH ? `${SIAB.phFormat(r)} <span class="folha-fase">(${r.phase.toLowerCase()})</span>` : 'oculto');
     const resumo = tubos.map(t => {
@@ -111,6 +112,7 @@ SIAB.impressao = (() => {
         linha('Conta-gotas', esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))),
         linha('Volume da gota', `${SIAB.format(t.dropVolume)} mL`),
         linha('Indicador', esc(SIAB.nomeIndicador(t))),
+        t.group ? linha('Vínculo', `${esc(SIAB.nomeGrupo(t))} · adições sincronizadas`) : '',
         r.temperature !== 25 ? linha('Temperatura', `${SIAB.format(r.temperature, 0)} °C`) : ''
       ].join('');
       const leitura = [
