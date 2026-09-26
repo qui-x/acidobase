@@ -97,7 +97,9 @@ SIAB.impressao = (() => {
       const n = s.tubes.indexOf(t);
       const r = SIAB.chem.solve(t), c = SIAB.chem.liquid(t, s.indicatorOnly, r);
       const cap = SIAB.capacidade(t), vid = SIAB.VIDRARIAS[t.vidraria || s.vidraria]?.curto || 'Tubo';
-      return `<tr${t.id === s.activeId ? ' class="folha-em-foco"' : ''}><td class="num">${n + 1}</td><td>${esc(t.name)}</td><td>${esc(`${vid} ${cap} mL`)}</td>
+      // Destaque só no relatório padrão, em que só o tubo em foco ganha detalhes.
+      // Com tubos escolhidos na visão geral, todos são analisados por igual.
+      return `<tr${t.id === s.activeId && !personalizado ? ' class="folha-em-foco"' : ''}><td class="num">${n + 1}</td><td>${esc(t.name)}</td><td>${esc(`${vid} ${cap} mL`)}</td>
         <td>${esc(SIAB.resumoConteudo(t))}</td><td>${esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))}</td>
         <td>${esc(SIAB.nomeIndicador(t, true))}</td><td class="num">${r.drops} (${SIAB.format(r.added)} mL)</td>
         <td class="num">${ph(r)}</td><td><span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}</td></tr>`;

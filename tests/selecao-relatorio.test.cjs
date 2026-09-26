@@ -158,6 +158,8 @@ async function verificar(largura) {
     S.render(); clicar('selecao-todos-btn'); clicar('selecao-relatorio-btn');
     assert.equal(s.relatorioIds.length, 10);
     assert.equal(folha().querySelectorAll('.folha-detalhe').length, 10);
+    // Com os tubos escolhidos, todos são analisados: nenhum fica destacado no resumo.
+    assert.equal(folha().querySelectorAll('.folha-resumo .folha-em-foco').length, 0);
     if (largura <= 900) clicar('close-controls');
     // Tubos removidos saem do relatório; nunca retorna silenciosamente a imprimir todos.
     s.tubes = s.tubes.filter(t => t.id === ids[1]); S.render();
@@ -171,6 +173,8 @@ async function verificar(largura) {
     assert.ok(!folha().textContent.includes('Novo sem seleção'));
     clicar('relatorio-limpar-btn');
     assert.equal(folha().querySelectorAll('.folha-detalhe').length, 1);
+    // No relatório padrão, a linha do tubo em foco continua destacada (é o tubo detalhado).
+    assert.equal(folha().querySelectorAll('.folha-resumo .folha-em-foco').length, 1);
 
     // Laboratório e missão têm relatórios independentes.
     s.relatorioIds = [s.activeId];
