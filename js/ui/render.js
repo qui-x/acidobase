@@ -389,32 +389,30 @@ SIAB.renderRegua = t => {
     ${faixa ? `<p class="ver-regua-faixa"><span class="regua-faixa-amostra" aria-hidden="true"></span>Viragem ${SIAB.escape(ind.short)}: pH ${SIAB.format(ind.low, 1)} a ${SIAB.format(ind.high, 1)}</p>` : ''}`;
 };
 
+// Aba Histórico: a tabela das gotas, da mais recente para a primeira. Longa,
+// vem compacta (gotas iguais seguidas numa linha, como no caderno); o CSV
+// continua com todas as gotas, uma por linha.
 SIAB.historicoHTML = tube => {
-  const s = SIAB.state;
   const botoes = `<div class="ver-acoes"><button type="button" class="secondary-btn" data-acao="csv">Baixar tabela (CSV)</button><button type="button" class="secondary-btn" data-acao="registrar">Registrar no caderno</button></div>`;
   if (!tube.additions.length) return `<p class="field-hint">Nenhuma gota adicionada.</p>${botoes}`;
-  // Só as 200 gotas mais recentes aparecem; o pH depende apenas do volume total.
-  let acumulado = 0;
-  const somas = tube.additions.map(v => (acumulado += v));
-  const linhas = somas.slice(-200).map((soma, j) => {
-    const i = somas.length - Math.min(200, somas.length) + j;
-    const r = SIAB.chem.solve({ ...tube, additions: [soma] });
-    const cor = SIAB.chem.indicatorColor(tube, r.pH).name;
-    return `<tr><td>${i + 1}</td><td>${SIAB.format(r.added)}</td><td>${s.showPH ? SIAB.phFormat(r) : '—'}</td><td>${cor}</td></tr>`;
-  }).reverse();
-  return `${botoes}<table><caption class="sr-only">Histórico de ${SIAB.escape(tube.name)}</caption><thead><tr><th>Gota</th><th>Adicionado (mL)</th><th>pH</th><th>Cor</th></tr></thead><tbody>${linhas.join('')}</tbody></table>`;
+  const tabela = SIAB.compactarTabela(SIAB.historicoTabela(tube, SIAB.phFormat));
+  const linhas = tabela.linhas.slice(1).slice(-300).reverse()
+    .map(l => `<tr>${l.map(v => `<td>${SIAB.escape(v)}</td>`).join('')}</tr>`);
+  const nota = tabela.compacta ? `<p class="field-hint">${SIAB.escape(SIAB.notaCompacta(tabela))} O CSV traz todas as gotas.</p>` : '';
+  return `${botoes}${nota}<table><caption class="sr-only">Histórico de ${SIAB.escape(tube.name)}</caption><thead><tr><th>Gota</th><th>Adicionado (mL)</th><th>pH</th><th>Cor</th></tr></thead><tbody>${linhas.join('')}</tbody></table>`;
 };
 
 // Tabela de gotas do tubo: da gota 0 (antes de gotejar) até a última.
 // Com o pH oculto, a coluna pH fica "—" (o que não aparece na tela não sai no arquivo).
 SIAB.COLUNAS_GOTAS = ['Gota', 'Adicionado (mL)', 'pH', 'Cor'];
-SIAB.historicoTabela = tube => {
+// formatoPH: como escrever o pH (no CSV, sempre 2 casas; na tela, com ≈ nas amostras).
+SIAB.historicoTabela = (tube, formatoPH = r => SIAB.format(r.pH)) => {
   const linhas = [];
   let soma = 0;
   for (let i = 0; i <= tube.additions.length; i++) {
     if (i > 0) soma += tube.additions[i - 1];
     const r = SIAB.chem.solve({ ...tube, additions: soma > 0 ? [soma] : [] });
-    linhas.push([String(i), SIAB.format(r.added), SIAB.state.showPH ? SIAB.format(r.pH) : '—', SIAB.chem.indicatorColor(tube, r.pH).name]);
+    linhas.push([String(i), SIAB.format(r.added), SIAB.state.showPH ? formatoPH(r) : '—', SIAB.chem.indicatorColor(tube, r.pH).name]);
   }
   return { colunas: [...SIAB.COLUNAS_GOTAS], linhas };
 };

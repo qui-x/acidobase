@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.2
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.3
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.2`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.3`), o que evita
 essa mistura.
 
 ## O que há na versão 0.6
@@ -102,6 +102,14 @@ dinâmico; a diferença entre ponto final e ponto de equivalência).
   produtos: um perde um H e o outro ganha um.
 - **Ordenar por pH:** na visão geral, os recipientes ficam do mais ácido ao
   mais básico, sobre uma régua de pH que marca cada um com a cor e o número.
+- **Tabela de gotas compacta:** no caderno, na aba Histórico e na folha
+  impressa, gotas seguidas com a mesma cor e pH quase igual (até 0,2 de
+  diferença) viram um registro só, como "51–100 | 2,55–5,00 | 2,31–2,48 |
+  vermelho". Cada registro junta até 50 gotas, ou 100 quando a tabela passa
+  de 1000 gotas. Perto do ponto final cada gota continua numa linha. Uma
+  titulação de 620 gotas cabe em 30 linhas. Tabelas de até 60 linhas ficam
+  gota a gota, as leituras antigas longas são compactadas ao abrir o caderno
+  e o CSV do Histórico continua com todas as gotas.
 
 ## O que há na versão 0.5
 

@@ -24,11 +24,12 @@ SIAB.notaTabelaHTML = nota => {
   if (!t?.linhas?.length) return '';
   const nome = `Tabela de gotas: ${nota.titulo}`;
   return `<div class="nota-tabela" role="region" tabindex="0" aria-label="${SIAB.escape(nome)}">
-    <table><caption>Tabela de gotas <span>${t.linhas.length} ${t.linhas.length === 1 ? 'linha' : 'linhas'}</span></caption>
+    <table><caption>Tabela de gotas <span>${t.linhas.length} ${t.linhas.length === 1 ? 'linha' : 'linhas'}${t.compacta ? ` · ${t.gotas} gotas` : ''}</span></caption>
       <thead><tr>${t.colunas.map(c => `<th scope="col">${SIAB.escape(c)}</th>`).join('')}</tr></thead>
       <tbody>${t.linhas.map(l => `<tr>${l.map(v => `<td>${SIAB.escape(v)}</td>`).join('')}</tr>`).join('')}</tbody>
     </table>
   </div>
+  ${t.compacta ? `<p class="nota-compacta">${SIAB.escape(SIAB.notaCompacta(t))}</p>` : ''}
   <button type="button" class="quiet-btn" data-baixar-tabela="${nota.id}">Baixar esta tabela (CSV)</button>`;
 };
 

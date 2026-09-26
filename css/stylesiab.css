@@ -505,6 +505,7 @@ button.cartao { font: inherit; cursor: pointer; }
 /* Tabela de gotas da nota: rolagem própria e cabeçalho fixo. */
 .nota-tabela { margin-top: 12px; max-height: 340px; overflow: auto; border: 1px solid var(--border); border-radius: 6px; background: var(--bg); }
 .nota-tabela table { margin: 0; font-size: .8rem; }
+.nota-compacta { margin: 6px 0 0; font-size: .75rem; color: var(--secondary); }
 .nota-tabela caption { caption-side: top; text-align: left; padding: 8px 10px; font-weight: 700; font-size: .78rem; color: var(--text); }
 .nota-tabela caption span { font-weight: 400; color: var(--secondary); margin-left: 6px; }
 .nota-tabela th { position: sticky; top: 0; background: var(--panel2); padding: 7px 10px; font-size: .74rem; }

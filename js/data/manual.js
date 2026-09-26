@@ -215,7 +215,7 @@ SIAB.manual = [
         'H₃O⁺ (λ° = 349,6) e OH⁻ (198) conduzem de 4 a 7 vezes mais que Na⁺ (50,1) ou Cl⁻ (76,3): o próton salta de uma molécula de água para a vizinha (mecanismo de Grotthuss). Por isso a curva κ × volume faz um “V” numa titulação de ácido forte com base forte, com o vértice na equivalência: é a titulação condutométrica, que dispensa indicador. No módulo Calcular aparece a conta íon por íon. Os valores são ideais (diluição infinita); acima de 0,01 mol/L o medido é um pouco menor.',
         'Pontes entre representações: toque numa fórmula da Equação, num íon da Condução ou numa espécie do diagrama de distribuição, e a lupa abre com aquela espécie em destaque (as outras ficam apagadas). Na lupa, tocar no nome da espécie liga e desliga o destaque.',
         'Equação: ionização do que está no tubo e no conta-gotas, reação ao misturar e números. Uma seta curva laranja, com “H⁺”, vai do doador de próton (ácido) ao receptor (base): em CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻, o H⁺ passa do ácido acético para a água. pOH aparece no módulo Medir; [H₃O⁺], Ka, α e quantidades em mmol, no módulo Calcular.',
-        'Histórico: tabela gota a gota. “Baixar tabela (CSV)” abre em planilha (ponto e vírgula, vírgula decimal). “Registrar no caderno” guarda a leitura atual.'
+        'Histórico: tabela das gotas, da mais recente para a primeira. Numa titulação longa, gotas seguidas com a mesma cor e pH quase igual viram uma linha (veja “Caderno de laboratório”). “Baixar tabela (CSV)” traz todas as gotas, uma por linha, e abre em planilha (ponto e vírgula, vírgula decimal). “Registrar no caderno” guarda a leitura atual.'
       ] },
       { dica: 'Com o teclado, use as setas ← e → para trocar de aba.' }
     ]
@@ -245,6 +245,7 @@ SIAB.manual = [
       { lista: [
         'O que entra: previsões do “Prever e gotejar”, leituras de “Registrar no caderno” e, no modo completo, missões e desafios. Cada nota tem data e hora.',
         'Leituras: guardam a tabela de gotas como tabela (Gota, Adicionado, pH, Cor), com rolagem própria e “Baixar esta tabela (CSV)”. Com o pH oculto, a coluna pH fica “—”.',
+        'Tabela compacta: com mais de 60 linhas, gotas seguidas com a mesma cor e pH quase igual (até 0,2 de diferença) viram um registro só, como “51–100 | 2,55–5,00 | 2,31–2,48 | vermelho”. Cada registro junta até 50 gotas (100 quando passa de 1000 gotas). Perto do ponto final, onde a cor ou o pH mudam de uma gota para outra, cada gota continua numa linha. Tabelas curtas ficam gota a gota, e as leituras antigas longas são compactadas ao abrir o caderno.',
         'Baixar caderno (CSV): uma planilha com todas as notas. As linhas da tabela de gotas ocupam as colunas gota, volume_adicionado_mL, pH e cor.',
         'Imprimir: imprime as notas numa folha com cabeçalho (Nome, Turma e Data) e número de página; tabelas longas continuam na página seguinte, repetindo o cabeçalho.',
         'Apagar nota ou apagar caderno: apagar o caderno pede confirmação.'

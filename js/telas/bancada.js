@@ -705,7 +705,8 @@ SIAB.bancada = (() => {
             ['Indicador', `${SIAB.nomeIndicador(t)}: ${SIAB.chem.indicatorColor(t, r.pH).name}`],
             ['pH', SIAB.state.showPH ? SIAB.phFormat(r) : 'oculto']
           ],
-          tabela: SIAB.historicoTabela(t)
+          // Tabela compacta: gotas iguais seguidas viram uma linha (ver progresso.js).
+          tabela: SIAB.compactarTabela(SIAB.historicoTabela(t))
         });
         SIAB.notice('Leitura registrada no caderno.');
       }

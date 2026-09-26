@@ -44,10 +44,12 @@ SIAB.impressao = (() => {
     </header>`;
   }
 
-  // Tabela de gotas: todas as linhas até 40; acima disso, 30 linhas espaçadas
-  // (sempre a primeira e a última). A tabela completa sai no CSV do Histórico.
+  // Tabela de gotas: até 40 linhas, gota a gota. Acima disso, compacta (gotas
+  // iguais seguidas numa linha, como no caderno); se ainda passar de 40
+  // linhas, 30 delas, espaçadas (sempre a primeira e a última). A tabela
+  // completa sai no CSV do Histórico.
   function tabelaGotas(t) {
-    const tabela = SIAB.historicoTabela(t);
+    const tabela = SIAB.compactarTabela(SIAB.historicoTabela(t), { limite: 40 });
     const total = tabela.linhas.length;
     let linhas = tabela.linhas;
     if (total > 40) {
@@ -55,7 +57,8 @@ SIAB.impressao = (() => {
       const escolhidas = new Set(Array.from({ length: 30 }, (_, i) => Math.round(i * passo)));
       linhas = [...escolhidas].sort((a, b) => a - b).map(i => tabela.linhas[i]);
     }
-    const nota = total > 40 ? `<p class="folha-nota">Mostrando ${linhas.length} de ${total} linhas, espaçadas. A tabela completa sai em Histórico → Baixar tabela (CSV).</p>` : '';
+    const partes = [SIAB.notaCompacta(tabela), total > 40 ? `Mostrando ${linhas.length} de ${total} linhas, espaçadas.` : ''].filter(Boolean);
+    const nota = partes.length ? `<p class="folha-nota">${esc(partes.join(' '))} A tabela completa, gota a gota, sai em Histórico → Baixar tabela (CSV).</p>` : '';
     const tabelaHTML = parte => `<table class="folha-tabela folha-gotas"><thead><tr>${tabela.colunas.map((c, i) => `<th scope="col"${i < 3 ? ' class="num"' : ''}>${esc(c)}</th>`).join('')}</tr></thead>
       <tbody>${parte.map(l => `<tr>${l.map((v, i) => `<td${i < 3 ? ' class="num"' : ''}>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
     // Mais de 16 linhas: duas colunas lado a lado, para caber na página.
