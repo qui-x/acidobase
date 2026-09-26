@@ -114,7 +114,7 @@ SIAB.impressao = (() => {
       nivel !== 'explorar' && r.equivalenceVolume !== null ? linha('Equivalência prevista', `${SIAB.format(r.equivalenceVolume)} mL`) : ''
     ].join('');
     const grafico = s.showPH && t.additions.length
-      ? `<figure class="folha-grafico">${SIAB.grafico.svg(t)}<figcaption>Curva de pH × volume adicionado. Faixa colorida: viragem do indicador; linha tracejada: pH neutro.</figcaption></figure>`
+      ? `<figure class="folha-grafico">${SIAB.grafico.svg(t, { pontoFinal: SIAB.pontoFinal(t) })}<figcaption>Curva de pH × volume adicionado. Faixa colorida: viragem do indicador; linha tracejada: pH neutro; losango: ponto final observado.</figcaption></figure>`
       : `<p class="folha-nota">${s.showPH ? 'Sem gotas ainda: o gráfico aparece depois das primeiras gotas.' : 'O pH estava oculto na bancada; o gráfico não foi impresso.'}</p>`;
 
     return `${cabecalho(titulo, { subtitulo })}

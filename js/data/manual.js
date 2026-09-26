@@ -175,7 +175,9 @@ SIAB.manual = [
         'Capacidade: quando o recipiente fica cheio, os botões de gotejar ficam desativados.',
         'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas; o nível sobe nesse momento. “Reduzir animações” desliga esse movimento.',
         'Cor onde a gota cai: antes de se misturar, a gota forma uma zona com pH próprio. Numa titulação com fenolftaleína, o NaOH deixa essa zona rosa mesmo com o resto ainda ácido; o rosa some quando a gota se mistura. Longe do ponto final, some logo; perto dele, demora; depois dele, fica. O simulador calcula essa zona em etapas (a gota com 1,5, 3, 6… 96 gotas de volume do líquido), até virar o recipiente todo.',
-        'Agitar (ao lado da cor): termina a mistura na hora, como girar o erlenmeyer ou mexer o béquer. No laboratório, o ponto final é quando a cor clara dura cerca de 30 segundos, agitando.'
+        'Agitar (ao lado da cor): termina a mistura na hora, como girar o erlenmeyer ou mexer o béquer. No laboratório, o ponto final é quando a cor clara dura cerca de 30 segundos, agitando.',
+        'Turvação: bases pouco solúveis, como Mg(OH)₂ e Al(OH)₃, deixam o líquido leitoso enquanto sobra sólido sem dissolver; com ácido, o sólido dissolve e o líquido clareia. Parado por uns segundos, o sólido assenta no fundo (na vida real leva minutos); uma gota ou Agitar suspende de novo.',
+        'Bolhas de CO₂: com carbonato ou bicarbonato em meio ácido, forma-se CO₂. Quando o CO₂ dissolvido passa da solubilidade (cerca de 0,034 mol/L a 25 °C e 1 atm, lei de Henry), aparecem bolhas; se isso acontece só onde a gota cai, sobe um jorro de bolhas ali. É uma ilustração: o cálculo do pH mantém o gás dissolvido (sistema fechado).'
       ] },
       { teclas: [['Enter', 'adiciona 1 gota'], ['Espaço (segurar)', 'goteja sem parar até soltar'], ['Tab', 'passa para o próximo controle']] },
       { dica: 'Tubos vinculados (veja “Tubos da bancada”) recebem as mesmas gotas ao mesmo tempo.' }
@@ -197,14 +199,17 @@ SIAB.manual = [
   },
   {
     id: 'ver', titulo: 'Painel VER', alvo: '#ver-panel',
-    resumo: 'Escala de pH, gráfico, partículas, equação e histórico do tubo selecionado.',
+    resumo: 'Escala de pH, gráfico, partículas, condução, equação e histórico do tubo selecionado.',
     blocos: [
       { p: 'No alto do painel fica a Escala de pH: o triângulo marca o pH na escala de 0 a 14, o tracejado marca o neutro e o colchete embaixo mostra a faixa de viragem do indicador (onde ele muda de cor). A segunda linha mostra [H₃O⁺] em potências de 10 (10⁰, 10⁻⁷, 10⁻¹⁴ mol/L): a escala de pH é logarítmica, e cada unidade de pH é 10 vezes mais ou menos H₃O⁺. Com o pH oculto, a escala some junto com o número e o gráfico.' },
       { lista: [
-        'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência. Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca). Tracejado horizontal: pH neutro.',
+        'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência. Losango: ponto final observado (a gota em que a cor mudou). Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca). Faixa clara “região tampão”: onde a razão base/ácido conjugado vai de 0,1 a 10 (pH = pKa ± 1) e o pH quase não muda. Tracejado horizontal: pH neutro.',
+        'No módulo Calcular, o gráfico tem mais duas vistas. ΔpH/ΔV: a variação de pH por mL entre gotas seguidas (a conta que se faz com a tabela do Histórico); o pico marca a equivalência, onde a curva é mais íngreme. Espécies: o diagrama de distribuição, com a fração α de cada espécie do ácido ou base fraca em função do pH, dada por α = [espécie] / total; duas espécies vizinhas se cruzam em α = 0,5 quando pH = pKa, e a linha “pH agora” mostra a mistura do momento.',
         'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; círculo vazado: íon espectador (Na⁺, Cl⁻…, que não troca prótons); quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece. As partículas passeiam devagar (difusão).',
         'Escala logarítmica (botão na lupa): o número de partículas passa a acompanhar o expoente da concentração (cada 3 partículas = 10 vezes), e aparecem os íons raros, como o OH⁻ em meio ácido.',
         'Acontecimentos na lupa: depois das gotas, partículas do conta-gotas entram e reagem (H₃O⁺ + OH⁻ → 2 H₂O, ou CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O com um ácido fraco). Com um ácido fraco e sua base conjugada presentes, um próton pula de uma partícula para a outra de tempos em tempos e as quantidades não mudam: o equilíbrio é dinâmico.',
+        'Condução: o teste de condução elétrica e o condutímetro. A lâmpada acende mais quando há mais íons, ou íons mais rápidos. A leitura (µS/cm ou mS/cm) vem da lei de Kohlrausch, κ = Σ λ° · c: cada íon contribui com a própria condutividade molar (λ°) vezes a concentração. A barra “Quem carrega a corrente” mostra a parte de cada íon, com as cores da lupa (listrado: íon espectador).',
+        'H₃O⁺ (λ° = 349,6) e OH⁻ (198) conduzem de 4 a 7 vezes mais que Na⁺ (50,1) ou Cl⁻ (76,3): o próton salta de uma molécula de água para a vizinha (mecanismo de Grotthuss). Por isso a curva κ × volume faz um “V” numa titulação de ácido forte com base forte, com o vértice na equivalência: é a titulação condutométrica, que dispensa indicador. No módulo Calcular aparece a conta íon por íon. Os valores são ideais (diluição infinita); acima de 0,01 mol/L o medido é um pouco menor.',
         'Equação: ionização do que está no tubo e no conta-gotas, reação ao misturar e números. pOH aparece no módulo Medir; [H₃O⁺], Ka, α e quantidades em mmol, no módulo Calcular.',
         'Histórico: tabela gota a gota. “Baixar tabela (CSV)” abre em planilha (ponto e vírgula, vírgula decimal). “Registrar no caderno” guarda a leitura atual.'
       ] },
@@ -307,7 +312,8 @@ SIAB.manual = [
       { p: 'O simulador resolve o equilíbrio de soluções ideais a 25 °C, com volumes que se somam e mistura imediata. Os indicadores estão em quantidade muito pequena e não alteram o pH.' },
       { faq: [
         ['Por que alguns pH aparecem com “≈”?', 'Frutas, alimentos e chuva são amostras representativas. O pH delas é uma estimativa; amostras reais variam com marca, maturação e preparo.'],
-        ['Por que vinagre com bicarbonato não faz espuma?', 'O simulador não representa gases: o CO₂ formado fica dissolvido (sistema fechado). Na vida real o gás escapa, e o pH final pode ser diferente.'],
+        ['Por que vinagre com bicarbonato não faz espuma?', 'O cálculo não retira gases: o CO₂ formado fica dissolvido (sistema fechado). Quando ele passa da solubilidade (cerca de 0,034 mol/L), a vidraria mostra bolhas, só como ilustração. Na vida real o gás escapa, e o pH final fica um pouco mais alto.'],
+        ['A condutividade é exata?', 'É o valor ideal da lei de Kohlrausch (diluição infinita, 25 °C). Em soluções mais concentradas que 0,01 mol/L, os íons se atrapalham e o condutímetro de verdade mostra um valor menor. Íons sem valor tabelado (ânions orgânicos dos alimentos) usam uma estimativa pela carga, marcada com ≈.'],
         ['Por que a fenolftaleína não muda na equivalência do HCl?', 'Ela muda entre pH 8,2 e 10. Na titulação de HCl com NaOH, o pH salta de cerca de 3,6 para 10,4 em duas gotas; a cor rosa aparece logo depois da equivalência.'],
         ['Diluir muito um ácido deixa a solução básica?', 'Não. Com mais água, o pH se aproxima de 7, sem passar dele.'],
         ['As cores são exatas?', 'Não. São representações didáticas das faixas de viragem. O repolho roxo real varia com o preparo do extrato.'],

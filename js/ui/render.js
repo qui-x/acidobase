@@ -131,6 +131,12 @@ SIAB.render = (syncForm = false) => {
     ? 'Ponto de equivalência · quantidades estequiométricas'
     : cheio ? `${vidro.curto} cheio: ${SIAB.format(capacidade, 0)} mL.`
     : pf ? `Ponto final observado: ${pf.de} → ${pf.para} com ${SIAB.format(pf.volume)} mL${eqCalc}` : '';
+  // Sólido sem dissolver (turvação) e CO₂ acima da solubilidade (bolhas).
+  const solidos = SIAB.chem.solidos(t, r);
+  const notas = [];
+  if (solidos.length) notas.push(`Turvo: ${solidos.map(x => x.formula).join(' e ')} sem dissolver${nivelDose !== 'explorar' ? ` (${SIAB.format(solidos.reduce((sum, x) => sum + x.gL, 0), 2)} g/L)` : ''}. Parado, assenta; Agitar mistura de novo.`);
+  if (SIAB.chem.co2(t, r).excesso > 0) notas.push('Bolhas de CO₂ (ilustração: o cálculo do pH mantém o gás dissolvido).');
+  $('vidro-nota').textContent = notas.join(' ');
   $('group-notice').hidden = !t.group;
   $('group-notice').textContent = t.group ? `Adições vinculadas · ${targets.length} tubos recebem as mesmas gotas.` : '';
 
@@ -237,7 +243,7 @@ SIAB.syncForm = () => {
   SIAB.refreshSelects?.();
 };
 
-// Painel VER: gráfico, partículas, equação e histórico do tubo em foco.
+// Painel VER: gráfico, partículas, condução, equação e histórico do tubo em foco.
 SIAB.renderVer = () => {
   const $ = SIAB.$, s = SIAB.state, t = SIAB.current();
   const disponiveis = SIAB.bancada.config.ver;
@@ -252,7 +258,7 @@ SIAB.renderVer = () => {
   $('ver-conteudo').setAttribute('aria-labelledby', `tab-${s.verTab}`);
   if (!t) {
     $('ver-regua').hidden = true;
-    $('ver-conteudo').innerHTML = '<p class="ver-oculto">Coloque um frasco num tubo para ver o gráfico, as partículas, a equação e o histórico.</p>';
+    $('ver-conteudo').innerHTML = '<p class="ver-oculto">Coloque um frasco num tubo para ver o gráfico, as partículas, a condução, a equação e o histórico.</p>';
     return;
   }
   SIAB.renderRegua(t);
@@ -265,18 +271,37 @@ SIAB.renderVer = () => {
   const nivel = SIAB.bancada.config.modo === 'missao' ? SIAB.bancada.config.nivel : s.level;
   let conteudo = '';
   if (s.verTab === 'grafico') {
-    const eqTexto = r.equivalenceVolume !== null && nivel !== 'explorar'
-      ? `Equivalência prevista em ${SIAB.format(r.equivalenceVolume)} mL.` : '';
-    const semGotas = t.additions.length ? '' : '<p class="field-hint">Adicione gotas para desenhar a curva.</p>';
-    conteudo = s.showPH
-      ? `${SIAB.grafico.svg(t)}${semGotas}<p class="field-hint">Faixa colorida: viragem do indicador. Linha tracejada horizontal: pH neutro. ${eqTexto}</p>`
-      : '<p class="ver-oculto">O gráfico aparece quando o pH é revelado.</p>';
+    // No módulo Calcular, o gráfico tem mais duas vistas: ΔpH/ΔV e espécies.
+    const modo = nivel === 'calcular' ? s.graficoModo || 'ph' : 'ph';
+    const modos = nivel === 'calcular'
+      ? `<div class="grafico-modos" role="group" aria-label="O que o gráfico mostra">${[['ph', 'pH × volume'], ['derivada', 'ΔpH/ΔV'], ['especies', 'Espécies']]
+        .map(([id, rotulo]) => `<button type="button" data-acao="grafico-modo" data-modo="${id}" aria-pressed="${modo === id}">${rotulo}</button>`).join('')}</div>` : '';
+    let corpo;
+    if (modo === 'derivada') {
+      const d = SIAB.grafico.derivada(t);
+      corpo = d
+        ? `${d.svg}<p class="field-hint">Cada barra é ΔpH/ΔV entre gotas seguidas, a conta que se faz com a tabela do Histórico. O pico, perto de ${SIAB.format(d.pico)} mL, fica onde a curva é mais íngreme: a equivalência.</p>`
+        : '<p class="field-hint">Adicione pelo menos duas gotas para calcular ΔpH/ΔV.</p>';
+    } else if (modo === 'especies') {
+      const dist = SIAB.grafico.distribuicao(t, r);
+      corpo = dist
+        ? `${dist}<p class="field-hint">Cada curva é a fração de uma espécie. Duas espécies vizinhas se cruzam (α = 0,5) quando pH = pKa. A linha “pH agora” mostra a mistura neste momento.</p>`
+        : '<p class="field-hint">Aqui só há ácido e base fortes, que se ionizam por completo: não há equilíbrio de espécies para mostrar. Experimente ácido acético, amônia, um sal ou um tampão.</p>';
+    } else {
+      const eqTexto = r.equivalenceVolume !== null && nivel !== 'explorar'
+        ? `Equivalência prevista em ${SIAB.format(r.equivalenceVolume)} mL.` : '';
+      const semGotas = t.additions.length ? '' : '<p class="field-hint">Adicione gotas para desenhar a curva.</p>';
+      const pf = SIAB.pontoFinal(t);
+      corpo = `${SIAB.grafico.svg(t, { pontoFinal: pf, nivel })}${semGotas}<p class="field-hint">Faixa colorida: viragem do indicador. Linha tracejada horizontal: pH neutro.${pf ? ' Losango: ponto final observado (a cor mudou).' : ''} ${eqTexto}</p>`;
+    }
+    conteudo = s.showPH ? modos + corpo : '<p class="ver-oculto">O gráfico aparece quando o pH é revelado.</p>';
   }
   if (s.verTab === 'particulas') {
     conteudo = s.showPH || SIAB.bancada.config.modo === 'missao'
       ? SIAB.lupa.html(t, { nivel, result: r })
       : '<p class="ver-oculto">Mostre o pH para ver as partículas.</p>';
   }
+  if (s.verTab === 'condutividade') conteudo = SIAB.condutimetro.html(t, { nivel, result: r });
   if (s.verTab === 'equacao') conteudo = SIAB.equacao.html(t, { nivel, result: r });
   if (s.verTab === 'historico') conteudo = SIAB.historicoHTML(t);
   $('ver-conteudo').innerHTML = conteudo;

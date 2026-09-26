@@ -114,13 +114,40 @@ function estadoDoVidro(tube, vidraria) {
   const r = SIAB.chem.solve(tube);
   const c = SIAB.chem.liquid(tube, SIAB.state.indicatorOnly, r);
   const y = forma.altura(Math.min(1, r.volume / capacidade));
-  // A gota tem a cor do que está no conta-gotas (quase sempre incolor: vidro-azulado).
-  const natural = SIAB.solutions[tube.titrant]?.natural;
-  const corGota = natural && natural.opacity > .05 ? `rgb(${natural.rgb.join(',')})` : 'rgba(214, 232, 255, .92)';
+  // A gota tem a cor do que está no conta-gotas (quase sempre incolor: vidro-azulado;
+  // suspensão, como o leite de magnésia: branca).
+  const doConta = SIAB.solutions[tube.titrant];
+  const natural = doConta?.natural;
+  const corGota = natural && natural.opacity > .05 ? `rgb(${natural.rgb.join(',')})`
+    : doConta?.kind === 'suspension' ? 'rgba(242, 242, 238, .96)' : 'rgba(214, 232, 255, .92)';
+  // Turvação: sólido sem dissolver (Mg(OH)₂, Al(OH)₃). Quanto mais gramas por
+  // litro, mais leitoso; o sólido assenta no fundo se ficar parado.
+  const gL = SIAB.chem.solidos(tube, r).reduce((sum, x) => sum + x.gL, 0);
+  const turvo = gL > 0 ? Math.min(.72, 1 - Math.exp(-gL / .8)) : 0;
+  const fundo = forma.altura(0);
+  const sedimento = turvo ? Math.max(6, (fundo - y) * Math.min(.25, .06 + gL / 25)) : 0;
+  // Bolhas de CO₂ (ilustração): CO₂ dissolvido acima da solubilidade.
+  const gas = SIAB.chem.co2(tube, r);
   const nome = SIAB.VIDRARIAS?.[tipo]?.nome || 'Tubo de ensaio';
   const m = SIAB.MEDIDAS_VIDRO[tipo][capacidade];
   return { tipo, forma, capacidade, r, c, y, meia: forma.meia(y), rgb: `rgb(${c.rgb.join(',')})`, corGota,
-    rotulo: `${tube.name} (${nome.toLowerCase()} de ${capacidade} mL${m ? `, ${m.D} × ${m.H} mm` : ''}): solução ${c.name}, ${SIAB.format(r.volume)} mililitros` };
+    turvo, fundo, sedimento, bolhas: gas.excesso > 0 ? Math.round(5 + 13 * Math.min(1, gas.excesso)) : 0,
+    rotulo: `${tube.name} (${nome.toLowerCase()} de ${capacidade} mL${m ? `, ${m.D} × ${m.H} mm` : ''}): solução ${c.name}${turvo ? ', turva' : ''}${gas.excesso > 0 ? ', com bolhas de CO₂' : ''}, ${SIAB.format(r.volume)} mililitros` };
+}
+
+// Bolhas de CO₂ subindo do fundo até a superfície (no sistema do líquido:
+// superfície em y = 0). Paradas, sem animação, ficam espalhadas pela altura.
+function bolhasHTML(v) {
+  if (!v.bolhas) return '';
+  const coluna = Math.max(6, v.fundo - v.y);
+  let semente = 11;
+  const sorteio = () => (semente = (semente * 16807) % 2147483647) / 2147483647;
+  return Array.from({ length: v.bolhas }, () => {
+    const x = v.forma.cx + (sorteio() - .5) * 1.5 * Math.max(4, v.meia - 3);
+    const alto = coluna * (.1 + .85 * sorteio());
+    const r = 1.4 + 1.8 * sorteio();
+    return `<circle class="bolha" cx="${x.toFixed(1)}" cy="${alto.toFixed(1)}" r="${r.toFixed(1)}" style="--sobe:${(coluna - alto).toFixed(1)}px;--y:${alto.toFixed(1)}px;--dx:${((sorteio() - .5) * 4).toFixed(1)}px;animation-duration:${(1.1 + 1.4 * sorteio()).toFixed(2)}s;animation-delay:-${(2.5 * sorteio()).toFixed(2)}s"/>`;
+  }).join('');
 }
 
 // prefix 'focus' desenha a cena da bancada: escala única (tamanho de verdade),
@@ -149,7 +176,7 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
     ? `0 ${forma.TOPO} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - forma.TOPO).toFixed(1)}`
     : `0 ${(forma.yt - 8).toFixed(1)} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - forma.yt + 8).toFixed(1)}`;
   return `<svg class="tube-svg vidro-${v.tipo}${foco ? ' vidro-foco' : ''}" viewBox="${caixa}" role="img" aria-label="${SIAB.escape(v.rotulo)}">
-    <defs><clipPath id="${id}"><path d="${forma.interno}"/></clipPath>${foco ? `<clipPath id="${id}-abaixo"><rect x="0" y="0" width="${forma.largura.toFixed(1)}" height="400"/></clipPath>` : ''}</defs>
+    <defs><clipPath id="${id}"><path d="${forma.interno}"/></clipPath>${foco ? `<clipPath id="${id}-abaixo"><rect x="0" y="0" width="${forma.largura.toFixed(1)}" height="400"/></clipPath>` : ''}<pattern id="${id}-grao" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".9"/><circle cx="5" cy="4.5" r=".7"/></pattern></defs>
     ${contaGotas}
     <g class="vidro-corpo" style="transform-origin:${cx.toFixed(1)}px ${forma.BASE}px">
     <path class="tube-outline" d="${forma.contorno}" stroke-width="2"/>
@@ -157,8 +184,11 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
       <g class="liquido" style="transform:translateY(${y.toFixed(1)}px)">
         <rect class="liquid-body" x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400" style="fill:${v.rgb};fill-opacity:${v.c.opacity}"/>
         <ellipse class="liquido-superficie" cx="${cx.toFixed(1)}" cy="0" rx="${v.meia.toFixed(1)}" ry="3" style="fill:${v.rgb};fill-opacity:${Math.min(1, v.c.opacity + .12)}"/>
+        <g class="turvacao" style="--turvo:${v.turvo.toFixed(2)}"${v.turvo ? '' : ' hidden'}><ellipse cx="${cx.toFixed(1)}" cy="0" rx="${v.meia.toFixed(1)}" ry="3"/><rect x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400"/><rect class="turvacao-grao" x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400" fill="url(#${id}-grao)"/></g>
+        <g class="bolhas">${foco ? bolhasHTML(v) : ''}</g>
         ${foco ? `<g class="efeitos-dentro" clip-path="url(#${id}-abaixo)"></g><g class="efeitos-superficie"></g>` : ''}
       </g>
+      <rect class="sedimento" x="${x0.toFixed(1)}" y="${(v.fundo - v.sedimento).toFixed(1)}" width="${largura.toFixed(1)}" height="${(v.sedimento + 6).toFixed(1)}"${v.turvo ? '' : ' hidden'}/>
     </g>
     <path d="${forma.borda}" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>
     <path class="tube-reflection" d="${forma.reflexo}" stroke-width="3" fill="none" stroke-linecap="round"/>
@@ -222,6 +252,36 @@ SIAB.vidro = (() => {
     sup.setAttribute('rx', v.meia.toFixed(1));
     const cg = svg.querySelector('.cg-liquido');
     if (cg) cg.style.fill = v.corGota;
+    const turvacao = svg.querySelector('.turvacao'), sedimento = svg.querySelector('.sedimento');
+    if (turvacao) {
+      turvacao.hidden = !v.turvo;
+      turvacao.style.setProperty('--turvo', v.turvo.toFixed(2));
+      turvacao.querySelector('ellipse').setAttribute('rx', v.meia.toFixed(1));
+      sedimento.hidden = !v.turvo;
+      sedimento.setAttribute('y', (v.fundo - v.sedimento).toFixed(1));
+      sedimento.setAttribute('height', (v.sedimento + 6).toFixed(1));
+      if (!v.turvo) svg.classList.remove('assentado');
+    }
+    const bolhas = svg.querySelector('.bolhas');
+    const chaveBolhas = `${v.bolhas}|${v.y.toFixed(0)}`;
+    if (bolhas && bolhas.dataset.chave !== chaveBolhas) {
+      bolhas.dataset.chave = chaveBolhas;
+      bolhas.innerHTML = bolhasHTML(v);
+    }
+  }
+
+  // Sólido em suspensão assenta depois de um tempo parado (acelerado: na
+  // vida real, minutos). Uma gota ou "Agitar" suspende de novo.
+  let assentar = null;
+  function suspender(caixa) {
+    const svg = caixa.querySelector('svg.vidro-foco');
+    clearTimeout(assentar);
+    if (!svg) return;
+    svg.classList.remove('assentado');
+    assentar = setTimeout(() => {
+      const atual = caixa.querySelector('svg.vidro-foco');
+      if (atual && !atual.querySelector('.turvacao')?.hidden) atual.classList.add('assentado');
+    }, 12000);
   }
 
   // Desenha o tubo em foco: recria só quando muda o tubo, a vidraria ou a capacidade.
@@ -231,6 +291,7 @@ SIAB.vidro = (() => {
       clearTimeout(pendente);
       caixa.innerHTML = SIAB.tubeSVG(tube, 'focus', false, vidraria);
       caixa.dataset.chave = chave;
+      suspender(caixa);
       return;
     }
     // Uma gota ainda está caindo: o líquido muda quando ela chegar.
@@ -269,6 +330,7 @@ SIAB.vidro = (() => {
     const queda = Math.max(12, v.y - ponta - 3);
     const formar = 90, cair = Math.round(120 + 14 * Math.sqrt(queda)), total = formar + cair;
     impacto = Math.max(impacto, agora + espera + total);
+    suspender(caixa);
 
     // Borracha do conta-gotas aperta.
     svg.querySelector('.cg-bulbo')?.animate(
@@ -316,6 +378,24 @@ SIAB.vidro = (() => {
       // Zona incolor: só um leve véu da mistura; zona colorida: bem visível.
       opacity: i === ultimo ? 0 : c.opacity < .2 ? .12 : Math.min(.95, c.opacity + .2)
     })), { duration: DURACAO_ZONA * ultimo, delay: chegada, easing: 'linear', fill: 'forwards' }));
+    // Efervescência onde a gota cai: se ali o CO₂ passa da solubilidade
+    // (ácido caindo em bicarbonato, ou o contrário), sobe um jorro de bolhas.
+    const dvGota = tube.additions.at(-1) || 0;
+    if (dvGota > 0 && v.r.volume > 2.5 * dvGota) {
+      const z = SIAB.chem.zona(tube, 1.5 * dvGota);
+      if (SIAB.chem.co2(z.tubo, z.r).excesso > 0) {
+        for (let i = 0; i < 8; i++) {
+          const b = criar(dentro, 'circle', { class: 'bolha-jorro', cx: 0, cy: 0, r: (1 + (i % 3) * .6).toFixed(1) });
+          b.style.opacity = 0;
+          const dx = ((i * 37) % 11 - 5) * Math.min(1.6, w / 12);
+          sumir(b, b.animate([
+            { transform: `translate(${cx + dx * .3}px, ${10 + (i % 4) * 5}px)`, opacity: .95 },
+            { transform: `translate(${cx + dx}px, 0px)`, opacity: .9, offset: .85 },
+            { transform: `translate(${cx + dx}px, -2px)`, opacity: 0 }
+          ], { duration: 520 + 60 * i, delay: chegada + 40 * i, easing: 'ease-in', fill: 'forwards' }));
+        }
+      }
+    }
     [-1, 1, 0].forEach((lado, i) => {
       const pingo = criar(svg.querySelector('.efeitos'), 'circle', { class: 'respingo', cx: 0, cy: 0, r: i === 2 ? 1.3 : 1.7, fill: v.corGota });
       pingo.style.opacity = 0;
@@ -338,6 +418,9 @@ SIAB.vidro = (() => {
   function agitar(caixa) {
     const svg = caixa.querySelector('svg.vidro-foco');
     if (!svg) return 0;
+    svg.classList.add('agitando');
+    setTimeout(() => svg.classList.remove('agitando'), 900);
+    suspender(caixa);
     svg.querySelectorAll('.nuvem-cor').forEach(n => n.getAnimations().forEach(a => { a.playbackRate = 10; }));
     if (semMovimento() || !svg.animate) {
       svg.querySelectorAll('.nuvem-cor').forEach(n => n.remove());

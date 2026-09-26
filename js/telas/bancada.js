@@ -8,13 +8,13 @@ SIAB.bancada = (() => {
   const config = {
     modo: 'laboratorio',
     controles: new Set(TODOS),
-    ver: ['grafico', 'particulas', 'equacao', 'historico'],
+    ver: ['grafico', 'particulas', 'condutividade', 'equacao', 'historico'],
     nivel: 'explorar'
   };
   const mobile = matchMedia('(max-width: 900px)');
   let confirmAction = null, lastSheetFocus = null, deltaTimer = null, sequencia = null;
 
-  function configurar({ modo = 'laboratorio', controles = TODOS, ver = ['grafico', 'particulas', 'equacao', 'historico'], nivel = 'explorar' } = {}) {
+  function configurar({ modo = 'laboratorio', controles = TODOS, ver = ['grafico', 'particulas', 'condutividade', 'equacao', 'historico'], nivel = 'explorar' } = {}) {
     config.modo = modo;
     config.controles = new Set(controles);
     config.ver = ver;
@@ -643,6 +643,13 @@ SIAB.bancada = (() => {
         SIAB.loja.avisar();
         SIAB.$('ver-conteudo').querySelector('[data-acao="lupa-escala"]')?.focus();
         SIAB.announce(SIAB.state.lupaLog ? 'Lupa em escala logarítmica: os íons raros aparecem.' : 'Lupa em escala linear.');
+        return;
+      }
+      if (botao.dataset.acao === 'grafico-modo') {
+        SIAB.state.graficoModo = botao.dataset.modo;
+        SIAB.loja.avisar();
+        SIAB.$('ver-conteudo').querySelector(`[data-modo="${botao.dataset.modo}"]`)?.focus();
+        SIAB.announce({ ph: 'Gráfico: pH × volume.', derivada: 'Gráfico: derivada ΔpH/ΔV; o pico marca a equivalência.', especies: 'Gráfico: fração de cada espécie × pH.' }[botao.dataset.modo]);
         return;
       }
       if (botao.dataset.acao === 'csv') {

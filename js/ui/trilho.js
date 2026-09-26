@@ -33,10 +33,11 @@ SIAB.trilho = (() => {
     missao: 'M5 21V4M5 4h11l-2 4 2 4H5',
     grafico: 'M4 4v16h16M7 15l4-5 3 3 5-7',
     particulas: 'M7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM17 10a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM10 18a2 2 0 1 0 0-4 2 2 0 0 0 0 4ZM18 20a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z',
+    condutividade: 'M9 18h6M10 21h4M12 3a6 6 0 0 0-3.6 10.8c.9.7 1.6 1.8 1.6 3.2h4c0-1.4.7-2.5 1.6-3.2A6 6 0 0 0 12 3Z',
     equacao: 'M4 9h12m0 0-3-3m3 3-3 3M20 15H8m0 0 3-3m-3 3 3 3',
     historico: 'M4 12a8 8 0 1 0 2.3-5.7M4 4v4h4M12 8v4l3 2'
   };
-  const ROTULOS_VER = { grafico: 'Gráfico', particulas: 'Partículas', equacao: 'Equação', historico: 'Histórico' };
+  const ROTULOS_VER = { grafico: 'Gráfico', particulas: 'Partículas', condutividade: 'Condutividade', equacao: 'Equação', historico: 'Histórico' };
   const trilhoDe = painel => $(painel === 'controls' ? 'trilho-controls' : 'trilho-ver');
   const nomeDe = painel => (painel === 'controls' ? 'prateleira' : 'painel VER');
 

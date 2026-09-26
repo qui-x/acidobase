@@ -226,6 +226,45 @@ SIAB.chem = (() => {
     return { tubo: local, r: solve(local) };
   }
 
+  // Sistemas ácido-base do recipiente, para o diagrama de distribuição:
+  // nomes das espécies (da mais protonada à menos protonada), pKa e
+  // concentração total. Sistemas iguais (ácido acético e acetato de sódio,
+  // por exemplo) somam. Do mais concentrado ao menos concentrado.
+  function sistemas(tube) {
+    const { terms } = mixture(tube);
+    const lista = [];
+    const juntar = (nomes, pKa, total) => {
+      const chave = nomes.join('|');
+      const achado = lista.find(x => x.chave === chave);
+      if (achado) achado.total += total;
+      else lista.push({ chave, nomes, pKa, total });
+    };
+    [...terms.acids, ...terms.bases].forEach(x => juntar([x.solution.acidForm, x.solution.baseForm], [-Math.log10(x.ka)], x.c));
+    terms.systems.forEach(x => juntar(SIAB.familySpecies?.[x.family] || [...x.pKa, 0].map((_, i) => `${x.family} (${i})`), x.pKa, x.total));
+    return lista.filter(x => x.total > 0).sort((p, q) => q.total - p.total);
+  }
+
+  // CO₂ dissolvido (H₂CO₃*, a forma mais protonada do sistema carbonato), em
+  // mol/L. Acima da solubilidade do CO₂ (cerca de 0,034 mol/L a 25 °C e
+  // 1 atm, pela lei de Henry) o gás sairia em bolhas. O modelo é fechado: o
+  // CO₂ continua no cálculo do pH; as bolhas são só uma ilustração.
+  const SOLUBILIDADE_CO2 = .034;
+  function co2(tube, result = solve(tube)) {
+    const { terms } = mixture(tube);
+    const conc = terms.systems.filter(x => x.family === 'carbonate')
+      .reduce((sum, x) => sum + x.total * fractions(result.pH, x.pKa)[0], 0);
+    return { conc, solubilidade: SOLUBILIDADE_CO2, excesso: Math.max(0, conc / SOLUBILIDADE_CO2 - 1) };
+  }
+
+  // Sólido que não dissolveu (suspensões como o Mg(OH)₂), em mol/L e g/L.
+  function solidos(tube, result = solve(tube)) {
+    const { terms } = mixture(tube);
+    return terms.suspensions.map(x => {
+      const mol = Math.max(0, x.c - dissolved(x, result.oh));
+      return { formula: x.solution.formula, mol, gL: mol * (x.solution.massaMolar || 60) };
+    }).filter(x => x.mol > 1e-7);
+  }
+
   // Grau de ionização de um ácido fraco monoprótico: α = Ka / (Ka + [H₃O⁺]).
   function alpha(ka, pH) {
     const h = 10 ** -pH;
@@ -332,5 +371,5 @@ SIAB.chem = (() => {
     };
   }
 
-  return { solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base, zona, fracaoBasica };
+  return { solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base, zona, fracaoBasica, sistemas, co2, solidos };
 })();

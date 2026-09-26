@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.0
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.1
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.0`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.1`), o que evita
 essa mistura.
 
 ## O que há na versão 0.6
@@ -66,6 +66,26 @@ dinâmico; a diferença entre ponto final e ponto de equivalência).
   10⁻¹⁴ mol/L sob pH 0, 7 e 14 (cada unidade de pH = 10 vezes em [H₃O⁺]).
 - **Celular:** o conta-gotas fica preso acima da barra de baixo mesmo quando
   você rola até o painel VER.
+- **Condução (nova aba do VER):** teste de condução com lâmpada e
+  condutímetro (µS/cm ou mS/cm) pela lei de Kohlrausch, κ = Σ λ° · c, com os
+  valores de λ° do CRC Handbook. A barra "Quem carrega a corrente" mostra a
+  parte de cada íon, nas cores da lupa. A curva κ × volume faz o "V" da
+  titulação condutométrica: H₃O⁺ e OH⁻ conduzem de 4 a 7 vezes mais que Na⁺ e
+  Cl⁻. No módulo Calcular aparece a conta íon por íon.
+- **Gráfico mais completo:**
+  - losango no ponto final observado;
+  - faixa da região tampão (pH = pKa ± 1) nas titulações de ácido ou base
+    fraca;
+  - no módulo Calcular, duas vistas a mais: ΔpH/ΔV, cujo pico marca a
+    equivalência, e o diagrama de distribuição das espécies (α × pH), com o
+    pH do momento.
+- **Turvação:** Mg(OH)₂ e Al(OH)₃ sem dissolver deixam o líquido leitoso, na
+  cor do indicador. O líquido clareia quando o ácido dissolve o sólido, o
+  sólido assenta se o recipiente fica parado, e Agitar suspende de novo.
+- **Bolhas de CO₂ (ilustração):** com carbonato ou bicarbonato em meio ácido,
+  aparecem bolhas quando o CO₂ dissolvido passa da solubilidade (0,034 mol/L,
+  lei de Henry). Se isso acontece só onde a gota cai, sobe um jorro de bolhas
+  ali. O cálculo do pH continua com o gás dissolvido.
 
 ## O que há na versão 0.5
 
