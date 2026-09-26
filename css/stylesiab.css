@@ -771,6 +771,15 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .cg-bulbo { fill: #c2415d; transform-box: fill-box; transform-origin: 50% 100%; }
 .cg-colar { fill: var(--muted); }
 .cg-vidro { fill: color-mix(in srgb, var(--text) 8%, transparent); stroke: var(--muted); stroke-width: 1.2; }
+/* Bureta sobre o erlenmeyer: fica sempre montada; a torneira abre ao gotejar. */
+.bu-vidro { fill: none; stroke: var(--muted); stroke-width: 1.2; }
+.bu-liquido, .bu-ponta-liquido { opacity: .85; }
+.bu-marca { stroke: var(--muted); stroke-width: .8; }
+.bu-torneira { fill: color-mix(in srgb, var(--text) 10%, transparent); stroke: var(--muted); stroke-width: 1.2; }
+.bu-ponta { fill: color-mix(in srgb, var(--text) 8%, transparent); stroke: var(--muted); stroke-width: 1.2; }
+.bu-chave { fill: #2563eb; transform-box: fill-box; transform-origin: 50% 50%; transition: transform .2s ease; }
+.large-tube.pingando .bu-chave { transform: rotate(55deg); }
+.menisco { stroke: none; }
 .gota-caindo { stroke: rgba(255, 255, 255, .6); stroke-width: .6; }
 .onda { fill: none; stroke-width: 1.4; }
 .respingo, .nuvem-cor { pointer-events: none; }
@@ -863,6 +872,20 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .overview-tube .tube-svg { height: 160px; }
 .overview-tube strong { display: block; font-size: .875rem; overflow-wrap: anywhere; margin-top: 8px; }
 .overview-tube .small { font-size: .75rem; display: block; }
+.overview-heading { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 14px; }
+.overview-heading p { flex: 1 1 auto; }
+.ordenar-ph-btn { min-height: 36px; padding: 6px 14px; border: 1px solid var(--border); border-radius: 999px; background: var(--panel2); color: var(--secondary); font-size: .8rem; font-weight: 600; }
+.ordenar-ph-btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+.ordenar-ph-btn:disabled { opacity: .55; }
+.overview-tube { position: relative; }
+.overview-num { position: absolute; top: 8px; left: 10px; min-width: 22px; height: 22px; border-radius: 999px; background: var(--panel2); border: 1px solid var(--border); font: 600 .72rem/20px 'Segoe UI', system-ui, sans-serif; color: var(--secondary); }
+.overview-regua { margin: 0 0 16px; }
+.regua-bancada { width: 100%; max-width: 600px; height: auto; display: block; margin: 0 auto; }
+.regua-bancada circle { stroke: var(--text); stroke-width: 1.2; }
+.regua-bancada text { font: 700 10px 'Segoe UI', system-ui, sans-serif; fill: #111; paint-order: stroke; stroke: rgba(255, 255, 255, .7); stroke-width: 2.5px; }
+.regua-bancada .regua-bancada-rotulo { fill: var(--secondary); stroke: none; font-weight: 500; }
+.regua-bancada-haste { stroke: var(--muted); stroke-width: 1; }
+.regua-bancada-neutro { stroke: var(--text); stroke-dasharray: 2 2; stroke-width: 1; }
 .overview-readout { display: flex; justify-content: center; gap: 10px; font-size: .75rem; color: var(--secondary); margin-top: 8px; }
 .overview-color { display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 6px; font-size: .75rem; }
 
@@ -955,6 +978,18 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .eq-bloco h3 { margin: 0 0 6px; font-size: .8rem; color: var(--accent); }
 .eq-formula { font-family: 'Cambria Math', 'STIX Two Math', Georgia, serif; font-size: 1rem; line-height: 1.5; overflow-wrap: anywhere; }
 .eq-bloco .small { margin-top: 4px; }
+/* Pontes entre representações e seta de transferência de próton. */
+.eq-formula.com-seta { position: relative; padding-top: 18px; }
+.eq-seta { position: absolute; left: 0; top: 0; overflow: visible; pointer-events: none; }
+.eq-seta path { fill: none; stroke: var(--warn); stroke-width: 1.5; }
+.eq-seta marker path { fill: var(--warn); stroke: none; }
+.eq-seta text { fill: var(--warn); font: 600 10px 'Segoe UI', system-ui, sans-serif; }
+.eq-especie, .especie-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0 1px; border-bottom: 1px dotted var(--accent); border-radius: 2px; cursor: pointer; }
+.eq-especie:hover, .especie-btn:hover { color: var(--accent); }
+.especie-btn { font-weight: 600; }
+.especie-btn[aria-pressed="true"] { color: var(--accent); border-bottom-style: solid; }
+.lupa-svg.com-destaque .particula { opacity: .14; transition: opacity .25s; }
+.lupa-destacando { margin: 4px 0 0; font-size: .78rem; color: var(--accent); }
 .eq-lista { margin: 0; padding-left: 18px; font-size: .8rem; display: grid; gap: 6px; }
 .eq-linha { display: grid; grid-template-columns: minmax(90px, 40%) 1fr; gap: 8px; font-size: .8rem; }
 .eq-linha dt { color: var(--muted); }

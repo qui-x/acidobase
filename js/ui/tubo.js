@@ -150,6 +150,32 @@ function bolhasHTML(v) {
   }).join('');
 }
 
+// Menisco: a água molha o vidro e sobe um pouco junto da parede (menisco
+// côncavo, cerca de 1 mm num tubo estreito). O volume se lê pela parte de
+// baixo dele, que é a superfície desenhada (y = 0 no sistema do líquido).
+function meniscoD(cx, meia, S) {
+  const h = 1.1 * S, k = Math.min(2.2 * S, meia * .45);
+  return `M${(cx - meia).toFixed(1)} 0V${(-h).toFixed(1)}Q${(cx - meia).toFixed(1)} 0 ${(cx - meia + k).toFixed(1)} 0ZM${(cx + meia).toFixed(1)} 0V${(-h).toFixed(1)}Q${(cx + meia).toFixed(1)} 0 ${(cx + meia - k).toFixed(1)} 0Z`;
+}
+
+// Ponta da bureta com torneira, presa sobre o erlenmeyer (o frasco das
+// titulações). Mesmo sistema de coordenadas do conta-gotas: ponta em (80, 12).
+// A coluna sobe até o topo da cena; a torneira abre enquanto goteja.
+function buretaSVG(forma, corGota) {
+  const topo = forma.TOPO - (forma.ponta - 12);
+  const marcas = [];
+  for (let y = -24, i = 0; y > topo + 4; y -= 6, i++) marcas.push(`<path class="bu-marca" d="M75 ${y}h${i % 5 === 0 ? 5 : 3}"/>`);
+  return `<g class="bureta" aria-hidden="true">
+      <rect class="bu-liquido" x="76.3" y="${topo.toFixed(1)}" width="7.4" height="${(-16 - topo).toFixed(1)}" style="fill:${corGota}"/>
+      <path class="bu-vidro" d="M75 ${topo.toFixed(1)}V-16M85 ${topo.toFixed(1)}V-16"/>
+      ${marcas.join('')}
+      <rect class="bu-torneira" x="73" y="-16" width="14" height="9" rx="2"/>
+      <path class="bu-ponta" d="M77.2 -7h5.6l-1.6 19h-2.4Z"/>
+      <path class="bu-ponta-liquido" d="M78.3 -7h3.4l-1.1 17h-1.2Z" style="fill:${corGota}"/>
+      <g class="bu-chave"><rect x="63" y="-13.5" width="34" height="4" rx="2"/><circle cx="80" cy="-11.5" r="3.2"/></g>
+    </g>`;
+}
+
 // prefix 'focus' desenha a cena da bancada: escala única (tamanho de verdade),
 // conta-gotas acima da boca e camada de efeitos. Os outros (visão geral,
 // desafios) enquadram só o recipiente, para caber no cartão.
@@ -165,7 +191,8 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
     const tamanho = Math.min(8, forma.meia(yy) * .6);
     return `<path class="tube-tick" d="M${(dentro - 1).toFixed(1)} ${yy.toFixed(1)}h-${tamanho.toFixed(1)}" stroke-width="1"/>${small ? '' : `<text class="tube-graduation" x="${(dentro + 3 * forma.S + 6).toFixed(1)}" y="${(yy + 4).toFixed(1)}">${vol}</text>`}`;
   }).join('');
-  const contaGotas = foco ? `<g transform="translate(${(cx - 80).toFixed(1)} ${(forma.ponta - 12).toFixed(1)})"><g class="conta-gotas-vidro" aria-hidden="true">
+  const contaGotas = foco && v.tipo === 'erlenmeyer' ? `<g transform="translate(${(cx - 80).toFixed(1)} ${(forma.ponta - 12).toFixed(1)})">${buretaSVG(forma, v.corGota)}</g>`
+    : foco ? `<g transform="translate(${(cx - 80).toFixed(1)} ${(forma.ponta - 12).toFixed(1)})"><g class="conta-gotas-vidro" aria-hidden="true">
       <path class="cg-bulbo" d="M70 -22v-11a10 10 0 0 1 20 0v11Z"/>
       <rect class="cg-colar" x="73" y="-23" width="14" height="4" rx="1"/>
       <path class="cg-vidro" d="M75 -19v21l3.4 10h3.2l3.4-10v-21Z"/>
@@ -184,6 +211,7 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
       <g class="liquido" style="transform:translateY(${y.toFixed(1)}px)">
         <rect class="liquid-body" x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400" style="fill:${v.rgb};fill-opacity:${v.c.opacity}"/>
         <ellipse class="liquido-superficie" cx="${cx.toFixed(1)}" cy="0" rx="${v.meia.toFixed(1)}" ry="3" style="fill:${v.rgb};fill-opacity:${Math.min(1, v.c.opacity + .12)}"/>
+        <path class="menisco" d="${meniscoD(cx, v.meia, forma.S)}" style="fill:${v.rgb};fill-opacity:${v.c.opacity}"/>
         <g class="turvacao" style="--turvo:${v.turvo.toFixed(2)}"${v.turvo ? '' : ' hidden'}><ellipse cx="${cx.toFixed(1)}" cy="0" rx="${v.meia.toFixed(1)}" ry="3"/><rect x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400"/><rect class="turvacao-grao" x="${x0.toFixed(1)}" y="0" width="${largura.toFixed(1)}" height="400" fill="url(#${id}-grao)"/></g>
         <g class="bolhas">${foco ? bolhasHTML(v) : ''}</g>
         ${foco ? `<g class="efeitos-dentro" clip-path="url(#${id}-abaixo)"></g><g class="efeitos-superficie"></g>` : ''}
@@ -250,6 +278,13 @@ SIAB.vidro = (() => {
     sup.style.fill = v.rgb;
     sup.style.fillOpacity = Math.min(1, v.c.opacity + .12);
     sup.setAttribute('rx', v.meia.toFixed(1));
+    const menisco = svg.querySelector('.menisco');
+    if (menisco) {
+      menisco.setAttribute('d', meniscoD(v.forma.cx, v.meia, v.forma.S));
+      menisco.style.fill = v.rgb;
+      menisco.style.fillOpacity = v.c.opacity;
+    }
+    svg.querySelectorAll('.bu-liquido, .bu-ponta-liquido').forEach(el => { el.style.fill = v.corGota; });
     const cg = svg.querySelector('.cg-liquido');
     if (cg) cg.style.fill = v.corGota;
     const turvacao = svg.querySelector('.turvacao'), sedimento = svg.querySelector('.sedimento');
@@ -329,6 +364,11 @@ SIAB.vidro = (() => {
     const cx = v.forma.cx, ponta = v.forma.ponta;
     const queda = Math.max(12, v.y - ponta - 3);
     const formar = 90, cair = Math.round(120 + 14 * Math.sqrt(queda)), total = formar + cair;
+    // Tamanho de verdade: uma gota de volume V é uma esfera de diâmetro
+    // d = ∛(6V/π) (0,05 mL → 4,6 mm; 0,01 mL → 2,7 mm), na escala do desenho.
+    // O desenho da gota mede 8,4 unidades de largura.
+    const vGota = Math.min(.1, tube.additions.at(-1) || tube.dropVolume);
+    const esc = Math.cbrt(6 * vGota * 1000 / Math.PI) * v.forma.S / 8.4;
     impacto = Math.max(impacto, agora + espera + total);
     suspender(caixa);
 
@@ -343,9 +383,9 @@ SIAB.vidro = (() => {
     });
     g.style.opacity = 0;
     sumir(g, g.animate([
-      { transform: `translate(${cx}px, ${ponta}px) scale(.2)`, opacity: 1, offset: 0 },
-      { transform: `translate(${cx}px, ${ponta + 3}px) scale(1)`, opacity: 1, offset: formar / total, easing: 'cubic-bezier(.55, 0, 1, .55)' },
-      { transform: `translate(${cx}px, ${(ponta + 3 + queda).toFixed(1)}px) scale(.85, 1.25)`, opacity: 1, offset: 1 }
+      { transform: `translate(${cx}px, ${ponta}px) scale(${(.2 * esc).toFixed(2)})`, opacity: 1, offset: 0 },
+      { transform: `translate(${cx}px, ${(ponta + 3 * esc).toFixed(1)}px) scale(${esc.toFixed(2)})`, opacity: 1, offset: formar / total, easing: 'cubic-bezier(.55, 0, 1, .55)' },
+      { transform: `translate(${cx}px, ${(ponta + 3 * esc + queda).toFixed(1)}px) scale(${(.85 * esc).toFixed(2)}, ${(1.25 * esc).toFixed(2)})`, opacity: 1, offset: 1 }
     ], { duration: total, delay: espera, fill: 'forwards' }));
 
     // Chegada: ondas, respingos, nuvem de cor e a superfície balançando.

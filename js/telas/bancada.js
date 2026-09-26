@@ -89,13 +89,13 @@ SIAB.bancada = (() => {
     SIAB.registrar('gotas');
     SIAB.vidro.pingando($('large-tube'), true);
   }
-  function gotaDaSequencia() {
+  function gotaDaSequencia(fracao = 1) {
     if (!sequencia) iniciarSequencia();
     if (!cabeMaisUma()) {
       SIAB.notice(`Capacidade de ${SIAB.format(SIAB.capacidade(SIAB.current()), 0)} mL atingida.`);
       return false;
     }
-    SIAB.targets(SIAB.current()).forEach(x => x.additions.push(x.dropVolume));
+    SIAB.targets(SIAB.current()).forEach(x => x.additions.push(x.dropVolume * fracao));
     sequencia.n++;
     const agora = leitura();
     const virou = SIAB.current().indicator !== 'none' && !sequencia.viragem && agora.cor !== sequencia.cor;
@@ -148,6 +148,17 @@ SIAB.bancada = (() => {
     if (feitas > 0) SIAB.som.tocar(leitura().pH);
     fimSequencia();
     return feitas;
+  }
+
+  // Meia gota (bureta): perto do ponto final, abre-se a torneira só até a gota
+  // ficar pendurada na ponta; ela é encostada na parede do erlenmeyer e lavada
+  // para dentro com a pisseta. Metade do volume de uma gota.
+  function meiaGota() {
+    iniciarSequencia();
+    const ok = gotaDaSequencia(.5);
+    if (ok) SIAB.som.tocar(leitura().pH);
+    fimSequencia();
+    if (ok) setTimeout(() => SIAB.announce(`Meia gota (${SIAB.format(SIAB.current().dropVolume / 2, 3)} mL): pendurada na ponta, encostada na parede e lavada para dentro.`), 50);
   }
 
   // Agitar: termina a mistura (as cores locais das gotas somem na cor do todo).
@@ -520,6 +531,7 @@ SIAB.bancada = (() => {
       fim: fimSequencia
     });
     $('drop5-btn').addEventListener('click', () => gotejar(5));
+    $('meia-gota-btn').addEventListener('click', meiaGota);
     // Os atalhos em mL mudam com a capacidade (data-ml, escrito por render.js).
     $('drop1ml-btn').addEventListener('click', evento => gotejar(Math.round(Number(evento.currentTarget.dataset.ml || 1) / SIAB.current().dropVolume)));
     $('drop5ml-btn').addEventListener('click', evento => gotejar(Math.round(Number(evento.currentTarget.dataset.ml || 5) / SIAB.current().dropVolume)));
@@ -533,10 +545,23 @@ SIAB.bancada = (() => {
       new ResizeObserver(() => {
         document.documentElement.style.setProperty('--dose-h', `${Math.ceil($('dose-area').getBoundingClientRect().height)}px`);
       }).observe($('dose-area'));
+      // Setas de transferência de próton: redesenha quando o painel muda de largura.
+      let larguraVer = 0;
+      new ResizeObserver(([item]) => {
+        const w = Math.round(item.contentRect.width);
+        if (w === larguraVer) return;
+        larguraVer = w;
+        if (SIAB.state.verTab === 'equacao') SIAB.equacao.setas($('ver-conteudo'));
+      }).observe($('ver-conteudo'));
     }
 
     $('focus-tab').addEventListener('click', () => { closeSheet(false); SIAB.state.view = 'focus'; SIAB.render(true); });
     $('overview-tab').addEventListener('click', () => { closeSheet(false); SIAB.state.view = 'overview'; SIAB.render(true); });
+    $('ordenar-ph-btn').addEventListener('click', () => {
+      SIAB.state.ordemPH = !SIAB.state.ordemPH;
+      SIAB.render(true);
+      SIAB.announce(SIAB.state.ordemPH ? 'Recipientes em ordem de pH, do mais ácido ao mais básico.' : 'Recipientes na ordem da bancada.');
+    });
     document.addEventListener('click', evento => {
       const tubo = evento.target.closest('[data-tube]');
       if (tubo) selecionarTubo(Number(tubo.dataset.tube));
@@ -645,6 +670,17 @@ SIAB.bancada = (() => {
         SIAB.announce(SIAB.state.lupaLog ? 'Lupa em escala logarítmica: os íons raros aparecem.' : 'Lupa em escala linear.');
         return;
       }
+      // Ponte entre representações: uma espécie tocada na Equação, na Condução,
+      // no diagrama de espécies ou na legenda da lupa fica em destaque na lupa.
+      if (botao.dataset.acao === 'destacar') {
+        const s = SIAB.state, f = botao.dataset.especie, naLupa = s.verTab === 'particulas';
+        s.destaque = naLupa && s.destaque === f ? null : f;
+        s.verTab = 'particulas';
+        SIAB.loja.avisar();
+        [...SIAB.$('ver-conteudo').querySelectorAll('.lupa-legenda [data-especie]')].find(b => b.dataset.especie === f)?.focus();
+        SIAB.announce(s.destaque ? `Lupa de partículas: ${f} em destaque.` : 'Lupa de partículas: todas as espécies.');
+        return;
+      }
       if (botao.dataset.acao === 'grafico-modo') {
         SIAB.state.graficoModo = botao.dataset.modo;
         SIAB.loja.avisar();
@@ -700,5 +736,5 @@ SIAB.bancada = (() => {
     responsive();
   }
 
-  return { config, configurar, ligar, gotejar, agitar, colocar, selecionarTubo, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
+  return { config, configurar, ligar, gotejar, meiaGota, agitar, colocar, selecionarTubo, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
 })();

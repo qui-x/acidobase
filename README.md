@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.1
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.2
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,7 +25,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.1`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.2`), o que evita
 essa mistura.
 
 ## O que há na versão 0.6
@@ -86,6 +86,22 @@ dinâmico; a diferença entre ponto final e ponto de equivalência).
   aparecem bolhas quando o CO₂ dissolvido passa da solubilidade (0,034 mol/L,
   lei de Henry). Se isso acontece só onde a gota cai, sobe um jorro de bolhas
   ali. O cálculo do pH continua com o gás dissolvido.
+- **Gota de verdade e menisco:** a gota desenhada tem o diâmetro de uma
+  esfera do mesmo volume, d = ∛(6V/π) (0,05 mL = 4,6 mm), na escala da
+  vidraria. A superfície do líquido sobe junto do vidro (menisco côncavo), e
+  o volume se lê pela parte de baixo dele.
+- **Bureta no erlenmeyer:** a ponta da bureta fica presa sobre o frasco, e a
+  torneira abre enquanto você goteja. O botão "½ gota" simula a meia gota
+  encostada na parede e lavada com a pisseta, para chegar ao ponto final com
+  mais precisão.
+- **Pontes entre representações:** tocar numa fórmula da Equação, num íon da
+  Condução ou numa espécie do diagrama de distribuição abre a lupa com
+  aquela espécie em destaque.
+- **Seta do próton:** na Equação, uma seta curva com "H⁺" vai do doador
+  (ácido) ao receptor (base). O programa acha os dois comparando reagentes e
+  produtos: um perde um H e o outro ganha um.
+- **Ordenar por pH:** na visão geral, os recipientes ficam do mais ácido ao
+  mais básico, sobre uma régua de pH que marca cada um com a cor e o número.
 
 ## O que há na versão 0.5
 

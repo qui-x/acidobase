@@ -146,7 +146,9 @@ SIAB.grafico = (() => {
   function distribuicao(tube, r = SIAB.chem.solve(tube)) {
     const sis = SIAB.chem.sistemas(tube)[0];
     if (!sis) return null;
-    const cores = new Map(SIAB.lupa.dados(tube, r).map(e => [e.formula, e.cor]));
+    const dadosLupa = SIAB.lupa.dados(tube, r);
+    const cores = new Map(dadosLupa.map(e => [e.formula, e.cor]));
+    const presentes = new Set(SIAB.lupa.disponivel() ? dadosLupa.filter(e => e.quantidade > 0).map(e => e.formula) : []);
     const PALETA = ['#e879f9', '#34d399', '#fbbf24', '#22d3ee'];
     const cor = (nome, i) => cores.get(nome) || PALETA[i % PALETA.length];
     const x = pH => M.left + (pH / 14) * largura;
@@ -170,7 +172,10 @@ SIAB.grafico = (() => {
     const pct = a => `${SIAB.format(100 * a, a < .1 ? 1 : 0)} %`;
     const descricao = `Diagrama de distribuição: fração de cada espécie em função do pH. No pH ${SIAB.format(agora)}: ${lista.map(e => `${e.nome} ${pct(e.a)}`).join(', ')}.`;
     return `<svg class="grafico-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${descricao}"><title>${descricao}</title>${partes.join('')}</svg>
-      <ul class="cond-legenda grafico-especies" aria-hidden="true">${lista.map(e => `<li><span class="legenda-cor" style="background:${e.cor}"></span>${SIAB.escape(e.nome)} <b>${pct(e.a)}</b></li>`).join('')}</ul>`;
+      <ul class="cond-legenda grafico-especies">${lista.map(e => {
+        const f = SIAB.escape(e.nome), naLupa = presentes.has(e.nome);
+        return `<li><span class="legenda-cor" style="background:${e.cor}" aria-hidden="true"></span>${naLupa ? `<button type="button" class="especie-btn" data-acao="destacar" data-especie="${f}" title="Ver ${f} na lupa">${f}</button>` : f} <b>${pct(e.a)}</b></li>`;
+      }).join('')}</ul>`;
   }
 
   return { svg, serie, curvaTeorica, derivada, distribuicao };

@@ -37,7 +37,7 @@ SIAB.condutimetro = (() => {
   }
 
   // Barra "quem carrega a corrente": fração de κ de cada íon.
-  function barra(medida, cores) {
+  function barra(medida, cores, ligar = false) {
     if (!(medida.kappa > 0)) return '';
     const grandes = medida.ions.filter(x => x.contrib / medida.kappa >= .01);
     const resto = medida.kappa - grandes.reduce((sum, x) => sum + x.contrib, 0);
@@ -49,7 +49,7 @@ SIAB.condutimetro = (() => {
       <div class="cond-barra" role="img" aria-label="Parte da condutividade de cada íon: ${partes.map(p => `${p.nome} ${pct(p.fracao)}`).join(', ')}.">
         ${partes.map(p => `<span style="flex-grow:${p.fracao.toFixed(4)};background:${p.cor}"${p.vazado ? ' class="vazado"' : ''}></span>`).join('')}
       </div>
-      <ul class="cond-legenda" aria-hidden="true">${partes.map(p => `<li><span class="legenda-cor${p.vazado ? ' espectador' : ''}" style="${p.vazado ? `border-color:${p.cor}` : `background:${p.cor}`}"></span>${SIAB.escape(p.nome)} <b>${pct(p.fracao)}</b></li>`).join('')}</ul>
+      <ul class="cond-legenda">${partes.map(p => `<li><span class="legenda-cor${p.vazado ? ' espectador' : ''}" style="${p.vazado ? `border-color:${p.cor}` : `background:${p.cor}`}" aria-hidden="true"></span>${ligar && p.nome !== 'outros' ? `<button type="button" class="especie-btn" data-acao="destacar" data-especie="${SIAB.escape(p.nome)}" title="Ver ${SIAB.escape(p.nome)} na lupa">${SIAB.escape(p.nome)}</button>` : SIAB.escape(p.nome)} <b>${pct(p.fracao)}</b></li>`).join('')}</ul>
     </div>`;
   }
 
@@ -111,7 +111,7 @@ SIAB.condutimetro = (() => {
           <span>${FRASES[estado]}</span>
         </div>
       </div>
-      ${barra(medida, cores)}
+      ${barra(medida, cores, SIAB.lupa.disponivel())}
       ${tube.additions.length ? curva(tube, result) : '<p class="field-hint">Adicione gotas para desenhar a curva de condutividade.</p>'}
       <p class="field-hint">H₃O⁺ e OH⁻ conduzem muito mais que os outros íons (o próton salta entre moléculas de água): por isso a curva muda de rumo na equivalência, sem precisar de indicador.</p>
       ${nivel === 'calcular' ? tabela(medida) : ''}

@@ -94,7 +94,9 @@ SIAB.render = (syncForm = false) => {
   // Conta-gotas.
   const cheio = targets.some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.capacidade(x) + 1e-9);
   $('dose-area').hidden = !pode('gotas');
-  $('titrant-label').textContent = `Conta-gotas: ${SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)}`;
+  // No erlenmeyer, o titulante vem de uma bureta (com meia gota); nos outros, do conta-gotas.
+  const bureta = vidro === SIAB.VIDRARIAS.erlenmeyer;
+  $('titrant-label').textContent = `${bureta ? 'Bureta' : 'Conta-gotas'}: ${SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)}`;
   // Uma linha só: quantas gotas, quanto volume e o tamanho da gota.
   // O tamanho da gota só aparece nos módulos em que ele pode ser ajustado (Medir e Calcular).
   const nivelDose = cfg.modo === 'missao' ? cfg.nivel : s.level;
@@ -111,6 +113,8 @@ SIAB.render = (syncForm = false) => {
   $('poe-btn').disabled = cheio;
   $('dose-shortcuts').hidden = !pode('atalhos') && !pode('poe');
   $('drop5-btn').hidden = !pode('atalhos');
+  $('meia-gota-btn').hidden = !pode('atalhos') || !bureta;
+  $('meia-gota-btn').disabled = cheio;
   $('drop1ml-btn').hidden = !pode('atalhos');
   // Segundo atalho: só nos recipientes maiores (encher 25 mL de gota em gota levaria minutos).
   $('drop5ml-btn').hidden = !pode('atalhos') || !atalho2;
@@ -151,9 +155,19 @@ SIAB.render = (syncForm = false) => {
     </button>`;
   }).join('');
   if (s.view === 'overview') {
-    $('overview-grid').innerHTML = s.tubes.map(x => {
-      const v = SIAB.chem.solve(x), cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}">${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? '<span class="small">Adições vinculadas</span>' : ''}</button>`;
+    // Ordenar por pH: os recipientes do mais ácido ao mais básico, com uma
+    // régua de pH que marca cada um (só com o pH à vista).
+    const ordenar = Boolean(s.ordemPH && s.showPH);
+    $('ordenar-ph-btn').setAttribute('aria-pressed', String(ordenar));
+    $('ordenar-ph-btn').disabled = !s.showPH;
+    $('ordenar-ph-btn').title = s.showPH ? 'Do mais ácido ao mais básico, com uma régua de pH' : 'Mostre o pH para ordenar';
+    const lista = s.tubes.map((x, n) => ({ x, n, v: SIAB.chem.solve(x) }));
+    if (ordenar) lista.sort((p, q) => p.v.pH - q.v.pH);
+    $('overview-regua').hidden = !ordenar;
+    $('overview-regua').innerHTML = ordenar ? SIAB.reguaDaBancada(lista) : '';
+    $('overview-grid').innerHTML = lista.map(({ x, n, v }) => {
+      const cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
+      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span>${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? '<span class="small">Adições vinculadas</span>' : ''}</button>`;
     }).join('');
   }
 
@@ -306,6 +320,34 @@ SIAB.renderVer = () => {
   if (s.verTab === 'historico') conteudo = SIAB.historicoHTML(t);
   $('ver-conteudo').innerHTML = conteudo;
   if (s.verTab === 'particulas') SIAB.lupa.equilibrio($('ver-conteudo'));
+  if (s.verTab === 'equacao') SIAB.equacao.setas($('ver-conteudo'));
+};
+
+// Régua de pH da bancada (visão geral ordenada): cada recipiente é um ponto
+// com a cor do líquido e o número dele, na posição do pH. Pontos próximos
+// sobem de linha para não se cobrirem.
+SIAB.reguaDaBancada = lista => {
+  const x = pH => 12 + (Math.max(0, Math.min(14, pH)) / 14) * 336;
+  const stops = [0, 2, 4, 6, 7, 8, 10, 12, 14].map(pH => `<stop offset="${pH / 14}" stop-color="rgb(${SIAB.chem.color('universal', Math.max(1, pH)).rgb.join(',')})"/>`).join('');
+  const ocupado = [];
+  const pontos = lista.map(({ x: t, n, v }) => {
+    const px = x(v.pH);
+    let linha = 0;
+    while (ocupado.some(o => o.linha === linha && Math.abs(o.px - px) < 20)) linha++;
+    ocupado.push({ px, linha });
+    const cor = SIAB.chem.liquid(t, SIAB.state.indicatorOnly, v);
+    const cy = 44 - linha * 21;
+    return `<g><path class="regua-bancada-haste" d="M${px.toFixed(1)} ${cy + 9}V58"/><circle cx="${px.toFixed(1)}" cy="${cy}" r="9" style="fill:rgb(${cor.rgb.join(',')})"/><text x="${px.toFixed(1)}" y="${cy + 3.5}" text-anchor="middle">${n + 1}</text></g>`;
+  });
+  const topo = 44 - (Math.max(0, ...ocupado.map(o => o.linha))) * 21 - 12;
+  const descricao = `Régua de pH da bancada: ${lista.map(({ x: t, v }) => `${t.name} pH ${SIAB.phFormat(v)}`).join('; ')}.`;
+  return `<svg class="regua-bancada" viewBox="0 ${topo} 360 ${96 - topo}" role="img" aria-label="${SIAB.escape(descricao)}">
+    <defs><linearGradient id="regua-bancada-grad">${stops}</linearGradient></defs>
+    <rect x="12" y="58" width="336" height="12" rx="6" fill="url(#regua-bancada-grad)"/>
+    <path class="regua-bancada-neutro" d="M${x(7)} 56v16"/>
+    ${pontos.join('')}
+    <text class="regua-bancada-rotulo" x="12" y="86">0 · ácido</text><text class="regua-bancada-rotulo" x="${x(7)}" y="86" text-anchor="middle">7 · neutro</text><text class="regua-bancada-rotulo" x="348" y="86" text-anchor="end">básico · 14</text>
+  </svg>`;
 };
 
 // Ponto final observado: a primeira gota em que o nome da cor do indicador

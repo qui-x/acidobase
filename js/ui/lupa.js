@@ -66,6 +66,10 @@ SIAB.lupa = (() => {
   function html(tube, { nivel = 'explorar', result = SIAB.chem.solve(tube) } = {}) {
     const log = Boolean(SIAB.state.lupaLog);
     const lista = dados(tube, result, log);
+    // Espécie em destaque (tocada na legenda, na Equação ou na Condução): as
+    // outras partículas ficam apagadas. O seletor usa data-f, que acompanha a
+    // partícula quando um próton pula no equilíbrio.
+    const destacada = lista.some(e => e.formula === SIAB.state.destaque && e.quantidade > 0) ? SIAB.state.destaque : null;
     const desenho = [];
     let posicao = 0;
     for (const especie of lista) {
@@ -92,7 +96,8 @@ SIAB.lupa = (() => {
       const numero = e.quantidade > 0 ? `${e.quantidade} ${e.quantidade === 1 ? 'partícula' : 'partículas'}` : `traço (menos de 1 nesta escala${log ? '' : '; veja a escala logarítmica'})`;
       const conc = nivel === 'calcular' ? ` · ${SIAB.cientifico(e.conc)} mol/L` : '';
       const tipo = e.type === 'solid' ? 'sólido' : e.type === 'molecule' ? 'molécula' : e.espectador ? 'íon espectador' : 'íon';
-      return `<li><span class="legenda-cor ${e.type}${e.espectador ? ' espectador' : ''}" style="${e.espectador ? `border-color:${e.cor}` : `background:${e.cor}`}" aria-hidden="true"></span><strong>${SIAB.escape(e.formula)}</strong> <span class="small">${tipo} · ${numero}${conc}</span></li>`;
+      const f = SIAB.escape(e.formula);
+      return `<li><span class="legenda-cor ${e.type}${e.espectador ? ' espectador' : ''}" style="${e.espectador ? `border-color:${e.cor}` : `background:${e.cor}`}" aria-hidden="true"></span><button type="button" class="especie-btn" data-acao="destacar" data-especie="${f}" aria-pressed="${destacada === e.formula}">${f}</button> <span class="small">${tipo} · ${numero}${conc}</span></li>`;
     }).join('');
 
     const inicial = SIAB.solutions[tube.solution];
@@ -117,11 +122,13 @@ SIAB.lupa = (() => {
       : `Escala linear: a espécie mais abundante tem ${MAX} partículas.`;
     return `<div class="lupa">
       <div class="lupa-barra"><button type="button" class="lupa-escala" data-acao="lupa-escala" aria-pressed="${log}">Escala logarítmica</button></div>
-      <svg class="lupa-svg" viewBox="0 0 320 180" role="img" aria-label="Partículas dissolvidas nesta escala: ${SIAB.escape(descricao)}."${par ? ` data-par="${SIAB.escape(JSON.stringify(par))}"` : ''}>${desenho.join('')}<g class="lupa-eventos"></g></svg>
+      ${destacada ? `<style>.lupa-svg.com-destaque .particula[data-f="${SIAB.escape(destacada)}"] { opacity: 1; }</style>` : ''}
+      <svg class="lupa-svg${destacada ? ' com-destaque' : ''}" viewBox="0 0 320 180" role="img" aria-label="Partículas dissolvidas nesta escala: ${SIAB.escape(descricao)}.${destacada ? ` Em destaque: ${SIAB.escape(destacada)}.` : ''}"${par ? ` data-par="${SIAB.escape(JSON.stringify(par))}"` : ''}>${desenho.join('')}<g class="lupa-eventos"></g></svg>
+      ${destacada ? `<p class="lupa-destacando">Em destaque: <strong>${SIAB.escape(destacada)}</strong>. Toque de novo no nome para ver todas.</p>` : ''}
       <p class="lupa-evento" aria-hidden="true"></p>
       ${destaque}
       <ul class="lupa-legenda">${legenda}</ul>
-      <p class="field-hint">${escala} Contorno vazado: íon espectador. Moléculas de água não aparecem: há cerca de 55,5 mol/L delas, muito mais que o soluto.</p>
+      <p class="field-hint">${escala} Contorno vazado: íon espectador. Toque num nome para destacar suas partículas. Moléculas de água não aparecem: há cerca de 55,5 mol/L delas, muito mais que o soluto.</p>
     </div>`;
   }
 
@@ -228,5 +235,8 @@ SIAB.lupa = (() => {
     }, 2400);
   }
 
-  return { html, dados, reagir, equilibrio };
+  // A lupa está à vista? (aba Partículas liberada e pH revelado, ou missão)
+  const disponivel = () => SIAB.bancada.config.ver.includes('particulas') && (SIAB.state.showPH || SIAB.bancada.config.modo === 'missao');
+
+  return { html, dados, reagir, equilibrio, disponivel };
 })();
