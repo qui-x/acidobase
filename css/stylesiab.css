@@ -161,6 +161,9 @@ td { font-family: Consolas, monospace; }
 .chip:has(input:disabled), .segmented label:has(input:disabled) { opacity: .4; cursor: default; }
 .chip-cor { width: 26px; height: 10px; border-radius: 5px; box-shadow: 0 0 0 1px var(--border); }
 .chip small { color: var(--muted); font-weight: 400; }
+.indicadores-extra { flex-basis: 100%; margin-top: 2px; }
+.indicadores-extra > summary { cursor: pointer; min-height: 36px; display: flex; align-items: center; gap: 6px; font-size: .8rem; font-weight: 600; color: var(--secondary); }
+.indicadores-extra > .chip-list { margin-top: 6px; }
 .segmented { display: flex; flex-wrap: wrap; gap: 0; }
 .segmented legend { width: 100%; }
 .segmented label { flex: 1; justify-content: center; min-height: 40px; padding: 7px 10px; font-size: .8rem; margin-left: -1px; }
@@ -1010,7 +1013,7 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .eq-seta text { fill: var(--warn); font: 600 10px 'Segoe UI', system-ui, sans-serif; }
 .eq-especie, .especie-btn { font: inherit; color: inherit; background: none; border: 0; padding: 0 1px; border-bottom: 1px dotted var(--accent); border-radius: 2px; cursor: pointer; }
 .eq-especie:hover, .especie-btn:hover { color: var(--accent); }
-.especie-btn { font-weight: 600; }
+.especie-btn { font-weight: 600; min-height: 24px; min-width: 24px; display: inline-flex; align-items: center; justify-content: center; }
 .especie-btn[aria-pressed="true"] { color: var(--accent); border-bottom-style: solid; }
 .lupa-svg.com-destaque .particula { opacity: .14; transition: opacity .25s; }
 .lupa-destacando { margin: 4px 0 0; font-size: .78rem; color: var(--accent); }

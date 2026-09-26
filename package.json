@@ -1,6 +1,6 @@
 {
   "name": "siab-acidobase",
-  "version": "0.6.5",
+  "version": "0.7.0",
   "private": true,
   "description": "SIAB — A química das cores: simulador de ácidos e bases para o ensino médio (missões, desafios, laboratório e PWA).",
   "license": "GPL-3.0-only",

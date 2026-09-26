@@ -50,12 +50,19 @@ SIAB.grafico = (() => {
     partes.push(`<text class="grafico-eixo" x="${M.left + largura / 2}" y="${H - 4}" text-anchor="middle">volume adicionado (mL)</text>`);
     partes.push(`<text class="grafico-eixo" x="10" y="${M.top + altura / 2}" transform="rotate(-90 10 ${M.top + altura / 2})" text-anchor="middle">pH</text>`);
 
-    // Região tampão (ácido ou base fraca): entre 1/11 e 10/11 da equivalência,
-    // a razão base/ácido conjugado vai de 0,1 a 10, isto é, pH = pKa ± 1.
-    if (mostrarMarcas && r.halfEquivalenceVolume !== null && eq / 11 < xMax) {
-      const v1 = eq / 11, v2 = Math.min(eq * 10 / 11, xMax);
-      partes.push(`<rect class="grafico-tampao" x="${x(v1).toFixed(1)}" y="${M.top}" width="${(x(v2) - x(v1)).toFixed(1)}" height="${altura}"/><text class="grafico-legenda" x="${((x(v1) + x(v2)) / 2).toFixed(1)}" y="${M.top + altura - 6}" text-anchor="middle">região tampão${nivel === 'explorar' ? '' : ' (pH = pKa ± 1)'}</text>`);
-    }
+    // Meias-etapas (ácido ou base fraca; cada etapa de um poliprótico): no meio
+    // de cada etapa, pH ≈ pKa. Só as que valem de verdade: com um ácido quase
+    // forte ou muito diluído, o pH ali se afasta do pKa, e a marca não aparece.
+    const meias = mostrarMarcas ? (r.meias || [])
+      .map(m => ({ ...m, pH: SIAB.chem.solve({ ...tube, additions: [m.v] }).pH }))
+      .filter(m => Math.abs(m.pH - m.pKa) < .2 && m.inicio < xMax) : [];
+    // Região tampão: entre 1/11 e 10/11 de cada etapa, a razão base/ácido
+    // conjugado vai de 0,1 a 10, isto é, pH = pKa ± 1.
+    meias.forEach(m => {
+      const d = m.fim - m.inicio, v1 = m.inicio + d / 11, v2 = Math.min(m.inicio + d * 10 / 11, xMax);
+      const rotulo = meias.length > 1 ? 'tampão' : `região tampão${nivel === 'explorar' ? '' : ' (pH = pKa ± 1)'}`;
+      partes.push(`<rect class="grafico-tampao" x="${x(v1).toFixed(1)}" y="${M.top}" width="${(x(v2) - x(v1)).toFixed(1)}" height="${altura}"/><text class="grafico-legenda" x="${((x(v1) + x(v2)) / 2).toFixed(1)}" y="${M.top + altura - 6}" text-anchor="middle">${rotulo}</text>`);
+    });
     // Faixa de viragem do indicador escolhido.
     const ind = SIAB.indicators[tube.indicator];
     if (mostrarMarcas && ind && ind.acid && ind.base) {
@@ -66,13 +73,14 @@ SIAB.grafico = (() => {
     // Neutro na temperatura do tubo.
     partes.push(`<path class="grafico-neutro" d="M${M.left} ${y(r.neutralPH)}H${W - M.right}"/>`);
 
-    if (mostrarMarcas && eq !== null && eq <= xMax) {
-      partes.push(`<path class="grafico-equivalencia" d="M${x(eq)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${x(eq) + 4}" y="${M.top + 10}">equivalência</text>`);
-      if (r.halfEquivalenceVolume !== null) {
-        const meia = SIAB.chem.solve({ ...tube, additions: [r.halfEquivalenceVolume] }).pH;
-        partes.push(`<circle class="grafico-meia" cx="${x(r.halfEquivalenceVolume)}" cy="${y(meia)}" r="4"/><text class="grafico-legenda" x="${x(r.halfEquivalenceVolume) + 6}" y="${y(meia) + 14}">pH = pKa</text>`);
-      }
-    }
+    // Equivalências: uma linha por etapa (H₃PO₄ e Na₂CO₃ têm duas).
+    const eqs = mostrarMarcas ? r.equivalencias.filter(v => v <= xMax) : [];
+    eqs.forEach((v, i) => {
+      partes.push(`<path class="grafico-equivalencia" d="M${x(v).toFixed(1)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${(x(v) + 4).toFixed(1)}" y="${M.top + 10 + (i % 2) * 11}">${eqs.length > 1 ? `${i + 1}ª equivalência` : 'equivalência'}</text>`);
+    });
+    meias.forEach(m => {
+      partes.push(`<circle class="grafico-meia" cx="${x(m.v).toFixed(1)}" cy="${y(m.pH).toFixed(1)}" r="4"/><text class="grafico-legenda" x="${(x(m.v) + 6).toFixed(1)}" y="${(y(m.pH) + 14).toFixed(1)}">pH = ${m.rotulo}</text>`);
+    });
     if (paradaVolume !== null) {
       partes.push(`<path class="grafico-parada" d="M${x(paradaVolume)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${x(paradaVolume) - 4}" y="${M.top + 24}" text-anchor="end">você parou</text>`);
     }
@@ -90,7 +98,7 @@ SIAB.grafico = (() => {
     if (final) partes.push(`<circle class="grafico-ponto" cx="${x(final.v)}" cy="${y(final.pH)}" r="4"/>`);
 
     const descricao = pontos.length > 1
-      ? `Curva de titulação: pH de ${SIAB.format(pontos[0].pH)} até ${SIAB.format(final.pH)} depois de ${SIAB.format(final.v)} mL adicionados.${eq !== null ? ` Equivalência em ${SIAB.format(eq)} mL.` : ''}${pontoFinal ? ` Ponto final observado (a cor mudou) em ${SIAB.format(pontoFinal.volume)} mL.` : ''}`
+      ? `Curva de titulação: pH de ${SIAB.format(pontos[0].pH)} até ${SIAB.format(final.pH)} depois de ${SIAB.format(final.v)} mL adicionados.${r.equivalencias.length > 1 ? ` Equivalências em ${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL.` : eq !== null ? ` Equivalência em ${SIAB.format(eq)} mL.` : ''}${pontoFinal ? ` Ponto final observado (a cor mudou) em ${SIAB.format(pontoFinal.volume)} mL.` : ''}`
       : `Curva de titulação ainda sem gotas. pH inicial ${SIAB.format(pontos[0]?.pH ?? r.pH)}.`;
     return `<svg class="grafico-svg" viewBox="0 0 ${W} ${H}" role="img" aria-label="${descricao}"><title>${descricao}</title>${partes.join('')}</svg>`;
   }
@@ -132,7 +140,8 @@ SIAB.grafico = (() => {
     }
     eixoVolume(xMax, x, partes);
     partes.push(`<text class="grafico-eixo" x="10" y="${M.top + altura / 2}" transform="rotate(-90 10 ${M.top + altura / 2})" text-anchor="middle">|ΔpH/ΔV| (por mL)</text>`);
-    if (eq !== null && eq <= xMax) partes.push(`<path class="grafico-equivalencia" d="M${x(eq).toFixed(1)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${(x(eq) + 4).toFixed(1)}" y="${M.top + 10}">equivalência</text>`);
+    const eqs = r.equivalencias.filter(v => v <= xMax);
+    eqs.forEach((v, i) => partes.push(`<path class="grafico-equivalencia" d="M${x(v).toFixed(1)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${(x(v) + 4).toFixed(1)}" y="${M.top + 10 + (i % 2) * 11}">${eqs.length > 1 ? `${i + 1}ª equivalência` : 'equivalência'}</text>`));
     partes.push(...barras.map(b => `<rect class="grafico-barra" x="${x(b.v0).toFixed(2)}" y="${y(b.d).toFixed(1)}" width="${Math.max(.6, x(b.v1) - x(b.v0) - .3).toFixed(2)}" height="${(M.top + altura - y(b.d)).toFixed(1)}"/>`));
     const pico = barras.reduce((p, q) => (q.d > p.d ? q : p));
     const vPico = (pico.v0 + pico.v1) / 2;

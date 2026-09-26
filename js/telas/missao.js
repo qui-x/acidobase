@@ -52,7 +52,7 @@ SIAB.missaoTela = (() => {
       partes.push(`<label class="field">Temperatura dos tubos: <output id="missao-temp-valor">${SIAB.format(t.temperature, 0)} °C</output><input id="missao-temp" type="range" min="0" max="100" step="1" value="${t.temperature}"></label>`);
     }
     if (ctrl.has('indicador')) {
-      partes.push(`<fieldset class="chips"><legend>Indicador do tubo</legend><div class="chip-list">${Object.entries(SIAB.indicators).map(([id, x]) => `<label class="chip"><input type="radio" name="missao-indicador" value="${id}" ${t.indicator === id ? 'checked' : ''}><span>${SIAB.escape(x.short)}</span></label>`).join('')}</div></fieldset>`);
+      partes.push(`<fieldset class="chips"><legend>Indicador do tubo</legend><div class="chip-list">${Object.entries(SIAB.indicators).filter(([, x]) => !x.extra).map(([id, x]) => `<label class="chip"><input type="radio" name="missao-indicador" value="${id}" ${t.indicator === id ? 'checked' : ''}><span>${SIAB.escape(x.short)}</span></label>`).join('')}</div></fieldset>`);
     }
     return partes.length ? `<div class="missao-controles">${partes.join('')}</div>` : '';
   }

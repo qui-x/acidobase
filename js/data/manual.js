@@ -74,7 +74,15 @@ SIAB.manual = [
     id: 'prateleira', titulo: 'Prateleira de frascos', alvo: '#painel-laboratorio', painel: true,
     resumo: 'Menus Tubo e Conta-gotas, busca e grupos de frascos.',
     blocos: [
-      { p: 'A prateleira guarda todos os frascos, separados em grupos: frutas e sucos, alimentos e bebidas, soluções do cotidiano, reagentes de laboratório, sais e tampões, saúde e ambiente, e referência (água pura).' },
+      { p: 'A prateleira guarda cerca de 140 frascos, em 16 grupos recolhíveis: frutas e sucos; alimentos e bebidas; casa, limpeza e higiene; saúde e farmácia; corpo humano; água e ambiente; ácidos fortes; ácidos fracos; ácidos polipróticos; bases fortes; bases fracas; sais; sais de metais (cátions ácidos); tampões; aminoácidos; e referência (água pura). A busca procura no nome, na fórmula e no tipo (experimente “sal ácido”, “tampão” ou “NH₄”).' },
+      { lista: [
+        'Ácidos e bases fortes e fracos: HNO₃, HBr, HClO₄, H₂SO₄, KOH, Ba(OH)₂; ácidos fórmico, benzoico, láctico, fluorídrico, hipocloroso, bórico; aminas (metilamina, piridina, anilina…) e o Tris dos laboratórios de biologia.',
+        'Ácidos polipróticos: H₃PO₄, H₂SO₃, ácido carbônico, oxálico, cítrico, tartárico e ascórbico (vitamina C). Cada H⁺ tem seu pKa; na titulação aparecem os saltos que um indicador consegue ver.',
+        'Sais: neutros (KCl, KNO₃), ácidos (NH₄NO₃, NaHSO₄), básicos (NaF, NaClO, Na₃PO₄) e anfóteros (NaHCO₃, NaH₂PO₄, Na₂HPO₄), que podem doar ou receber H⁺.',
+        'Sais de metais: AlCl₃, FeCl₃, CuSO₄, ZnCl₂ e pedra-ume. Deixam a água ácida porque o cátion pequeno e com carga alta enfraquece a ligação O–H das águas presas a ele: [Al(H₂O)₆]³⁺ ⇌ [Al(H₂O)₅OH]²⁺ + H⁺.',
+        'Aminoácidos: glicina, alanina, ácido glutâmico e lisina. Em água são zwitteríons, e o pH fica perto do ponto isoelétrico (pI): cerca de 6 na glicina, 3,2 no ácido glutâmico e 9,7 na lisina.',
+        'Amostras novas: sucos (maracujá, uva, acerola…), bebidas com gás (bolhas de CO₂), água sanitária, soro fisiológico, fluidos do corpo (suco gástrico, saliva, plasma, urina) e águas (mar, mineral, piscina, destilada exposta ao ar). Íons que não mudam o pH, como o sal da água do mar, aparecem na lupa e na condução.'
+      ] },
       { lista: [
         'Menus Tubo e Conta-gotas: cada um mostra o frasco em uso. Toque no menu para abrir a lista logo abaixo dele; tocar em um frasco coloca a solução ali e o menu se fecha. Esc também fecha.',
         'Grupos recolhíveis: a lista abre só o grupo do frasco em uso. Toque no nome de um grupo para abrir ou fechar; o número ao lado diz quantos frascos ele tem.',
@@ -118,6 +126,7 @@ SIAB.manual = [
       { p: 'O indicador muda de cor conforme o pH. Cada indicador muda em uma faixa diferente; a tabela “Indicadores disponíveis” mostra as faixas.' },
       { lista: [
         'Escolher: toque em um dos botões com a amostra de cores (bromotimol, fenolftaleína, alaranjado de metila, tornassol, universal, repolho roxo).',
+        'Mais indicadores (recolhido, com a faixa de viragem ao lado): vermelho de metila (4,4–6,2), verde de bromocresol (3,8–5,4), vermelho de fenol (6,8–8,4), timolftaleína (9,3–10,5) e cúrcuma, o açafrão-da-terra da cozinha (7,4–8,6: amarela em meio ácido, marrom avermelhada em meio básico).',
         'Sem indicador: mostra só a cor própria da amostra.',
         'Realçar indicador: esconde a cor própria de alimentos como café e suco de morango, para ler só o indicador. Não muda o pH.',
         'Nome da cor: aparece sempre em texto, abaixo do tubo. “Cor composta” quer dizer que a amostra também tem cor própria.'
@@ -206,7 +215,7 @@ SIAB.manual = [
     blocos: [
       { p: 'No alto do painel fica a Escala de pH: o triângulo marca o pH na escala de 0 a 14, o tracejado marca o neutro e o colchete embaixo mostra a faixa de viragem do indicador (onde ele muda de cor). A segunda linha mostra [H₃O⁺] em potências de 10 (10⁰, 10⁻⁷, 10⁻¹⁴ mol/L): a escala de pH é logarítmica, e cada unidade de pH é 10 vezes mais ou menos H₃O⁺. Com o pH oculto, a escala some junto com o número e o gráfico.' },
       { lista: [
-        'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência. Losango: ponto final observado (a gota em que a cor mudou). Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca). Faixa clara “região tampão”: onde a razão base/ácido conjugado vai de 0,1 a 10 (pH = pKa ± 1) e o pH quase não muda. Tracejado horizontal: pH neutro.',
+        'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência (uma por etapa nos polipróticos: o H₃PO₄ e o Na₂CO₃ têm duas). Losango: ponto final observado (a gota em que a cor mudou). Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca; “pKa₁”, “pKa₂” em cada etapa), só onde o pH ali fica mesmo perto do pKa. Faixa clara “região tampão”: onde a razão base/ácido conjugado vai de 0,1 a 10 (pH = pKa ± 1) e o pH quase não muda. Tracejado horizontal: pH neutro.',
         'No módulo Calcular, o gráfico tem mais duas vistas. ΔpH/ΔV: a variação de pH por mL entre gotas seguidas (a conta que se faz com a tabela do Histórico); o pico marca a equivalência, onde a curva é mais íngreme. Espécies: o diagrama de distribuição, com a fração α de cada espécie do ácido ou base fraca em função do pH, dada por α = [espécie] / total; duas espécies vizinhas se cruzam em α = 0,5 quando pH = pKa, e a linha “pH agora” mostra a mistura do momento.',
         'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; círculo vazado: íon espectador (Na⁺, Cl⁻…, que não troca prótons); quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece. As partículas passeiam devagar (difusão).',
         'Escala logarítmica (botão na lupa): o número de partículas passa a acompanhar o expoente da concentração (cada 3 partículas = 10 vezes), e aparecem os íons raros, como o OH⁻ em meio ácido.',
@@ -328,6 +337,9 @@ SIAB.manual = [
         ['A condutividade é exata?', 'É o valor ideal da lei de Kohlrausch (diluição infinita, 25 °C). Em soluções mais concentradas que 0,01 mol/L, os íons se atrapalham e o condutímetro de verdade mostra um valor menor. Íons sem valor tabelado (ânions orgânicos dos alimentos) usam uma estimativa pela carga, marcada com ≈.'],
         ['Por que a fenolftaleína não muda na equivalência do HCl?', 'Ela muda entre pH 8,2 e 10. Na titulação de HCl com NaOH, o pH salta de cerca de 3,6 para 10,4 em duas gotas; a cor rosa aparece logo depois da equivalência.'],
         ['Diluir muito um ácido deixa a solução básica?', 'Não. Com mais água, o pH se aproxima de 7, sem passar dele.'],
+        ['Por que o FeCl₃ não forma precipitado quando pinga NaOH?', 'Nos sais de metais, o simulador calcula só a primeira hidrólise do cátion ([Fe(H₂O)₆]³⁺ ⇌ [Fe(H₂O)₅OH]²⁺ + H⁺). Na vida real, com base suficiente, o hidróxido (Fe(OH)₃, Al(OH)₃, Cu(OH)₂) precipita; isso não é simulado.'],
+        ['Por que o (NH₄)₂SO₄ e o CuSO₄ ficam menos ácidos do que o esperado?', 'O sulfato é uma base muito fraca (pKa₂ do H₂SO₄ = 1,92): ele captura parte do H₃O⁺ e vira HSO₄⁻. O simulador inclui esse efeito, que a conta de livro com só o cátion ignora.'],
+        ['As amostras novas são exatas?', 'Não. Sucos, bebidas, produtos de limpeza e fluidos do corpo são representativos: o pH de referência vem de faixas publicadas, e a quantidade de ácido ou base é um parâmetro didático. Reagentes usam constantes de tabela (Harris; CRC Handbook; Lehninger para aminoácidos).'],
         ['As cores são exatas?', 'Não. São representações didáticas das faixas de viragem. O repolho roxo real varia com o preparo do extrato.'],
         ['A vidraria muda o resultado?', 'O pH de cada frasco não muda: ele depende da concentração, não do volume. Com mais amostra (um recipiente maior), é preciso gotejar mais para neutralizar, e a curva do gráfico se estica no eixo do volume.'],
         ['Posso mudar a temperatura?', 'Na bancada, não: tudo está a 25 °C. A temperatura só muda na missão “Neutro nem sempre é 7”, no modo completo.'],

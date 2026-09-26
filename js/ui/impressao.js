@@ -121,7 +121,7 @@ SIAB.impressao = (() => {
         linha('Cor', `<span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}`),
         linha('Volume no recipiente', `${SIAB.volumeTexto(r.volume, cap)} mL de ${cap} mL`),
         linha('Adicionado', `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL`),
-        nivel !== 'explorar' && r.equivalenceVolume !== null ? linha('Equivalência prevista', `${SIAB.format(r.equivalenceVolume)} mL`) : ''
+        nivel !== 'explorar' && r.equivalenceVolume !== null ? linha(r.equivalencias.length > 1 ? 'Equivalências previstas' : 'Equivalência prevista', `${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL`) : ''
       ].join('');
       const grafico = s.showPH && t.additions.length
         ? `<figure class="folha-grafico">${SIAB.grafico.svg(t, { pontoFinal: SIAB.pontoFinal(t) })}<figcaption>Curva de pH × volume adicionado. Faixa colorida: viragem do indicador; linha tracejada: pH neutro; losango: ponto final observado.</figcaption></figure>`

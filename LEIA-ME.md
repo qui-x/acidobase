@@ -1,4 +1,4 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.5
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.0
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
@@ -25,8 +25,57 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.5`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.0`), o que evita
 essa mistura.
+
+## O que há na versão 0.7: muito mais substâncias
+
+A prateleira passou de 31 para **140 frascos** (85 reagentes e 55 amostras), em 16 grupos
+recolhíveis, e de 7 para 12 indicadores.
+As constantes vêm de tabelas usuais: Harris, CRC Handbook, Lehninger para os
+aminoácidos e Baes e Mesmer para os cátions metálicos.
+
+- **Ácidos e bases:**
+  - fortes: HNO₃, HBr, HI, HClO₄, H₂SO₄, KOH, LiOH, Ba(OH)₂;
+  - ácidos fracos: fórmico, benzoico, propanoico, láctico, cloroacético,
+    HF, HNO₂, HClO, HCN, bórico, fenol e AAS;
+  - bases fracas: metilamina, etilamina, dimetilamina, trimetilamina,
+    piridina, anilina, hidroxilamina, hidrazina, etanolamina, imidazol e
+    Tris.
+- **Ácidos polipróticos:** H₃PO₄, H₂CO₃, H₂SO₃, oxálico, cítrico, tartárico e
+  ascórbico (vitamina C).
+- **Sais:**
+  - neutros, ácidos, básicos e anfóteros: KCl, NH₄NO₃, (NH₄)₂SO₄, NaHSO₄,
+    NaHCO₃, fosfatos, NaF, NaClO, acetato de amônio, citrato…;
+  - sais de metais que acidificam a água: AlCl₃, FeCl₃, CuSO₄, ZnCl₂ e
+    pedra-ume.
+- **Tampões e aminoácidos:**
+  - tampões amônia, carbonato, citrato, bórax e Tris;
+  - glicina, alanina, ácido glutâmico e lisina, com o pH perto do ponto
+    isoelétrico.
+- **Amostras do dia a dia:**
+  - sucos (maracujá, uva, acerola, caju…);
+  - vinho, cerveja, água com gás, refrigerantes, chás, mel, shoyu e clara de
+    ovo;
+  - água sanitária, amoníaco, detergente, creme dental e xampu;
+  - antiácido efervescente, vitamina C e soro fisiológico;
+  - suco gástrico, saliva, plasma, urina, suor e lágrima;
+  - água do mar, mineral, da torneira, de piscina, destilada exposta ao ar
+    e extrato de solo ácido.
+- **Íons que não mudam o pH** (o sal da água do mar, do soro, do plasma)
+  aparecem na lupa e conduzem corrente: o sal de cozinha acende a lâmpada, e
+  o açúcar não.
+- **Titulação com várias equivalências:**
+  - o H₃PO₄ e o Na₂CO₃ mostram dois saltos, cada um com sua meia-etapa
+    (pH = pKa₁, pKa₂);
+  - o H₂SO₄ gasta 2 NaOH por fórmula;
+  - a Equação mostra a reação etapa por etapa, com a seta do H⁺.
+- **Cinco indicadores novos** em "Mais indicadores": vermelho de metila,
+  verde de bromocresol, vermelho de fenol, timolftaleína e cúrcuma
+  (açafrão-da-terra).
+- **Verificação:** um teste compara o pH de cada substância nova com a conta
+  independente do livro-texto (quadrática para ácidos e bases fracos,
+  anfóteros, ponto isoelétrico, tampões). São 1490 verificações.
 
 ## Seleção, vínculos e relatório · 0.6.5
 

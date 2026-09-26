@@ -50,6 +50,13 @@ SIAB.chem = (() => {
     return numerator / denominator;
   }
 
+  // Carga de uma fórmula pelo sobrescrito: "NH₄⁺" → 1; "[Al(H₂O)₆]³⁺" → 3; "SO₄²⁻" → −2.
+  const SOBRE = { '²': 2, '³': 3, '⁴': 4 };
+  function cargaDe(formula = '') {
+    const m = String(formula).match(/([²³⁴]?)([⁺⁻])/);
+    return m ? (SOBRE[m[1]] || 1) * (m[2] === '⁺' ? 1 : -1) : 0;
+  }
+
   // Amostras calibradas: a carga dos íons fixos satisfaz o balanço no pH alvo.
   function sampleStock(solution) {
     const model = solution.model;
@@ -95,7 +102,9 @@ SIAB.chem = (() => {
       if (s.kind === 'weakAcid') terms.acids.push({ c, ka: s.ka, solution: s });
       if (s.kind === 'weakBase') terms.bases.push({ c, ka: s.ka, solution: s });
       if (s.kind === 'suspension') terms.suspensions.push({ c, ksp: s.ksp, n, solution: s });
-      if (s.kind === 'salt') {
+      // Sal, tampão ou "sistema" (ácido poliprótico, aminoácido, cátion metálico
+      // hidratado): sistemas de pKa mais a carga fixa dos íons que não reagem.
+      if (s.kind === 'salt' || s.kind === 'sistema') {
         terms.positive += s.chargePerUnit * c;
         s.systems.forEach(x => terms.systems.push({ total: x.perUnit * c, pKa: SIAB.acidFamilies[x.family], family: x.family }));
         (s.spectators || []).forEach(x => terms.spectators.push({ formula: x.formula, conc: x.perUnit * c }));
@@ -105,12 +114,17 @@ SIAB.chem = (() => {
         const scale = fraction / (source.dilution || 1);
         terms.positive += stock.fixedCharge * scale;
         stock.systems.forEach(x => terms.systems.push({ total: x.total * scale, pKa: x.pKa, family: x.family }));
-        if (Math.abs(stock.fixedCharge * scale) > 0) {
+        // Íons fixos de verdade: a carga fixa menos a carga de referência dos
+        // sistemas (o NH₄⁺ do amônio, o Al³⁺ hidratado…).
+        const fixos = stock.fixedCharge - stock.systems.reduce((sum, x) => sum + x.total * cargaDe(SIAB.familySpecies?.[x.family]?.[0]), 0);
+        if (Math.abs(fixos * scale) > 1e-12) {
           terms.spectators.push({
-            formula: s.fixedIon || (stock.fixedCharge > 0 ? 'cátions de sais' : 'ânions de sais'),
-            conc: Math.abs(stock.fixedCharge * scale)
+            formula: s.fixedIon || (fixos > 0 ? 'cátions de sais' : 'ânions de sais'),
+            conc: Math.abs(fixos * scale)
           });
         }
+        // Íons que não trocam H⁺ (Na⁺, Cl⁻… do soro, da água do mar): lupa e condução.
+        (s.model.espectadores || []).forEach(x => terms.spectators.push({ formula: x.formula, conc: x.conc * scale }));
       }
     }
     return { va, volume, terms };
@@ -133,13 +147,28 @@ SIAB.chem = (() => {
       - terms.systems.reduce((sum, x) => sum + x.total * meanCharge(pH, x.pKa), 0);
   }
 
-  // Papel de cada solução no cálculo estequiométrico da equivalência.
-  function role(solution) {
-    if (!solution) return null;
-    if (solution.kind === 'strongAcid' || solution.kind === 'weakAcid') return { type: 'acid', n: solution.n || 1 };
-    if (solution.kind === 'strongBase' || solution.kind === 'weakBase' || solution.kind === 'suspension') return { type: 'base', n: solution.n || 1 };
-    return null;
+  // O que cada solução faz numa titulação: quantos H⁺ doa (acido) ou recebe
+  // (base) por fórmula, etapa por etapa. [1, 2] = duas equivalências: a 1ª
+  // com 1 H⁺ por fórmula e a 2ª com 2 (H₃PO₄ com NaOH; Na₂CO₃ com HCl).
+  // Sais e sistemas declaram isso em "titula" ({ acido, base, familia, forma });
+  // forma é a posição, na lista de espécies da família, da forma dissolvida.
+  function capacidade(s) {
+    if (!s) return {};
+    if (s.kind === 'strongAcid') return { acido: [s.n || 1] };
+    if (s.kind === 'weakAcid') return { acido: [1] };
+    if (s.kind === 'strongBase' || s.kind === 'weakBase' || s.kind === 'suspension') return { base: [s.n || 1] };
+    return s.titula || {};
   }
+
+  // pKa de cada etapa da titulação (na meia-etapa, pH ≈ pKa).
+  function pKaDasEtapas(s, sentido, etapas) {
+    if (s.kind === 'weakAcid' || s.kind === 'weakBase') return [-Math.log10(s.ka)];
+    const familia = s.titula?.familia, lista = SIAB.acidFamilies?.[familia];
+    if (!lista) return [];
+    const f = s.titula.forma ?? 0;
+    return etapas.map((_, k) => lista[sentido === 'acido' ? f + k : f - k - 1]);
+  }
+  const SUB_NUM = ['₀', '₁', '₂', '₃', '₄'];
 
   function solve(tube) {
     const { va, volume, terms } = mixture(tube);
@@ -154,12 +183,26 @@ SIAB.chem = (() => {
     const pH = (lo + hi) / 2;
     const initial = SIAB.solutions[tube.solution];
     const drops = SIAB.solutions[tube.titrant];
-    const a = role(initial), b = role(drops);
+    const A = capacidade(initial), B = capacidade(drops);
     // Numa mistura de vários tubos não há uma única "equivalência" prevista.
-    const opposite = Boolean(a && b && a.type !== b.type && !tube.componentes?.length);
-    const equivalenceVolume = opposite && tube.titrantConcentration > 0
-      ? tube.concentration * a.n * tube.initialVolume / (tube.titrantConcentration * b.n)
-      : null;
+    let etapas = null, porGota = 0, sentido = null;
+    if (!tube.componentes?.length && tube.titrantConcentration > 0) {
+      if (A.acido && B.base) { etapas = A.acido; porGota = B.base.at(-1); sentido = 'acido'; }
+      else if (A.base && B.acido) { etapas = A.base; porGota = B.acido.at(-1); sentido = 'base'; }
+    }
+    // V de cada equivalência = n(H⁺ trocados até ali) / (C do titulante × H⁺ ou OH⁻ por fórmula).
+    const equivalencias = etapas ? etapas.map(e => tube.concentration * e * tube.initialVolume / (tube.titrantConcentration * porGota)) : [];
+    const equivalenceVolume = equivalencias.length ? equivalencias.at(-1) : null;
+    // Meias-etapas: no meio de cada etapa, ácido e base conjugada estão em
+    // quantidades iguais e pH ≈ pKa (Henderson–Hasselbalch).
+    const pks = etapas ? pKaDasEtapas(initial, sentido, etapas) : [];
+    const familiaPKa = SIAB.acidFamilies?.[initial?.titula?.familia] || [];
+    const meias = equivalencias.map((v, k) => {
+      const inicio = k ? equivalencias[k - 1] : 0, pKa = pks[k];
+      if (!Number.isFinite(pKa)) return null;
+      const indice = familiaPKa.length > 1 ? familiaPKa.indexOf(pKa) + 1 : 0;
+      return { v: (inicio + v) / 2, inicio, fim: v, pKa, rotulo: `pKa${indice > 0 ? SUB_NUM[indice] || '' : ''}` };
+    }).filter(Boolean);
     const weak = initial && (initial.kind === 'weakAcid' || initial.kind === 'weakBase');
     const approximate = base(tube).some(x => SIAB.solutions[x.id]?.kind === 'sample') || (va > 0 && drops?.kind === 'sample');
     const neutralPH = pkw / 2;
@@ -167,9 +210,9 @@ SIAB.chem = (() => {
       pH, pOH: pkw - pH, pKw: pkw, neutralPH, temperature,
       h: 10 ** -pH, oh: kw / 10 ** -pH,
       approximate, added: va, volume, drops: tube.additions.length,
-      equivalenceVolume,
-      halfEquivalenceVolume: equivalenceVolume !== null && weak ? equivalenceVolume / 2 : null,
-      atEquivalence: equivalenceVolume !== null && Math.abs(va - equivalenceVolume) < 1e-8,
+      equivalenceVolume, equivalencias, meias,
+      halfEquivalenceVolume: equivalenceVolume !== null && (weak || (meias.length === 1 && equivalencias.length === 1)) ? equivalenceVolume / 2 : null,
+      atEquivalence: equivalencias.some(v => Math.abs(va - v) < 1e-8),
       phase: Math.abs(pH - neutralPH) < 0.005 ? 'Neutra' : pH < neutralPH ? 'Ácida' : 'Básica'
     };
   }
@@ -371,5 +414,5 @@ SIAB.chem = (() => {
     };
   }
 
-  return { solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base, zona, fracaoBasica, sistemas, co2, solidos };
+  return { capacidade, solve, color, colorMix, indicatorColor, colorRange, colorNames, liquid, added, species, alpha, fractions, pKw, KW, meanCharge, base, zona, fracaoBasica, sistemas, co2, solidos };
 })();

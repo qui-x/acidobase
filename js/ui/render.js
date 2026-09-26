@@ -130,7 +130,9 @@ SIAB.render = (syncForm = false) => {
   // Ponto final observado (onde a cor do indicador mudou e ficou) e, nos
   // módulos Medir e Calcular, a equivalência calculada: nem sempre coincidem.
   const pf = SIAB.pontoFinal(t);
-  const eqCalc = nivelDose !== 'explorar' && r.equivalenceVolume !== null ? ` · equivalência calculada: ${SIAB.format(r.equivalenceVolume)} mL` : '';
+  const eqCalc = nivelDose === 'explorar' || r.equivalenceVolume === null ? ''
+    : r.equivalencias.length > 1 ? ` · equivalências calculadas: ${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL`
+    : ` · equivalência calculada: ${SIAB.format(r.equivalenceVolume)} mL`;
   $('equivalence-note').textContent = r.atEquivalence && s.showPH
     ? 'Ponto de equivalência · quantidades estequiométricas'
     : cheio ? `${vidro.curto} cheio: ${SIAB.format(capacidade, 0)} mL.`
@@ -305,8 +307,9 @@ SIAB.renderVer = () => {
         ? `${dist}<p class="field-hint">Cada curva é a fração de uma espécie. Duas espécies vizinhas se cruzam (α = 0,5) quando pH = pKa. A linha “pH agora” mostra a mistura neste momento.</p>`
         : '<p class="field-hint">Aqui só há ácido e base fortes, que se ionizam por completo: não há equilíbrio de espécies para mostrar. Experimente ácido acético, amônia, um sal ou um tampão.</p>';
     } else {
-      const eqTexto = r.equivalenceVolume !== null && nivel !== 'explorar'
-        ? `Equivalência prevista em ${SIAB.format(r.equivalenceVolume)} mL.` : '';
+      const eqTexto = r.equivalenceVolume === null || nivel === 'explorar' ? ''
+        : r.equivalencias.length > 1 ? `Equivalências previstas em ${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL (uma por H⁺).`
+        : `Equivalência prevista em ${SIAB.format(r.equivalenceVolume)} mL.`;
       const semGotas = t.additions.length ? '' : '<p class="field-hint">Adicione gotas para desenhar a curva.</p>';
       const pf = SIAB.pontoFinal(t);
       corpo = `${SIAB.grafico.svg(t, { pontoFinal: pf, nivel })}${semGotas}<p class="field-hint">Faixa colorida: viragem do indicador. Linha tracejada horizontal: pH neutro.${pf ? ' Losango: ponto final observado (a cor mudou).' : ''} ${eqTexto}</p>`;
