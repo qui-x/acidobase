@@ -3,13 +3,14 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = 'siab-0.7.2';
+const VERSAO = 'siab-0.8.0';
 const ARQUIVOS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './a11y.js',
   './css/stylesiab.css',
+  './css/mobile-study.css',
   './assets/siab-icone.svg',
   './favicon-dark.svg',
   './favicon-light.svg',
@@ -72,7 +73,8 @@ const ARQUIVOS = [
   './js/telas/manual.js',
   './js/a11y/preferencias.js',
   './js/init/pwa.js',
-  './js/init/app.js'
+  './js/init/app.js',
+  './js/ui/mobile-study.js'
 ];
 
 // cache: 'reload' busca cada arquivo no servidor, sem usar o cache do navegador.

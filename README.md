@@ -1,11 +1,18 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.2
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.8.0
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
 Funciona no computador e no celular, com ou sem internet, e pode ser instalado
 como aplicativo.
 
-## Bancada adaptável · 0.7.2
+## Bancada adaptável e organização mobile · 0.8.0
+
+Além do enquadramento adaptável da bancada, a versão 0.8.0 organiza a experiência
+em telas menores por tarefa: **Experimento**, **Tubos** e **Análises**. A prateleira
+fica dividida em **Preparo**, **Medidas**, **Módulos** e **Ações**; os atalhos de
+doses podem ser recolhidos, a visão geral começa em lista compacta e o índice do
+manual fica recolhível. Os mesmos componentes, IDs, rotas, eventos e cálculos são
+reutilizados; acima de 900 px o layout desktop permanece no fluxo original.
 
 - **Tubo em foco:** enquadramento automático do recipiente, da escala e do
   conta-gotas. O desenho usa a altura disponível e cresce quando há mais espaço,

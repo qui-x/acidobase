@@ -1,3 +1,15 @@
+## Atualização 0.8.0 — organização mobile e espaço da bancada
+
+Abra `index.html` para usar a versão atualizada. Em telas de até 900 px, a bancada
+é apresentada por tarefa em **Experimento**, **Tubos** e **Análises**. A prateleira
+usa os grupos **Preparo**, **Medidas**, **Módulos** e **Ações**; a visão geral começa
+em lista, o índice do manual pode ser fechado e a vidraria recebe uma altura
+calculada pelo espaço realmente disponível. Em desktop, os controles acrescentados
+ficam ocultos e os componentes originais continuam no mesmo fluxo.
+
+Os cálculos, rotas, eventos e IDs originais continuam sendo usados. Recarregue a
+página quando aparecer o aviso de atualização do aplicativo instalado.
+
 ## Atualização 0.7.2 — espaço da bancada
 
 Abra `index.html` para usar a versão atualizada. A vidraria em foco agora se ajusta
