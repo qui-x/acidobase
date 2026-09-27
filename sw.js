@@ -3,13 +3,14 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = 'siab-0.6.4';
+const VERSAO = 'siab-0.8.1';
 const ARQUIVOS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './a11y.js',
   './css/stylesiab.css',
+  './css/mobile-study.css',
   './assets/siab-icone.svg',
   './favicon-dark.svg',
   './favicon-light.svg',
@@ -23,6 +24,8 @@ const ARQUIVOS = [
   './js/data/cotidiano.js',
   './js/data/sais.js',
   './js/data/ambiente-saude.js',
+  './js/data/reagentes.js',
+  './js/data/amostras.js',
   './js/data/funcoes.js',
   './js/simulation/quimica.js',
   './js/simulation/condutividade.js',
@@ -46,6 +49,7 @@ const ARQUIVOS = [
   './js/ui/seletores.js',
   './js/ui/prateleira.js',
   './js/ui/modulos.js',
+  './js/ui/layout-bancada.js',
   './js/ui/render.js',
   './js/ui/gaveta.js',
   './js/ui/trilho.js',
@@ -69,7 +73,8 @@ const ARQUIVOS = [
   './js/telas/manual.js',
   './js/a11y/preferencias.js',
   './js/init/pwa.js',
-  './js/init/app.js'
+  './js/init/app.js',
+  './js/ui/mobile-study.js'
 ];
 
 // cache: 'reload' busca cada arquivo no servidor, sem usar o cache do navegador.

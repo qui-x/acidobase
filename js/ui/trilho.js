@@ -45,7 +45,8 @@ SIAB.trilho = (() => {
   function itens(painel) {
     const cfg = SIAB.bancada.config;
     if (painel === 'ver-panel') return cfg.ver.map(id => ({ id, rotulo: ROTULOS_VER[id], icone: ICONES[id], ver: id }));
-    if (cfg.modo === 'missao') return [{ id: 'missao', rotulo: 'Missão', icone: ICONES.missao, foco: '#painel-missao button' }];
+    const relatorio = { id: 'relatorio', rotulo: 'Imprimir relatório', icone: ICONES.historico, foco: '#imprimir-relatorio' };
+    if (cfg.modo === 'missao') return [{ id: 'missao', rotulo: 'Missão', icone: ICONES.missao, foco: '#painel-missao button' }, relatorio];
     const temTubo = Boolean(SIAB.current());
     return [
       { id: 'nivel', rotulo: 'Módulos', icone: ICONES.nivel, foco: '#modulos .modulo.ativo .modulo-cab' },
@@ -53,7 +54,8 @@ SIAB.trilho = (() => {
       { id: 'frascos', rotulo: 'Frascos', icone: ICONES.frascos, foco: '#menu-tubo' },
       temTubo && { id: 'indicador', rotulo: 'Indicador', icone: ICONES.indicador, foco: '#indicator-chips input:checked, #indicator-chips input' },
       temTubo && SIAB.state.level !== 'explorar' && { id: 'ajustes', rotulo: 'Ajustes de medida', icone: ICONES.ajustes, foco: '#ajustes summary' },
-      temTubo && { id: 'acoes', rotulo: 'Ações do tubo', icone: ICONES.acoes, foco: '#compare-btn' }
+      temTubo && { id: 'acoes', rotulo: 'Ações do tubo', icone: ICONES.acoes, foco: '#compare-btn' },
+      temTubo && relatorio
     ].filter(Boolean);
   }
 

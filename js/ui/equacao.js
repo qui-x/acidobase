@@ -16,6 +16,8 @@ SIAB.equacao = (() => {
       const n = suspensao.n;
       return `${suspensao.formula}(s) + ${n} H₃O⁺ → ${suspensao.cation} + ${2 * n} H₂O`;
     }
+    const etapas = reacaoPorEtapas(a, b);
+    if (etapas) return etapas;
     const ids = par.map(s => s.id);
     if (ids.includes('bicarbonate') && (acidoForte || acidoFraco)) return 'HCO₃⁻ + H₃O⁺ → H₂CO₃ + H₂O  (H₂CO₃ ⇌ CO₂ + H₂O)';
     if (ids.includes('bicarbonate') && ids.includes('vinegar')) return 'CH₃COOH + HCO₃⁻ → CH₃COO⁻ + H₂CO₃  (H₂CO₃ ⇌ CO₂ + H₂O)';
@@ -32,10 +34,33 @@ SIAB.equacao = (() => {
     return null;
   }
 
+  // Nome curto de uma espécie para a equação: "H₃Cit (ácido cítrico)" → "H₃Cit".
+  const curto = nome => String(nome).replace(/\s*\(.*\)$/, '');
+
+  /* Reação etapa por etapa (sais e sistemas com "titula", ver reagentes.js)
+     com um ácido ou uma base forte: a espécie dissolvida recebe ou doa um H⁺
+     por etapa. Ex.: CO₃²⁻ + H₃O⁺ → HCO₃⁻ + H₂O e HCO₃⁻ + H₃O⁺ → H₂CO₃ + H₂O.
+     Etapa com pKa negativo (1ª do H₂SO₄) já está ionizada: H₃O⁺ + OH⁻. */
+  function reacaoPorEtapas(a, b) {
+    for (const [s, o] of [[a, b], [b, a]]) {
+      const t = s.titula, nomes = SIAB.familySpecies?.[t?.familia], pks = SIAB.acidFamilies?.[t?.familia];
+      if (!t || !nomes || !pks) continue;
+      const f = t.forma ?? 0;
+      const passos = lista => (pks.length === 1 ? 1 : lista.at(-1));
+      if (t.acido && o.kind === 'strongBase') {
+        return Array.from({ length: passos(t.acido) }, (_, k) => (pks[f + k] < 0 ? 'H₃O⁺ + OH⁻ → 2 H₂O' : `${curto(nomes[f + k])} + OH⁻ → ${curto(nomes[f + k + 1])} + H₂O`));
+      }
+      if (t.base && o.kind === 'strongAcid') {
+        return Array.from({ length: passos(t.base) }, (_, k) => `${curto(nomes[f - k])} + H₃O⁺ → ${curto(nomes[f - k - 1])} + H₂O`);
+      }
+    }
+    return null;
+  }
+
   // Equação completa ("molecular") quando as duas substâncias estão na tabela de funções.
   const PARA_FUNCOES = { hcl: 'hcl', naoh: 'naoh', mgoh2: 'mgoh2', aloh3: 'aloh3', limewater: 'caoh2', ammonia: 'nh4oh' };
   function reacaoCompleta(a, b) {
-    const ida = PARA_FUNCOES[a.id], idb = PARA_FUNCOES[b.id];
+    const ida = a.funcao || PARA_FUNCOES[a.id], idb = b.funcao || PARA_FUNCOES[b.id];
     const acido = SIAB.acidos.find(x => x.id === ida || x.id === idb);
     const base = SIAB.bases.find(x => x.id === ida || x.id === idb);
     if (acido && base) return SIAB.funcoes.total(acido, base);
@@ -79,18 +104,21 @@ SIAB.equacao = (() => {
     const seta = doador >= 0 && receptor >= 0 && doador !== receptor;
     const token = (x, papel) => {
       const f = SIAB.escape(x.formula);
-      const nucleo = presentes.has(x.formula)
-        ? `<button type="button" class="eq-especie" data-acao="destacar" data-especie="${f}" title="Ver ${f} na lupa">${f}</button>` : f;
+      // Na lupa, a espécie pode ter nome longo ("H₃Cit (ácido cítrico)").
+      const alvo = presentes.has(x.formula) ? x.formula : [...presentes].find(p => p.startsWith(`${x.formula} (`));
+      const nucleo = alvo
+        ? `<button type="button" class="eq-especie" data-acao="destacar" data-especie="${SIAB.escape(alvo)}" title="Ver ${SIAB.escape(alvo)} na lupa">${f}</button>` : f;
       return `<span class="eq-token"${papel ? ` data-papel="${papel}"` : ''}>${SIAB.escape(x.coef)}${nucleo}${SIAB.escape(x.estado)}</span>`;
     };
     const lado = (lista, eEsquerda) => lista.map((x, i) => token(x, eEsquerda && seta ? (i === doador ? 'doador' : i === receptor ? 'receptor' : '') : '')).join(' + ');
     const leitura = seta ? `<span class="sr-only"> (${SIAB.escape(esquerda[doador].formula)} doa H⁺ para ${SIAB.escape(esquerda[receptor].formula)})</span>` : '';
     return { html: `${lado(esquerda, true)} ${m[2]} ${lado(direita, false)}${SIAB.escape(resto)}${leitura}`, seta };
   }
-  const formula = (texto, presentes) => {
-    const f = formulaHTML(texto, presentes);
+  // Uma equação (ou várias, uma por etapa) em parágrafos próprios.
+  const formula = (texto, presentes) => [].concat(texto || []).filter(Boolean).map(t => {
+    const f = formulaHTML(t, presentes);
     return `<p class="eq-formula${f.seta ? ' com-seta' : ''}">${f.html}</p>`;
-  };
+  }).join('');
 
   // Desenha as setas curvas de transferência de próton (depois de a tela montar).
   function setas(caixa) {
@@ -148,7 +176,12 @@ SIAB.equacao = (() => {
     const ionica = componentes.length ? null : reacaoIonica(a, b);
     const completa = componentes.length ? null : reacaoCompleta(a, b);
     if (ionica || completa) {
-      blocos.push(`<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3>${completa ? `<p class="eq-formula">${SIAB.escape(completa.equacao)}</p><p class="small">Sal formado: ${SIAB.escape(completa.nomeSal)}.</p>` : ''}${ionica ? `${formula(ionica, presentes)}<p class="small">Equação iônica: só as partículas que reagem. A seta curva mostra o H⁺ passando do ácido para a base.</p>` : ''}</section>`);
+      // Neutralização total × etapas que a titulação mostra (H₃PO₄: 3 H⁺, 2 saltos).
+      const acidoDaTabela = SIAB.acidos?.find(x => x.id === a.funcao);
+      const visiveis = a.titula?.acido?.at(-1);
+      const parcial = acidoDaTabela && visiveis && acidoDaTabela.h > visiveis
+        ? ` Esta é a neutralização total (${acidoDaTabela.h} H⁺); na titulação, só ${visiveis === 1 ? 'o 1º H⁺ dá' : `os ${visiveis} primeiros dão`} salto de pH: o último é fraco demais.` : '';
+      blocos.push(`<section class="eq-bloco eq-reacao"><h3>Reação ao misturar</h3>${completa ? `<p class="eq-formula">${SIAB.escape(completa.equacao)}</p><p class="small">Sal formado: ${SIAB.escape(completa.nomeSal)}.${parcial}</p>` : ''}${ionica ? `${formula(ionica, presentes)}<p class="small">Equação iônica: só as partículas que reagem${Array.isArray(ionica) && ionica.length > 1 ? ', uma etapa (um H⁺) por vez' : ''}. A seta curva mostra o H⁺ passando do ácido para a base.</p>` : ''}</section>`);
     }
 
     const numeros = [];
@@ -166,11 +199,21 @@ SIAB.equacao = (() => {
         numeros.push(linha('α (ionização)', `${SIAB.format(SIAB.chem.alpha(a.ka, result.pH) * 100, 1)} %`));
       }
       if (a.kind === 'weakBase') numeros.push(linha('Kb', SIAB.cientifico(a.kb)));
+      // Sais e sistemas: os pKa de cada família, da forma mais protonada à menos.
+      if (a.kind === 'salt' || a.kind === 'sistema') {
+        (a.systems || []).forEach(x => {
+          const pks = SIAB.acidFamilies[x.family] || [];
+          const visiveis = pks.filter(pk => pk > 0);
+          if (visiveis.length) numeros.push(linha(`pKa · ${SIAB.escape(curto(SIAB.familySpecies[x.family]?.[0] || x.family))}`, visiveis.map(pk => SIAB.format(pk, 2)).join(' · ')));
+        });
+      }
       if (a.kind === 'suspension') numeros.push(linha('Kps', SIAB.cientifico(a.ksp)));
       if (b.kind === 'suspension') numeros.push(linha('Kps do conta-gotas', SIAB.cientifico(b.ksp)));
       const nA = tube.concentration * tube.initialVolume;
       if (a.kind !== 'sample' && a.kind !== 'water') numeros.push(linha('Quantidade no tubo', `n = C · V = ${SIAB.format(tube.concentration, 4)} × ${SIAB.format(tube.initialVolume)} = ${SIAB.format(nA, 5)} mmol`));
-      if (result.equivalenceVolume !== null) {
+      if (result.equivalencias.length > 1) {
+        numeros.push(linha('Volumes de equivalência', result.equivalencias.map((v, i) => `V${'₁₂₃₄'[i] || ''} = ${SIAB.format(v, 3)} mL`).join(' · ')));
+      } else if (result.equivalenceVolume !== null) {
         numeros.push(linha('Volume de equivalência', `V = ${SIAB.format(result.equivalenceVolume, 3)} mL`));
       }
     }

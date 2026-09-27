@@ -73,8 +73,8 @@ SIAB.bancada = (() => {
   }
 
   /* ---------- Gotas ---------- */
-  function cabeMaisUma() {
-    return !SIAB.targets(SIAB.current()).some(x => SIAB.chem.solve(x).volume + x.dropVolume > SIAB.capacidade(x) + 1e-9);
+  function limiteDaGota(fracao = 1) {
+    return SIAB.targets(SIAB.current()).find(x => SIAB.chem.solve(x).volume + x.dropVolume * fracao > SIAB.capacidade(x) + 1e-9);
   }
 
   function leitura() {
@@ -91,8 +91,9 @@ SIAB.bancada = (() => {
   }
   function gotaDaSequencia(fracao = 1) {
     if (!sequencia) iniciarSequencia();
-    if (!cabeMaisUma()) {
-      SIAB.notice(`Capacidade de ${SIAB.format(SIAB.capacidade(SIAB.current()), 0)} mL atingida.`);
+    const limite = limiteDaGota(fracao);
+    if (limite) {
+      SIAB.notice(`${limite.name} não comporta mais esta dose. Capacidade: ${SIAB.format(SIAB.capacidade(limite), 0)} mL.${SIAB.current().group ? ' Nenhum tubo do grupo recebeu a dose.' : ''}`);
       return false;
     }
     SIAB.targets(SIAB.current()).forEach(x => x.additions.push(x.dropVolume * fracao));
@@ -206,7 +207,7 @@ SIAB.bancada = (() => {
         estado.activeId = SIAB.newTube({ solution: 'water', indicator: 'none' }).id;
         estado.view = 'focus';
       }
-      SIAB.targets(SIAB.current()).forEach(tubo => {
+      SIAB.preparoTargets(SIAB.current(), alvo === 'tube' ? 'substancia' : 'contaGotas').forEach(tubo => {
         if (alvo === 'tube') {
           // Um frasco novo substitui o conteúdo (também o de uma mistura).
           delete tubo.componentes;
@@ -224,8 +225,10 @@ SIAB.bancada = (() => {
     });
     SIAB.syncForm();
     const onde = alvo === 'tube' ? 'no tubo' : 'no conta-gotas';
+    const juntos = SIAB.preparoTargets(SIAB.current(), alvo === 'tube' ? 'substancia' : 'contaGotas').length;
     SIAB.notice(primeiro
       ? `${SIAB.current().name} criado com ${x.name} ${onde}. Agora escolha um indicador.`
+      : juntos > 1 ? `${x.name} ${onde} dos ${juntos} tubos do ${SIAB.nomeGrupo(SIAB.current())}. As gotas recomeçaram; use Desfazer para voltar.`
       : `${x.name} ${onde}. As gotas recomeçaram; use Desfazer para voltar.`);
     SIAB.announce(`${x.name} ${onde}.`);
     // O menu da prateleira se fecha depois da escolha (o foco volta ao cabeçalho
@@ -285,11 +288,20 @@ SIAB.bancada = (() => {
     if (!eReagente(t.titrant)) medidas.titrantConcentration = t.titrant === 'water' ? 0 : t.titrantConcentration;
     if (!SIAB.isEveryday(t.solution)) medidas.dilution = 1;
     if (!SIAB.isEveryday(t.titrant)) medidas.titrantDilution = 1;
+    // Cada parte do preparo vai para os tubos que a compartilham; o volume da
+    // gota é sempre comum ao grupo.
+    const doTubo = { concentration: medidas.concentration, initialVolume: medidas.initialVolume, dilution: medidas.dilution };
+    const doConta = { titrantConcentration: medidas.titrantConcentration, titrantDilution: medidas.titrantDilution };
     SIAB.alterar('aplicar medidas', () => {
-      SIAB.targets(t).forEach(x => Object.assign(x, medidas, { additions: [] }));
+      SIAB.preparoTargets(t, 'substancia').forEach(x => Object.assign(x, doTubo, { additions: [] }));
+      SIAB.preparoTargets(t, 'contaGotas').forEach(x => Object.assign(x, doConta, { additions: [] }));
+      SIAB.targets(t).forEach(x => { x.dropVolume = medidas.dropVolume; });
     });
     closeSheet();
-    SIAB.notice(SIAB.targets(t).length > 1 ? 'Medidas aplicadas aos tubos vinculados.' : 'Medidas aplicadas. Use Desfazer para voltar.');
+    const comum = SIAB.textoCompartilhado(t);
+    SIAB.notice(t.groupMode === 'drops'
+      ? `Preparo atualizado${comum ? ` (${comum}) em todo o ${SIAB.nomeGrupo(t)}` : ' neste tubo'}. O volume da gota vale para todo o grupo. Use Desfazer para voltar.`
+      : SIAB.targets(t).length > 1 ? 'Medidas aplicadas aos tubos vinculados.' : 'Medidas aplicadas. Use Desfazer para voltar.');
   }
 
   /* ---------- Vidraria e capacidade ---------- */
@@ -371,8 +383,7 @@ SIAB.bancada = (() => {
       const indice = s.tubes.indexOf(t);
       SIAB.alterar('remover tubo', estado => {
         estado.tubes = estado.tubes.filter(x => x.id !== t.id);
-        const resto = estado.tubes.filter(x => x.group && x.group === t.group);
-        if (resto.length === 1) resto[0].group = null;
+        SIAB.limparGrupos(estado);
         estado.activeId = estado.tubes.length ? estado.tubes[Math.min(indice, estado.tubes.length - 1)].id : null;
       });
       SIAB.render(true);
@@ -404,20 +415,85 @@ SIAB.bancada = (() => {
     SIAB.notice('Comparação criada: três tubos vinculados. Cada gota cai nos três.');
   }
 
+  // Vínculo manual: as gotas sempre; opcionalmente a substância do tubo e o
+  // conta-gotas. O tubo de referência (em foco, ou o primeiro marcado) dá o
+  // volume da gota e, quando escolhidos, a substância e o conta-gotas. Um tubo
+  // que muda de substância ou de conta-gotas recomeça as gotas: as antigas
+  // foram feitas com outro reagente e não valeriam para o novo.
+  const CAMPOS = {
+    substancia: ['solution', 'concentration', 'initialVolume', 'dilution', 'componentes'],
+    contaGotas: ['titrant', 'titrantConcentration', 'titrantDilution']
+  };
+  const mesmos = (a, b, parte) => CAMPOS[parte].every(k => JSON.stringify(a[k] ?? null) === JSON.stringify(b[k] ?? null));
+  // O grupo já é exatamente estes tubos, com estas mesmas partes compartilhadas?
+  function vinculoIgual(tubos, opcoes) {
+    const p = tubos[0];
+    return Boolean(p?.group) && p.groupMode === 'drops' && tubos.every(t => t.group === p.group) && SIAB.targets(p).length === tubos.length
+      && Boolean(p.groupShare?.substancia) === Boolean(opcoes.substancia) && Boolean(p.groupShare?.contaGotas) === Boolean(opcoes.contaGotas);
+  }
+  function referenciaDe(tubos) { return tubos.find(t => t.id === SIAB.state.activeId) || tubos[0]; }
+  // Tubos que mudariam de substância ou de conta-gotas (e recomeçariam as gotas).
+  function mudariam(tubos, opcoes) {
+    const ref = referenciaDe(tubos);
+    return tubos.filter(t => t !== ref && ['substancia', 'contaGotas'].some(parte => opcoes[parte] && !mesmos(t, ref, parte)));
+  }
+
+  function vincularTubos(ids, opcoes = {}) {
+    if (!config.controles.has('tubos')) return false;
+    const s = SIAB.state, escolhidos = new Set(ids);
+    const tubos = s.tubes.filter(t => escolhidos.has(t.id));
+    if (tubos.length < 2 || vinculoIgual(tubos, opcoes)) return false;
+    const referencia = referenciaDe(tubos);
+    const partilha = { substancia: Boolean(opcoes.substancia), contaGotas: Boolean(opcoes.contaGotas) };
+    const recomecam = mudariam(tubos, partilha);
+    let grupo;
+    SIAB.alterar('vincular tubos', estado => {
+      grupo = estado.nextGroup++;
+      tubos.forEach(t => {
+        t.group = grupo;
+        t.groupMode = 'drops';
+        t.groupShare = { ...partilha };
+        t.dropVolume = referencia.dropVolume;
+        if (t === referencia || !recomecam.includes(t)) return;
+        for (const parte of ['substancia', 'contaGotas']) {
+          if (!partilha[parte]) continue;
+          for (const k of CAMPOS[parte]) {
+            if (referencia[k] === undefined) delete t[k];
+            else t[k] = JSON.parse(JSON.stringify(referencia[k]));
+          }
+        }
+        t.additions = [];
+      });
+      SIAB.limparGrupos(estado);
+    });
+    const comum = SIAB.textoCompartilhado(referencia);
+    SIAB.notice(`Grupo ${grupo}: ${tubos.length} tubos vinculados. Gotas de ${SIAB.format(referencia.dropVolume)} mL, como em ${referencia.name}.`
+      + (comum ? ` Compartilham ${comum} de ${referencia.name}${recomecam.length ? `; ${recomecam.map(t => t.name).join(', ')} ${recomecam.length === 1 ? 'recomeçou' : 'recomeçaram'} as gotas` : ''}.` : ' Cada tubo mantém sua amostra e seu conta-gotas.')
+      + ' Cada um mantém o indicador. Use Desfazer para voltar.');
+    return true;
+  }
+
+  function desvincularTubos(ids) {
+    if (!config.controles.has('tubos')) return false;
+    const escolhidos = new Set(ids), tubos = SIAB.state.tubes.filter(t => escolhidos.has(t.id) && t.group);
+    if (!tubos.length) return false;
+    SIAB.alterar('desvincular tubos', estado => {
+      tubos.forEach(t => { t.group = null; delete t.groupMode; delete t.groupShare; });
+      SIAB.limparGrupos(estado);
+    });
+    SIAB.notice(`${tubos.length} ${tubos.length === 1 ? 'tubo desvinculado' : 'tubos desvinculados'}. Os preparos e o histórico foram mantidos. Use Desfazer para voltar.`);
+    return true;
+  }
+
   function desvincular() {
     const t = SIAB.current();
-    SIAB.alterar('desvincular', estado => {
-      const antigo = t.group;
-      t.group = null;
-      const resto = estado.tubes.filter(x => x.group === antigo);
-      if (resto.length === 1) resto[0].group = null;
-    });
-    SIAB.notice('Este tubo agora recebe gotas individualmente.');
+    if (t) desvincularTubos([t.id]);
   }
 
   function recomecar() {
     SIAB.alterar('recomeçar gotas', () => {
-      SIAB.targets(SIAB.current()).forEach(x => { x.additions = []; });
+      const t = SIAB.current();
+      (t.groupMode === 'drops' ? [t] : SIAB.targets(t)).forEach(x => { x.additions = []; });
     });
     closeSheet();
     SIAB.notice('Gotas removidas. Use Desfazer para voltar.');
@@ -449,7 +525,7 @@ SIAB.bancada = (() => {
     const opcoes = SIAB.escala(cap).previsao;
     const marcada = Number(document.querySelector('input[name="poe-gotas"]:checked')?.value);
     $('poe-gotas-opcoes').innerHTML = opcoes.map((n, k) => `<label><input type="radio" name="poe-gotas" value="${n}"${(opcoes.includes(marcada) ? n === marcada : k === 2) ? ' checked' : ''}><span>${n}${cap > SIAB.CAPACITY_ML ? `<small>${(Math.round(n * t.dropVolume * 100) / 100).toLocaleString('pt-BR')} mL</small>` : ''}</span></label>`).join('');
-    const livre = (cap - SIAB.chem.solve(t).volume) / t.dropVolume;
+    const livre = Math.min(...SIAB.targets(t).map(x => (SIAB.capacidade(x) - SIAB.chem.solve(x).volume) / x.dropVolume));
     document.querySelectorAll('input[name="poe-gotas"]').forEach(x => {
       x.disabled = Number(x.value) > livre + 1e-9;
       if (x.disabled && x.checked) x.checked = false;
@@ -737,5 +813,5 @@ SIAB.bancada = (() => {
     responsive();
   }
 
-  return { config, configurar, ligar, gotejar, meiaGota, agitar, colocar, selecionarTubo, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
+  return { config, configurar, ligar, gotejar, meiaGota, agitar, colocar, selecionarTubo, vincularTubos, desvincularTubos, vinculoIgual, mudariam, referenciaDe, trocarVidraria, trocarCapacidade, openSheet, closeSheet, responsive, TODOS, mobile };
 })();

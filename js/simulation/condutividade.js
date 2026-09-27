@@ -19,7 +19,12 @@ SIAB.condutividade = (() => {
     'Na⁺': 50.1, 'K⁺': 73.5, 'NH₄⁺': 73.5, 'Ca²⁺': 119.0, 'Mg²⁺': 106.0, 'Al³⁺': 183.0,
     'Cl⁻': 76.3, 'NO₃⁻': 71.4, 'CH₃COO⁻': 40.9, 'HCO₃⁻': 44.5, 'CO₃²⁻': 138.6,
     'HSO₄⁻': 52.0, 'SO₄²⁻': 160.0, 'H₂PO₄⁻': 36.0, 'HPO₄²⁻': 114.0, 'PO₄³⁻': 207.0,
-    'Cit³⁻': 210.6, 'Lac⁻': 38.8
+    'Cit³⁻': 210.6, 'Lac⁻': 38.8,
+    'Li⁺': 38.7, 'Ba²⁺': 127.2, 'Br⁻': 78.1, 'I⁻': 76.8, 'ClO₄⁻': 67.3, 'F⁻': 55.4, 'HCOO⁻': 54.6,
+    'CN⁻': 78.0, 'NO₂⁻': 71.8, 'HC₂O₄⁻': 40.2, 'C₂O₄²⁻': 148.2, 'C₆H₅COO⁻': 32.4, 'CH₃CH₂COO⁻': 35.8,
+    'ClCH₂COO⁻': 39.8, 'HSO₃⁻': 58.0, 'SO₃²⁻': 144.0,
+    'CH₃NH₃⁺': 58.7, '(CH₃)₂NH₂⁺': 51.8, '(CH₃)₃NH⁺': 47.2, 'C₂H₅NH₃⁺': 47.2, 'N₂H₅⁺': 59.0,
+    '[Al(H₂O)₆]³⁺': 183.0, '[Fe(H₂O)₆]³⁺': 204.0, '[Cu(H₂O)₆]²⁺': 107.2, '[Zn(H₂O)₆]²⁺': 105.6
   };
   // Íons sem valor na tabela (ânions orgânicos dos alimentos, "cátions de
   // sais" das amostras): estimativa pela carga, marcada com ≈ na tela.

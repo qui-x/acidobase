@@ -138,15 +138,24 @@ SIAB.prateleira = (() => {
     const box = SIAB.$('indicator-chips');
     if (!box) return;
     const t = SIAB.current();
-    box.innerHTML = Object.entries(SIAB.indicators).map(([id, x]) => {
+    const chip = ([id, x]) => {
       let amostra = 'transparent';
       if (x.acid) amostra = `linear-gradient(90deg,rgb(${x.acid.join(',')}),rgb(${x.middle.join(',')}),rgb(${x.base.join(',')}))`;
       if (id === 'universal' || id === 'cabbage') {
         const cores = [2, 5, 7, 9, 12].map(pH => `rgb(${SIAB.chem.color(id, pH).rgb.join(',')})`);
         amostra = `linear-gradient(90deg,${cores.join(',')})`;
       }
-      return `<label class="chip"><input type="radio" name="indicador" value="${id}" ${t?.indicator === id ? 'checked' : ''}><span class="chip-cor" style="background:${amostra}" aria-hidden="true"></span><span>${SIAB.escape(x.short)}</span></label>`;
-    }).join('');
+      const faixa = x.acid ? ` <small>${SIAB.format(x.low, 1)}–${SIAB.format(x.high, 1)}</small>` : '';
+      return `<label class="chip"><input type="radio" name="indicador" value="${id}" ${t?.indicator === id ? 'checked' : ''}><span class="chip-cor" style="background:${amostra}" aria-hidden="true"></span><span>${SIAB.escape(x.short)}${x.extra ? faixa : ''}</span></label>`;
+    };
+    // Os indicadores a mais (vermelho de metila, cúrcuma…) ficam recolhidos,
+    // e abrem sozinhos quando um deles está em uso.
+    const lista = Object.entries(SIAB.indicators);
+    const extras = lista.filter(([, x]) => x.extra);
+    const emUso = extras.some(([id]) => id === t?.indicator);
+    const aberto = box.querySelector('.indicadores-extra')?.open;
+    box.innerHTML = lista.filter(([, x]) => !x.extra).map(chip).join('')
+      + (extras.length ? `<details class="indicadores-extra"${emUso || aberto ? ' open' : ''}><summary>Mais indicadores <span class="shelf-conta">${extras.length}</span></summary><div class="chip-list">${extras.map(chip).join('')}</div></details>` : '');
   }
 
   return { render, renderIndicadores, ligar, abrir, fechar, get aberto() { return aberto; }, ROTULOS };

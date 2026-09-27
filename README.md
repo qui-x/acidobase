@@ -1,9 +1,57 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.6.4
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.8.1
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
 Funciona no computador e no celular, com ou sem internet, e pode ser instalado
 como aplicativo.
+
+## Manual coerente para desktop e mobile · 0.8.1
+
+O manual agora começa por um mapa de localização que mostra a mesma bancada em
+dois arranjos: no **desktop**, Prateleira, Experimento, Conta-gotas/Doses,
+Painel VER e Tira de tubos permanecem visíveis lado a lado; no **mobile**, o
+cabeçalho alterna entre **Experimento**, **Tubos** e **Análises**, enquanto a
+prateleira abre em **Preparo**, **Medidas**, **Módulos** e **Ações**. A seção
+"Onde fica cada parte" também indica o caminho mais curto para preparar uma
+solução, ajustar medidas, mudar o módulo ou interpretar o resultado.
+
+O conteúdo do manual continua usando os mesmos links, roteiros e ações do
+simulador. A atualização é documental e visual: IDs, rotas, eventos e cálculos
+químicos permanecem compatíveis com a bancada 0.8.0.
+
+## Bancada adaptável e organização mobile · 0.8.0
+
+Além do enquadramento adaptável da bancada, a versão 0.8.0 organiza a experiência
+em telas menores por tarefa: **Experimento**, **Tubos** e **Análises**. A prateleira
+fica dividida em **Preparo**, **Medidas**, **Módulos** e **Ações**; os atalhos de
+doses podem ser recolhidos, a visão geral começa em lista compacta e o índice do
+manual fica recolhível. Os mesmos componentes, IDs, rotas, eventos e cálculos são
+reutilizados; acima de 900 px o layout desktop permanece no fluxo original.
+
+- **Tubo em foco:** enquadramento automático do recipiente, da escala e do
+  conta-gotas. O desenho usa a altura disponível e cresce quando há mais espaço,
+  inclusive com os painéis recolhidos e no modo projetor.
+- **Visão geral:** distribuição calculada pela largura, altura e quantidade de
+  recipientes. Cartões podem organizar imagem e dados lado a lado ou na vertical.
+  A última linha ocupa toda a largura. Em Full HD, com os painéis recolhidos,
+  dez tubos são organizados em duas linhas de cinco.
+- Abrir painéis, redimensionar a janela, mudar o tamanho do texto, ordenar por pH
+  ou selecionar tubos recalcula a disposição. Em telas menores, a rolagem preserva
+  nomes completos e os controles; no celular a seleção continua em lista vertical.
+- As proporções de cada recipiente, a capacidade, o nível do líquido e os cálculos
+  químicos são preservados. A **ampliação visual é ajustada por recipiente**;
+  comparar a altura dos desenhos na tela não equivale a comparar dimensões reais.
+- Abas e tira de tubos permanecem visíveis no computador; a rolagem ocorre dentro
+  da vista ativa. O cache foi atualizado para carregar a nova versão.
+
+### Verificações de desenvolvimento
+
+`tests/layout-bancada.test.cjs` verifica em Chromium as capacidades de cada
+vidraria, 1 a 10 cartões, projeção, redimensionamento e seleção no celular.
+Instale Playwright (`npm install --no-save playwright` e `npx playwright install chromium`)
+e execute `npm run test:layout`. Um navegador existente pode ser indicado por
+`SIAB_BROWSER_EXECUTABLE`. Os testes de seleção, relatório e vínculos continuam
+em `tests/selecao-relatorio.test.cjs` (dependência de desenvolvimento: jsdom).
 
 ## Como abrir
 
@@ -25,31 +73,130 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.6.4`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.2`), o que evita
 essa mistura.
 
-## Seleção de tubos para relatório · 0.6.4
+## O que há na versão 0.7: muito mais substâncias
+
+A prateleira passou de 31 para **140 frascos** (85 reagentes e 55 amostras), em 16 grupos
+recolhíveis, e de 7 para 12 indicadores.
+As constantes vêm de tabelas usuais: Harris, CRC Handbook, Lehninger para os
+aminoácidos e Baes e Mesmer para os cátions metálicos.
+
+- **Ácidos e bases:**
+  - fortes: HNO₃, HBr, HI, HClO₄, H₂SO₄, KOH, LiOH, Ba(OH)₂;
+  - ácidos fracos: fórmico, benzoico, propanoico, láctico, cloroacético,
+    HF, HNO₂, HClO, HCN, bórico, fenol e AAS;
+  - bases fracas: metilamina, etilamina, dimetilamina, trimetilamina,
+    piridina, anilina, hidroxilamina, hidrazina, etanolamina, imidazol e
+    Tris.
+- **Ácidos polipróticos:** H₃PO₄, H₂CO₃, H₂SO₃, oxálico, cítrico, tartárico e
+  ascórbico (vitamina C).
+- **Sais:**
+  - neutros, ácidos, básicos e anfóteros: KCl, NH₄NO₃, (NH₄)₂SO₄, NaHSO₄,
+    NaHCO₃, fosfatos, NaF, NaClO, acetato de amônio, citrato…;
+  - sais de metais que acidificam a água: AlCl₃, FeCl₃, CuSO₄, ZnCl₂ e
+    pedra-ume.
+- **Tampões e aminoácidos:**
+  - tampões amônia, carbonato, citrato, bórax e Tris;
+  - glicina, alanina, ácido glutâmico e lisina, com o pH perto do ponto
+    isoelétrico.
+- **Amostras do dia a dia:**
+  - sucos (maracujá, uva, acerola, caju…);
+  - vinho, cerveja, água com gás, refrigerantes, chás, mel, shoyu e clara de
+    ovo;
+  - água sanitária, amoníaco, detergente, creme dental e xampu;
+  - antiácido efervescente, vitamina C e soro fisiológico;
+  - suco gástrico, saliva, plasma, urina, suor e lágrima;
+  - água do mar, mineral, da torneira, de piscina, destilada exposta ao ar
+    e extrato de solo ácido.
+- **Íons que não mudam o pH** (o sal da água do mar, do soro, do plasma)
+  aparecem na lupa e conduzem corrente: o sal de cozinha acende a lâmpada, e
+  o açúcar não.
+- **Titulação com várias equivalências:**
+  - o H₃PO₄ e o Na₂CO₃ mostram dois saltos, cada um com sua meia-etapa
+    (pH = pKa₁, pKa₂);
+  - o H₂SO₄ gasta 2 NaOH por fórmula;
+  - a Equação mostra a reação etapa por etapa, com a seta do H⁺.
+- **Cinco indicadores novos** em "Mais indicadores": vermelho de metila,
+  verde de bromocresol, vermelho de fenol, timolftaleína e cúrcuma
+  (açafrão-da-terra).
+- **Verificação:** um teste compara o pH de cada substância nova com a conta
+  independente do livro-texto (quadrática para ácidos e bases fracos,
+  anfóteros, ponto isoelétrico, tampões). São 1490 verificações.
+
+## Seleção, vínculos e relatório · 0.6.5
 
 Na **Visão geral**, use **Ctrl + clique** (⌘ + clique no Mac), pressione um
-recipiente por cerca de meio segundo ou use **Selecionar tubos**. O modo de
-seleção permite marcar e desmarcar com um toque e **Selecionar todos** os
-recipientes presentes na bancada. Arrastar ou rolar cancela a espera do gesto.
+recipiente por cerca de meio segundo ou use **Selecionar tubos**. Marque e
+desmarque com um toque, ou use **Selecionar todos**. Arrastar ou rolar cancela
+a espera do gesto. Uma nova seleção começa vazia; **Revisar seleção** recupera
+somente a lista já confirmada para o relatório.
 
 No celular (até 900 px), os recipientes se organizam em **lista vertical, um
 por linha**, com miniatura, nome e marca de seleção. As ações ficam na parte
 inferior da tela, acima da navegação; a lista reserva espaço para essa barra.
 No computador, a seleção mantém a grade da visão geral.
 
-**Adicionar ao relatório** confirma a seleção. **Imprimir relatório** passa a
-incluir somente os recipientes escolhidos, com preparo, leitura, gráfico e
-histórico de cada um. **Revisar seleção** permite trocar os recipientes;
-**Usar relatório padrão** volta ao resumo de toda a bancada e ao detalhe do
-recipiente em foco. O relatório usa as leituras atuais; não é um registro
-congelado nem uma nota do caderno. A seleção vale enquanto a bancada estiver
-aberta e fica separada entre laboratório livre e missão.
+### Imprimir pelo botão da barra lateral
+
+O único botão **Imprimir relatório** fica no painel esquerdo (no celular,
+abra **Prateleira**). Ele usa os tubos marcados na seleção em andamento,
+inclusive antes de usar **Adicionar ao relatório**. O contador no próprio
+botão informa quantos recipientes serão impressos. Uma seleção vazia não
+imprime todos por engano; Ctrl+P segue o mesmo critério.
+
+**Adicionar ao relatório** confirma a lista para uso posterior e mostra esse
+mesmo botão na prateleira. Cada recipiente escolhido ganha preparo, leitura,
+gráfico e histórico no documento. **Revisar seleção** permite trocar a lista;
+**Usar relatório padrão** volta ao resumo da bancada e ao detalhe do tubo em
+foco. São usadas as leituras atuais, não um registro congelado. A lista vale
+até recarregar a página e fica separada entre laboratório livre e missão.
+
+### Vincular tubos já preparados
+
+Selecione pelo menos dois tubos e use **Vincular tubos**. Os cartões, a tira
+da bancada e o tubo em foco mostram **Grupo 1**, **Grupo 2** etc. Cada comando
+de gotejamento adiciona a mesma dose a todos os integrantes do grupo.
+
+**Compartilhar também (0.7.1):** antes de vincular, marque **Substância do
+tubo** e/ou **Conta-gotas**.
+- Todos passam a usar o que está no tubo de referência.
+- Quem mudar de reagente recomeça as gotas.
+- Depois, trocar o frasco ou o preparo dessa parte em qualquer tubo muda o
+  grupo inteiro.
+- O indicador continua de cada tubo.
+- Sem as opções, vale o vínculo só das gotas descrito abaixo.
+- Com os mesmos tubos selecionados, **Atualizar vínculo** muda o que o grupo
+  compartilha.
+
+- Amostra, indicador, conta-gotas e gotas anteriores são preservados.
+- O volume de cada nova gota é igualado ao do tubo em foco, se ele estiver
+  selecionado; caso contrário, ao primeiro selecionado na ordem da bancada.
+  O texto da seleção informa a referência antes de vincular.
+- Cada tubo utiliza seu próprio reagente do conta-gotas. Para comparar amostras
+  usando o mesmo titulante, prepare esse conta-gotas nos tubos desejados.
+- Nos vínculos manuais, trocar frasco ou aplicar preparo afeta só o tubo em
+  foco. O volume da gota continua comum ao grupo. Recomeçar gotas afeta só o
+  tubo em foco. **Comparar indicadores** mantém o preparo compartilhado das
+  três cópias, como antes.
+- **Desvincular**, na seleção, retira os tubos marcados dos grupos.
+  **Desvincular este tubo**, na prateleira, retira apenas o tubo em foco.
+  Grupos que ficarem com um único integrante são desfeitos automaticamente.
+- Ao vincular integrantes de grupos diferentes, só os marcados formam o novo
+  grupo; os demais mantêm seus vínculos se ainda houver pelo menos dois.
+- **Desfazer** restaura vínculos e volume de gota anteriores. Se algum tubo não
+  comportar uma dose, ela não é adicionada a nenhum integrante do grupo.
+
+Nas missões, os vínculos definidos pelo roteiro continuam protegidos.
 
 Teclado: Tab navega pelos controles; Enter/Espaço marca um cartão em modo de
 seleção; Ctrl/⌘ + A seleciona todos quando o foco está nessa área; Esc cancela.
+
+Verificação: `tests/selecao-relatorio.test.cjs` cobre seleção, gestos, impressão
+pelo painel, vinculação, desfazer e capacidade dos grupos com jsdom. Esses
+testes verificam eventos e estado; não substituem inspeção visual e uso em
+um aparelho com tela de toque.
 
 ## O que há na versão 0.6
 
@@ -152,8 +299,9 @@ frasco da prateleira e ele vira o "Tubo 1".
   têm resultado. Com isso a prateleira ficou cerca de 63 % mais curta
   (de 3.281 para 1.208 px no computador).
 - **Vidraria em tamanho de verdade:** tubo (12 × 75 mm), béqueres (ISO 3819)
-  e erlenmeyers (ISO 1773) são desenhados com as medidas reais, todos na mesma
-  escala e na mesma linha da bancada: o béquer de 50 mL aparece mais baixo e
+  e erlenmeyers (ISO 1773) são desenhados com as proporções das medidas reais.
+  Na versão 0.5 usavam a mesma escala de tela; desde 0.7.2 cada recipiente é
+  ampliado para a área disponível. Na geometria do modelo, o béquer de 50 mL aparece mais baixo e
   bem mais largo que o tubo, e o erlenmeyer de 250 mL quase com o dobro da
   altura. O nível do líquido vem do volume dentro da forma real.
 - **Responsivo de 320 px a 2K:** em telas grandes a letra cresce um pouco, os

@@ -114,7 +114,7 @@ SIAB.render = (syncForm = false) => {
   $('dose-shortcuts').hidden = !pode('atalhos') && !pode('poe');
   $('drop5-btn').hidden = !pode('atalhos');
   $('meia-gota-btn').hidden = !pode('atalhos') || !bureta;
-  $('meia-gota-btn').disabled = cheio;
+  $('meia-gota-btn').disabled = targets.some(x => SIAB.chem.solve(x).volume + x.dropVolume / 2 > SIAB.capacidade(x) + 1e-9);
   $('drop1ml-btn').hidden = !pode('atalhos');
   // Segundo atalho: só nos recipientes maiores (encher 25 mL de gota em gota levaria minutos).
   $('drop5ml-btn').hidden = !pode('atalhos') || !atalho2;
@@ -130,7 +130,9 @@ SIAB.render = (syncForm = false) => {
   // Ponto final observado (onde a cor do indicador mudou e ficou) e, nos
   // módulos Medir e Calcular, a equivalência calculada: nem sempre coincidem.
   const pf = SIAB.pontoFinal(t);
-  const eqCalc = nivelDose !== 'explorar' && r.equivalenceVolume !== null ? ` · equivalência calculada: ${SIAB.format(r.equivalenceVolume)} mL` : '';
+  const eqCalc = nivelDose === 'explorar' || r.equivalenceVolume === null ? ''
+    : r.equivalencias.length > 1 ? ` · equivalências calculadas: ${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL`
+    : ` · equivalência calculada: ${SIAB.format(r.equivalenceVolume)} mL`;
   $('equivalence-note').textContent = r.atEquivalence && s.showPH
     ? 'Ponto de equivalência · quantidades estequiométricas'
     : cheio ? `${vidro.curto} cheio: ${SIAB.format(capacidade, 0)} mL.`
@@ -142,7 +144,9 @@ SIAB.render = (syncForm = false) => {
   if (SIAB.chem.co2(t, r).excesso > 0) notas.push('Bolhas de CO₂ (ilustração: o cálculo do pH mantém o gás dissolvido).');
   $('vidro-nota').textContent = notas.join(' ');
   $('group-notice').hidden = !t.group;
-  $('group-notice').textContent = t.group ? `Adições vinculadas · ${targets.length} tubos recebem as mesmas gotas.` : '';
+  $('group-notice').textContent = t.group ? `${SIAB.nomeGrupo(t)} · ${targets.length} tubos recebem gotas de ${SIAB.format(t.dropVolume)} mL juntos.${t.groupMode !== 'drops' ? ' Preparo compartilhado para comparar indicadores.'
+    : SIAB.textoCompartilhado(t) ? ` Compartilham ${SIAB.textoCompartilhado(t)}; cada tubo mantém o indicador.`
+    : ' Cada tubo usa seu próprio conta-gotas e mantém preparo e indicador individuais.'}` : '';
 
   // Tira de tubos e visão geral.
   $('add-tube-btn').hidden = !pode('tubos');
@@ -151,7 +155,7 @@ SIAB.render = (syncForm = false) => {
     const v = SIAB.chem.solve(x), cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
     return `<button type="button" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="${SIAB.escape(x.name)}: ${cor.name}${s.showPH ? ', pH ' + SIAB.phFormat(v) : ''}">
       <span class="mini-tube mini-${x.vidraria || s.vidraria}" style="--cor:rgb(${cor.rgb.join(',')});--nivel:${Math.min(1, v.volume / SIAB.capacidade(x))}" aria-hidden="true"></span>
-      <span><strong>${SIAB.escape(x.name)}</strong><small>${n + 1} · ${SIAB.escape(SIAB.nomeIndicador(x, true))}${x.group ? ' · vinculado' : ''}</small></span>
+      <span><strong>${SIAB.escape(x.name)}</strong><small>${n + 1} · ${SIAB.escape(SIAB.nomeIndicador(x, true))}${x.group ? ' · ' + SIAB.nomeGrupo(x) : ''}</small></span>
     </button>`;
   }).join('');
   if (s.view === 'overview') {
@@ -167,7 +171,7 @@ SIAB.render = (syncForm = false) => {
     $('overview-regua').innerHTML = ordenar ? SIAB.reguaDaBancada(lista) : '';
     $('overview-grid').innerHTML = lista.map(({ x, n, v }) => {
       const cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span>${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? '<span class="small">Adições vinculadas</span>' : ''}</button>`;
+      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span><span class="overview-visual">${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}</span><span class="overview-details"><strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · ${SIAB.targets(x).length} tubos${x.groupMode === 'drops' && SIAB.textoCompartilhado(x) ? ` · ${SIAB.textoCompartilhado(x)}` : ''}</span>` : ''}</span></button>`;
     }).join('');
   }
 
@@ -196,6 +200,7 @@ SIAB.render = (syncForm = false) => {
 
   SIAB.renderVer();
   SIAB.refreshSelects?.();
+  SIAB.layoutBancada?.atualizar();
 };
 
 // Bancada sem tubos (é assim que o laboratório começa): orienta o primeiro
@@ -305,8 +310,9 @@ SIAB.renderVer = () => {
         ? `${dist}<p class="field-hint">Cada curva é a fração de uma espécie. Duas espécies vizinhas se cruzam (α = 0,5) quando pH = pKa. A linha “pH agora” mostra a mistura neste momento.</p>`
         : '<p class="field-hint">Aqui só há ácido e base fortes, que se ionizam por completo: não há equilíbrio de espécies para mostrar. Experimente ácido acético, amônia, um sal ou um tampão.</p>';
     } else {
-      const eqTexto = r.equivalenceVolume !== null && nivel !== 'explorar'
-        ? `Equivalência prevista em ${SIAB.format(r.equivalenceVolume)} mL.` : '';
+      const eqTexto = r.equivalenceVolume === null || nivel === 'explorar' ? ''
+        : r.equivalencias.length > 1 ? `Equivalências previstas em ${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL (uma por H⁺).`
+        : `Equivalência prevista em ${SIAB.format(r.equivalenceVolume)} mL.`;
       const semGotas = t.additions.length ? '' : '<p class="field-hint">Adicione gotas para desenhar a curva.</p>';
       const pf = SIAB.pontoFinal(t);
       corpo = `${SIAB.grafico.svg(t, { pontoFinal: pf, nivel })}${semGotas}<p class="field-hint">Faixa colorida: viragem do indicador. Linha tracejada horizontal: pH neutro.${pf ? ' Losango: ponto final observado (a cor mudou).' : ''} ${eqTexto}</p>`;

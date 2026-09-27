@@ -75,9 +75,8 @@ SIAB.condutimetro = (() => {
     }
     partes.push(`<text class="grafico-eixo" x="${M.left + largura / 2}" y="${H - 4}" text-anchor="middle">volume adicionado (mL)</text>`);
     partes.push(`<text class="grafico-eixo" x="11" y="${M.top + altura / 2}" transform="rotate(-90 11 ${M.top + altura / 2})" text-anchor="middle">κ (${unidade})</text>`);
-    if (eq !== null && eq <= xMax) {
-      partes.push(`<path class="grafico-equivalencia" d="M${x(eq).toFixed(1)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${(x(eq) + 4).toFixed(1)}" y="${M.top + 10}">equivalência</text>`);
-    }
+    const eqs = r.equivalencias.filter(v => v <= xMax);
+    eqs.forEach((v, i) => partes.push(`<path class="grafico-equivalencia" d="M${x(v).toFixed(1)} ${M.top}V${M.top + altura}"/><text class="grafico-legenda" x="${(x(v) + 4).toFixed(1)}" y="${M.top + 10 + (i % 2) * 11}">${eqs.length > 1 ? `${i + 1}ª equivalência` : 'equivalência'}</text>`));
     partes.push(`<polyline class="grafico-linha cond-linha" points="${pontos.map(p => `${x(p.v).toFixed(1)},${y(p.k).toFixed(1)}`).join(' ')}"/>`);
     const final = pontos.at(-1);
     partes.push(`<circle class="grafico-ponto" cx="${x(final.v).toFixed(1)}" cy="${y(final.k).toFixed(1)}" r="4"/>`);

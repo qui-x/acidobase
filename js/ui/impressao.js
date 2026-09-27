@@ -82,21 +82,24 @@ SIAB.impressao = (() => {
   // Relatório da bancada em uso (laboratório livre ou missão).
   function relatorioBancada() {
     const s = SIAB.state, foco = SIAB.current();
-    const personalizado = Array.isArray(s.relatorioIds);
-    const tubos = personalizado ? s.tubes.filter(t => s.relatorioIds.includes(t.id)) : s.tubes;
+    const ids = SIAB.selecaoTubos.idsRelatorio();
+    const personalizado = Array.isArray(ids);
+    const tubos = personalizado ? s.tubes.filter(t => ids.includes(t.id)) : s.tubes;
     const missao = SIAB.bancada.config.modo === 'missao';
     const nivel = missao ? SIAB.bancada.config.nivel : s.level;
     const titulo = missao ? TITULOS.missao : TITULOS.laboratorio;
     const subtitulo = missao ? $('mission-bar')?.textContent.trim() || '' : `Módulo ${SIAB.MODULOS[nivel]?.nome || ''}`;
     if (!tubos.length || (!personalizado && !foco)) {
-      return `${cabecalho(titulo, { subtitulo })}<p class="folha-vazia">${personalizado ? 'Nenhum dos recipientes escolhidos está na bancada. Selecione tubos na visão geral para atualizar o relatório.' : 'A bancada está vazia: nenhum recipiente para relatar.'}</p>`;
+      return `${cabecalho(titulo, { subtitulo })}<p class="folha-vazia">${personalizado ? 'Nenhum recipiente selecionado para este relatório. Marque tubos na visão geral para atualizar o relatório.' : 'A bancada está vazia: nenhum recipiente para relatar.'}</p>`;
     }
     const ph = r => (s.showPH ? `${SIAB.phFormat(r)} <span class="folha-fase">(${r.phase.toLowerCase()})</span>` : 'oculto');
     const resumo = tubos.map(t => {
       const n = s.tubes.indexOf(t);
       const r = SIAB.chem.solve(t), c = SIAB.chem.liquid(t, s.indicatorOnly, r);
       const cap = SIAB.capacidade(t), vid = SIAB.VIDRARIAS[t.vidraria || s.vidraria]?.curto || 'Tubo';
-      return `<tr${t.id === s.activeId ? ' class="folha-em-foco"' : ''}><td class="num">${n + 1}</td><td>${esc(t.name)}</td><td>${esc(`${vid} ${cap} mL`)}</td>
+      // Destaque só no relatório padrão, em que só o tubo em foco ganha detalhes.
+      // Com tubos escolhidos na visão geral, todos são analisados por igual.
+      return `<tr${t.id === s.activeId && !personalizado ? ' class="folha-em-foco"' : ''}><td class="num">${n + 1}</td><td>${esc(t.name)}</td><td>${esc(`${vid} ${cap} mL`)}</td>
         <td>${esc(SIAB.resumoConteudo(t))}</td><td>${esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))}</td>
         <td>${esc(SIAB.nomeIndicador(t, true))}</td><td class="num">${r.drops} (${SIAB.format(r.added)} mL)</td>
         <td class="num">${ph(r)}</td><td><span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}</td></tr>`;
@@ -111,6 +114,7 @@ SIAB.impressao = (() => {
         linha('Conta-gotas', esc(SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution))),
         linha('Volume da gota', `${SIAB.format(t.dropVolume)} mL`),
         linha('Indicador', esc(SIAB.nomeIndicador(t))),
+        t.group ? linha('Vínculo', `${esc(SIAB.nomeGrupo(t))} · adições sincronizadas${t.groupMode === 'drops' && SIAB.textoCompartilhado(t) ? `; ${esc(SIAB.textoCompartilhado(t))} compartilhados` : ''}`) : '',
         r.temperature !== 25 ? linha('Temperatura', `${SIAB.format(r.temperature, 0)} °C`) : ''
       ].join('');
       const leitura = [
@@ -119,7 +123,7 @@ SIAB.impressao = (() => {
         linha('Cor', `<span class="folha-cor" style="background:rgb(${c.rgb.join(',')});opacity:${Math.max(.25, c.opacity)}"></span>${esc(c.name)}`),
         linha('Volume no recipiente', `${SIAB.volumeTexto(r.volume, cap)} mL de ${cap} mL`),
         linha('Adicionado', `${r.drops} ${r.drops === 1 ? 'gota' : 'gotas'} · ${SIAB.format(r.added)} mL`),
-        nivel !== 'explorar' && r.equivalenceVolume !== null ? linha('Equivalência prevista', `${SIAB.format(r.equivalenceVolume)} mL`) : ''
+        nivel !== 'explorar' && r.equivalenceVolume !== null ? linha(r.equivalencias.length > 1 ? 'Equivalências previstas' : 'Equivalência prevista', `${r.equivalencias.map(v => SIAB.format(v)).join(' e ')} mL`) : ''
       ].join('');
       const grafico = s.showPH && t.additions.length
         ? `<figure class="folha-grafico">${SIAB.grafico.svg(t, { pontoFinal: SIAB.pontoFinal(t) })}<figcaption>Curva de pH × volume adicionado. Faixa colorida: viragem do indicador; linha tracejada: pH neutro; losango: ponto final observado.</figcaption></figure>`

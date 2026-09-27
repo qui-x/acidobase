@@ -14,6 +14,7 @@
   SIAB.initPreferences();
   SIAB.gaveta.ligar();
   SIAB.bancada.ligar();
+  SIAB.layoutBancada.ligar();
   SIAB.trilho.ligar();
   SIAB.tour.ligar();
   SIAB.segredo.ligar();
