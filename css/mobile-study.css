@@ -1,4 +1,4 @@
-/* Adaptação mobile SIAB 0.8.0. Regras apenas para telas até 900 px; os
+/* Adaptação mobile SIAB 0.8.1. Regras apenas para telas até 900 px; os
    componentes originais conservam seus IDs, sua posição no DOM e eventos. */
 .mobile-study-control { display: none; }
 @media screen and (max-width: 900px) {

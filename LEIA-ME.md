@@ -1,3 +1,17 @@
+## Atualização 0.8.1 — manual coerente para desktop e mobile
+
+Abra `index.html` e entre em **Manual → Onde fica cada parte**. A nova seção
+mostra dois mapas do simulador: no desktop, a prateleira fica à esquerda, o
+experimento e as doses no centro, o painel **VER** à direita e a tira de tubos
+abaixo; no mobile, o cabeçalho alterna entre **Experimento**, **Tubos** e
+**Análises**, e a prateleira abre as áreas **Preparo**, **Medidas**, **Módulos**
+e **Ações** em uma folha inferior.
+
+As orientações de **Começar**, **Menu** e **Onde fica cada parte** foram
+reescritas para explicar a posição dos controles e o caminho de cada tarefa.
+O manual continua apontando para as mesmas telas e preserva a estrutura, as
+rotas, os eventos e os cálculos da versão 0.8.0.
+
 ## Atualização 0.8.0 — organização mobile e espaço da bancada
 
 Abra `index.html` para usar a versão atualizada. Em telas de até 900 px, a bancada

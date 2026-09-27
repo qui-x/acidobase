@@ -71,24 +71,39 @@ SIAB.manualTela = (() => {
 
   /* ---------- Conteúdo gerado ---------- */
   function diagrama() {
-    // Caixas baixas (a tira de tubos) levam o número à esquerda do texto.
-    const caixa = (x, y, w, h, n, texto, sub) => {
-      const baixa = h < 40, by = baixa ? y + h / 2 : y + 14;
-      return `<g><rect class="diag-caixa" x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/>
-      <circle class="diag-bola" cx="${x + 14}" cy="${by}" r="9"/><text class="diag-num" x="${x + 14}" y="${by + 4}" text-anchor="middle">${n}</text>
-      <text class="diag-texto" x="${x + w / 2 + (baixa ? 10 : 0)}" y="${baixa ? y + h / 2 + 4 : y + h / 2 + 2}" text-anchor="middle">${texto}</text>
-      ${sub ? `<text class="diag-sub" x="${x + w / 2}" y="${y + h / 2 + 16}" text-anchor="middle">${sub}</text>` : ''}</g>`;
-    };
-    return `<figure class="manual-figura">
-      <svg class="diagrama" viewBox="0 0 360 214" role="img" aria-label="Esquema da bancada no computador: 1 prateleira à esquerda; 2 tubo e leitura no centro; 3 conta-gotas abaixo do tubo; 4 painel VER à direita; 5 tira de tubos embaixo.">
-        ${caixa(4, 4, 98, 170, 1, 'Prateleira', 'frascos e indicador')}
-        ${caixa(108, 4, 144, 104, 2, 'Tubo e leitura', 'pH, régua, cor')}
-        ${caixa(108, 114, 144, 60, 3, 'Conta-gotas', 'gotas e Desfazer')}
-        ${caixa(258, 4, 98, 170, 4, 'Painel VER', 'gráfico, partículas')}
-        ${caixa(108, 180, 144, 30, 5, 'Tubos da bancada', '')}
-      </svg>
-      <figcaption>A bancada no computador. No celular, as partes ficam uma embaixo da outra, e a prateleira abre pelo botão “Prateleira”.</figcaption>
-    </figure>`;
+    const card = (classe, numero, titulo, texto) => `<div class="manual-map-card ${classe}">
+      ${numero ? `<span class="manual-map-n" aria-hidden="true">${numero}</span>` : ''}
+      <strong>${titulo}</strong><span>${texto}</span>
+    </div>`;
+    return `<div class="manual-layout-maps" aria-label="Mapas de localização do simulador">
+      <section class="manual-layout-map manual-map-desktop" aria-labelledby="manual-map-desktop-title">
+        <p class="eyebrow">DESKTOP · TUDO VISÍVEL</p>
+        <h3 id="manual-map-desktop-title">A bancada ocupa a largura e mantém as áreas lado a lado</h3>
+        <div class="manual-map-grid-desktop" role="img" aria-label="No desktop, a prateleira fica à esquerda, o experimento e as doses ficam no centro, o painel VER fica à direita e a tira de tubos fica abaixo.">
+          ${card('map-shelf', '1', 'Prateleira', 'frascos · indicador · medidas')}
+          ${card('map-experiment', '2', 'Experimento', 'vidraria · pH · volume · cor')}
+          ${card('map-dose', '3', 'Conta-gotas / Doses', 'gotas · Desfazer · atalhos')}
+          ${card('map-ver', '4', 'Painel VER', 'gráfico · partículas · condução · equação · histórico')}
+          ${card('map-strip', '5', 'Tira de tubos', 'troca rápida do recipiente ativo')}
+        </div>
+        <p class="manual-map-caption">Use a prateleira para montar, o centro para operar a vidraria e o painel VER para interpretar o resultado.</p>
+      </section>
+
+      <section class="manual-layout-map manual-map-mobile" aria-labelledby="manual-map-mobile-title">
+        <p class="eyebrow">MOBILE · UMA TAREFA POR VEZ</p>
+        <h3 id="manual-map-mobile-title">A mesma bancada vira uma sequência curta de áreas</h3>
+        <div class="manual-map-grid-mobile" role="img" aria-label="No mobile, o cabeçalho alterna entre Experimento, Tubos e Análises; a prateleira abre em uma folha inferior com Preparo, Medidas, Módulos e Ações.">
+          ${card('map-mobile-header', '', 'Cabeçalho + 3 áreas', 'Experimento · Tubos · Análises')}
+          ${card('map-mobile-experiment', '', 'Experimento', 'vidraria e leitura')}
+          ${card('map-mobile-strip', '', 'Tubos / tira', 'troca rápida')}
+          ${card('map-mobile-analysis', '', 'Análises', 'painel VER')}
+          ${card('map-mobile-dose', '', 'Doses fixas', 'Desfazer · gotejar · Doses ▾')}
+          ${card('map-mobile-nav', '', 'Navegação', 'Aprender · Bancada · Caderno')}
+          ${card('map-mobile-shelf', '', 'Prateleira', 'Preparo · Medidas · Módulos · Ações')}
+        </div>
+        <p class="manual-map-caption">No celular, toque em <strong>Prateleira</strong> para abrir as ferramentas; a faixa de doses fica acima da navegação inferior para não cobrir a vidraria.</p>
+      </section>
+    </div>`;
   }
 
   // Primeira gota em que a cor do indicador muda.

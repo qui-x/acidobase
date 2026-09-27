@@ -18,18 +18,43 @@ SIAB.manual = [
     id: 'comecar', titulo: 'Primeiros passos',
     resumo: 'O que é a bancada e como fazer o primeiro teste em um minuto.',
     blocos: [
-      { p: 'A bancada é um laboratório virtual de ácidos e bases. Você escolhe o que vai no tubo, escolhe o que vai no conta-gotas e acompanha, a cada gota, a cor, o pH, as partículas e o gráfico.' },
-      { gerado: 'diagrama' },
+      { p: 'A bancada é um laboratório virtual de ácidos e bases. Você escolhe o que vai no tubo, escolhe o que vai no conta-gotas e acompanha, a cada gota, a cor, o pH, as partículas e o gráfico. A disposição muda conforme o tamanho da tela, mas as partes e os cálculos são os mesmos.' },
       { p: 'A bancada começa vazia: nenhum tubo, nenhuma amostra. Você monta o teste do zero.' },
       { passos: [
-        'Na Prateleira (1), abra o menu “Tubo” e toque em um frasco: ele vira o “Tubo 1”.',
-        'Abra o menu “Conta-gotas” e toque no frasco que vai gotejar.',
-        'Escolha um indicador, logo abaixo dos frascos.',
-        'Segure o botão “Segure para gotejar” (3) e observe a leitura (2) e o painel VER (4).',
+        'Na Prateleira (desktop) ou em Prateleira → Preparo (mobile), abra o menu “Tubo” e escolha um frasco: ele vira o “Tubo 1”.',
+        'Abra o menu “Conta-gotas” e toque no frasco que vai gotejar. No mobile, os dois menus ficam dentro da aba Preparo.',
+        'Escolha um indicador, ainda em Preparo, e use Medidas, Módulos ou Ações somente quando precisar dessas tarefas.',
+        'Segure “Segure para gotejar” na área Experimento. A leitura fica acima da vidraria; em Análises, o mesmo botão continua disponível.',
         'Se algo sair diferente do que queria, toque em “Desfazer”.'
       ] },
-      { dica: 'No celular, a prateleira abre pelo botão de ajustes no alto da tela (ícone de controles deslizantes, ao lado do botão de acessibilidade). A barra de chips logo abaixo do cabeçalho leva ao painel VER; a tira de tubos (5) fica no fim da tela.' },
+      { dica: 'No desktop, prateleira, bancada, conta-gotas, painel VER e tira de tubos ficam visíveis em conjunto. No mobile, Experimento, Tubos e Análises se alternam na faixa superior; a prateleira abre pelo botão de ajustes, a tira fica em Tubos ou abaixo do experimento, e a barra de doses fica fixa acima da navegação inferior.' },
       { p: 'Para um passeio de 1 minuto por cada parte, use Menu ☰ → “Tour guiado da bancada”. Quer começar com um teste já montado? Veja “Roteiros de teste prontos”.' }
+    ],
+    link: ['#/manual/layout', 'Ver o mapa do layout desktop e mobile']
+  },
+  {
+    id: 'layout', titulo: 'Onde fica cada parte',
+    resumo: 'Mapa do layout desktop e mobile, com o caminho mais curto para cada tarefa.',
+    blocos: [
+      { p: 'O SIAB não cria uma bancada diferente no celular: ele reorganiza os mesmos componentes para que cada tarefa ocupe a tela inteira. Use este mapa para localizar uma parte antes de procurar um botão.' },
+      { gerado: 'diagrama' },
+      { lista: [
+        'Prateleira: prepara o teste. No desktop fica à esquerda; no mobile abre como painel inferior pelo botão de ajustes. Dentro dela, Preparo reúne vidraria, frascos e indicador; Medidas reúne volumes e concentrações; Módulos reúne Explorar, Medir e Calcular; Ações reúne comparar, recomeçar, remover e roteiros.',
+        'Experimento: mostra o tubo ou a vidraria em foco, pH, volume, cor e o botão de gotejar. É a área para observar uma mistura acontecendo.',
+        'Tubos: mostra a visão geral da bancada. Começa em lista compacta no mobile; “Ver em grade” volta aos cartões lado a lado. Selecionar tubos mantém as ações de vincular, desvincular e relatório já existentes.',
+        'Análises: reúne o painel VER. Gráfico, Partículas, Condução, Equação e Histórico são abas do mesmo painel; a escala de pH pode ser expandida quando for necessária.',
+        'Tira de tubos: permite trocar rapidamente o recipiente ativo. No desktop fica abaixo da bancada; no mobile fica logo depois do experimento e também aparece no contexto de Tubos.',
+        'Conta-gotas e Doses: ficam abaixo da vidraria no desktop e como barra fixa acima da navegação inferior no mobile. Desfazer e gotejar continuam acessíveis; os atalhos extras podem ser abertos em “Doses”.',
+        'Navegação: no desktop usa o cabeçalho e o menu. No mobile, Aprender, Bancada e Caderno ficam na barra inferior; Início, Desafios, Manual e Professor continuam no menu e nas telas próprias.'
+      ] },
+      { passos: [
+        'Quero preparar um frasco ou trocar a vidraria: abra Prateleira → Preparo.',
+        'Quero ajustar volume, diluição ou concentração: abra Prateleira → Medidas.',
+        'Quero mudar Explorar, Medir ou Calcular: abra Prateleira → Módulos.',
+        'Quero comparar, recomeçar, remover ou abrir um roteiro: abra Prateleira → Ações.',
+        'Quero acompanhar uma gota: fique em Experimento. Quero comparar recipientes: abra Tubos. Quero interpretar resultados: abra Análises.'
+      ] },
+      { dica: 'Desktop e mobile usam o mesmo estado químico: trocar de área não troca o tubo ativo, não apaga gotas e não altera o cálculo.' }
     ]
   },
   {
@@ -45,10 +70,11 @@ SIAB.manual = [
         'Aplicativo: tour guiado da bancada, instalar o app, ideias para a aula e informações sobre o SIAB.'
       ] },
       { lista: [
-        'Cabeçalho: “SIAB” com o nome por extenso, Simulador Interativo de Ácidos e Bases. A aba destacada (ou, no celular, a barra de baixo) mostra em que parte você está. Se faltar espaço (texto ampliado), os botões ficam só com o ícone e as abas descem para uma segunda linha.',
+        'Cabeçalho: “SIAB” com o nome por extenso, Simulador Interativo de Ácidos e Bases. A aba destacada mostra em que parte você está. Em telas pequenas, Experimento, Tubos e Análises formam a faixa principal da bancada; no desktop, as áreas ficam compostas na mesma tela.',
         'Computador: o botão com seta ao lado de “Prateleira” e de “VER” recolhe o painel num trilho de ícones, e a bancada ganha espaço (a escolha fica salva). Tocar num ícone traz só aquela parte, num cartão flutuando por cima da bancada, sem mudar o tamanho dela: dá, por exemplo, para deixar o gráfico flutuando e gotejar enquanto ele muda. O mesmo ícone, o ×, Esc ou um toque na bancada (no caso da prateleira) fecham o cartão. O primeiro ícone do trilho, ou o botão com seta no cartão, fixa o painel de novo.',
-        'Celular e tablet: a barra de chips (Tubo em foco, Visão geral, Gráfico, Partículas, Equação, Histórico) rola para os lados e fica presa abaixo do cabeçalho.',
-        'Celular: a prateleira abre por baixo e fecha sozinha depois que você escolhe um frasco, para o resultado aparecer na hora.'
+        'Celular e tablet: o botão de ajustes abre a Prateleira como painel inferior. Use Preparo, Medidas, Módulos e Ações para não atravessar uma lista longa de controles.',
+        'Celular: a faixa superior separa Experimento, Tubos e Análises. A barra de doses permanece acima da navegação inferior; os atalhos podem ser recolhidos para deixar a vidraria visível.',
+        'Desktop: a Prateleira pode ficar aberta à esquerda, o Experimento ocupa o centro, o conta-gotas fica abaixo dele, o painel VER fica à direita e a Tira de tubos acompanha a parte inferior da bancada.'
       ] }
     ]
   },
