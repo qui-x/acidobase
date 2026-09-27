@@ -1,464 +1,639 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.8.1
+# SIAB — Simulador Interativo de Ácidos e Bases
 
-**SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
-uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
-Funciona no computador e no celular, com ou sem internet, e pode ser instalado
-como aplicativo.
+**Versão atual: 0.8.1**
 
-## Manual coerente para desktop e mobile · 0.8.1
+O SIAB é um laboratório virtual de ácidos e bases para o ensino médio. Ele combina uma bancada experimental com motor químico, missões guiadas, desafios, caderno de laboratório e ferramentas para o professor. A aplicação funciona em português do Brasil, no computador, no celular e em modo projetor.
 
-O manual agora começa por um mapa de localização que mostra a mesma bancada em
-dois arranjos: no **desktop**, Prateleira, Experimento, Conta-gotas/Doses,
-Painel VER e Tira de tubos permanecem visíveis lado a lado; no **mobile**, o
-cabeçalho alterna entre **Experimento**, **Tubos** e **Análises**, enquanto a
-prateleira abre em **Preparo**, **Medidas**, **Módulos** e **Ações**. A seção
-"Onde fica cada parte" também indica o caminho mais curto para preparar uma
-solução, ajustar medidas, mudar o módulo ou interpretar o resultado.
+O programa não precisa de servidor ou conta para executar. A bancada fica em memória durante a sessão; o modo de navegação, as preferências, o progresso, os recordes e o caderno ficam armazenados no navegador deste aparelho. Quando publicado por HTTP ou HTTPS, o SIAB também pode ser instalado como PWA e continuar funcionando sem internet depois da primeira visita.
 
-O conteúdo do manual continua usando os mesmos links, roteiros e ações do
-simulador. A atualização é documental e visual: IDs, rotas, eventos e cálculos
-químicos permanecem compatíveis com a bancada 0.8.0.
+## Conteúdo
 
-## Bancada adaptável e organização mobile · 0.8.0
+- [Visão rápida](#visão-rápida)
+- [Executar localmente](#executar-localmente)
+- [Modos e rotas](#modos-e-rotas)
+- [Bancada de laboratório](#bancada-de-laboratório)
+- [Preparar uma experiência](#preparar-uma-experiência)
+- [Leituras e painel VER](#leituras-e-painel-ver)
+- [Vários tubos, seleção e relatório](#vários-tubos-seleção-e-relatório)
+- [Layout desktop, mobile e projetor](#layout-desktop-mobile-e-projetor)
+- [Motor químico e limites do modelo](#motor-químico-e-limites-do-modelo)
+- [Aprender: trilhas e missões](#aprender-trilhas-e-missões)
+- [Desafios](#desafios)
+- [Área do professor](#área-do-professor)
+- [Caderno de laboratório](#caderno-de-laboratório)
+- [Acessibilidade e teclado](#acessibilidade-e-teclado)
+- [Instalação, PWA e uso offline](#instalação-pwa-e-uso-offline)
+- [Arquitetura do projeto](#arquitetura-do-projeto)
+- [Testes](#testes)
+- [Publicação e manutenção](#publicação-e-manutenção)
+- [Privacidade, referências e licença](#privacidade-referências-e-licença)
 
-Além do enquadramento adaptável da bancada, a versão 0.8.0 organiza a experiência
-em telas menores por tarefa: **Experimento**, **Tubos** e **Análises**. A prateleira
-fica dividida em **Preparo**, **Medidas**, **Módulos** e **Ações**; os atalhos de
-doses podem ser recolhidos, a visão geral começa em lista compacta e o índice do
-manual fica recolhível. Os mesmos componentes, IDs, rotas, eventos e cálculos são
-reutilizados; acima de 900 px o layout desktop permanece no fluxo original.
+## Visão rápida
 
-- **Tubo em foco:** enquadramento automático do recipiente, da escala e do
-  conta-gotas. O desenho usa a altura disponível e cresce quando há mais espaço,
-  inclusive com os painéis recolhidos e no modo projetor.
-- **Visão geral:** distribuição calculada pela largura, altura e quantidade de
-  recipientes. Cartões podem organizar imagem e dados lado a lado ou na vertical.
-  A última linha ocupa toda a largura. Em Full HD, com os painéis recolhidos,
-  dez tubos são organizados em duas linhas de cinco.
-- Abrir painéis, redimensionar a janela, mudar o tamanho do texto, ordenar por pH
-  ou selecionar tubos recalcula a disposição. Em telas menores, a rolagem preserva
-  nomes completos e os controles; no celular a seleção continua em lista vertical.
-- As proporções de cada recipiente, a capacidade, o nível do líquido e os cálculos
-  químicos são preservados. A **ampliação visual é ajustada por recipiente**;
-  comparar a altura dos desenhos na tela não equivale a comparar dimensões reais.
-- Abas e tira de tubos permanecem visíveis no computador; a rolagem ocorre dentro
-  da vista ativa. O cache foi atualizado para carregar a nova versão.
-
-### Verificações de desenvolvimento
-
-`tests/layout-bancada.test.cjs` verifica em Chromium as capacidades de cada
-vidraria, 1 a 10 cartões, projeção, redimensionamento e seleção no celular.
-Instale Playwright (`npm install --no-save playwright` e `npx playwright install chromium`)
-e execute `npm run test:layout`. Um navegador existente pode ser indicado por
-`SIAB_BROWSER_EXECUTABLE`. Os testes de seleção, relatório e vínculos continuam
-em `tests/selecao-relatorio.test.cjs` (dependência de desenvolvimento: jsdom).
-
-## Como abrir
-
-| Forma | Como | Instala como app? |
-| --- | --- | --- |
-| Arquivo | Abra `index.html` no navegador | Não, mas funciona igual |
-| Servidor local | `npm start` e acesse http://localhost:8080 | Sim |
-| Publicado | Publique a pasta em um endereço https (por exemplo, GitHub Pages) | Sim |
-| Arquivo único | `npm run build` gera um HTML só | Não |
-
-**Para instalar:** abra pelo endereço http(s) e use **Instalar app** (no topo,
-no computador, ou em Menu ☰ → Aplicativo), ou o menu do navegador ("Instalar aplicativo" / "Adicionar à tela de
-início"). Depois da primeira visita, o SIAB abre sem internet. Quando houver
-versão nova, ela é baixada sozinha e aparece o aviso "Nova versão do SIAB
-instalada · Recarregar".
-
-**Se aparecer erro depois de trocar a versão** (por exemplo, `Cannot set
-properties of undefined`), o navegador está usando arquivos antigos guardados
-no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
-continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
-site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.2`), o que evita
-essa mistura.
-
-## O que há na versão 0.7: muito mais substâncias
-
-A prateleira passou de 31 para **140 frascos** (85 reagentes e 55 amostras), em 16 grupos
-recolhíveis, e de 7 para 12 indicadores.
-As constantes vêm de tabelas usuais: Harris, CRC Handbook, Lehninger para os
-aminoácidos e Baes e Mesmer para os cátions metálicos.
-
-- **Ácidos e bases:**
-  - fortes: HNO₃, HBr, HI, HClO₄, H₂SO₄, KOH, LiOH, Ba(OH)₂;
-  - ácidos fracos: fórmico, benzoico, propanoico, láctico, cloroacético,
-    HF, HNO₂, HClO, HCN, bórico, fenol e AAS;
-  - bases fracas: metilamina, etilamina, dimetilamina, trimetilamina,
-    piridina, anilina, hidroxilamina, hidrazina, etanolamina, imidazol e
-    Tris.
-- **Ácidos polipróticos:** H₃PO₄, H₂CO₃, H₂SO₃, oxálico, cítrico, tartárico e
-  ascórbico (vitamina C).
-- **Sais:**
-  - neutros, ácidos, básicos e anfóteros: KCl, NH₄NO₃, (NH₄)₂SO₄, NaHSO₄,
-    NaHCO₃, fosfatos, NaF, NaClO, acetato de amônio, citrato…;
-  - sais de metais que acidificam a água: AlCl₃, FeCl₃, CuSO₄, ZnCl₂ e
-    pedra-ume.
-- **Tampões e aminoácidos:**
-  - tampões amônia, carbonato, citrato, bórax e Tris;
-  - glicina, alanina, ácido glutâmico e lisina, com o pH perto do ponto
-    isoelétrico.
-- **Amostras do dia a dia:**
-  - sucos (maracujá, uva, acerola, caju…);
-  - vinho, cerveja, água com gás, refrigerantes, chás, mel, shoyu e clara de
-    ovo;
-  - água sanitária, amoníaco, detergente, creme dental e xampu;
-  - antiácido efervescente, vitamina C e soro fisiológico;
-  - suco gástrico, saliva, plasma, urina, suor e lágrima;
-  - água do mar, mineral, da torneira, de piscina, destilada exposta ao ar
-    e extrato de solo ácido.
-- **Íons que não mudam o pH** (o sal da água do mar, do soro, do plasma)
-  aparecem na lupa e conduzem corrente: o sal de cozinha acende a lâmpada, e
-  o açúcar não.
-- **Titulação com várias equivalências:**
-  - o H₃PO₄ e o Na₂CO₃ mostram dois saltos, cada um com sua meia-etapa
-    (pH = pKa₁, pKa₂);
-  - o H₂SO₄ gasta 2 NaOH por fórmula;
-  - a Equação mostra a reação etapa por etapa, com a seta do H⁺.
-- **Cinco indicadores novos** em "Mais indicadores": vermelho de metila,
-  verde de bromocresol, vermelho de fenol, timolftaleína e cúrcuma
-  (açafrão-da-terra).
-- **Verificação:** um teste compara o pH de cada substância nova com a conta
-  independente do livro-texto (quadrática para ácidos e bases fracos,
-  anfóteros, ponto isoelétrico, tampões). São 1490 verificações.
-
-## Seleção, vínculos e relatório · 0.6.5
-
-Na **Visão geral**, use **Ctrl + clique** (⌘ + clique no Mac), pressione um
-recipiente por cerca de meio segundo ou use **Selecionar tubos**. Marque e
-desmarque com um toque, ou use **Selecionar todos**. Arrastar ou rolar cancela
-a espera do gesto. Uma nova seleção começa vazia; **Revisar seleção** recupera
-somente a lista já confirmada para o relatório.
-
-No celular (até 900 px), os recipientes se organizam em **lista vertical, um
-por linha**, com miniatura, nome e marca de seleção. As ações ficam na parte
-inferior da tela, acima da navegação; a lista reserva espaço para essa barra.
-No computador, a seleção mantém a grade da visão geral.
-
-### Imprimir pelo botão da barra lateral
-
-O único botão **Imprimir relatório** fica no painel esquerdo (no celular,
-abra **Prateleira**). Ele usa os tubos marcados na seleção em andamento,
-inclusive antes de usar **Adicionar ao relatório**. O contador no próprio
-botão informa quantos recipientes serão impressos. Uma seleção vazia não
-imprime todos por engano; Ctrl+P segue o mesmo critério.
-
-**Adicionar ao relatório** confirma a lista para uso posterior e mostra esse
-mesmo botão na prateleira. Cada recipiente escolhido ganha preparo, leitura,
-gráfico e histórico no documento. **Revisar seleção** permite trocar a lista;
-**Usar relatório padrão** volta ao resumo da bancada e ao detalhe do tubo em
-foco. São usadas as leituras atuais, não um registro congelado. A lista vale
-até recarregar a página e fica separada entre laboratório livre e missão.
-
-### Vincular tubos já preparados
-
-Selecione pelo menos dois tubos e use **Vincular tubos**. Os cartões, a tira
-da bancada e o tubo em foco mostram **Grupo 1**, **Grupo 2** etc. Cada comando
-de gotejamento adiciona a mesma dose a todos os integrantes do grupo.
-
-**Compartilhar também (0.7.1):** antes de vincular, marque **Substância do
-tubo** e/ou **Conta-gotas**.
-- Todos passam a usar o que está no tubo de referência.
-- Quem mudar de reagente recomeça as gotas.
-- Depois, trocar o frasco ou o preparo dessa parte em qualquer tubo muda o
-  grupo inteiro.
-- O indicador continua de cada tubo.
-- Sem as opções, vale o vínculo só das gotas descrito abaixo.
-- Com os mesmos tubos selecionados, **Atualizar vínculo** muda o que o grupo
-  compartilha.
-
-- Amostra, indicador, conta-gotas e gotas anteriores são preservados.
-- O volume de cada nova gota é igualado ao do tubo em foco, se ele estiver
-  selecionado; caso contrário, ao primeiro selecionado na ordem da bancada.
-  O texto da seleção informa a referência antes de vincular.
-- Cada tubo utiliza seu próprio reagente do conta-gotas. Para comparar amostras
-  usando o mesmo titulante, prepare esse conta-gotas nos tubos desejados.
-- Nos vínculos manuais, trocar frasco ou aplicar preparo afeta só o tubo em
-  foco. O volume da gota continua comum ao grupo. Recomeçar gotas afeta só o
-  tubo em foco. **Comparar indicadores** mantém o preparo compartilhado das
-  três cópias, como antes.
-- **Desvincular**, na seleção, retira os tubos marcados dos grupos.
-  **Desvincular este tubo**, na prateleira, retira apenas o tubo em foco.
-  Grupos que ficarem com um único integrante são desfeitos automaticamente.
-- Ao vincular integrantes de grupos diferentes, só os marcados formam o novo
-  grupo; os demais mantêm seus vínculos se ainda houver pelo menos dois.
-- **Desfazer** restaura vínculos e volume de gota anteriores. Se algum tubo não
-  comportar uma dose, ela não é adicionada a nenhum integrante do grupo.
-
-Nas missões, os vínculos definidos pelo roteiro continuam protegidos.
-
-Teclado: Tab navega pelos controles; Enter/Espaço marca um cartão em modo de
-seleção; Ctrl/⌘ + A seleciona todos quando o foco está nessa área; Esc cancela.
-
-Verificação: `tests/selecao-relatorio.test.cjs` cobre seleção, gestos, impressão
-pelo painel, vinculação, desfazer e capacidade dos grupos com jsdom. Esses
-testes verificam eventos e estado; não substituem inspeção visual e uso em
-um aparelho com tela de toque.
-
-## O que há na versão 0.6
-
-Melhorias didáticas nas animações e visualizações, cada uma apoiada no que a
-pesquisa em ensino de química aponta como difícil de enxergar (a ligação entre
-o que se vê, as partículas e os símbolos; a escala logarítmica; o equilíbrio
-dinâmico; a diferença entre ponto final e ponto de equivalência).
-
-- **Cor onde a gota cai:** antes de se misturar, a gota forma uma zona com pH
-  próprio. O simulador calcula essa zona em etapas (a gota misturada a 1,5, 3,
-  6… 96 vezes o próprio volume) e mostra a cor de cada etapa até o recipiente
-  todo. Numa titulação com fenolftaleína, o rosa some logo longe do ponto
-  final, demora perto dele e fica depois dele: é o critério usado no
-  laboratório (a cor clara que dura cerca de 30 s).
-- **Agitar:** botão ao lado da cor que termina a mistura na hora, girando o
-  recipiente como se gira o erlenmeyer.
-- **Ponto final observado × equivalência calculada:** a bancada anota a gota em
-  que a cor do indicador mudou ("incolor → rosa claro com 10,05 mL") e, nos
-  módulos Medir e Calcular, a equivalência calculada ao lado. A diferença é o
-  erro de titulação.
-- **Cor do indicador pela química:** a fração da forma básica vem do pKIn
-  (α = 1 / (1 + 10^(pKIn − pH))) e a cor soma as absorções das duas formas
-  (lei de Beer–Lambert). Assim o bromotimol passa por verde, o tornassol por
-  violeta e o alaranjado de metila por laranja, sem cores inventadas. A cor
-  não escurece nos recipientes largos, porque no laboratório a quantidade de
-  indicador acompanha o recipiente.
-- **Lupa de partículas:**
-  - escala logarítmica opcional (cada 3 partículas = 10 vezes), que mostra os
-    íons raros, como o OH⁻ em meio ácido;
-  - íons espectadores vazados (Na⁺, Cl⁻);
-  - partículas que se movem devagar (difusão);
-  - depois das gotas, partículas entram e reagem (H₃O⁺ + OH⁻ → 2 H₂O, ou o
-    ácido fraco com o OH⁻);
-  - com ácido fraco e base conjugada, um próton pula de uma partícula para
-    outra sem mudar as quantidades (equilíbrio dinâmico).
-- **Escala de pH com [H₃O⁺]:** uma segunda linha mostra 10⁰, 10⁻⁷ e
-  10⁻¹⁴ mol/L sob pH 0, 7 e 14 (cada unidade de pH = 10 vezes em [H₃O⁺]).
-- **Celular:** o conta-gotas fica preso acima da barra de baixo mesmo quando
-  você rola até o painel VER.
-- **Condução (nova aba do VER):** teste de condução com lâmpada e
-  condutímetro (µS/cm ou mS/cm) pela lei de Kohlrausch, κ = Σ λ° · c, com os
-  valores de λ° do CRC Handbook. A barra "Quem carrega a corrente" mostra a
-  parte de cada íon, nas cores da lupa. A curva κ × volume faz o "V" da
-  titulação condutométrica: H₃O⁺ e OH⁻ conduzem de 4 a 7 vezes mais que Na⁺ e
-  Cl⁻. No módulo Calcular aparece a conta íon por íon.
-- **Gráfico mais completo:**
-  - losango no ponto final observado;
-  - faixa da região tampão (pH = pKa ± 1) nas titulações de ácido ou base
-    fraca;
-  - no módulo Calcular, duas vistas a mais: ΔpH/ΔV, cujo pico marca a
-    equivalência, e o diagrama de distribuição das espécies (α × pH), com o
-    pH do momento.
-- **Turvação:** Mg(OH)₂ e Al(OH)₃ sem dissolver deixam o líquido leitoso, na
-  cor do indicador. O líquido clareia quando o ácido dissolve o sólido, o
-  sólido assenta se o recipiente fica parado, e Agitar suspende de novo.
-- **Bolhas de CO₂ (ilustração):** com carbonato ou bicarbonato em meio ácido,
-  aparecem bolhas quando o CO₂ dissolvido passa da solubilidade (0,034 mol/L,
-  lei de Henry). Se isso acontece só onde a gota cai, sobe um jorro de bolhas
-  ali. O cálculo do pH continua com o gás dissolvido.
-- **Gota de verdade e menisco:** a gota desenhada tem o diâmetro de uma
-  esfera do mesmo volume, d = ∛(6V/π) (0,05 mL = 4,6 mm), na escala da
-  vidraria. A superfície do líquido sobe junto do vidro (menisco côncavo), e
-  o volume se lê pela parte de baixo dele.
-- **Bureta no erlenmeyer:** a ponta da bureta fica presa sobre o frasco, e a
-  torneira abre enquanto você goteja. O botão "½ gota" simula a meia gota
-  encostada na parede e lavada com a pisseta, para chegar ao ponto final com
-  mais precisão.
-- **Pontes entre representações:** tocar numa fórmula da Equação, num íon da
-  Condução ou numa espécie do diagrama de distribuição abre a lupa com
-  aquela espécie em destaque.
-- **Seta do próton:** na Equação, uma seta curva com "H⁺" vai do doador
-  (ácido) ao receptor (base). O programa acha os dois comparando reagentes e
-  produtos: um perde um H e o outro ganha um.
-- **Ordenar por pH:** na visão geral, os recipientes ficam do mais ácido ao
-  mais básico, sobre uma régua de pH que marca cada um com a cor e o número.
-- **Tabela de gotas compacta:** no caderno, na aba Histórico e na folha
-  impressa, gotas seguidas com a mesma cor e pH quase igual (até 0,2 de
-  diferença) viram um registro só, como "51–100 | 2,55–5,00 | 2,31–2,48 |
-  vermelho". Cada registro junta até 50 gotas, ou 100 quando a tabela passa
-  de 1000 gotas. Perto do ponto final cada gota continua numa linha. Uma
-  titulação de 620 gotas cabe em 30 linhas. Tabelas de até 60 linhas ficam
-  gota a gota, as leituras antigas longas são compactadas ao abrir o caderno
-  e o CSV do Histórico continua com todas as gotas.
-
-## O que há na versão 0.5
-
-O SIAB abre na **bancada de testes**, e ela **começa vazia**: você toca num
-frasco da prateleira e ele vira o "Tubo 1".
-
-- **Módulos Explorar, Medir e Calcular:** três cartões recolhíveis na
-  prateleira, como os cartões de modelo do SIMA, nas cores da marca: os
-  ícones dos três módulos, lado a lado, refazem o degradê do SIAB (vermelho →
-  rosa → fúcsia → violeta). Cada um mostra o número, o
-  selo "Ativo", o que propõe, o que libera na bancada e o botão "Ativar
-  módulo". A química é a mesma nos três; muda só quantos controles e números
-  aparecem (do qualitativo ao quantitativo).
-- **Menus Tubo e Conta-gotas:** a prateleira mostra dois menus recolhíveis com
-  o frasco em uso. A lista abre logo abaixo do menu escolhido e fecha depois
-  da escolha; os grupos de frascos também se recolhem, e a busca abre os que
-  têm resultado. Com isso a prateleira ficou cerca de 63 % mais curta
-  (de 3.281 para 1.208 px no computador).
-- **Vidraria em tamanho de verdade:** tubo (12 × 75 mm), béqueres (ISO 3819)
-  e erlenmeyers (ISO 1773) são desenhados com as proporções das medidas reais.
-  Na versão 0.5 usavam a mesma escala de tela; desde 0.7.2 cada recipiente é
-  ampliado para a área disponível. Na geometria do modelo, o béquer de 50 mL aparece mais baixo e
-  bem mais largo que o tubo, e o erlenmeyer de 250 mL quase com o dobro da
-  altura. O nível do líquido vem do volume dentro da forma real.
-- **Responsivo de 320 px a 2K:** em telas grandes a letra cresce um pouco, os
-  painéis alargam e leitura, vidraria e conta-gotas ficam juntos no centro; no
-  celular, os atalhos cabem numa linha e o manual não passa da tela.
-- **Centro da bancada mais limpo:** a escala de pH saiu do centro e foi para o
-  topo do painel VER, com a leitura e a faixa de viragem do indicador; "Ocultar
-  pH" virou um botão de olho ao lado de "pH"; o tamanho da gota só aparece nos
-  módulos Medir e Calcular.
-- **Impressão de verdade:** "Imprimir relatório" (ou Ctrl+P na bancada) gera
-  um relatório A4 com cabeçalho (logotipo, título, data, Nome e Turma),
-  tabela dos recipientes, o recipiente em foco (desenho, preparo, leitura,
-  gráfico e tabela de gotas em duas colunas), linhas para observações e a nota
-  do modelo. Caderno, manual e roteiro do professor saem com o mesmo
-  cabeçalho, paleta clara em qualquer tema e "Página X de Y" no rodapé. Botões,
-  painéis e o VLibras nunca vão para o papel.
-- **Escala do recipiente:** os números acompanham a capacidade escolhida. O
-  volume aparece com a precisão que o vidro permite (centésimos no tubo de
-  5 mL, décimos de 10 a 125 mL, mL inteiros em 250 mL, já que as marcas de
-  béquer e erlenmeyer têm cerca de ± 5 % de incerteza). Os atalhos em mL ficam
-  perto de 1/10 da capacidade (+1 mL no tubo; +10 e +25 mL no béquer de
-  250 mL), e "Prever e gotejar" oferece de 1 % a 10 % da capacidade em gotas.
-  A capacidade aparece uma vez só ("10,3 mL de 50 mL").
-- **Gotas com movimento:** o conta-gotas aparece sobre a vidraria, a gota se
-  forma na ponta, cai e, ao chegar, faz ondas, respingos e espalha a nova cor;
-  o nível sobe nesse momento. Na viragem, a cor se espalha mais.
-- **Vidraria e capacidade:** tubo de ensaio (5 mL, sempre o padrão ao abrir),
-  béquer (10 a 250 mL) ou erlenmeyer (25 a 250 mL). O volume inicial acompanha
-  a capacidade e, a partir de 25 mL, aparece o atalho "+5 mL". No erlenmeyer, que é
-  cônico, as marcas de 1 a 5 mL se afastam perto do gargalo, como no vidro de
-  verdade.
-
-- **Animação de abertura:** ao abrir o app ou recarregar a página, cinco tubos
-  de ensaio (fenolftaleína, bromotimol, repolho roxo, metilorange e universal)
-  recebem gotas e trocam de composto, de ácido a neutro e depois a básico. As
-  cores e os pH vêm do próprio motor químico. Um toque ou uma tecla pula a
-  animação. Ela não toca com "Reduzir animações" e pode ser desligada.
-- **Barra superior compacta** (inspirada no Laboratório Virtual): botão ☰, a sigla
-  SIAB com o nome por extenso (Simulador Interativo de Ácidos e Bases) e o botão
-  de acessibilidade. No celular, também um
-  botão para a prateleira. Se faltar espaço (texto ampliado), os botões ficam só
-  com o ícone e as abas descem para uma segunda linha.
-- **Menu ☰ (gaveta lateral):** navegar, os 10 roteiros de teste (montam com um
-  toque), **Modos**, **Acessibilidade** e Aplicativo (tour, instalar, sobre).
-- **Painel de acessibilidade com interruptores:** modo escuro, alto contraste,
-  tamanho do texto, espaçamento de letras, reduzir animações, animação de
-  abertura, leitura simples, simular daltonismo, som do pH, vibração, tradutor
-  de Libras (VLibras, precisa de internet) e restaurar padrões.
-- **Celular:** barra de chips rolável e presa abaixo do cabeçalho, que leva ao
-  painel VER. A prateleira fecha sozinha depois de escolher o frasco.
-- **Computador:** a prateleira e o painel VER recolhem num trilho de ícones,
-  como no SIMA. Um ícone traz só aquela parte, num cartão que flutua por cima
-  da bancada sem mudar o tamanho dela: dá para deixar o gráfico flutuando e
-  gotejar enquanto ele muda. O mesmo ícone, o ×, Esc ou um toque na bancada
-  fecham o cartão; o primeiro ícone fixa o painel de novo.
-- **Tour guiado da bancada:** contorna cada parte e explica em um cartão.
-- **Caderno:** a tabela de gotas fica guardada como tabela de verdade, com
-  colunas, na tela, na impressão e no CSV. As notas antigas são convertidas
-  sozinhas.
-
-### Segredos da bancada (para professores: não conte aos alunos)
-
-- **Arco-íris do pH:** toque 7 vezes seguidas no logotipo (7 é o pH neutro) ou
-  digite "arco-íris" na busca da prateleira. Aparecem 7 tubos com indicador
-  universal, do pH 1 ao 13.
-- **Mistura geral:** digite "misturar" na busca da prateleira ou, no celular,
-  agite o aparelho três vezes. Todos os tubos da bancada são despejados num
-  béquer de 50 mL e o motor calcula a mistura de verdade: soluções, gotas e
-  indicadores. Por exemplo, o arco-íris inteiro misturado dá pH 9,25, o pKa do
-  par NH₄⁺/NH₃ que sobra depois da neutralização.
-
-Os dois ficam no caderno como "Descoberta", e "Desfazer" volta aos tubos de
-antes.
-
-### Como acessar missões, desafios e professor
-
-Abra o **Menu ☰ → Modos** e ligue **"Missões, desafios e professor"**. Aparecem
-Início, Aprender (14 missões), Desafios (5 jogos) e Professor no menu, nas abas
-do topo e na barra de baixo do celular. A escolha fica salva neste navegador.
-Desligando, volta a ficar só a bancada. Um link de aula enviado pelo professor
-(`#/aula/...`) liga esse modo sozinho.
-
-## Modo completo (desde a versão 0.3)
-
-Com o modo completo ligado, a tela inicial oferece quatro caminhos:
-
-- **Aprender:** 4 trilhas com 14 missões guiadas (ler → prever → observar →
-  agir → explicar → conferir). As respostas vão para o caderno.
-- **Desafios:** 5 jogos com pontuação e recorde: Amostra misteriosa, Missão
-  titulação, Super Trunfo químico, Régua do pH e Construtor de neutralização.
-- **Laboratório:** bancada livre com prateleira de frascos e os módulos
-  Explorar, Medir e Calcular.
-- **Professor:** montar aula com link para a turma, roteiro impresso,
-  respostas esperadas e modo projetor.
-
-Na bancada:
-
-- **Conta-gotas dinâmico:** segure para gotejar; +5 gotas; +1 mL. No teclado,
-  Enter adiciona 1 gota e segurar Espaço goteja.
-- **Painel VER:** gráfico da titulação ao vivo, lupa de partículas, equações e
-  histórico. Tudo muda junto a cada gota.
-- **Prever e gotejar:** registra previsão, resultado e explicação no caderno.
-- **Desfazer amplo:** desfaz qualquer ação (gotas, frascos, medidas, remoção).
-- **Novos frascos:** sais (NaCl, NH₄Cl, CH₃COONa, Na₂CO₃), tampões acetato e
-  fosfato, antiácidos Mg(OH)₂ e Al(OH)₃, água de cal e água da chuva (limpa e
-  ácida).
-- **Caderno de laboratório:** previsões, missões, leituras e pontuações, com
-  download em CSV.
-
-Acessibilidade: veja o painel acima. A cor é sempre descrita em texto, todos os
-controles funcionam pelo teclado, e o som do pH (tom mais agudo com pH maior)
-e a vibração na viragem são opcionais.
-
-## Mapa das mecânicas
-
-| Mecânica | Onde está |
+| Área | O que oferece |
 | --- | --- |
-| M1 Prever antes da gota | "Prever e gotejar" no laboratório; passos "prever" das missões |
-| M2 Amostra misteriosa | Desafios |
-| M3 Régua do pH | Desafios |
-| M4 Lupa molecular | Painel VER → Partículas; missões "Dentro da água" e "Grau de ionização" |
-| M5 Gráfico ao vivo | Painel VER → Gráfico; missão "A curva da titulação" |
-| M6 Missão titulação | Desafios |
-| M7 Construtor de neutralização | Desafios |
-| M8 Super Trunfo | Desafios |
-| M9 Laboratório do tampão | Missão "Laboratório do tampão" |
-| M10 Todo sal é neutro? | Missões "Todo sal é neutro?" e "Por que o sal muda o pH?" |
-| M11 Estômago virtual | Missão "Estômago virtual" |
-| M12 Chuva ácida e calagem | Missão "Chuva ácida e calagem" |
-| M13 Duelo força × concentração | Missão "Forte ou concentrado?" |
-| M14 Caderno de laboratório | Caderno; Histórico → CSV |
-| M15 Neutro nem sempre é 7 | Missão "Neutro nem sempre é 7" |
+| Bancada | Preparo de soluções, escolha de vidraria e indicador, gotejamento, leitura de pH, cor e volume. |
+| Motor químico | Equilíbrio ácido-base, dissociação, hidrólise, tampões, polipróticos, solubilidade, titulação, condutividade e temperatura. |
+| Representações | Vidraria animada, cor calculada, régua de pH, gráfico, partículas, equações, condução e histórico. |
+| Biblioteca | 140 frascos em 16 grupos, 12 opções de indicador e 10 roteiros de teste prontos. |
+| Aprender | Quatro trilhas e 14 missões com prever, observar, agir, explicar e conferir. |
+| Desafios | Cinco jogos curtos com pontuação, recorde e registro no caderno. |
+| Professor | Seleção de atividades, link de aula, modo projetor, roteiro impresso, objetivos, BNCC e respostas esperadas. |
+| Registros | Caderno local, tabela de gotas, CSV, impressão e relatório da bancada. |
+| Acesso | Tema claro/escuro, alto contraste, texto ampliável, redução de movimento, filtros para daltonismo, som, vibração, VLibras e teclado. |
+| Distribuição | Arquivos locais, servidor simples, GitHub Pages, PWA instalável e HTML único offline. |
 
-## Documentação
+## Executar localmente
 
-- **Manual** (no próprio programa, aba "Manual"): cada parte da bancada, os
-  módulos, a vidraria, os roteiros de teste e os limites do modelo.
-- **Referências** das constantes e equações: Menu ☰ → Aplicativo → Sobre o SIAB.
+### Abrir como arquivo
 
-## Para quem vai mexer no código
+Abra <code>index.html</code> diretamente no navegador. A bancada, o manual, as missões e os desafios funcionam; a instalação como aplicativo e o service worker exigem HTTP ou HTTPS.
 
-- Ao publicar uma versão nova, troque o número nos três lugares: `version` em
-  `js/core/namespace.js`, o final `?v=…` de cada arquivo em `index.html` e
-  `VERSAO` em `sw.js`. Assim o navegador não mistura arquivos novos e antigos.
-- Arquivo `.js` novo? Inclua também na lista de arquivos do `sw.js`, para ele
-  funcionar sem internet.
+### Servidor local
 
-## Limites
+Com Python 3:
 
-Os valores são referências didáticas. Soluções ideais a 25 °C (só uma missão
-muda Kw), volumes aditivos e equilíbrio imediato. Amostras do cotidiano e da
-chuva são representativas (símbolo ≈). Não se simulam escape de CO₂, espuma,
-precipitação, coagulação nem a velocidade das reações. As atividades sobre
-antiácidos são didáticas e não são orientação de saúde.
+~~~bash
+cd siab
+python3 -m http.server 8080
+~~~
 
-O progresso fica guardado só no navegador deste aparelho. Não há contas nem
-envio de dados.
+Acesse <http://localhost:8080>.
 
-Base: estrutura modular da família de simuladores (SIQC, SIMA, SIFI); motor
-`a11y.js` compartilhado. Licença: GNU GPL v3 (arquivo `LICENSE`).
+Com o script do projeto:
+
+~~~bash
+cd siab
+npm start
+~~~
+
+O projeto não depende de framework ou bundler para executar. Node.js é necessário somente para os testes automatizados descritos mais adiante.
+
+### Arquivo único
+
+O build reúne CSS, JavaScript e o ícone principal em um único HTML sem dependências externas:
+
+~~~bash
+cd siab
+python3 build_standalone.py ../SIAB-teste.html
+~~~
+
+O HTML único pode ser aberto diretamente, enviado por arquivo ou usado em uma aula sem internet. Ele não é instalável como PWA porque não possui manifesto e service worker separados.
+
+### GitHub Pages
+
+Publique o conteúdo da pasta <code>siab/</code> com <code>index.html</code> na raiz do site ou de uma subpasta do repositório. Os caminhos do projeto são relativos, portanto funcionam em endereços como <code>usuario.github.io/repositorio/</code>. Para instalar o PWA, o GitHub Pages deve estar servido por HTTPS.
+
+## Modos e rotas
+
+O SIAB possui dois modos de navegação:
+
+- **Bancada:** modo padrão, com laboratório livre, manual e caderno.
+- **Completo:** acrescenta início, trilhas, missões, desafios, professor e aulas montadas.
+
+A escolha fica salva no navegador em <code>siab_modo</code>. Um link de aula em <code>#/aula/...</code> liga o modo completo automaticamente.
+
+| Rota | Tela |
+| --- | --- |
+| <code>#/</code> | Entrada padrão: bancada no modo Bancada ou início no modo Completo. |
+| <code>#/laboratorio</code> | Bancada livre de laboratório. |
+| <code>#/manual</code> | Manual interativo, busca, índice e impressão. |
+| <code>#/manual/&lt;seção&gt;</code> | Abre uma seção específica do manual e pode destacar o controle correspondente. |
+| <code>#/caderno</code> | Caderno de laboratório e exportação de dados. |
+| <code>#/inicio</code> | Tela inicial do modo Completo. |
+| <code>#/aprender</code> | Trilhas de missões e desafios. |
+| <code>#/missao/&lt;id&gt;</code> | Missão guiada individual. |
+| <code>#/desafios</code> | Lista de jogos. |
+| <code>#/desafio/&lt;id&gt;</code> | Jogo individual com pontuação e recorde. |
+| <code>#/professor</code> | Montagem de aula e respostas esperadas. |
+| <code>#/aula/&lt;itens&gt;</code> | Sequência de aula enviada pelo professor. |
+
+O menu ☰ também reúne os 10 roteiros prontos, preferências, tour guiado, instalação, ideias para aula e informações do projeto.
+
+## Bancada de laboratório
+
+A bancada começa vazia. O primeiro frasco escolhido na prateleira cria o Tubo 1. É possível trabalhar com até 10 recipientes na mesma bancada, alternar o recipiente ativo, renomeá-lo e desfazer ações.
+
+### Módulos
+
+Os módulos controlam a quantidade de informação exibida, mantendo o mesmo motor químico:
+
+| Módulo | Foco | Controles e resultados |
+| --- | --- | --- |
+| **Explorar** | Observação qualitativa | Frascos, indicadores, vidraria, cor, pH e partículas. Os ajustes numéricos ficam ocultos. |
+| **Medir** | Medição e titulação | Volume inicial, diluição, tamanho da gota, equivalência, meia-equivalência, pOH e pH + pOH. |
+| **Calcular** | Tratamento quantitativo | Concentrações, espécies, Ka/Kb, grau de ionização, n = C · V, ΔpH/ΔV, distribuição de espécies e conta de condutividade íon por íon. |
+
+Trocar de módulo não apaga tubos, gotas, preparo ou vínculos. O módulo ativo aparece na barra da bancada e fica salvo no estado da experiência.
+
+### Prateleira e biblioteca de frascos
+
+A prateleira contém aproximadamente 140 soluções em 16 grupos recolhíveis:
+
+- frutas e sucos;
+- alimentos e bebidas;
+- casa, limpeza e higiene;
+- saúde e farmácia;
+- corpo humano;
+- água e ambiente;
+- ácidos fortes;
+- ácidos fracos;
+- ácidos polipróticos;
+- bases fortes;
+- bases fracas;
+- sais;
+- sais de metais e cátions ácidos;
+- tampões;
+- aminoácidos;
+- referência, incluindo água pura.
+
+A busca procura nome, fórmula, grupo e tipo, aceita texto sem acento e abre automaticamente os grupos com resultados. Os menus **Tubo** e **Conta-gotas** mostram o frasco em uso e fecham depois da escolha.
+
+A biblioteca inclui ácidos e bases fortes e fracos, sais neutros/ácidos/básicos/anfóteros, sais metálicos, tampões, aminoácidos, produtos domésticos, alimentos, bebidas, fluidos do corpo e águas representativas.
+
+### Indicadores
+
+Há 12 opções de indicador, contando a opção sem indicador:
+
+- bromotimol;
+- fenolftaleína;
+- alaranjado de metila;
+- tornassol;
+- universal;
+- repolho roxo;
+- vermelho de metila;
+- verde de bromocresol;
+- vermelho de fenol;
+- timolftaleína;
+- cúrcuma;
+- sem indicador.
+
+A cor é acompanhada por nome textual. **Realçar indicador** oculta temporariamente a cor própria da amostra para que o estudante observe somente o indicador; isso não altera o pH.
+
+### Vidrarias
+
+A bancada trabalha com três recipientes:
+
+| Vidraria | Capacidades disponíveis | Uso didático |
+| --- | --- | --- |
+| Tubo de ensaio | 5 mL | Microescala e testes rápidos. |
+| Béquer | 10, 25, 50, 100 e 250 mL | Boca larga para misturar, aquecer e transferir. |
+| Erlenmeyer | 25, 50, 125 e 250 mL | Titulações e agitação com menor risco de respingos. |
+
+A forma, a escala e o nível do líquido acompanham a capacidade escolhida. O volume inicial padrão corresponde a 20% da capacidade. Trocar a vidraria reinicia as gotas; **Desfazer** restaura a vidraria, a capacidade e o preparo anterior.
+
+O tubo tem capacidade fixa de 5 mL. Béqueres e erlenmeyers usam marcas aproximadas, com incerteza didática de cerca de 5% da capacidade. O tamanho visual é ajustado à área disponível sem alterar proporções, cálculos ou capacidade real.
+
+### Ajustes de preparo
+
+Nos módulos Medir e Calcular, o estudante pode ajustar:
+
+- concentração do tubo e do conta-gotas, de 0,0001 a 0,1 mol/L;
+- diluição da amostra, incluindo como preparada, 1 + 1, 1 + 4 e 1 + 9 partes de água;
+- volume inicial;
+- volume de cada gota: 0,01, 0,02, 0,05 ou 0,10 mL.
+
+O formulário valida limites antes de alterar a bancada. Aplicar novas medidas registra uma ação para **Desfazer** e reinicia as gotas do recipiente afetado.
+
+## Preparar uma experiência
+
+1. Abra a prateleira e selecione o módulo.
+2. Escolha a vidraria e, quando disponível, a capacidade.
+3. No menu **Tubo**, escolha a solução ou amostra.
+4. Selecione o indicador.
+5. No menu **Conta-gotas**, escolha a solução titulante.
+6. Ajuste medidas quando estiver em Medir ou Calcular.
+7. Use **Segure para gotejar**, <code>+5 gotas</code>, <code>+1 mL</code> ou os atalhos da capacidade.
+8. Observe a cor, pH, volume e as abas do painel VER.
+9. Use **Desfazer** para retornar uma ação, uma sequência de gotas ou uma troca de preparo.
+
+No erlenmeyer, o conta-gotas é representado por uma bureta e o botão **½ gota** permite aproximar o ponto final. Agitar mistura imediatamente e anima o recipiente.
+
+## Leituras e painel VER
+
+### Leitura do recipiente
+
+A área de leitura mostra:
+
+- pH com duas casas para reagentes e indicação aproximada para amostras representativas;
+- classificação Ácida, Neutra ou Básica;
+- pOH, pKw e temperatura quando liberados pelo módulo;
+- volume atual e capacidade do recipiente;
+- cor composta, cor própria da amostra e indicador;
+- variação de pH depois das gotas;
+- ponto final observado, quando a cor muda;
+- equivalência calculada e meia-equivalência quando aplicável;
+- botão de olho para ocultar pH, escala e gráfico antes da previsão.
+
+O pH neutro é calculado como pKw/2, portanto não é sempre 7 fora da condição de 25 °C.
+
+### Abas do painel VER
+
+| Aba | Função |
+| --- | --- |
+| **Gráfico** | Curva pH × volume adicionado, faixa de viragem, ponto final observado, equivalência, região tampão e meia-equivalência. No Calcular, mostra ΔpH/ΔV e distribuição de espécies. |
+| **Partículas** | Lupa molecular com íons, moléculas, sólidos e íons espectadores. A escala linear mostra proporções; a escala logarítmica revela espécies raras. |
+| **Condução** | Lâmpada, condutímetro em µS/cm ou mS/cm, participação de cada íon e curva de condutividade durante a titulação. |
+| **Equação** | Ionização, hidrólise, neutralização e reações por etapa. A seta curva identifica a transferência de H⁺. Fórmulas e espécies podem levar diretamente à lupa. |
+| **Histórico** | Leitura gota a gota, ponto final, equivalência, tabela completa e exportação em CSV. |
+
+A régua de pH fica acima das abas do VER e pode mostrar a concentração de H₃O⁺ em escala logarítmica.
+
+### Visualizações químicas
+
+O SIAB conecta três níveis de representação:
+
+- **Macroscópico:** cor, volume, menisco, turvação, bolhas, gotas e vidraria;
+- **Submicroscópico:** espécies dissolvidas, íons espectadores, transferência de prótons e sólidos;
+- **Simbólico:** fórmulas, pKa, Ka, Kb, equações, gráfico e condutividade.
+
+A lupa usa uma semente fixa para que as partículas não mudem de posição aleatoriamente a cada renderização. As animações mostram difusão, entrada da gota, neutralização e equilíbrio dinâmico; podem ser desativadas pela acessibilidade.
+
+## Vários tubos, seleção e relatório
+
+A tira de tubos fica abaixo da bancada e permite trocar rapidamente o recipiente em foco. Cada cartão pode ser renomeado, removido ou aberto na visão geral.
+
+### Visão geral
+
+A visão geral:
+
+- mostra de 1 a 10 recipientes;
+- calcula automaticamente colunas, linhas, tamanho de cartão e orientação;
+- distribui a última linha pela largura disponível;
+- permite ordenar por pH;
+- apresenta cor, pH, número e grupo de cada recipiente;
+- oferece uma grade no desktop e uma lista vertical com alvos grandes no mobile.
+
+### Seleção
+
+Para iniciar a seleção:
+
+- use **Selecionar tubos**;
+- faça Ctrl + clique no Windows/Linux ou ⌘ + clique no macOS;
+- pressione e segure um cartão por cerca de meio segundo;
+- no celular, toque nos itens da lista vertical.
+
+A seleção oferece **Selecionar todos**, **Revisar seleção**, **Adicionar ao relatório**, **Vincular tubos**, **Desvincular**, **Recomeçar gotas** e outras ações compatíveis com a configuração da bancada.
+
+### Vínculos
+
+Dois ou mais tubos podem receber as mesmas gotas e o mesmo volume de gota. Ao vincular:
+
+- a referência é o tubo em foco, se ele estiver selecionado, ou o primeiro selecionado;
+- cada tubo mantém seu indicador;
+- o preparo da amostra e do conta-gotas pode permanecer independente;
+- as opções **Substância do tubo** e **Conta-gotas** permitem compartilhar esses componentes;
+- mudar uma parte compartilhada atualiza o grupo e reinicia gotas feitas com o reagente anterior;
+- desvincular um tubo ou um conjunto remove somente os integrantes selecionados;
+- grupos com apenas um integrante são desfeitos;
+- **Desfazer** restaura vínculos e volumes anteriores;
+- se a dose não couber em qualquer integrante, ela não é aplicada a nenhum tubo do grupo.
+
+**Comparar indicadores** cria três cópias vinculadas da mesma titulação, com bromotimol, fenolftaleína e indicador universal.
+
+### Relatório
+
+O botão **Imprimir relatório** fica no painel da prateleira. Ele usa a seleção atual, a lista confirmada ou, quando não há seleção personalizada, o resumo da bancada e o tubo em foco.
+
+O relatório inclui:
+
+- cabeçalho com logotipo, título, data, Nome e Turma;
+- tabela dos recipientes;
+- preparo e leitura;
+- desenho da vidraria;
+- gráfico;
+- tabela de gotas;
+- observações e conclusão;
+- nota sobre limites do modelo.
+
+O mesmo relatório pode ser acionado com Ctrl + P ou ⌘ + P. O conteúdo é montado para impressão A4 e os controles da aplicação não aparecem no papel.
+
+## Layout desktop, mobile e projetor
+
+### Desktop
+
+Acima de 900 px, a bancada mantém o arranjo amplo:
+
+- Prateleira à esquerda;
+- Experimento e vidraria no centro;
+- Conta-gotas abaixo da vidraria;
+- Painel VER à direita;
+- Tira de tubos na parte inferior.
+
+Prateleira e VER podem ser recolhidos em trilhos de ícones. Um cartão flutuante permite manter um painel aberto sobre a bancada sem reduzir o espaço do experimento.
+
+### Mobile e tablet
+
+Até 900 px, a mesma estrutura é reorganizada por tarefa:
+
+- **Experimento:** vidraria, leitura e gotejamento;
+- **Tubos:** visão geral e seleção;
+- **Análises:** painel VER e escala de pH;
+- **Prateleira → Preparo:** vidraria, tubo, conta-gotas e indicador;
+- **Prateleira → Medidas:** volumes, diluição, concentração e gota;
+- **Prateleira → Módulos:** Explorar, Medir e Calcular;
+- **Prateleira → Ações:** comparar, recomeçar, remover, relatório e roteiros.
+
+A prateleira abre como painel inferior. A barra de doses permanece acima da navegação inferior e pode ser recolhida. A lista de tubos reserva espaço para as ações de seleção, sem cobrir os controles.
+
+O manual possui índice recolhível no celular, busca, links de retorno e mapas visuais das duas disposições.
+
+### Modo projetor
+
+O modo projetor está na Área do professor. Ele aumenta textos e controles para uso em sala e fica salvo em <code>siab_projetor</code>. A distribuição da bancada se recalcula quando a projeção, o tamanho do texto ou os painéis mudam.
+
+## Motor químico e limites do modelo
+
+O motor resolve o pH pela eletroneutralidade, com balanços de massa, volume total e autoionização da água. A solução é tratada como aquosa, ideal e com equilíbrio imediato.
+
+### Sistemas representados
+
+- ácidos e bases fortes;
+- ácidos e bases fracos;
+- ácidos e bases polipróticos;
+- sais neutros, ácidos, básicos e anfóteros;
+- hidrólise de sais;
+- tampões;
+- aminoácidos e ponto isoelétrico;
+- cátions metálicos hidratados;
+- suspensões pouco solúveis com Kps;
+- amostras calibradas do cotidiano, do corpo e do ambiente;
+- água com temperatura variável na missão específica;
+- carbonato, bicarbonato e CO₂ dissolvido.
+
+### Grandezas calculadas
+
+- pH, pOH, pKw, [H₃O⁺] e [OH⁻];
+- frações de espécies e carga média;
+- concentração e grau de ionização;
+- Ka, Kb, pKa e meia-equivalência;
+- volume de equivalência por etapa;
+- estequiometria de neutralização;
+- condutividade pela lei de Kohlrausch;
+- fração de CO₂ acima da solubilidade ilustrada;
+- massa/quantidade de sólidos que permanecem sem dissolver;
+- cor do indicador pela fração ácido/base e absorção aproximada.
+
+A titulação calcula etapas múltiplas para sistemas como H₃PO₄ e carbonato. A temperatura padrão é 25 °C; a missão **Neutro nem sempre é 7** altera pKw para mostrar que neutralidade significa [H₃O⁺] = [OH⁻], e não necessariamente pH 7.
+
+### Limites
+
+O SIAB é uma representação didática:
+
+- volumes são aditivos e a mistura é imediata;
+- não há velocidade real de reação ou transporte hidrodinâmico;
+- amostras de alimentos, produtos, chuva e fluidos são referências representativas;
+- cores são aproximações das faixas de viragem;
+- o CO₂ permanece no sistema fechado do cálculo; as bolhas são ilustração;
+- não é simulado o escape real de gás;
+- precipitação formada após adicionar base não é modelada como reação completa;
+- condutividade usa valores ideais de diluição infinita e estimativas para íons sem dado tabelado;
+- a atividade de antiácidos é didática e não orienta dose ou tratamento de saúde.
+
+## Aprender: trilhas e missões
+
+O modo Aprender organiza 14 missões em quatro trilhas. Cada missão segue a sequência **ler → prever → observar → agir → explicar → conferir**. Respostas, explicações e leituras são registradas no caderno.
+
+| Trilha | Série | Missões |
+| --- | --- | --- |
+| **1. Cores e indicadores** | 1ª série | O que o repolho roxo revela; Um tubo, três olhares; Nem toda cor é do indicador. |
+| **2. Ácidos, bases e sais** | 1ª série | Dentro da água: ionização; Forte ou concentrado?; Todo sal é neutro?; Chuva ácida e calagem. |
+| **3. Quantidades e titulação** | 2ª série | Diluir muda o quê?; A curva da titulação; Estômago virtual. |
+| **4. Equilíbrio, hidrólise e tampão** | 2ª série | Grau de ionização e diluição; Por que o sal muda o pH?; Laboratório do tampão; Neutro nem sempre é 7. |
+
+As missões montam bancadas próprias e podem restringir os controles para orientar o estudante. O estado da missão fica separado da bancada livre; concluir uma missão não apaga o laboratório do usuário.
+
+## Desafios
+
+Os desafios são partidas curtas com pontuação, recorde e registro automático no caderno:
+
+| Desafio | Conteúdo |
+| --- | --- |
+| **Amostra misteriosa** | Usar faixas de indicadores para descobrir o pH de amostras ocultas. |
+| **Missão titulação** | Calcular equivalência, escolher indicador e parar no momento adequado. |
+| **Super Trunfo químico** | Comparar cartas, classificar funções inorgânicas e usar memória. |
+| **Régua do pH** | Posicionar amostras na escala logarítmica e comparar diferenças de acidez. |
+| **Construtor de neutralização** | Montar equação, fórmula e nome do sal formado. |
+
+Cada jogo informa recorde, quantidade de partidas e progresso local.
+
+## Área do professor
+
+O modo Professor permite:
+
+- selecionar missões e desafios de qualquer trilha;
+- gerar um link de aula que funciona no mesmo endereço do SIAB;
+- abrir a sequência da aula em qualquer aparelho;
+- imprimir um roteiro com perguntas, alternativas e linhas para respostas;
+- ativar o modo projetor;
+- consultar objetivos, concepções alternativas, códigos da BNCC e respostas esperadas;
+- apagar o progresso local quando necessário.
+
+A aula montada pode ser enviada como rota <code>#/aula/missao:...,...</code>. Ao abrir esse endereço, o modo Completo é ativado automaticamente.
+
+## Caderno de laboratório
+
+O caderno usa armazenamento local e reúne:
+
+- previsões do recurso **Prever e gotejar**;
+- explicações sobre o resultado observado;
+- leituras registradas pelo estudante;
+- conclusões e tabelas de gotas;
+- missões concluídas;
+- pontuações e recordes de desafios.
+
+Cada leitura pode ser:
+
+- visualizada como tabela;
+- exportada como CSV;
+- impressa com cabeçalho e paginação;
+- apagada individualmente.
+
+Tabelas longas são compactadas visualmente quando gotas consecutivas possuem a mesma cor e pH quase igual. Próximo ao ponto final, cada gota continua em sua própria linha. O CSV preserva todas as gotas originais.
+
+O caderno guarda até 300 notas e não é sincronizado com servidor. Baixe o CSV para manter uma cópia em outro local.
+
+## Acessibilidade e teclado
+
+O painel de acessibilidade fica no cabeçalho ou no menu ☰. As preferências são salvas no navegador:
+
+- tema claro e escuro;
+- alto contraste;
+- texto entre 80% e 200%;
+- maior espaçamento entre letras e palavras;
+- redução de animações;
+- controle da animação de abertura;
+- modo de leitura simples;
+- simulação de protanopia, deuteranopia, tritanopia e acromatopsia;
+- som proporcional ao pH;
+- vibração na viragem, em aparelhos compatíveis;
+- tradutor VLibras, carregado somente quando ativado;
+- restauração dos padrões.
+
+| Tecla | Ação |
+| --- | --- |
+| Tab / Shift + Tab | Avançar ou voltar entre controles. |
+| Enter / Espaço | Ativar botões, interruptores e opções. |
+| Setas ← → | Trocar de aba no painel VER. |
+| Setas ↑ ↓ | Percorrer listas de escolha. |
+| Esc | Fechar diálogos, menu, prateleira, cartão flutuante e tour. |
+| Enter | Adicionar uma gota. |
+| Espaço pressionado | Gotejar continuamente. |
+| Ctrl + A ou ⌘ + A | Selecionar todos os tubos quando o foco está na seleção. |
+
+A cor, o pH e o estado dos controles também são descritos em texto para leitores de tela.
+
+## Instalação, PWA e uso offline
+
+O PWA usa:
+
+- <code>manifest.webmanifest</code> para nome, ícones, atalhos e categoria;
+- <code>sw.js</code> para cache dos arquivos;
+- botão de instalação no cabeçalho e no menu;
+- aviso de atualização quando uma nova versão assume o controle.
+
+Requisitos para instalar:
+
+1. publique o projeto em HTTPS ou execute em localhost;
+2. abra o site uma vez;
+3. use **Instalar app** no cabeçalho ou em Menu ☰ → Aplicativo;
+4. depois da primeira visita, o conteúdo principal funciona sem internet.
+
+O tradutor VLibras é a única parte opcional que precisa carregar um recurso externo. Se uma atualização apresentar erro por cache, use Ctrl + Shift + R ou Cmd + Shift + R, feche as abas antigas e abra o site novamente.
+
+## Mecânicas didáticas adicionais
+
+- **Prever e gotejar:** registra hipótese sobre número de gotas, meio e cor antes de revelar o resultado; depois pede uma explicação.
+- **Tour guiado:** destaca cada região da bancada e explica sua função, com alvo alternativo para o mobile.
+- **Animação de abertura:** usa o próprio motor químico para animar cinco tubos com diferentes indicadores.
+- **Desfazer amplo:** mantém uma pilha de ações para gotas, preparo, vidraria, capacidade, vínculos, remoção e roteiros.
+- **Pontes entre representações:** fórmulas, íons e espécies clicáveis levam à lupa correspondente.
+- **Mistura geral:** recurso de descoberta que reúne o conteúdo dos tubos em um béquer de 50 mL e calcula a mistura.
+- **Arco-íris do pH:** recurso de descoberta que cria tubos de indicador universal em uma faixa de pH.
+
+Os dois recursos de descoberta podem ser registrados no caderno e desfeitos. Eles são úteis para demonstrações e exploração livre.
+
+## Arquitetura do projeto
+
+O projeto é modular, mas roda sem etapa de compilação:
+
+~~~text
+siab/
+├── index.html                 Página e estrutura principal da aplicação
+├── a11y.js                   Memória compartilhada de acessibilidade
+├── manifest.webmanifest       Configuração do PWA
+├── sw.js                     Service worker e cache de versão
+├── build_standalone.py        Geração do HTML único
+├── package.json               Scripts e metadados
+├── css/
+│   ├── stylesiab.css          Tema, componentes e impressão
+│   └── mobile-study.css       Organização mobile até 900 px
+├── js/
+│   ├── core/                  Estado, loja, progresso, roteador e utilitários
+│   ├── data/                  Catálogo, soluções, missões, trilhas e manual
+│   ├── simulation/            Motor químico e condutividade
+│   ├── ui/                    Renderização, prateleira, gotejamento, gráfico, lupa,
+│   │                          equação, caderno auxiliar e responsividade
+│   ├── telas/                 Bancada, manual, caderno, missões, desafios e professor
+│   ├── a11y/                  Preferências do painel de acessibilidade
+│   └── init/                  Inicialização da aplicação e PWA
+└── tests/                     Testes de layout e integração DOM
+~~~
+
+O namespace global <code>SIAB</code> coordena os módulos. O estado da bancada livre e o estado da missão são separados. A loja avisa os componentes quando uma ação altera o estado, e o roteador trabalha com endereços hash para funcionar também em <code>file://</code>.
+
+## Testes
+
+### Dependências de desenvolvimento
+
+O uso normal não precisa de dependências npm. Para executar os testes:
+
+~~~bash
+cd siab
+npm install --no-save playwright jsdom
+npx playwright install chromium
+~~~
+
+Em ambientes que já possuem Chromium, informe o executável pela variável <code>SIAB_BROWSER_EXECUTABLE</code>.
+
+### Layout e bancada
+
+~~~bash
+SIAB_BROWSER_EXECUTABLE=/caminho/para/chromium npm run test:layout
+~~~
+
+O teste cobre:
+
+- todas as capacidades das três vidrarias;
+- de 1 a 10 cartões na visão geral;
+- redimensionamento, modo projetor e painéis recolhidos;
+- enquadramento da vidraria, escala e conta-gotas;
+- seleção no celular;
+- ausência de sobreposição e rolagem inesperada.
+
+### Seleção, relatório e vínculos
+
+~~~bash
+SIAB_JSDOM_MODULE=/caminho/para/node_modules/jsdom npm run test:selection
+~~~
+
+O teste cobre:
+
+- seleção por clique, Ctrl/⌘ e gesto prolongado;
+- seleção vertical no celular;
+- impressão pelo botão da prateleira;
+- relatório personalizado;
+- vínculos manuais e compartilhamento de preparo;
+- desvinculação, remoção e desfazer;
+- capacidade de grupos;
+- comparação de indicadores.
+
+Os testes automatizados verificam estado e eventos. A inspeção visual em navegador e o teste em aparelho de toque continuam recomendados para alterações de layout.
+
+## Publicação e manutenção
+
+Ao publicar uma nova versão:
+
+1. atualize <code>version</code> em <code>js/core/namespace.js</code> e <code>package.json</code>;
+2. atualize o sufixo <code>?v=...</code> de cada CSS e script no <code>index.html</code>;
+3. atualize <code>VERSAO</code> em <code>sw.js</code>;
+4. inclua novos arquivos na lista <code>ARQUIVOS</code> do service worker;
+5. execute os testes;
+6. gere o HTML único, se ele fizer parte da entrega;
+7. publique a pasta e aguarde o aviso de atualização do PWA.
+
+A versão atual é **0.8.1**. O manual dentro da aplicação documenta cada parte da bancada e possui mapas do layout desktop e mobile.
+
+## Privacidade, referências e licença
+
+### Privacidade
+
+O SIAB não possui conta, backend, analytics ou envio automático de dados. O navegador armazena localmente:
+
+- modo de navegação;
+- preferências de acessibilidade;
+- progresso das missões;
+- recordes;
+- caderno;
+- última tela visitada;
+- preferência de projetor e instalação.
+
+O VLibras só é carregado quando o usuário ativa o recurso e requer conexão com a internet.
+
+### Referências do motor
+
+As constantes, faixas e modelos são documentados na janela **Sobre o SIAB → Referências**. O projeto utiliza, entre outras fontes:
+
+- OpenStax, *Chemistry 2e*, capítulos de ácidos e bases, constantes de ionização, Kps e titulações;
+- D. C. Harris, *Análise Química Quantitativa*;
+- *CRC Handbook of Chemistry and Physics*, incluindo condutividade iônica limite;
+- Nelson e Cox, *Princípios de Bioquímica de Lehninger*, para aminoácidos;
+- Baes e Mesmer, *The Hydrolysis of Cations*, para cátions metálicos hidratados;
+- Bandura e Lvov, para a variação de pKw da água com a temperatura.
+
+Os valores representam uma aproximação educacional. Consulte a tela **Sobre o SIAB** para a lista de links e observações de cada fonte.
+
+### Licença
+
+Este projeto é distribuído sob a [GNU General Public License v3.0](LICENSE).
+
