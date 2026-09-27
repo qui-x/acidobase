@@ -171,7 +171,7 @@ SIAB.render = (syncForm = false) => {
     $('overview-regua').innerHTML = ordenar ? SIAB.reguaDaBancada(lista) : '';
     $('overview-grid').innerHTML = lista.map(({ x, n, v }) => {
       const cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span>${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}<strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · ${SIAB.targets(x).length} tubos${x.groupMode === 'drops' && SIAB.textoCompartilhado(x) ? ` · ${SIAB.textoCompartilhado(x)}` : ''}</span>` : ''}</button>`;
+      return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span><span class="overview-visual">${SIAB.tubeSVG(x, 'overview', true, s.vidraria)}</span><span class="overview-details"><strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(',')})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span>${s.showPH ? `<span>pH ${SIAB.phFormat(v)}</span>` : ''}</span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · ${SIAB.targets(x).length} tubos${x.groupMode === 'drops' && SIAB.textoCompartilhado(x) ? ` · ${SIAB.textoCompartilhado(x)}` : ''}</span>` : ''}</span></button>`;
     }).join('');
   }
 
@@ -200,6 +200,7 @@ SIAB.render = (syncForm = false) => {
 
   SIAB.renderVer();
   SIAB.refreshSelects?.();
+  SIAB.layoutBancada?.atualizar();
 };
 
 // Bancada sem tubos (é assim que o laboratório começa): orienta o primeiro

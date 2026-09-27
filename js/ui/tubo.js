@@ -3,10 +3,9 @@
    líquido na cor calculada pelo motor.
 
    Tamanho de verdade: cada recipiente é desenhado com as medidas reais de
-   catálogo (diâmetro D e altura H, em mm), todos na MESMA escala e apoiados na
-   mesma linha da bancada. Assim o béquer de 50 mL aparece mais baixo e bem
-   mais largo que o tubo de ensaio, e o erlenmeyer de 250 mL quase o dobro da
-   altura do tubo, como no laboratório.
+   catálogo (diâmetro D e altura H, em mm), em um sistema comum de coordenadas.
+   O enquadramento de tela amplia cada recipiente para caber na área disponível;
+   as proporções geométricas e a conversão entre volume e altura não mudam.
    - Tubo de ensaio 12 × 75 mm: o tubo "de 5 mL" de catálogo.
    - Béquer forma baixa (Griffin), medidas da norma ISO 3819.
    - Erlenmeyer de gargalo estreito, medidas da norma ISO 1773 (o de 125 mL
@@ -162,7 +161,8 @@ function meniscoD(cx, meia, S) {
 // titulações). Mesmo sistema de coordenadas do conta-gotas: ponta em (80, 12).
 // A coluna sobe até o topo da cena; a torneira abre enquanto goteja.
 function buretaSVG(forma, corGota) {
-  const topo = forma.TOPO - (forma.ponta - 12);
+  // Trecho visível da bureta acompanha o enquadramento, inclusive nos frascos pequenos.
+  const topo = -52;
   const marcas = [];
   for (let y = -24, i = 0; y > topo + 4; y -= 6, i++) marcas.push(`<path class="bu-marca" d="M75 ${y}h${i % 5 === 0 ? 5 : 3}"/>`);
   return `<g class="bureta" aria-hidden="true">
@@ -176,9 +176,9 @@ function buretaSVG(forma, corGota) {
     </g>`;
 }
 
-// prefix 'focus' desenha a cena da bancada: escala única (tamanho de verdade),
-// conta-gotas acima da boca e camada de efeitos. Os outros (visão geral,
-// desafios) enquadram só o recipiente, para caber no cartão.
+// O foco enquadra o recipiente e o conta-gotas na área disponível. As medidas
+// e o nível continuam proporcionais; a ampliação de tela varia com a vidraria.
+// Os outros contextos enquadram só o recipiente, para caber no cartão.
 SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
   const v = estadoDoVidro(tube, vidraria);
   const { forma, capacidade, y } = v;
@@ -198,9 +198,11 @@ SIAB.tubeSVG = (tube, prefix, small = false, vidraria = 'tubo') => {
       <path class="cg-vidro" d="M75 -19v21l3.4 10h3.2l3.4-10v-21Z"/>
       <path class="cg-liquido" d="M76.4 -8v10l2.6 7.6h2l2.6-7.6v-10Z" style="fill:${v.corGota}"/>
     </g></g>` : '';
-  // Cena da bancada: altura fixa (mesma escala para toda vidraria). Fora dela: só o recipiente.
+  // Margem suficiente para bulbo, bureta, gotas e agitação, sem reservar a
+  // altura de um erlenmeyer de 250 mL para um tubo de ensaio ou béquer pequeno.
+  const topoFoco = Math.min(forma.yt - 8, forma.ponta - 70);
   const caixa = foco
-    ? `0 ${forma.TOPO} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - forma.TOPO).toFixed(1)}`
+    ? `0 ${topoFoco.toFixed(1)} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - topoFoco).toFixed(1)}`
     : `0 ${(forma.yt - 8).toFixed(1)} ${forma.largura.toFixed(1)} ${(forma.BASE + 14 - forma.yt + 8).toFixed(1)}`;
   return `<svg class="tube-svg vidro-${v.tipo}${foco ? ' vidro-foco' : ''}" viewBox="${caixa}" role="img" aria-label="${SIAB.escape(v.rotulo)}">
     <defs><clipPath id="${id}"><path d="${forma.interno}"/></clipPath>${foco ? `<clipPath id="${id}-abaixo"><rect x="0" y="0" width="${forma.largura.toFixed(1)}" height="400"/></clipPath>` : ''}<pattern id="${id}-grao" width="7" height="7" patternUnits="userSpaceOnUse"><circle cx="1.5" cy="1.5" r=".9"/><circle cx="5" cy="4.5" r=".7"/></pattern></defs>

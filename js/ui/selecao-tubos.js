@@ -94,7 +94,7 @@ SIAB.selecaoTubos = (() => {
         nota = document.createElement('span');
         nota.className = 'overview-report-mark';
         nota.textContent = 'No relatório';
-        botao.append(nota);
+        (botao.querySelector('.overview-details') || botao).append(nota);
       }
       nota.hidden = !incluidos.has(id);
     });
@@ -107,6 +107,7 @@ SIAB.selecaoTubos = (() => {
     $('relatorio-selecao-resumo').textContent = idsImpressao !== null
       ? `${quantidadeImpressao} ${quantidadeImpressao === 1 ? 'tubo escolhido' : 'tubos escolhidos'} na visão geral. Cada um terá preparo, leitura, gráfico e histórico.`
       : 'Resumo da bancada e detalhes do tubo em foco. Escolha tubos na visão geral para personalizar.';
+    SIAB.layoutBancada?.atualizar();
   }
 
   // Partes marcadas para compartilhar ao vincular (além das gotas).

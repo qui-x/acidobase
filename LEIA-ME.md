@@ -1,3 +1,14 @@
+## Atualização 0.7.2 — espaço da bancada
+
+Abra `index.html` para usar a versão atualizada. A vidraria em foco agora se ajusta
+à área disponível. Na visão geral, os cartões se redistribuem pela quantidade de
+recipientes e pelas dimensões da bancada. Recolha os painéis para ampliar a área
+de comparação. No celular, a seleção mantém a lista vertical.
+
+As proporções do desenho e os cálculos permanecem os mesmos; a ampliação de tela
+pode variar entre recipientes. Se usar a versão publicada, recarregue a página
+quando aparecer o aviso de atualização.
+
 # SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.1
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e

@@ -1,9 +1,36 @@
-# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.1
+# SIAB — Simulador Interativo de Ácidos e Bases · versão 0.7.2
 
 **SIAB — Simulador Interativo de Ácidos e Bases.** Missões guiadas, desafios e
 uma bancada de laboratório para ensinar ácidos e bases no ensino médio.
 Funciona no computador e no celular, com ou sem internet, e pode ser instalado
 como aplicativo.
+
+## Bancada adaptável · 0.7.2
+
+- **Tubo em foco:** enquadramento automático do recipiente, da escala e do
+  conta-gotas. O desenho usa a altura disponível e cresce quando há mais espaço,
+  inclusive com os painéis recolhidos e no modo projetor.
+- **Visão geral:** distribuição calculada pela largura, altura e quantidade de
+  recipientes. Cartões podem organizar imagem e dados lado a lado ou na vertical.
+  A última linha ocupa toda a largura. Em Full HD, com os painéis recolhidos,
+  dez tubos são organizados em duas linhas de cinco.
+- Abrir painéis, redimensionar a janela, mudar o tamanho do texto, ordenar por pH
+  ou selecionar tubos recalcula a disposição. Em telas menores, a rolagem preserva
+  nomes completos e os controles; no celular a seleção continua em lista vertical.
+- As proporções de cada recipiente, a capacidade, o nível do líquido e os cálculos
+  químicos são preservados. A **ampliação visual é ajustada por recipiente**;
+  comparar a altura dos desenhos na tela não equivale a comparar dimensões reais.
+- Abas e tira de tubos permanecem visíveis no computador; a rolagem ocorre dentro
+  da vista ativa. O cache foi atualizado para carregar a nova versão.
+
+### Verificações de desenvolvimento
+
+`tests/layout-bancada.test.cjs` verifica em Chromium as capacidades de cada
+vidraria, 1 a 10 cartões, projeção, redimensionamento e seleção no celular.
+Instale Playwright (`npm install --no-save playwright` e `npx playwright install chromium`)
+e execute `npm run test:layout`. Um navegador existente pode ser indicado por
+`SIAB_BROWSER_EXECUTABLE`. Os testes de seleção, relatório e vínculos continuam
+em `tests/selecao-relatorio.test.cjs` (dependência de desenvolvimento: jsdom).
 
 ## Como abrir
 
@@ -25,7 +52,7 @@ properties of undefined`), o navegador está usando arquivos antigos guardados
 no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
 continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
 site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.1`), o que evita
+cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.2`), o que evita
 essa mistura.
 
 ## O que há na versão 0.7: muito mais substâncias
@@ -251,8 +278,9 @@ frasco da prateleira e ele vira o "Tubo 1".
   têm resultado. Com isso a prateleira ficou cerca de 63 % mais curta
   (de 3.281 para 1.208 px no computador).
 - **Vidraria em tamanho de verdade:** tubo (12 × 75 mm), béqueres (ISO 3819)
-  e erlenmeyers (ISO 1773) são desenhados com as medidas reais, todos na mesma
-  escala e na mesma linha da bancada: o béquer de 50 mL aparece mais baixo e
+  e erlenmeyers (ISO 1773) são desenhados com as proporções das medidas reais.
+  Na versão 0.5 usavam a mesma escala de tela; desde 0.7.2 cada recipiente é
+  ampliado para a área disponível. Na geometria do modelo, o béquer de 50 mL aparece mais baixo e
   bem mais largo que o tubo, e o erlenmeyer de 250 mL quase com o dobro da
   altura. O nível do líquido vem do volume dentro da forma real.
 - **Responsivo de 320 px a 2K:** em telas grandes a letra cresce um pouco, os
