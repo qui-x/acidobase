@@ -1,10 +1,10 @@
 # SIAB — Simulador Interativo de Ácidos e Bases
 
-**Versão atual: 0.8.1**
+**Versão atual: 0.8.2**
 
 O SIAB é um laboratório virtual de ácidos e bases para o ensino médio. Ele combina uma bancada experimental com motor químico, missões guiadas, desafios, caderno de laboratório e ferramentas para o professor. A aplicação funciona em português do Brasil, no computador, no celular e em modo projetor.
 
-O programa não precisa de servidor ou conta para executar. A bancada fica em memória durante a sessão; o modo de navegação, as preferências, o progresso, os recordes e o caderno ficam armazenados no navegador deste aparelho. Quando publicado por HTTP ou HTTPS, o SIAB também pode ser instalado como PWA e continuar funcionando sem internet depois da primeira visita.
+O programa não precisa de servidor ou conta para executar. A bancada fica em memória durante a sessão; o modo de navegação, as preferências, o progresso, os recordes e o caderno ficam armazenados no navegador deste aparelho. Quando publicado por HTTPS (ou executado em localhost), o SIAB pode ser instalado como PWA nos navegadores que oferecem esse recurso. O uso sem internet depende do carregamento completo e da manutenção do cache pelo navegador.
 
 ## Conteúdo
 
@@ -23,6 +23,7 @@ O programa não precisa de servidor ou conta para executar. A bancada fica em me
 - [Caderno de laboratório](#caderno-de-laboratório)
 - [Acessibilidade e teclado](#acessibilidade-e-teclado)
 - [Instalação, PWA e uso offline](#instalação-pwa-e-uso-offline)
+- [Compatibilidade com Android e iOS](#compatibilidade-com-android-e-ios)
 - [Arquitetura do projeto](#arquitetura-do-projeto)
 - [Testes](#testes)
 - [Publicação e manutenção](#publicação-e-manutenção)
@@ -47,7 +48,7 @@ O programa não precisa de servidor ou conta para executar. A bancada fica em me
 
 ### Abrir como arquivo
 
-Abra <code>index.html</code> diretamente no navegador. A bancada, o manual, as missões e os desafios funcionam; a instalação como aplicativo e o service worker exigem HTTP ou HTTPS.
+No computador, abra <code>index.html</code> diretamente em um navegador compatível. A instalação como aplicativo e o service worker exigem HTTPS ou localhost. No Android, iPhone e iPad, prefira o endereço publicado: a prévia de um HTML em Arquivos, e-mail ou mensageiros pode exibir a página sem executar JavaScript.
 
 ### Servidor local
 
@@ -78,11 +79,15 @@ cd siab
 python3 build_standalone.py ../SIAB-teste.html
 ~~~
 
-O HTML único pode ser aberto diretamente, enviado por arquivo ou usado em uma aula sem internet. Ele não é instalável como PWA porque não possui manifesto e service worker separados.
+No computador, o HTML único pode ser aberto diretamente em um navegador ou usado em uma aula sem internet. No celular, prefira o site publicado; visualizadores de arquivos não equivalem a navegadores. Ele não é instalável como PWA porque não possui manifesto e service worker separados.
 
 ### GitHub Pages
 
-Publique o conteúdo da pasta <code>siab/</code> com <code>index.html</code> na raiz do site ou de uma subpasta do repositório. Os caminhos do projeto são relativos, portanto funcionam em endereços como <code>usuario.github.io/repositorio/</code>. Para instalar o PWA, o GitHub Pages deve estar servido por HTTPS.
+Publique **todo o conteúdo** da pasta <code>siab/</code>, incluindo <code>vendor/</code>, no diretório escolhido como origem do GitHub Pages. O arquivo de entrada deve se chamar exatamente <code>index.html</code>. Em Settings → Pages, selecione a origem de publicação correspondente (raiz, <code>docs/</code> ou artefato do Actions) e use o endereço HTTPS informado pelo GitHub.
+
+Os caminhos são relativos: uma publicação em <code>https://usuario.github.io/repositorio/</code> não precisa estar na raiz do domínio. As rotas usam <code>#/</code>, portanto não exigem reescrita de URLs. Se o projeto ficar em uma subpasta da origem publicada, inclua essa subpasta no link compartilhado.
+
+GitHub Pages serve arquivos estáticos; não há uma modalidade específica de publicação para iOS. As diferenças relevantes estão no navegador, no contexto de abertura do link, no HTTPS e nos recursos de armazenamento/instalação. Verifique a versão **0.8.2** em Menu → Sobre depois da publicação. Esta entrega não publica automaticamente no seu repositório.
 
 ## Modos e rotas
 
@@ -485,21 +490,44 @@ A cor, o pH e o estado dos controles também são descritos em texto para leitor
 
 ## Instalação, PWA e uso offline
 
-O PWA usa:
+O manifesto define nome, ícones e atalhos. O service worker guarda os arquivos da aplicação em um cache separado por endereço de publicação e versão. Atualizar uma publicação não remove os caches de outros projetos no mesmo domínio.
 
-- <code>manifest.webmanifest</code> para nome, ícones, atalhos e categoria;
-- <code>sw.js</code> para cache dos arquivos;
-- botão de instalação no cabeçalho e no menu;
-- aviso de atualização quando uma nova versão assume o controle.
+1. Abra o endereço **HTTPS** (ou localhost, durante o desenvolvimento) com conexão e espere o carregamento terminar.
+2. **Android e desktop:** use **Instalar app** quando o navegador oferecer a instalação, ou a opção equivalente do menu do navegador.
+3. **iPhone/iPad:** no Safari, use **Compartilhar → Adicionar à Tela de Início**. Ative **Abrir como App da Web**, se disponível. Na ausência de instalação automática, **Menu ☰ → Aplicativo → Instalar app** abre as instruções do manual.
+4. Antes da aula, feche e reabra o endereço sem conexão para conferir o cache naquele aparelho.
 
-Requisitos para instalar:
+Instalar não é requisito para usar a bancada online. O HTML único não registra service worker. Em outros aparelhos da rede, um endereço como <code>http://192.168.x.x:8080</code> pode abrir a página, mas não equivale a localhost para instalação/cache offline.
 
-1. publique o projeto em HTTPS ou execute em localhost;
-2. abra o site uma vez;
-3. use **Instalar app** no cabeçalho ou em Menu ☰ → Aplicativo;
-4. depois da primeira visita, o conteúdo principal funciona sem internet.
+O navegador pode bloquear ou remover cache e dados locais por suas configurações, limpeza de dados, falta de espaço ou políticas de armazenamento. Navegação privada não oferece persistência confiável entre sessões. Exporte o caderno antes de limpar dados. O VLibras é opcional e precisa de internet.
 
-O tradutor VLibras é a única parte opcional que precisa carregar um recurso externo. Se uma atualização apresentar erro por cache, use Ctrl + Shift + R ou Cmd + Shift + R, feche as abas antigas e abra o site novamente.
+Ao receber o aviso de atualização, termine ou exporte o experimento antes de recarregar: a bancada está em memória durante a sessão. A atualização não apaga automaticamente o caderno ou as preferências.
+
+## Compatibilidade com Android e iOS
+
+O projeto usa detecção de recursos, em vez de decidir apenas pelo nome do navegador. A versão 0.8.2 inclui alternativas locais para <code>Array.at</code>, <code>Object.hasOwn</code>, eventos de <code>matchMedia</code> e diálogos, além de cores, foco e seleção visual sem depender exclusivamente de CSS recente.
+
+| Ambiente | Faixa de projeto e cuidados |
+| --- | --- |
+| Safari no iPhone/iPad | Alvo a partir de iOS/iPadOS 14.5 (Safari 14.1); prefira versões atualizadas do sistema. As APIs de diálogo, <code>at</code> e <code>hasOwn</code> têm alternativas quando ausentes. |
+| Chrome/Edge no Android | Alvo a partir de Chromium 90; mantenha também o Android System WebView atualizado quando o link abrir dentro de outro aplicativo. |
+| Outros navegadores | Teste os fluxos essenciais antes de distribuir. Compartilhar o motor não garante o mesmo comportamento de instalação, download ou impressão. |
+| Prévias de arquivos e navegadores de mensageiros | Não fazem parte da distribuição garantida; abra o link HTTPS no navegador completo. |
+| Versões anteriores à faixa de projeto | Sem garantia de sintaxe, layout ou recursos. Uma falha de abertura detectada passa a mostrar orientação e botão para recarregar. |
+
+Esses limites são **alvos de compatibilidade, não certificação de cada versão ou aparelho**. A matriz e os resultados desta entrega ficam em [COMPATIBILIDADE.md](COMPATIBILIDADE.md). Emulação de tela/toque e remoção de APIs no teste não substituem um iPhone, iPad ou Android físico.
+
+Som, vibração, instalação, impressão, clipboard e downloads dependem das permissões e capacidades do navegador/sistema. A bancada não exige som ou vibração; copiar links possui alternativa por seleção do texto.
+
+### Se a página abrir e os botões não responderem
+
+1. Abra o link publicado diretamente no navegador, fora da prévia de um arquivo ou mensageiro.
+2. Com conexão, recarregue e confira a versão em **Menu → Sobre**; feche abas antigas após atualizar.
+3. Confira se o sistema e o navegador atendem à faixa de projeto.
+4. Na publicação, confira arquivos ausentes/404, maiúsculas e minúsculas nos caminhos, HTTPS e inclusão da pasta <code>vendor/</code>.
+5. Registre URL, aparelho, versões do sistema/navegador e o botão que falhou. Erros de console ajudam a distinguir incompatibilidade, publicação incompleta e armazenamento indisponível.
+
+Não recomende apagar todos os dados como primeiro passo: a limpeza também pode remover o caderno e o progresso.
 
 ## Mecânicas didáticas adicionais
 
@@ -537,7 +565,8 @@ siab/
 │   ├── telas/                 Bancada, manual, caderno, missões, desafios e professor
 │   ├── a11y/                  Preferências do painel de acessibilidade
 │   └── init/                  Inicialização da aplicação e PWA
-└── tests/                     Testes de layout e integração DOM
+├── vendor/dialog-polyfill/    Alternativa local para diálogos, com licença
+└── tests/                     Testes de layout, DOM e compatibilidade
 ~~~
 
 O namespace global <code>SIAB</code> coordena os módulos. O estado da bancada livre e o estado da missão são separados. A loja avisa os componentes quando uma ação altera o estado, e o roteador trabalha com endereços hash para funcionar também em <code>file://</code>.
@@ -551,7 +580,7 @@ O uso normal não precisa de dependências npm. Para executar os testes:
 ~~~bash
 cd siab
 npm install --no-save playwright jsdom
-npx playwright install chromium
+npx playwright install --with-deps chromium webkit
 ~~~
 
 Em ambientes que já possuem Chromium, informe o executável pela variável <code>SIAB_BROWSER_EXECUTABLE</code>.
@@ -590,6 +619,16 @@ O teste cobre:
 
 Os testes automatizados verificam estado e eventos. A inspeção visual em navegador e o teste em aparelho de toque continuam recomendados para alterações de layout.
 
+### Compatibilidade e carregamento
+
+~~~bash
+npm run test:compatibility
+~~~
+
+Executa os fluxos em Chromium e WebKit, em desktop, celular estreito, celular e tablet; remove APIs para exercitar alternativas; bloqueia localStorage; verifica publicação em subpasta, cache e aviso de falha. Use <code>SIAB_TEST_ENGINES=chromium</code> para executar apenas um motor e <code>SIAB_STANDALONE=/caminho/SIAB.html</code> para incluir o HTML único.
+
+No WebKit do Playwright, a verificação do cache interrompe as respostas do servidor: há uma [falha conhecida na emulação de modo offline](https://github.com/microsoft/playwright/issues/42775). Isso não certifica o modo avião de um aparelho físico.
+
 ## Publicação e manutenção
 
 Ao publicar uma nova versão:
@@ -602,7 +641,7 @@ Ao publicar uma nova versão:
 6. gere o HTML único, se ele fizer parte da entrega;
 7. publique a pasta e aguarde o aviso de atualização do PWA.
 
-A versão atual é **0.8.1**. O manual dentro da aplicação documenta cada parte da bancada e possui mapas do layout desktop e mobile.
+A versão atual é **0.8.2**. O manual dentro da aplicação documenta cada parte da bancada e possui mapas do layout desktop e mobile.
 
 ## Privacidade, referências e licença
 
@@ -635,5 +674,12 @@ Os valores representam uma aproximação educacional. Consulte a tela **Sobre o 
 
 ### Licença
 
-Este projeto é distribuído sob a [GNU General Public License v3.0](LICENSE).
+Este projeto é distribuído sob a [GNU General Public License v3.0](LICENSE). A dependência local [dialog-polyfill 0.5.6](https://github.com/GoogleChrome/dialog-polyfill) é distribuída sob BSD-3-Clause; seu aviso está em [vendor/dialog-polyfill/LICENSE](vendor/dialog-polyfill/LICENSE) e permanece incluído no HTML único.
 
+
+### Referências de compatibilidade
+
+- [GitHub Pages: publicação estática](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages) e [HTTPS](https://docs.github.com/en/pages/getting-started-with-github-pages/securing-your-github-pages-site-with-https).
+- [Safari 14.1 e iOS/iPadOS 14.5](https://webkit.org/blog/11648/new-webkit-features-in-safari-14-1/) e [APIs introduzidas no Safari 15.4](https://webkit.org/blog/12445/new-webkit-features-in-safari-15-4/).
+- [Apple: adicionar sites à tela inicial](https://support.apple.com/pt-br/guide/iphone/iph42ab2f3a7/ios).
+- [WebKit: políticas de armazenamento](https://webkit.org/blog/14403/updates-to-storage-policy/).

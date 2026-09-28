@@ -3,12 +3,21 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = 'siab-0.8.1';
+const VERSAO = 'siab-0.8.2';
+// Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
+// precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
+const BASE = new URL(self.registration.scope);
+const INICIO = new URL('index.html', BASE).href;
+const PREFIXO_CACHE = `siab@${BASE.href}::`;
+const NOME_CACHE = PREFIXO_CACHE + VERSAO;
 const ARQUIVOS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './a11y.js',
+  './js/core/compatibilidade.js',
+  './vendor/dialog-polyfill/dialog-polyfill.js',
+  './vendor/dialog-polyfill/dialog-polyfill.css',
   './css/stylesiab.css',
   './css/mobile-study.css',
   './assets/siab-icone.svg',
@@ -82,17 +91,18 @@ const ARQUIVOS = [
 // skipWaiting: a versão nova assume logo; a página avisa para recarregar.
 self.addEventListener('install', evento => {
   evento.waitUntil(
-    caches.open(VERSAO)
+    caches.open(NOME_CACHE)
       .then(cache => cache.addAll(ARQUIVOS.map(url => new Request(url, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
   );
 });
 
-// Remove caches de versões antigas.
+// Remove somente versões antigas desta publicação. Caches legados sem escopo
+// são preservados: podem pertencer a outra cópia do SIAB no mesmo domínio.
 self.addEventListener('activate', evento => {
   evento.waitUntil(
     caches.keys()
-      .then(chaves => Promise.all(chaves.filter(chave => chave.startsWith('siab-') && chave !== VERSAO).map(chave => caches.delete(chave))))
+      .then(chaves => Promise.all(chaves.filter(chave => chave.startsWith(PREFIXO_CACHE) && chave !== NOME_CACHE).map(chave => caches.delete(chave))))
       .then(() => self.clients.claim())
   );
 });
@@ -101,18 +111,25 @@ self.addEventListener('activate', evento => {
 // A página pode ter parâmetros de acessibilidade (?theme=…): ignoreSearch.
 self.addEventListener('fetch', evento => {
   const pedido = evento.request;
-  if (pedido.method !== 'GET' || new URL(pedido.url).origin !== self.location.origin) return;
+  const url = new URL(pedido.url);
+  if (pedido.method !== 'GET' || url.origin !== BASE.origin || !url.pathname.startsWith(BASE.pathname)) return;
   const navegacao = pedido.mode === 'navigate';
+  // As rotas do app usam #/. Outros documentos/subpastas seguem para a rede.
+  if (navegacao && url.pathname !== BASE.pathname && url.pathname !== new URL(INICIO).pathname) return;
   evento.respondWith(
-    caches.match(navegacao ? './index.html' : pedido, { ignoreSearch: true }).then(guardado => {
+    caches.open(NOME_CACHE).then(async cache => {
+      const guardado = await cache.match(navegacao ? INICIO : pedido, { ignoreSearch: true });
       if (guardado) return guardado;
-      return fetch(pedido).then(resposta => {
+      try {
+        const resposta = await fetch(pedido);
         if (resposta.ok) {
-          const copia = resposta.clone();
-          caches.open(VERSAO).then(cache => cache.put(pedido, copia));
+          // Falta de espaço para cache não impede a resposta online.
+          try { await cache.put(pedido, resposta.clone()); } catch (erro) { /* cache indisponível */ }
         }
         return resposta;
-      }).catch(() => (navegacao ? caches.match('./index.html') : Response.error()));
-    })
+      } catch (erro) {
+        return (navegacao && await cache.match(INICIO)) || Response.error();
+      }
+    }).catch(() => fetch(pedido))
   );
 });

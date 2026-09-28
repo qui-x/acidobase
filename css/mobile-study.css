@@ -1,10 +1,10 @@
-/* Adaptação mobile SIAB 0.8.1. Regras apenas para telas até 900 px; os
+/* Adaptação mobile SIAB 0.8.2. Regras apenas para telas até 900 px; os
    componentes originais conservam seus IDs, sua posição no DOM e eventos. */
 .mobile-study-control { display: none; }
 @media screen and (max-width: 900px) {
   :root[data-mobile-study=on] .mobile-study-control { display: inline-flex; }
   :root[data-mobile-study=on] { --bottom-h: calc(58px + env(safe-area-inset-bottom)); }
-  :root[data-mobile-study=on] .app-header { padding-block: 5px; gap: 7px; }
+  :root[data-mobile-study=on] .app-header { padding-block: 5px; padding-top: calc(5px + env(safe-area-inset-top)); gap: 7px; }
   :root[data-mobile-study=on] .header-brand { gap: 7px; min-width: 0; }
   :root[data-mobile-study=on] .header-brand span { font-size: .63rem; }
   :root[data-mobile-study=on] .bottom-nav a { min-height: 50px; }
@@ -73,7 +73,7 @@
   :root[data-mobile-study=on][data-mobile-doses=on] .dose-shortcuts { display: flex; width: 100%; flex-wrap: wrap; }
   :root[data-mobile-study=on] .dose-shortcuts .secondary-btn { min-height: 44px; min-width: 72px; }
   :root[data-mobile-study=on] .controls {
-    max-height: min(88dvh, calc(var(--mobile-visible-height, 100dvh) - 8px)); padding: 0 14px 18px;
+    max-height: min(88dvh, calc(var(--mobile-visible-height, 100dvh) - 8px)); padding: 0 14px max(18px, env(safe-area-inset-bottom));
   }
   :root[data-mobile-study=on] .sheet-handle { margin-top: 8px; }
   :root[data-mobile-study=on] .controls-heading {
@@ -166,7 +166,7 @@
   :root[data-mobile-study=on] { --bottom-h: calc(48px + env(safe-area-inset-bottom)); }
   :root[data-mobile-study=on] .bottom-nav a { min-height: 42px; padding-block: 2px; }
   :root[data-mobile-study=on] .bottom-nav a svg { height: 16px; }
-  :root[data-mobile-study=on] .app-header { padding-block: 2px; }
+  :root[data-mobile-study=on] .app-header { padding-block: 2px; padding-top: calc(2px + env(safe-area-inset-top)); }
   :root[data-mobile-study=on] .view-tabs { min-height: 48px; padding-block: 2px; }
   :root[data-mobile-study=on] .focus-view { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 14px; padding: 4px 14px; }
   :root[data-mobile-study=on] .focus-heading { grid-column: 1; grid-row: 1; }

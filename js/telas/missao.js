@@ -113,7 +113,7 @@ SIAB.missaoTela = (() => {
       <dl class="resumo-missao">${linhas.map(([pergunta, resposta]) => `<div><dt>${SIAB.escape(pergunta)}</dt><dd>${SIAB.escape(resposta)}</dd></div>`).join('')}</dl>
       <div class="missao-acoes coluna">
         ${proximo ? `<a class="primary-btn" href="${rotaDoItem(proximo)}">Próximo: ${SIAB.escape(tituloDoItem(proximo))}</a>` : ''}
-        <a class="secondary-btn" href="#/aprender">Voltar às trilhas</a>
+        <a class="secondary-btn back-btn" href="#/aprender">Voltar às trilhas</a>
         <button type="button" class="quiet-btn" id="missao-refazer">Refazer esta missão</button>
       </div>
     </div>`;
@@ -140,7 +140,7 @@ SIAB.missaoTela = (() => {
       </section>
       ${controlesHTML(def)}
       <div class="missao-acoes">
-        <button type="button" class="quiet-btn" id="passo-voltar" ${a.indice === 0 ? 'disabled' : ''}>Voltar</button>
+        <button type="button" class="secondary-btn back-btn" id="passo-voltar" ${a.indice === 0 ? 'disabled' : ''}>Voltar</button>
         <button type="button" class="primary-btn" id="passo-avancar">${rotuloBotao(p)}</button>
       </div>
       ${p.tipo === 'agir' && p.demo ? '<button type="button" class="quiet-btn" id="passo-demo">Mostrar como (demonstração)</button>' : ''}

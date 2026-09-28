@@ -9,7 +9,7 @@ SIAB.cabecalhoJogo = (id, subtitulo) => {
   const d = SIAB.desafios[id];
   const registro = SIAB.progresso.desafio(id);
   return `<header class="jogo-cabecalho">
-    <a class="quiet-btn voltar" href="#/desafios">← Desafios</a>
+    <a class="secondary-btn back-btn voltar" href="#/desafios">← Desafios</a>
     <p class="eyebrow">DESAFIO · ${SIAB.escape(d.conteudo.toUpperCase())}</p>
     <h1 data-foco tabindex="-1">${SIAB.escape(d.titulo)}</h1>
     <p>${SIAB.escape(subtitulo || d.resumo)}</p>

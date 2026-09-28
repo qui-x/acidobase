@@ -2,6 +2,7 @@
 /* Inicialização: liga os módulos, os diálogos e o roteador. */
 (() => {
   const $ = SIAB.$;
+  SIABCompat.prepararDialogos();
 
   // Fechar diálogos pelo botão × e botões com data-close.
   document.addEventListener('click', evento => {

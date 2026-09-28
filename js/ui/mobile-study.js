@@ -94,7 +94,7 @@
       if (S.state.view === 'overview') $('focus-tab').click();
       area = 'analise';
     } else { area = valor; $(valor === 'tubos' ? 'overview-tab' : 'focus-tab').click(); }
-    atualizar(); window.scrollTo({ top: 0, behavior: 'instant' });
+    atualizar(); window.scrollTo(0, 0);
   }
   analise.addEventListener('click',() => mostrar('analise'));
   escala.addEventListener('click',() => {

@@ -1,3 +1,15 @@
+## Atualização 0.8.2 — botões, Safari e Android
+
+Os botões de voltar receberam estilo consistente. A abertura ganhou alternativas
+para APIs ausentes em navegadores antigos e uma mensagem de recuperação em caso
+de erro. Menus e seletores também funcionam sem o elemento dialog nativo.
+O cache agora separa publicações por endereço; o manual explica a instalação no
+iPhone/iPad e o acesso pelo link HTTPS.
+
+Consulte [README.md](README.md) para publicação e uso e
+[COMPATIBILIDADE.md](COMPATIBILIDADE.md) para os testes e seus limites.
+Publique também a pasta `vendor/`; os arquivos de compatibilidade são locais.
+
 ## Atualização 0.8.1 — manual coerente para desktop e mobile
 
 Abra `index.html` e entre em **Manual → Onde fica cada parte**. A nova seção
@@ -46,24 +58,28 @@ como aplicativo.
 
 | Forma | Como | Instala como app? |
 | --- | --- | --- |
-| Arquivo | Abra `index.html` no navegador | Não, mas funciona igual |
+| Arquivo no computador | Abra `index.html` em um navegador compatível | Não |
 | Servidor local | `npm start` e acesse http://localhost:8080 | Sim |
 | Publicado | Publique a pasta em um endereço https (por exemplo, GitHub Pages) | Sim |
 | Arquivo único | `npm run build` gera um HTML só | Não |
 
-**Para instalar:** abra pelo endereço http(s) e use **Instalar app** (no topo,
-no computador, ou em Menu ☰ → Aplicativo), ou o menu do navegador ("Instalar aplicativo" / "Adicionar à tela de
-início"). Depois da primeira visita, o SIAB abre sem internet. Quando houver
-versão nova, ela é baixada sozinha e aparece o aviso "Nova versão do SIAB
-instalada · Recarregar".
+**Para instalar:** abra o site por HTTPS (ou localhost no desenvolvimento).
+No Android/desktop, use **Instalar app** quando disponível ou o menu do navegador.
+No Safari do iPhone/iPad, use **Compartilhar → Adicionar à Tela de Início**.
+No celular, prefira o link publicado: a prévia de um HTML em Arquivos ou
+mensageiros pode não executar os botões.
 
-**Se aparecer erro depois de trocar a versão** (por exemplo, `Cannot set
-properties of undefined`), o navegador está usando arquivos antigos guardados
-no cache. Recarregue com **Ctrl + Shift + R** (no Mac, Cmd + Shift + R). Se
-continuar, feche todas as abas do SIAB e abra de novo, ou apague os dados do
-site (F12 → Application → Storage → Clear site data). Desde a versão 0.3.1,
-cada arquivo é pedido com a versão no endereço (`app.js?v=0.7.1`), o que evita
-essa mistura.
+O funcionamento offline depende do cache completo e preservado pelo navegador.
+Abra primeiro com internet e confira o acesso sem conexão antes da aula.
+Quando aparecer “Nova versão do SIAB instalada · Recarregar”, conclua ou exporte
+o experimento antes de recarregar, pois a bancada fica em memória.
+
+**Se a página aparecer, mas os botões falharem:** recarregue com conexão e abra
+no navegador completo. Confira a versão publicada e a versão do sistema/navegador.
+Uma falha pode vir de recursos ausentes, arquivos não publicados ou cache antigo;
+não atribua todo erro ao cache. Se persistir, registre URL, aparelho, versões e
+botão afetado. Antes de apagar dados do site, exporte o caderno e o progresso que
+quiser preservar.
 
 ## O que há na versão 0.7: muito mais substâncias
 

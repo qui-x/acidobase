@@ -229,7 +229,7 @@ SIAB.manualTela = (() => {
       <div class="manual-acoes-secao">
         ${s.alvo ? `<button type="button" class="secondary-btn" data-mostrar="${s.id}">Mostrar na bancada</button>` : ''}
         ${s.link ? `<a class="secondary-btn" href="${s.link[0]}">${esc(s.link[1])}</a>` : ''}
-        <a class="quiet-btn" href="#/manual">Voltar ao índice</a>
+        <a class="secondary-btn back-btn" href="#/manual">Voltar ao índice</a>
       </div>
     </section>`).join('');
   }

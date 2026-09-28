@@ -10,6 +10,7 @@ SIAB.initSelects = () => {
   let origin = null, visible = [], active = 0;
 
   SIAB.refreshSelects = () => {
+    SIABCompat.atualizarOpcoes();
     records.forEach(({ select, button }) => {
       const label = select.selectedOptions[0]?.textContent || 'Escolher';
       button.querySelector('span').textContent = label;

@@ -341,16 +341,22 @@ SIAB.manual = [
   },
   {
     id: 'app', titulo: 'Instalar e usar sem internet',
-    resumo: 'Aplicativo no computador ou no celular.',
+    resumo: 'Acesso no Android, iPhone, iPad e computador.',
     blocos: [
+      { p: 'No celular ou tablet, abra o endereço HTTPS publicado no navegador. A prévia de um HTML no app Arquivos, no e-mail ou em aplicativos de mensagens pode mostrar a página sem executar os botões. Se estiver em uma prévia, use “Abrir no navegador”.' },
       { lista: [
-        'Aberto como arquivo (index.html): tudo funciona, mas não dá para instalar.',
-        'Aberto por um endereço http(s), como o GitHub Pages ou “npm start”: aparece “Instalar app” no cabeçalho (computador) e em Menu ☰ → Aplicativo (ou use o menu do navegador, “Instalar aplicativo” / “Adicionar à tela de início”).',
-        'Ao abrir: a animação de abertura mostra tubos de ensaio mudando de composto e de cor (as cores vêm do próprio simulador). Toque para pular; dá para desligar em Acessibilidade.',
-        'Sem internet: depois da primeira visita pelo endereço, o SIAB abre mesmo offline.',
-        'Atualização: quando há versão nova, ela é baixada sozinha e aparece “Nova versão do SIAB instalada · Recarregar”.'
+        'iPhone e iPad: no Safari, abra Compartilhar → Adicionar à Tela de Início. Ative “Abrir como App da Web” se essa opção aparecer. Menu ☰ → Aplicativo → Instalar app também leva a estas instruções quando não existe instalação automática.',
+        'Android: use Instalar app quando o navegador oferecer o botão, ou o menu do navegador → Instalar aplicativo / Adicionar à tela inicial. As opções variam conforme o navegador e sua versão.',
+        'Computador: o HTML único pode ser aberto em um navegador. Para instalar e receber atualizações, use o site publicado por HTTPS. No desenvolvimento, localhost também permite o PWA.',
+        'Sem internet: abra primeiro com conexão e espere o carregamento completo. Teste novamente sem conexão antes da aula. O navegador precisa permitir e manter o cache; limpeza de dados, navegação privada e falta de espaço podem impedir ou remover o uso offline.',
+        'Atualização: quando uma versão nova assume o controle, aparece “Nova versão do SIAB instalada · Recarregar”. Termine ou exporte seu experimento antes de recarregar, pois a bancada fica em memória durante a sessão.'
       ] },
-      { dica: 'Se aparecer um erro depois de trocar a versão, recarregue com Ctrl + Shift + R (no Mac, Cmd + Shift + R). Se continuar, feche todas as abas do SIAB e abra de novo.' }
+      { p: 'Prefira versões atualizadas. A faixa de compatibilidade do projeto começa em Safari 14.1 / iOS e iPadOS 14.5 e navegadores Chromium 90 no Android. Há alternativas para funções ausentes em versões antigas, mas esse limite de projeto não significa que cada aparelho ou versão tenha sido certificado.' },
+      { faq: [
+        ['A página apareceu, mas os botões não respondem. O que fazer?', 'Abra o link publicado diretamente no navegador, com internet, e recarregue. Confira se o sistema e o navegador estão atualizados. Se persistir, informe o endereço, o aparelho, as versões do sistema e do navegador e qual botão falhou.'],
+        ['Preciso apagar todos os dados para atualizar?', 'Não. Primeiro recarregue pelo aviso de atualização e feche as abas antigas. Apagar dados do site também pode apagar preferências, progresso e caderno; exporte seus registros antes de qualquer limpeza.'],
+        ['Som, vibração, impressão e download são iguais em todos os aparelhos?', 'Não. Esses recursos dependem do navegador e do sistema. O simulador continua utilizável sem som ou vibração. Ao exportar ou imprimir no celular, conclua a operação na janela de compartilhamento, salvamento ou impressão oferecida pelo aparelho.']
+      ] }
     ]
   },
   {

@@ -249,7 +249,7 @@ SIAB.desafios.trunfo = (() => {
           <button type="button" class="cartao" data-acao="memoria"><strong>Memória</strong><span>Ligue 6 fórmulas aos seus nomes.</span></button>
         </div></section>`;
     } else {
-      const trocar = jogo.fim ? '' : '<button type="button" class="quiet-btn trocar-modo" data-acao="menu">← Trocar de modo</button>';
+      const trocar = jogo.fim ? '' : '<button type="button" class="secondary-btn back-btn trocar-modo" data-acao="menu">← Trocar de modo</button>';
       const miolo = jogo.tipo === 'duelo' ? renderDuelo() : jogo.tipo === 'classificar' ? renderClassificar() : renderMemoria();
       corpo = `<section class="jogo-painel ${jogo.tipo}">${trocar}${miolo}</section>`;
     }
