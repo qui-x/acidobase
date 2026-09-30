@@ -1,0 +1,362 @@
+{
+  "date": "2026-09-30T12:20:51.421Z",
+  "engines": [
+    {
+      "engine": "chromium",
+      "cases": [
+        {
+          "name": "140 soluções: mesma ciência nos três motores",
+          "status": "OK"
+        },
+        {
+          "name": "Todas as missões e temas abrem",
+          "status": "OK"
+        },
+        {
+          "name": "Conclusão sem pontuação e sem duplicar o Caderno",
+          "status": "OK"
+        },
+        {
+          "name": "Vínculo preserva conteúdo já adicionado",
+          "status": "OK"
+        },
+        {
+          "name": "Permissões de instrumentos, módulo e retorno da bancada livre",
+          "status": "OK"
+        },
+        {
+          "name": "Token alterado rejeitado",
+          "status": "OK"
+        },
+        {
+          "name": "Caderno: anotação e exportação CSV",
+          "status": "OK"
+        },
+        {
+          "name": "Sem armazenamento: aviso e sessão utilizável",
+          "status": "OK"
+        },
+        {
+          "name": "Teclado: abas e fechamento de diálogo",
+          "status": "OK"
+        },
+        {
+          "name": "Carga: dez recipientes e 500 gotas em lote",
+          "status": "OK"
+        },
+        {
+          "name": "Acessibilidade automática: WCAG 2 A/AA",
+          "status": "OK"
+        },
+        {
+          "name": "Sem exceções JavaScript",
+          "status": "OK"
+        }
+      ],
+      "errors": [],
+      "chemicalSolutions": 140,
+      "content": {
+        "missoes": [
+          "repolho-roxo",
+          "tres-indicadores",
+          "cor-que-engana",
+          "ionizacao",
+          "forte-ou-concentrado",
+          "sais-cores",
+          "chuva-acida",
+          "diluicao",
+          "curva-titulacao",
+          "estomago",
+          "grau-ionizacao",
+          "hidrolise",
+          "tampao",
+          "temperatura",
+          "amostra-misteriosa",
+          "missao-titulacao",
+          "regua-ph",
+          "construtor-neutralizacao",
+          "comparacao-quimica"
+        ],
+        "temas": [
+          "acidos-bases",
+          "forca",
+          "concentracao",
+          "ph-poh",
+          "indicadores",
+          "neutralizacao",
+          "sais",
+          "hidrolise",
+          "titulacao",
+          "tampoes",
+          "poliproticos",
+          "especies",
+          "condutividade",
+          "aplicacoes"
+        ]
+      },
+      "performance": {
+        "ms": 44.59999999997672,
+        "drops": 500,
+        "nodesBefore": 1325,
+        "nodesAfter": 1325,
+        "pH": 11.63202321494186
+      },
+      "a11y": [
+        {
+          "route": "inicio",
+          "violations": []
+        },
+        {
+          "route": "roteiros",
+          "violations": []
+        },
+        {
+          "route": "professor",
+          "violations": []
+        },
+        {
+          "route": "laboratorio",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "cases": [
+        {
+          "name": "140 soluções: mesma ciência nos três motores",
+          "status": "OK"
+        },
+        {
+          "name": "Todas as missões e temas abrem",
+          "status": "OK"
+        },
+        {
+          "name": "Conclusão sem pontuação e sem duplicar o Caderno",
+          "status": "OK"
+        },
+        {
+          "name": "Vínculo preserva conteúdo já adicionado",
+          "status": "OK"
+        },
+        {
+          "name": "Permissões de instrumentos, módulo e retorno da bancada livre",
+          "status": "OK"
+        },
+        {
+          "name": "Token alterado rejeitado",
+          "status": "OK"
+        },
+        {
+          "name": "Caderno: anotação e exportação CSV",
+          "status": "OK"
+        },
+        {
+          "name": "Sem armazenamento: aviso e sessão utilizável",
+          "status": "OK"
+        },
+        {
+          "name": "Teclado: abas e fechamento de diálogo",
+          "status": "OK"
+        },
+        {
+          "name": "Carga: dez recipientes e 500 gotas em lote",
+          "status": "OK"
+        },
+        {
+          "name": "Acessibilidade automática: WCAG 2 A/AA",
+          "status": "OK"
+        },
+        {
+          "name": "Sem exceções JavaScript",
+          "status": "OK"
+        }
+      ],
+      "errors": [],
+      "chemicalSolutions": 140,
+      "content": {
+        "missoes": [
+          "repolho-roxo",
+          "tres-indicadores",
+          "cor-que-engana",
+          "ionizacao",
+          "forte-ou-concentrado",
+          "sais-cores",
+          "chuva-acida",
+          "diluicao",
+          "curva-titulacao",
+          "estomago",
+          "grau-ionizacao",
+          "hidrolise",
+          "tampao",
+          "temperatura",
+          "amostra-misteriosa",
+          "missao-titulacao",
+          "regua-ph",
+          "construtor-neutralizacao",
+          "comparacao-quimica"
+        ],
+        "temas": [
+          "acidos-bases",
+          "forca",
+          "concentracao",
+          "ph-poh",
+          "indicadores",
+          "neutralizacao",
+          "sais",
+          "hidrolise",
+          "titulacao",
+          "tampoes",
+          "poliproticos",
+          "especies",
+          "condutividade",
+          "aplicacoes"
+        ]
+      },
+      "performance": {
+        "ms": 62,
+        "drops": 500,
+        "nodesBefore": 1325,
+        "nodesAfter": 1325,
+        "pH": 11.63202321494186
+      },
+      "a11y": [
+        {
+          "route": "inicio",
+          "violations": []
+        },
+        {
+          "route": "roteiros",
+          "violations": []
+        },
+        {
+          "route": "professor",
+          "violations": []
+        },
+        {
+          "route": "laboratorio",
+          "violations": []
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "cases": [
+        {
+          "name": "140 soluções: mesma ciência nos três motores",
+          "status": "OK"
+        },
+        {
+          "name": "Todas as missões e temas abrem",
+          "status": "OK"
+        },
+        {
+          "name": "Conclusão sem pontuação e sem duplicar o Caderno",
+          "status": "OK"
+        },
+        {
+          "name": "Vínculo preserva conteúdo já adicionado",
+          "status": "OK"
+        },
+        {
+          "name": "Permissões de instrumentos, módulo e retorno da bancada livre",
+          "status": "OK"
+        },
+        {
+          "name": "Token alterado rejeitado",
+          "status": "OK"
+        },
+        {
+          "name": "Caderno: anotação e exportação CSV",
+          "status": "OK"
+        },
+        {
+          "name": "Sem armazenamento: aviso e sessão utilizável",
+          "status": "OK"
+        },
+        {
+          "name": "Teclado: abas e fechamento de diálogo",
+          "status": "OK"
+        },
+        {
+          "name": "Carga: dez recipientes e 500 gotas em lote",
+          "status": "OK"
+        },
+        {
+          "name": "Acessibilidade automática: WCAG 2 A/AA",
+          "status": "OK"
+        },
+        {
+          "name": "Sem exceções JavaScript",
+          "status": "OK"
+        }
+      ],
+      "errors": [],
+      "chemicalSolutions": 140,
+      "content": {
+        "missoes": [
+          "repolho-roxo",
+          "tres-indicadores",
+          "cor-que-engana",
+          "ionizacao",
+          "forte-ou-concentrado",
+          "sais-cores",
+          "chuva-acida",
+          "diluicao",
+          "curva-titulacao",
+          "estomago",
+          "grau-ionizacao",
+          "hidrolise",
+          "tampao",
+          "temperatura",
+          "amostra-misteriosa",
+          "missao-titulacao",
+          "regua-ph",
+          "construtor-neutralizacao",
+          "comparacao-quimica"
+        ],
+        "temas": [
+          "acidos-bases",
+          "forca",
+          "concentracao",
+          "ph-poh",
+          "indicadores",
+          "neutralizacao",
+          "sais",
+          "hidrolise",
+          "titulacao",
+          "tampoes",
+          "poliproticos",
+          "especies",
+          "condutividade",
+          "aplicacoes"
+        ]
+      },
+      "performance": {
+        "ms": 72,
+        "drops": 500,
+        "nodesBefore": 1325,
+        "nodesAfter": 1325,
+        "pH": 11.63202321494186
+      },
+      "a11y": [
+        {
+          "route": "inicio",
+          "violations": []
+        },
+        {
+          "route": "roteiros",
+          "violations": []
+        },
+        {
+          "route": "professor",
+          "violations": []
+        },
+        {
+          "route": "laboratorio",
+          "violations": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,38 +1,48 @@
-'use strict';
-/* Trilhas de aprendizagem: missões e desafios em sequência. */
-SIAB.itemDaTrilha = item => {
-  const p = SIAB.progresso;
-  if (item.tipo === 'missao') {
-    const m = SIAB.missoes.find(x => x.id === item.id);
-    const feita = p.missao(item.id)?.concluida;
-    return { rota: `#/missao/${item.id}`, titulo: m.titulo, resumo: m.resumo, tipo: 'Missão', feito: feita, status: feita ? 'Concluída ✓' : `${m.passos.length} passos` };
-  }
-  const d = SIAB.desafios[item.id];
-  const registro = p.desafio(item.id);
-  return { rota: `#/desafio/${item.id}`, titulo: d.titulo, resumo: d.resumo, tipo: 'Desafio', feito: Boolean(registro), status: registro ? `Recorde: ${registro.recorde} pontos` : 'Ainda não jogado' };
-};
-
+"use strict";
 SIAB.telas.aprender = {
-  completo: true,
-  secao: 'aprender',
-  titulo: () => 'Aprender',
+  secao: "aprender",
+  titulo: () => "Temas",
   entrar() {
-    SIAB.$('trilhas').innerHTML = SIAB.trilhas.map(trilha => {
-      const itens = trilha.itens.map(SIAB.itemDaTrilha);
-      const feitos = itens.filter(x => x.feito).length;
-      return `<section class="trilha" aria-labelledby="trilha-${trilha.id}">
-        <header class="trilha-cabecalho">
-          <p class="eyebrow">TRILHA ${trilha.id} · ${SIAB.escape(trilha.serie.toUpperCase())}</p>
-          <h2 id="trilha-${trilha.id}">${SIAB.escape(trilha.titulo)}</h2>
-          <p>${SIAB.escape(trilha.descricao)}</p>
-          <div class="barra" role="progressbar" aria-label="Progresso da trilha ${trilha.id}" aria-valuemin="0" aria-valuemax="${itens.length}" aria-valuenow="${feitos}" aria-valuetext="${feitos} de ${itens.length}"><span style="width:${(feitos / itens.length) * 100}%"></span></div>
-        </header>
-        <ol class="trilha-itens">${itens.map((x, i) => `<li><a class="item-trilha ${x.feito ? 'feito' : ''}" href="${x.rota}">
-          <span class="item-numero" aria-hidden="true">${x.feito ? '✓' : i + 1}</span>
-          <span class="item-texto"><span class="item-tipo">${x.tipo}</span><strong>${SIAB.escape(x.titulo)}</strong><span>${SIAB.escape(x.resumo)}</span></span>
-          <span class="item-status">${SIAB.escape(x.status)}</span>
-        </a></li>`).join('')}</ol>
-      </section>`;
-    }).join('');
-  }
+    SIAB.$("temas-lista").innerHTML = SIAB.temas
+      .map(
+        (t) =>
+          `<a class="content-row" href="#/tema/${t.id}"><span><strong>${SIAB.escape(t.titulo)}</strong><small>${SIAB.escape(t.conceito)}</small></span><span>${SIAB.progresso.dados.temas[t.id]?.concluida ? "Concluído" : "Não realizado"}</span></a>`,
+      )
+      .join("");
+  },
+};
+SIAB.telas.tema = {
+  secao: "tema",
+  menu: "aprender",
+  titulo: (id) => SIAB.temas.find((t) => t.id === id)?.titulo || "Tema",
+  entrar(id) {
+    const t = SIAB.temas.find((t) => t.id === id);
+    if (!t) {
+      SIAB.notice("Tema não encontrado.");
+      SIAB.irPara("#/aprender");
+      return;
+    }
+    const missao =
+      SIAB.missoes.find((m) => m.id === t.missao) ||
+      SIAB.missoes.find((m) =>
+        m.bancada.tubos.some((x) => x.solution === t.solution),
+      );
+    const roteiro = SIAB.experimentos.find((r) =>
+      r.tubos.some((x) => x.solution === t.solution),
+    );
+    SIAB.$("tema-conteudo").innerHTML =
+      `<p class="eyebrow">APRENDER · TEMA</p><h1 data-foco tabindex="-1">${SIAB.escape(t.titulo)}</h1><p class="lead">${SIAB.escape(t.conceito)}</p><p>Investigue na bancada e use o VER para conectar observações, medidas e representações do modelo.</p><div class="actions"><button class="primary-btn" data-tema-bancada="${t.id}">Investigar na bancada</button>${missao ? `<a class="secondary-btn" href="#/missao/${missao.id}">Missão relacionada</a>` : ""}${roteiro ? `<a class="secondary-btn" href="#/roteiro/${roteiro.id}">Roteiro relacionado</a>` : ""}<button class="quiet-btn" data-tema-concluir="${t.id}">${SIAB.progresso.dados.temas[id]?.concluida ? "Concluído" : "Marcar como concluído"}</button></div>`;
+  },
+};
+SIAB.telas.missoes = {
+  secao: "missoes",
+  titulo: () => "Missões",
+  entrar() {
+    SIAB.$("missoes-lista").innerHTML = SIAB.missoes
+      .map(
+        (m) =>
+          `<a class="content-row" href="#/missao/${m.id}"><span><strong>${SIAB.escape(m.titulo)}</strong><small>${SIAB.escape(m.resumo)}</small></span><span>${SIAB.progresso.missao(m.id)?.concluida ? "Concluído" : "Não realizado"}</span></a>`,
+      )
+      .join("");
+  },
 };

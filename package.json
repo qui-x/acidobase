@@ -1,14 +1,22 @@
 {
   "name": "siab-acidobase",
-  "version": "0.8.2",
+  "version": "1.0.0-rc.1",
   "private": true,
-  "description": "SIAB — A química das cores: simulador de ácidos e bases para o ensino médio (missões, desafios, laboratório e PWA).",
+  "description": "SIAB — investigação em ácidos e bases: temas, missões, roteiros, relatórios e PWA.",
   "license": "GPL-3.0-only",
   "scripts": {
     "start": "python3 -m http.server 8080",
     "build": "python3 build_standalone.py",
+    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs",
+    "test:science": "node tests/ciencia.test.cjs",
+    "test:browser": "node tests/fluxos.test.cjs",
     "test:layout": "node tests/layout-bancada.test.cjs",
-    "test:selection": "node tests/selecao-relatorio.test.cjs",
-    "test:compatibility": "node tests/compatibilidade.test.cjs"
+    "test:regression": "node tests/regressao.test.cjs",
+    "test:environment": "node tests/ambiente.test.cjs",
+    "test:print": "node tests/impressao.test.cjs"
+  },
+  "devDependencies": {
+    "playwright": "1.56.1",
+    "@axe-core/playwright": "4.10.2"
   }
 }

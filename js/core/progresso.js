@@ -1,6 +1,5 @@
-'use strict';
-/* Progresso do estudante, guardado só neste navegador (sem conta e sem envio).
-   Missões concluídas, recordes dos desafios e o caderno de laboratório. */
+"use strict";
+/* Compatibilidade da tabela histórica. Persistência, migração e conclusão têm módulos próprios. */
 /* Tabela de gotas compacta (caderno, aba Histórico e folha impressa).
    Numa titulação longa, centenas de gotas seguidas dão quase a mesma leitura
    e a tabela vira uma lista enorme. Gotas SEGUIDAS com a MESMA COR e pH QUASE
@@ -12,98 +11,112 @@
    A gota 0 (antes de gotejar) fica sempre sozinha, e tabelas curtas (até 60
    linhas) não mudam. Com o pH oculto ("—"), agrupa só pela cor.
    Trabalha sobre as linhas em texto, então serve também para notas antigas. */
-SIAB.TABELA_COMPACTA = { limite: 60, tolerancia: .2, bloco: 50, blocoGrande: 100, muitasGotas: 1000 };
-SIAB.compactarTabela = (tabela, { limite = SIAB.TABELA_COMPACTA.limite } = {}) => {
+SIAB.TABELA_COMPACTA = {
+  limite: 60,
+  tolerancia: 0.2,
+  bloco: 50,
+  blocoGrande: 100,
+  muitasGotas: 1000,
+};
+SIAB.compactarTabela = (
+  tabela,
+  { limite = SIAB.TABELA_COMPACTA.limite } = {},
+) => {
   const { tolerancia, bloco, blocoGrande, muitasGotas } = SIAB.TABELA_COMPACTA;
-  if (!tabela?.linhas || tabela.compacta || tabela.linhas.length <= limite) return tabela;
+  if (!tabela?.linhas || tabela.compacta || tabela.linhas.length <= limite)
+    return tabela;
   // "2,31" → 2.31; "≈ 3,4" → 3.4; "—" → NaN.
-  const numero = texto => Number(String(texto).replace('≈', '').replace(/\./g, '').replace(',', '.').trim() || NaN);
+  const numero = (texto) =>
+    Number(
+      String(texto)
+        .replace("≈", "")
+        .replace(/\./g, "")
+        .replace(",", ".")
+        .trim() || NaN,
+    );
   const gotas = tabela.linhas.length - 1;
   const maximo = gotas > muitasGotas ? blocoGrande : bloco;
   const grupos = [];
   tabela.linhas.forEach((linha, i) => {
-    const grupo = grupos.at(-1), primeira = grupo?.[0];
-    const pH = numero(linha[2]), pH0 = primeira ? numero(primeira[2]) : NaN;
-    const mesmoPH = Number.isFinite(pH) ? Math.abs(pH - pH0) <= tolerancia + 1e-9 : !Number.isFinite(pH0);
-    if (i > 1 && grupo.length < maximo && linha[3] === primeira[3] && mesmoPH) grupo.push(linha);
+    const grupo = grupos.at(-1),
+      primeira = grupo?.[0];
+    const pH = numero(linha[2]),
+      pH0 = primeira ? numero(primeira[2]) : NaN;
+    const mesmoPH = Number.isFinite(pH)
+      ? Math.abs(pH - pH0) <= tolerancia + 1e-9
+      : !Number.isFinite(pH0);
+    if (i > 1 && grupo.length < maximo && linha[3] === primeira[3] && mesmoPH)
+      grupo.push(linha);
     else grupos.push([linha]);
   });
   const faixa = (a, b) => (a === b ? a : `${a}–${b}`);
   return {
     colunas: [...tabela.colunas],
-    linhas: grupos.map(g => (g.length === 1 ? [...g[0]] : [faixa(g[0][0], g.at(-1)[0]), faixa(g[0][1], g.at(-1)[1]), faixa(g[0][2], g.at(-1)[2]), g[0][3]])),
-    compacta: true, gotas, porLinha: maximo
+    linhas: grupos.map((g) =>
+      g.length === 1
+        ? [...g[0]]
+        : [
+            faixa(g[0][0], g.at(-1)[0]),
+            faixa(g[0][1], g.at(-1)[1]),
+            faixa(g[0][2], g.at(-1)[2]),
+            g[0][3],
+          ],
+    ),
+    compacta: true,
+    gotas,
+    porLinha: maximo,
   };
 };
 // Frase que explica a tabela compacta (mostrada junto dela).
-SIAB.notaCompacta = tabela => (tabela?.compacta
-  ? `${tabela.gotas} gotas em ${tabela.linhas.length} linhas: gotas seguidas com a mesma cor e pH quase igual (até ${tabela.porLinha}) estão juntas; perto do ponto final, cada gota tem sua linha.`
-  : '');
+SIAB.notaCompacta = (tabela) =>
+  tabela?.compacta
+    ? `${tabela.gotas} gotas em ${tabela.linhas.length} linhas: gotas seguidas com a mesma cor e pH quase igual (até ${tabela.porLinha}) estão juntas; perto do ponto final, cada gota tem sua linha.`
+    : "";
 
+// Fachada para os consumidores históricos; não mantém sistema de pontuação.
 SIAB.progresso = (() => {
-  const CHAVE = 'siab_progresso_v1';
-  const dados = Object.assign({ missoes: {}, desafios: {}, caderno: [], ultima: null }, SIAB.armazenamento.ler(CHAVE, {}));
-  const salvar = () => SIAB.armazenamento.gravar(CHAVE, dados);
-
-  // Até a versão 0.4, a tabela de gotas era guardada como um texto só
-  // ("0;0,00;2,57;rosa | 1;0,05;2,93;rosa | …"). Converte para tabela de verdade.
-  let convertidas = 0;
-  dados.caderno.forEach(nota => {
-    const i = (nota.linhas || []).findIndex(([campo, valor]) => campo === 'Tabela' && String(valor).includes(';'));
-    if (i < 0 || nota.tabela) return;
-    nota.tabela = {
-      colunas: ['Gota', 'Adicionado (mL)', 'pH', 'Cor'],
-      linhas: String(nota.linhas[i][1]).split(' | ').map(linha => linha.split(';'))
-    };
-    nota.linhas.splice(i, 1);
-    convertidas++;
-  });
-  // Até a versão 0.6.2, a tabela guardava todas as gotas, uma por linha: as
-  // longas viram tabela compacta (e o caderno ocupa menos espaço).
-  dados.caderno.forEach(nota => {
-    const compacta = SIAB.compactarTabela(nota.tabela);
-    if (compacta === nota.tabela) return;
-    nota.tabela = compacta;
-    convertidas++;
-  });
-  if (convertidas) salvar();
-
+  const dados = SIAB.migrarDados();
+  const salvar = () => SIAB.persistencia.salvar("siab_investigacao_v2", dados);
+  const id = () =>
+    globalThis.crypto?.randomUUID?.() ||
+    `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   return {
     dados,
     salvar,
-    missao: id => dados.missoes[id] || null,
-    concluirMissao(id, respostas) {
-      dados.missoes[id] = { concluida: true, data: new Date().toISOString(), respostas };
+    missao: (chave) => dados.missoes[chave] || null,
+    concluirMissao(chave, respostas) {
+      dados.missoes[chave] = {
+        concluida: true,
+        data: new Date().toISOString(),
+        respostas,
+      };
+      salvar();
+    },
+    concluirTema(chave) {
+      dados.temas[chave] = { concluida: true, data: new Date().toISOString() };
       salvar();
     },
     marcarUltima(rota, titulo) {
       dados.ultima = { rota, titulo };
       salvar();
     },
-    desafio: id => dados.desafios[id] || null,
-    // Registra uma partida e devolve true quando é um novo recorde.
-    registrarPartida(id, pontos) {
-      const anterior = dados.desafios[id] || { recorde: 0, vezes: 0 };
-      dados.desafios[id] = { recorde: Math.max(anterior.recorde, pontos), vezes: anterior.vezes + 1, ultima: pontos };
-      salvar();
-      return pontos > anterior.recorde;
-    },
-    // entrada: { tipo, titulo, linhas: [[rótulo, valor], ...], tabela?: { colunas, linhas } }.
-    // Devolve o id da nota.
     anotar(entrada) {
-      const id = `${Date.now()}-${Math.round(Math.random() * 1e6)}`;
-      dados.caderno.unshift({ id, data: new Date().toISOString(), ...entrada });
-      if (dados.caderno.length > 300) dados.caderno.length = 300;
+      const chave = id();
+      dados.caderno.unshift({
+        ...entrada,
+        id: chave,
+        data: new Date().toISOString(),
+      });
       salvar();
-      return id;
+      return chave;
     },
-    atualizarNota(id, campos) {
-      const nota = dados.caderno.find(x => x.id === id);
-      if (nota) Object.assign(nota, campos);
+    atualizarNota(chave, campos) {
+      const n = dados.caderno.find((n) => n.id === chave);
+      if (n) Object.assign(n, campos);
       salvar();
     },
-    removerNota(id) {
-      dados.caderno = dados.caderno.filter(nota => nota.id !== id);
+    removerNota(chave) {
+      dados.caderno = dados.caderno.filter((n) => n.id !== chave);
       salvar();
     },
     limparCaderno() {
@@ -112,10 +125,10 @@ SIAB.progresso = (() => {
     },
     apagarTudo() {
       dados.missoes = {};
-      dados.desafios = {};
+      dados.temas = {};
       dados.caderno = [];
       dados.ultima = null;
       salvar();
-    }
+    },
   };
 })();

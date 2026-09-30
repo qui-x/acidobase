@@ -230,10 +230,6 @@ td { font-family: Consolas, monospace; }
 /* O botão da prateleira só existe no celular, e só nas telas com bancada. */
 #prepare-btn { display: none; }
 .bottom-nav { display: none; }
-/* Modo bancada: esconde o que só existe no modo completo (missões, desafios, professor). */
-:root[data-modo=bancada] [data-completo] { display: none !important; }
-:root[data-modo=completo] [data-so-bancada] { display: none !important; }
-
 /* 4b. MENU LATERAL (GAVETA) E ACESSIBILIDADE -------------------------- */
 dialog.drawer {
   position: fixed; top: 0; right: auto; bottom: 0; left: 0; inset: 0 auto 0 0; margin: 0; padding: 0; width: min(360px, 88vw); max-width: 360px;
@@ -1037,91 +1033,6 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .missao-acoes.coluna { flex-direction: column; align-items: stretch; }
 .missao-card #passo-demo { align-self: flex-start; }
 .missao-card.concluida h2 { color: var(--ok); }
-
-/* 9. DESAFIOS --------------------------------------------------------- */
-.tela-jogo { max-width: 980px; }
-.jogo-cabecalho { margin-bottom: 16px; }
-.jogo-cabecalho .voltar { margin-bottom: 8px; }
-.jogo-painel .trocar-modo { margin-bottom: 12px; }
-.jogo-cabecalho h1 { font-size: clamp(1.4rem, 4vw, 1.9rem); margin: 4px 0 6px; }
-.jogo-cabecalho p:not(.eyebrow) { color: var(--secondary); }
-.jogo-cabecalho .eyebrow { color: var(--accent); }
-.recorde { font-size: .8rem; margin-top: 6px; }
-.jogo-painel { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px; }
-.jogo-painel > h2, .jogo-painel h2 { margin-bottom: 10px; }
-.jogo-painel h3 { font-size: .85rem; color: var(--accent); margin: 14px 0 8px; }
-.jogo-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
-.placar { font-size: .85rem; color: var(--secondary); margin-bottom: 10px; }
-
-.detetive-grade { display: grid; grid-template-columns: minmax(120px, 180px) 1fr; gap: 20px; }
-.detetive-tubo { text-align: center; }
-.detetive-tubo .tube-svg { max-height: 260px; }
-.detetive-botoes, .atributos { display: flex; flex-wrap: wrap; gap: 8px; }
-.detetive-botoes .secondary-btn, .atributos .secondary-btn { font-size: .8rem; min-width: 56px; }
-.detetive-resultados { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
-.detetive-resultados li { display: flex; gap: 10px; align-items: center; }
-.detetive-resultados small { display: block; color: var(--secondary); font-size: .75rem; }
-.detetive-regua { width: 100%; height: auto; margin-top: 12px; }
-.faixa-fundo { fill: var(--panel2); stroke: var(--border); }
-.faixa-possivel { fill: var(--accent); opacity: .75; }
-.faixa-teste { fill: var(--secondary); opacity: .5; }
-.faixa-rotulo { fill: var(--muted); font: 9px 'Segoe UI', system-ui, sans-serif; }
-.faixa-texto { font-size: .9rem; margin-top: 6px; }
-.palpite output { font-family: Consolas, monospace; color: var(--accent); font-weight: 700; font-size: 1rem; }
-
-.titulacao-bancada { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 20px; align-items: center; }
-.titulacao-tubo .tube-svg { max-height: 300px; }
-.titulacao-leitura { margin-bottom: 10px; }
-.titulacao-bancada .dose-actions { grid-template-columns: 1fr; }
-
-.carta {
-  width: min(250px, 100%); border-radius: 14px; border: 1px solid var(--border); background: var(--bg); padding: 14px;
-  display: flex; flex-direction: column; gap: 4px; box-shadow: 0 8px 24px #0004;
-}
-.carta.acido { border-top: 6px solid #f87171; }
-.carta.base { border-top: 6px solid #60a5fa; }
-.carta.neutra { border-top: 6px solid var(--accent); text-align: center; align-items: center; justify-content: center; min-height: 140px; }
-.carta.oculta { display: grid; place-items: center; min-height: 260px; background: repeating-linear-gradient(45deg, var(--panel2), var(--panel2) 10px, var(--panel) 10px, var(--panel) 20px); font-size: 3rem; color: var(--muted); }
-.carta-funcao { font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
-.carta-formula { font-size: 1.8rem; font-weight: 700; font-family: 'Cambria Math', Georgia, serif; }
-.carta-nome { font-size: .85rem; color: var(--secondary); }
-.carta dl { margin: 8px 0 0; display: grid; gap: 3px; }
-.carta dl > div { display: flex; justify-content: space-between; gap: 8px; font-size: .78rem; padding: 3px 6px; border-radius: 4px; }
-.carta dl > div.destaque { background: var(--panel2); outline: 1px solid var(--accent); }
-.carta dt { color: var(--muted); }
-.carta dd { margin: 0; font-weight: 600; }
-.carta-uso { font-size: .7rem; color: var(--muted); margin-top: 6px; }
-.duelo-mesa, .construtor-cartas { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin: 12px 0; }
-.versus { font-size: 1.6rem; color: var(--muted); }
-.classificar-mesa { margin-bottom: 12px; }
-.memoria-grade { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
-.peca { min-height: 76px; border-radius: 10px; border: 1px solid var(--border); background: repeating-linear-gradient(45deg, var(--panel2), var(--panel2) 8px, var(--panel) 8px, var(--panel) 16px); font-size: .85rem; font-weight: 600; padding: 6px; overflow-wrap: anywhere; }
-.peca.aberta { background: var(--bg); border-color: var(--accent); }
-.peca.achada { border-color: var(--ok); color: var(--ok); }
-
-.regua-lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
-.regua-lista output { font-family: Consolas, monospace; color: var(--accent); font-weight: 700; }
-.regua-jogo { width: 100%; height: auto; margin: 6px 0 12px; }
-.regua-real { fill: var(--text); }
-.regua-palpite { fill: var(--bg); stroke: var(--accent); stroke-width: 2; }
-.regua-erro { stroke: var(--accent); stroke-width: 2; opacity: .5; }
-.regua-num { font: 700 10px 'Segoe UI', system-ui, sans-serif; fill: var(--accent); }
-/* SVGs dos desafios não crescem demais em telas largas (textos legíveis). */
-.jogo-painel .grafico-svg { max-width: 620px; }
-.detetive-regua { max-width: 560px; }
-.regua-jogo { max-width: 640px; }
-.jogo-painel td:first-child { font-family: inherit; }
-.comparacao { margin-top: 18px; border-top: 1px solid var(--border); padding-top: 14px; }
-.comparacao-resultado { margin: 12px 0 8px; }
-.potencias { display: flex; flex-wrap: wrap; gap: 4px; }
-.potencias span { padding: 4px 8px; border-radius: 4px; background: var(--accent); color: var(--bg); font-weight: 700; font-size: .78rem; }
-.potencias .parcial { background: var(--panel2); color: var(--accent); border: 1px solid var(--accent); }
-
-.coeficientes { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 1.05rem; font-family: 'Cambria Math', Georgia, serif; }
-.coeficientes input { width: 3.4rem; text-align: center; font-size: 1rem; }
-.equacao-final { margin-top: 12px; padding: 14px; border: 1px solid var(--ok); border-radius: 10px; background: var(--bg); }
-.equacao-final .eq-formula { font-size: 1.2rem; }
-.modo-construtor .secondary-btn { flex: 1; }
 
 /* 10. DIÁLOGOS -------------------------------------------------------- */
 dialog {

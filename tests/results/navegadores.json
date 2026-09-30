@@ -1,0 +1,220 @@
+{
+  "date": "2026-09-30T12:19:03.198Z",
+  "platform": "linux",
+  "version": "1.0.0-rc.1",
+  "engines": [
+    {
+      "engine": "chromium",
+      "version": "141.0.7390.37",
+      "cases": [
+        {
+          "name": "Inicialização e navegação pública",
+          "status": "OK"
+        },
+        {
+          "name": "Catálogo completo e roteiros montáveis",
+          "status": "OK"
+        },
+        {
+          "name": "Medição explícita, fita, estabilização e leitura anterior",
+          "status": "OK"
+        },
+        {
+          "name": "VER: todas as representações e temperatura",
+          "status": "OK"
+        },
+        {
+          "name": "Prever e gotejar: registro voluntário",
+          "status": "OK"
+        },
+        {
+          "name": "Seleção, comparação, vínculo e mistura conservativa",
+          "status": "OK"
+        },
+        {
+          "name": "Mistura excedente não altera as origens",
+          "status": "OK"
+        },
+        {
+          "name": "Roteiro, relatório editável, Caderno e impressão",
+          "status": "OK"
+        },
+        {
+          "name": "Professor: criar, duplicar e abrir link opaco",
+          "status": "OK"
+        },
+        {
+          "name": "Atividade restrita: URL, atualização, outra aba e encerramento",
+          "status": "OK"
+        },
+        {
+          "name": "Links inválidos e rotas antigas",
+          "status": "OK"
+        },
+        {
+          "name": "Persistência da bancada e relatório após recarga",
+          "status": "OK"
+        },
+        {
+          "name": "Responsividade 320 a 2560 px e campos de texto",
+          "status": "OK"
+        },
+        {
+          "name": "Offline com cache instalado",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone file://",
+          "status": "OK"
+        },
+        {
+          "name": "Sem erros de execução",
+          "status": "OK"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "engine": "firefox",
+      "version": "142.0.1",
+      "cases": [
+        {
+          "name": "Inicialização e navegação pública",
+          "status": "OK"
+        },
+        {
+          "name": "Catálogo completo e roteiros montáveis",
+          "status": "OK"
+        },
+        {
+          "name": "Medição explícita, fita, estabilização e leitura anterior",
+          "status": "OK"
+        },
+        {
+          "name": "VER: todas as representações e temperatura",
+          "status": "OK"
+        },
+        {
+          "name": "Prever e gotejar: registro voluntário",
+          "status": "OK"
+        },
+        {
+          "name": "Seleção, comparação, vínculo e mistura conservativa",
+          "status": "OK"
+        },
+        {
+          "name": "Mistura excedente não altera as origens",
+          "status": "OK"
+        },
+        {
+          "name": "Roteiro, relatório editável, Caderno e impressão",
+          "status": "OK"
+        },
+        {
+          "name": "Professor: criar, duplicar e abrir link opaco",
+          "status": "OK"
+        },
+        {
+          "name": "Atividade restrita: URL, atualização, outra aba e encerramento",
+          "status": "OK"
+        },
+        {
+          "name": "Links inválidos e rotas antigas",
+          "status": "OK"
+        },
+        {
+          "name": "Persistência da bancada e relatório após recarga",
+          "status": "OK"
+        },
+        {
+          "name": "Responsividade 320 a 2560 px e campos de texto",
+          "status": "OK"
+        },
+        {
+          "name": "Offline com cache instalado",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone file://",
+          "status": "OK"
+        },
+        {
+          "name": "Sem erros de execução",
+          "status": "OK"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "version": "26.0",
+      "cases": [
+        {
+          "name": "Inicialização e navegação pública",
+          "status": "OK"
+        },
+        {
+          "name": "Catálogo completo e roteiros montáveis",
+          "status": "OK"
+        },
+        {
+          "name": "Medição explícita, fita, estabilização e leitura anterior",
+          "status": "OK"
+        },
+        {
+          "name": "VER: todas as representações e temperatura",
+          "status": "OK"
+        },
+        {
+          "name": "Prever e gotejar: registro voluntário",
+          "status": "OK"
+        },
+        {
+          "name": "Seleção, comparação, vínculo e mistura conservativa",
+          "status": "OK"
+        },
+        {
+          "name": "Mistura excedente não altera as origens",
+          "status": "OK"
+        },
+        {
+          "name": "Roteiro, relatório editável, Caderno e impressão",
+          "status": "OK"
+        },
+        {
+          "name": "Professor: criar, duplicar e abrir link opaco",
+          "status": "OK"
+        },
+        {
+          "name": "Atividade restrita: URL, atualização, outra aba e encerramento",
+          "status": "OK"
+        },
+        {
+          "name": "Links inválidos e rotas antigas",
+          "status": "OK"
+        },
+        {
+          "name": "Persistência da bancada e relatório após recarga",
+          "status": "OK"
+        },
+        {
+          "name": "Responsividade 320 a 2560 px e campos de texto",
+          "status": "OK"
+        },
+        {
+          "name": "Offline com cache instalado",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone file://",
+          "status": "OK"
+        },
+        {
+          "name": "Sem erros de execução",
+          "status": "OK"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

@@ -1,84 +1,114 @@
-'use strict';
+"use strict";
 /* Caderno de laboratório (M14): previsões, missões, leituras e desafios.
    Uma nota tem campos (linhas) e, nas leituras, a tabela de gotas. */
 
 // CSV do caderno: uma linha por campo. As linhas da tabela de gotas usam as
 // colunas próprias (gota, volume, pH, cor) para a planilha manter a tabela.
 SIAB.cadernoCSV = () => {
-  const linhas = ['data;tipo;titulo;campo;valor;gota;volume_adicionado_mL;pH;cor'];
-  SIAB.progresso.dados.caderno.forEach(nota => {
+  const linhas = [
+    "data;tipo;titulo;campo;valor;gota;volume_adicionado_mL;pH;cor",
+  ];
+  SIAB.progresso.dados.caderno.forEach((nota) => {
     const inicio = [SIAB.dataHora(new Date(nota.data)), nota.tipo, nota.titulo];
     (nota.linhas || []).forEach(([campo, valor]) => {
-      linhas.push([...inicio, campo, valor, '', '', '', ''].map(SIAB.csvCampo).join(';'));
+      linhas.push(
+        [...inicio, campo, valor, "", "", "", ""].map(SIAB.csvCampo).join(";"),
+      );
     });
-    (nota.tabela?.linhas || []).forEach(linha => {
-      linhas.push([...inicio, 'Tabela de gotas', '', ...linha].map(SIAB.csvCampo).join(';'));
+    (nota.tabela?.linhas || []).forEach((linha) => {
+      linhas.push(
+        [...inicio, "Tabela de gotas", "", ...linha]
+          .map(SIAB.csvCampo)
+          .join(";"),
+      );
     });
   });
-  return linhas.join('\n');
+  return linhas.join("\n");
 };
 
 // Tabela de gotas de uma nota, com rolagem própria (a página não rola de lado).
-SIAB.notaTabelaHTML = nota => {
+SIAB.notaTabelaHTML = (nota) => {
   const t = nota.tabela;
-  if (!t?.linhas?.length) return '';
+  if (!t?.linhas?.length) return "";
   const nome = `Tabela de gotas: ${nota.titulo}`;
   return `<div class="nota-tabela" role="region" tabindex="0" aria-label="${SIAB.escape(nome)}">
-    <table><caption>Tabela de gotas <span>${t.linhas.length} ${t.linhas.length === 1 ? 'linha' : 'linhas'}${t.compacta ? ` · ${t.gotas} gotas` : ''}</span></caption>
-      <thead><tr>${t.colunas.map(c => `<th scope="col">${SIAB.escape(c)}</th>`).join('')}</tr></thead>
-      <tbody>${t.linhas.map(l => `<tr>${l.map(v => `<td>${SIAB.escape(v)}</td>`).join('')}</tr>`).join('')}</tbody>
+    <table><caption>Tabela de gotas <span>${t.linhas.length} ${t.linhas.length === 1 ? "linha" : "linhas"}${t.compacta ? ` · ${t.gotas} gotas` : ""}</span></caption>
+      <thead><tr>${t.colunas.map((c) => `<th scope="col">${SIAB.escape(c)}</th>`).join("")}</tr></thead>
+      <tbody>${t.linhas.map((l) => `<tr>${l.map((v) => `<td>${SIAB.escape(v)}</td>`).join("")}</tr>`).join("")}</tbody>
     </table>
   </div>
-  ${t.compacta ? `<p class="nota-compacta">${SIAB.escape(SIAB.notaCompacta(t))}</p>` : ''}
+  ${t.compacta ? `<p class="nota-compacta">${SIAB.escape(SIAB.notaCompacta(t))}</p>` : ""}
   <button type="button" class="quiet-btn" data-baixar-tabela="${nota.id}">Baixar esta tabela (CSV)</button>`;
 };
 
+let filtroCaderno = "todos";
 SIAB.telas.caderno = {
-  secao: 'caderno',
-  titulo: () => 'Caderno',
+  secao: "caderno",
+  titulo: () => "Caderno",
   entrar() {
-    const notas = SIAB.progresso.dados.caderno;
-    const TIPOS = { previsao: 'Previsão', missao: 'Missão', leitura: 'Leitura', desafio: 'Desafio', descoberta: 'Descoberta' };
-    SIAB.$('caderno-csv').disabled = !notas.length;
-    SIAB.$('caderno-limpar').disabled = !notas.length;
-    SIAB.$('caderno-lista').innerHTML = notas.length
-      ? notas.map(nota => `<article class="nota" data-tipo="${nota.tipo}">
-          <header><span class="eyebrow">${TIPOS[nota.tipo] || 'Nota'} · ${SIAB.dataHora(new Date(nota.data))}</span><h2>${SIAB.escape(nota.titulo)}</h2></header>
-          <dl>${(nota.linhas || []).map(([campo, valor]) => `<div><dt>${SIAB.escape(campo)}</dt><dd>${SIAB.escape(valor)}</dd></div>`).join('')}</dl>
-          ${SIAB.notaTabelaHTML(nota)}
-          <button type="button" class="quiet-btn" data-apagar-nota="${nota.id}" aria-label="Apagar a nota ${SIAB.escape(nota.titulo)}">Apagar nota</button>
-        </article>`).join('')
-      : `<p class="vazio">O caderno está vazio. Na bancada, use “Prever e gotejar” ou, no painel VER → Histórico, “Registrar no caderno”${SIAB.MODO === 'completo' ? '. Missões e desafios também anotam aqui' : ''}.</p>`;
+    const all = SIAB.progresso.dados.caderno,
+      notas = all.filter(
+        (n) => filtroCaderno === "todos" || n.tipo === filtroCaderno,
+      ),
+      esc = SIAB.escape;
+    const tipos = {
+      experiencia: "Experiência",
+      missao: "Missão",
+      exploracao: "Exploração livre",
+      anotacao: "Anotação",
+    };
+    SIAB.$("caderno-lista").innerHTML = notas.length
+      ? notas
+          .map(
+            (n) =>
+              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="quiet-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
+          )
+          .join("")
+      : "<p>Nenhum registro neste filtro. Registre uma exploração na bancada ou escreva uma anotação.</p>";
   },
   ligar() {
-    const $ = SIAB.$;
-    $('caderno-csv').addEventListener('click', () => {
-      SIAB.baixarArquivo('siab-caderno.csv', SIAB.cadernoCSV());
-      SIAB.notice('Caderno baixado em CSV.');
-    });
-    $('caderno-imprimir').addEventListener('click', () => window.print());
-    $('caderno-limpar').addEventListener('click', () => {
-      SIAB.confirmar('Apagar caderno?', 'Todas as notas deste aparelho serão apagadas. Esta ação não pode ser desfeita.', () => {
-        SIAB.progresso.limparCaderno();
-        SIAB.telas.caderno.entrar();
-        SIAB.notice('Caderno apagado.');
-      }, 'Apagar caderno', 'danger');
-    });
-    $('caderno-lista').addEventListener('click', evento => {
-      const tabela = evento.target.closest('[data-baixar-tabela]');
-      if (tabela) {
-        const nota = SIAB.progresso.dados.caderno.find(x => x.id === tabela.dataset.baixarTabela);
-        const nome = SIAB.normalizar(nota.titulo).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || 'leitura';
-        SIAB.baixarArquivo(`siab-${nome}.csv`, SIAB.tabelaCSV(nota.tabela));
-        SIAB.notice('Tabela baixada em CSV.');
-        return;
-      }
-      const botao = evento.target.closest('[data-apagar-nota]');
-      if (!botao) return;
-      SIAB.progresso.removerNota(botao.dataset.apagarNota);
+    SIAB.$("caderno-filtro").onchange = (e) => {
+      filtroCaderno = e.target.value;
       SIAB.telas.caderno.entrar();
-      SIAB.announce('Nota apagada.');
-      $('caderno-titulo').focus();
-    });
-  }
+    };
+    SIAB.$("caderno-anotacao").onsubmit = (e) => {
+      e.preventDefault();
+      const f = new FormData(e.target);
+      SIAB.progresso.anotar({
+        tipo: "anotacao",
+        titulo: f.get("titulo"),
+        linhas: [["Anotação / hipótese / descoberta", f.get("texto")]],
+      });
+      e.target.reset();
+      SIAB.telas.caderno.entrar();
+    };
+    SIAB.$("caderno-csv").onclick = () =>
+      SIAB.baixarArquivo("SIAB-caderno.csv", SIAB.cadernoCSV());
+    SIAB.$("caderno-imprimir").onclick = () => window.print();
+    SIAB.$("caderno-limpar").onclick = () =>
+      SIAB.confirmar(
+        "Apagar Caderno?",
+        "Exporte o Caderno para preservar uma cópia antes de apagar.",
+        () => {
+          SIAB.progresso.limparCaderno();
+          SIAB.telas.caderno.entrar();
+        },
+        "Apagar",
+      );
+    SIAB.$("caderno-lista").onclick = (e) => {
+      const b = e.target.closest("[data-apagar-nota]");
+      if (b) {
+        SIAB.progresso.removerNota(b.dataset.apagarNota);
+        SIAB.telas.caderno.entrar();
+      }
+      const t = e.target.closest("[data-baixar-tabela]");
+      if (t) {
+        const n = SIAB.progresso.dados.caderno.find(
+          (x) => x.id === t.dataset.baixarTabela,
+        );
+        if (n?.tabela)
+          SIAB.baixarArquivo("SIAB-tabela.csv", SIAB.tabelaCSV(n.tabela));
+      }
+    };
+  },
 };

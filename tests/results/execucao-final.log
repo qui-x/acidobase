@@ -1,0 +1,28 @@
+OK HCl 0,1 M
+OK NaOH 0,1 M
+OK Acético: raiz analítica
+OK NH3: raiz analítica
+OK Tampão acetato
+OK NH4Cl
+OK CH3COONa
+OK Bicarbonato
+OK Ácido fosfórico e balanço de frações
+OK Neutralização forte × forte
+OK Ácido fraco × base forte: equivalência básica
+OK Meia-equivalência de ácido fraco
+OK Mistura conserva volume, neutraliza por mols
+OK Diluição com água
+OK Neutralidade por temperatura
+OK Kw consistente e qualidade declarada
+OK Saturação Mg(OH)2, Q=Kps
+OK Redissolução por ácido
+OK Reprecipitação após redissolução
+OK Mesmo sólido em duas fontes compartilha saturação
+OK Indicadores coerentes e mistura
+OK Condutividade de NaCl ideal
+OK Condutividade da água
+OK Estado central em cache e invalidação
+OK Todas as 140 substâncias: resultados finitos e conservação de frações
+{"scientificTests":25,"solutions":140}
+{"migrationChecks":12,"status":"OK","cases":["schema","notes","table","text","original backup","mission","startup","idempotence","reload","351 records","corrupt JSON","quota fallback"]}
+OK: enquadramento de 10 vidrarias/capacidades; 1–10 cartões; projeção, redimensionamento, seleção e celular.
