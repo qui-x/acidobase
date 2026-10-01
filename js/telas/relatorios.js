@@ -11,6 +11,8 @@ SIAB.relatorios = (() => {
   ];
   const lerTodos = () => SIAB.persistencia.ler("siab_relatorios_v1", {});
   function capturar() {
+    const ctx = SIAB.ActivityContext.current;
+    if (ctx && ctx.stage === "apresentacao") return null;
     const b = SIAB.state,
       exp = b.experiencia,
       r = SIAB.experimentos.find((x) => x.id === exp?.roteiro);
@@ -28,25 +30,52 @@ SIAB.relatorios = (() => {
         temperatura: c.temperature,
         ph: m.texto,
         instrumento: m.tecnica || "Não utilizado",
-        indicador: SIAB.nomeIndicador(t),
+        indicador: SIAB.ActivityContext.allows("measurements.indicator")
+          ? SIAB.nomeIndicador(t)
+          : "Sem indicador",
         cor: c.color.name,
         qualidade: c.quality,
-        condutividade: t.observacao?.condutividade || null,
-        tabela: SIAB.historicoTabela(t),
-        grafico: SIAB.graficoMedido(t),
+        condutividade: SIAB.ActivityContext.allows("measurements.conductivity")
+          ? t.observacao?.condutividade || null
+          : null,
+        rawMeasurements: JSON.parse(JSON.stringify(SIAB.instrumentos.raw(t))),
+        usedInstruments: [
+          ...new Set(SIAB.instrumentos.raw(t).map((m) => m.tecnica)),
+        ],
+        tabela: SIAB.ActivityContext.allows("analysis.table")
+          ? SIAB.historicoTabela(t)
+          : null,
+        tabelaCompacta:
+          SIAB.ActivityContext.allows("analysis.table") &&
+          SIAB.instrumentos.raw(t).length >= 24
+            ? SIAB.medicoes.compactHTML(SIAB.instrumentos.raw(t), {
+                equivalencias: c.equivalencias,
+                expand: false,
+              })
+            : null,
+        grafico:
+          SIAB.ActivityContext.allows("analysis.graph") &&
+          SIAB.instrumentos
+            .raw(t)
+            .filter((m) => ["fita", "phmetro"].includes(m.tecnica)).length >= 2
+            ? SIAB.graficoMedido(t)
+            : "",
+        historico: SIAB.ActivityContext.allows("analysis.history")
+          ? SIAB.historicoHTML(t)
+          : "",
         calculos:
-          b.level === "calcular"
+          b.level === "calcular" &&
+          (SIAB.ActivityContext.allows("representations.equations") ||
+            SIAB.ActivityContext.allows("representations.species"))
             ? {
-                preparos: SIAB.chem
-                  .base(t)
-                  .map((x) => ({
-                    nome: SIAB.solutions[x.id].name,
-                    amostra: SIAB.isEveryday(x.id),
-                    agua: x.id === "water",
-                    concentracao: x.concentration,
-                    volume: x.volume,
-                    mmol: x.concentration * x.volume,
-                  })),
+                preparos: SIAB.chem.base(t).map((x) => ({
+                  nome: SIAB.solutions[x.id].name,
+                  amostra: SIAB.isEveryday(x.id),
+                  agua: x.id === "water",
+                  concentracao: x.concentration,
+                  volume: x.volume,
+                  mmol: x.concentration * x.volume,
+                })),
                 equivalencias: c.equivalencias,
                 pKw: c.pKw,
               }
@@ -55,6 +84,14 @@ SIAB.relatorios = (() => {
     });
     atual = {
       id: b.reportId,
+      activity: ctx ? { ...ctx.activity } : null,
+      permissions: ctx ? JSON.parse(JSON.stringify(ctx.permissions)) : null,
+      activityRequirements: ctx?.requirements.requiredCapabilities || [],
+      allowedInstruments: Object.entries(
+        SIAB.ActivityContext.resources.measurements,
+      )
+        .filter(([k]) => SIAB.ActivityContext.allows("measurements." + k))
+        .map(([, v]) => v.id),
       origem: r ? "roteiro" : "livre",
       roteiro: r
         ? {
@@ -86,7 +123,7 @@ SIAB.relatorios = (() => {
     SIAB.persistencia.salvar("siab_relatorios_v1", all);
   }
   function tabela(rows) {
-    return `<div class="table-scroll"><table><thead><tr><th>Recipiente</th><th>Volume</th><th>T</th><th>pH</th><th>Técnica</th><th>Cor</th></tr></thead><tbody>${rows.map((t) => `<tr><td>${esc(t.nome)}</td><td>${SIAB.format(t.volume)} mL</td><td>${SIAB.format(t.temperatura, 1)} °C</td><td>${esc(t.ph)}</td><td>${esc(t.instrumento)}</td><td>${esc(t.cor)}</td></tr>`).join("")}</tbody></table></div>`;
+    return `<div class="table-scroll" tabindex="0" role="region" aria-label="Dados da investigação"><table><thead><tr><th>Recipiente</th><th>Volume</th><th>T</th><th>pH</th><th>Técnica</th><th>Cor</th></tr></thead><tbody>${rows.map((t) => `<tr><td>${esc(t.nome)}</td><td>${SIAB.format(t.volume)} mL</td><td>${SIAB.format(t.temperatura, 1)} °C</td><td>${esc(t.ph)}</td><td>${esc(t.instrumento)}</td><td>${esc(t.cor)}</td></tr>`).join("")}</tbody></table></div>`;
   }
   function calculosHTML(c) {
     const partes = c.preparos || [
@@ -121,14 +158,15 @@ SIAB.relatorios = (() => {
     if (ex)
       content += `<section><h2>1. Proposta</h2><h3>O problema</h3><p>${esc(ex.problema)}</p><h3>Pergunta central</h3><p>${esc(ex.pergunta)}</p><h3>Objetivo</h3><p>${esc(ex.objetivo)}</p></section>`;
     content += `<section><h2>${ex ? "2. " : ""}Montagem experimental</h2><ul>${r.recipientes.map((t) => `<li>${esc(t.nome)} · ${esc(t.vidraria)} · ${esc(t.conteudo)} · ${esc(t.indicador)}</li>`).join("")}</ul></section><section><h2>${ex ? "3. " : ""}Resultados experimentais</h2>${branco ? '<div class="writing-space"></div>' : tabela(r.recipientes)}`;
-    if (!branco && r.modulo !== "explorar")
+    if (!branco)
       content += r.recipientes
         .map(
           (t) =>
-            `<section class="report-result"><h3>${esc(t.nome)}</h3>${t.grafico}<div class="table-scroll"><table><thead><tr>${t.tabela.colunas.map((x) => `<th>${esc(x)}</th>`).join("")}</tr></thead><tbody>${t.tabela.linhas.map((l) => `<tr>${l.map((x) => `<td>${esc(x)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>${t.condutividade ? `<p>Condutividade registrada: ${SIAB.format(t.condutividade.valor)} µS/cm · mobilidades de referência a 25 °C.</p>` : ""}${t.calculos ? calculosHTML(t.calculos) : ""}</section>`,
+            `<section class="report-result"><h3>${esc(t.nome)}</h3><p>Técnicas efetivamente registradas: ${t.usedInstruments?.length ? t.usedInstruments.map((id) => esc(SIAB.medicoes.resolution[id]?.nome || id)).join(", ") : "Nenhuma medição registrada"}.</p>${t.grafico || ""}${t.tabelaCompacta || (t.tabela ? SIAB.medicoes.markup(t.tabela) : "")}${t.historico || ""}${t.condutividade ? `<p>Condutividade registrada: ${SIAB.format(t.condutividade.valor)} µS/cm · mobilidades de referência a 25 °C.</p>` : ""}${t.calculos ? calculosHTML(t.calculos) : ""}</section>`,
         )
         .join("");
-    content += "</section>";
+    content +=
+      '</section><p class="report-student-label">As seções seguintes são preenchidas pelo estudante.</p>';
     campos
       .filter(([k]) => ex || k !== "resposta")
       .forEach(([k, label], i) => {
@@ -141,6 +179,15 @@ SIAB.relatorios = (() => {
     SIAB.$("relatorio-conteudo").innerHTML = html({ editar: true });
   }
   function abrir(id) {
+    if (!SIAB.ActivityContext.guard("report.view")) return false;
+    if (
+      SIAB.ActivityContext.current &&
+      (SIAB.ActivityContext.current.stage === "apresentacao" ||
+        (id && id !== SIAB.state.reportId))
+    ) {
+      SIAB.notice("Relatório indisponível neste contexto.");
+      return false;
+    }
     if (id) {
       atual = lerTodos()[id] || null;
       if (!atual) SIAB.notice("Relatório não encontrado neste navegador.");
@@ -157,6 +204,7 @@ SIAB.relatorios = (() => {
     document.body.classList.add("imprimindo", "imprimindo-folha");
   }
   function imprimir(branco = false) {
+    if (!SIAB.ActivityContext.guard("report.print")) return false;
     emBranco = branco;
     preparar();
     window.print();
@@ -164,7 +212,7 @@ SIAB.relatorios = (() => {
   function ligar() {
     const box = SIAB.$("relatorio-conteudo");
     box.addEventListener("input", (e) => {
-      if (!atual) return;
+      if (!atual || !SIAB.ActivityContext.allows("report.edit")) return;
       if (e.target.dataset.reportField)
         atual.aluno[e.target.dataset.reportField] = e.target.value;
       else if (e.target.name)
@@ -179,6 +227,7 @@ SIAB.relatorios = (() => {
       SIAB.notice("Dados experimentais atualizados.");
     };
     SIAB.$("relatorio-registrar").onclick = () => {
+      if (!SIAB.ActivityContext.guard("files.notebook")) return;
       salvar();
       const existe = SIAB.progresso.dados.caderno.find(
         (n) => n.relatorioId === atual.id,
@@ -193,6 +242,7 @@ SIAB.relatorios = (() => {
       SIAB.notice("Referência ao relatório registrada no Caderno.");
     };
     SIAB.$("relatorio-baixar").onclick = () => {
+      if (!SIAB.ActivityContext.guard("files.html")) return;
       salvar();
       SIAB.baixarArquivo(
         "SIAB-relatorio.html",

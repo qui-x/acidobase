@@ -54,7 +54,7 @@ SIAB.manual = [
   [
     "ver",
     "Painel VER",
-    "OBSERVAR: partículas, espécies, equações e próton. MEDIR: pH, temperatura e condutividade. ANALISAR: gráfico, derivada, distribuição, histórico e tabela. Todos usam o mesmo estado químico. Valores numéricos nas representações são identificados como cálculos do modelo.",
+    "OBSERVAR: partículas, espécies, equações e próton. MEDIR: pH, temperatura e condutividade. ANALISAR: gráfico, derivada, distribuição, histórico e tabela. Somente os submenus da família selecionada aparecem; o link do professor determina os recursos disponíveis. Histórico é uma linha do tempo de eventos; Tabela reúne medições. Todos usam o mesmo estado químico. Valores numéricos nas representações são identificados como cálculos do modelo.",
   ],
   [
     "indicadores",
@@ -79,7 +79,7 @@ SIAB.manual = [
   [
     "historico",
     "Histórico da sessão e gráficos",
-    "O histórico registra intervenções e medições da sessão; não entra automaticamente no Caderno. O gráfico de pH usa medidas do pHmetro e a derivada usa diferenças entre medidas em volumes distintos. Distribuição de espécies é um cálculo do modelo. Exporte a tabela como CSV quando precisar.",
+    "O histórico registra intervenções e medições da sessão; não entra automaticamente no Caderno. O gráfico distingue medidas de fita e pHmetro; a derivada usa dados brutos sucessivos da mesma técnica em volumes distintos. Distribuição de espécies é um cálculo do modelo. A Tabela oferece Compacta e Completa; cada grupo expande os registros originais. A faixa e a contagem preservam a resolução da técnica. O CSV exporta todos os dados brutos.",
   ],
   [
     "prever",
@@ -119,12 +119,12 @@ SIAB.manual = [
   [
     "professor",
     "Área do Professor",
-    "Prepare Missão, Roteiro ou Montagem. Configure identificação, temperatura, instrumentos, navegação e formato do relatório. Gere a atividade, copie o link ou abra como aluno. Configurações recentes podem ser abertas ou duplicadas. Orientações, conceitos, respostas de referência e BNCC permanecem na área do professor. O projetor amplia a mesma bancada.",
+    "Prepare Missão, Roteiro ou Montagem. Configure identificação, temperatura, instrumentos, representações, análises, painel inicial, permissões de preparo, navegação e formato do relatório. A validação aceita técnicas alternativas para capacidades obrigatórias, como fita OU pHmetro. Gere a atividade, copie o link ou abra como aluno. Configurações recentes podem ser abertas ou duplicadas. Orientações, conceitos, respostas de referência e BNCC abrem em um diálogo na área do professor, com impressão separada. O projetor amplia a mesma bancada.",
   ],
   [
     "atividades",
     "Atividades por link e modo restrito",
-    "O link usa um token opaco com configuração criptografada no fragmento; não inclui respostas do professor. Funciona sem servidor de dados e pode ser reaberto no mesmo endereço do aplicativo. O modo restrito valida rotas, módulo, instrumentos e contexto, inclusive após refresh. Manual continua acessível. Finalizar salva o relatório; Encerrar atividade libera a navegação. É uma restrição pedagógica no cliente, não um mecanismo inviolável de avaliação. Não envie informações sigilosas no link.",
+    "O link usa um token opaco com configuração criptografada no fragmento; não inclui respostas do professor. Funciona sem servidor de dados e pode ser reaberto no mesmo endereço do aplicativo. O modo restrito valida rotas, módulo, instrumentos e contexto, inclusive após refresh. A ajuda abre orientações contextuais sem sair da atividade; o Manual geral não abre no modo restrito. A montagem mostra as condições liberadas, sem a prateleira completa. Finalizar salva o relatório; Encerrar atividade libera a navegação. É uma restrição pedagógica no cliente, não um mecanismo inviolável de avaliação. Não envie informações sigilosas no link.",
   ],
   [
     "acessibilidade",

@@ -1,5 +1,32 @@
 # Registro de integração — SIAB
 
+## 1.0.0-rc.3 — 01/10/2026
+
+- Workspace centrado no experimento; docas substituem as duas laterais permanentes.
+- Montagem com estados recolhido, resumo e controles contextuais de preparo/objetos/módulo; montagem fixa informativa.
+- Investigação compartilha os renderizadores da RC.2 entre doca desktop e painel inferior mobile; famílias e ferramentas seguem o ActivityContext.
+- Apresentações compacta, padrão, ampla e fullscreen interno, com Expandir, Restaurar, Fechar e foco de retorno.
+- Montagem, Ver e Dados na navegação inferior; níveis substituem conteúdo; família única e ferramenta única dispensam níveis redundantes.
+- Ações experimentais em faixa própria, incluindo medição rápida autorizada; ajustes de visualViewport, safe areas, tablet, rotação e modo projetor.
+- Cabeçalho e leituras mais concisos; atalhos duplicados removidos; descrição de grupos apresentada uma vez; indicação textual e contorno do tubo ativo.
+- Ajuda contextual também no laboratório livre; anúncios de medidas; teclado, regiões inertes, contraste e movimento reduzido.
+- Remoção do CSS antigo dos trilhos; adaptador mantém chamadas maduras do tour e dos atalhos.
+- Ciência, catálogo, ActivityContext, instrumentos, compactação, relatório e Professor preservados por comparação dos arquivos com a RC.2.
+- Suíte de workspace, capturas, comparação visual, atualização do cache/PWA, standalone e documentação. Permanece candidata RC.3.
+
+## 1.0.0-rc.2 — 30/09/2026
+
+- Menu inicial reorganizado e ícone oficial na tela com fundo desfocado, com adaptação para celular.
+- ActivityContext único; guardas de bancada, recipientes, instrumentos, rotas, documentos e restauração a partir do link.
+- Montagem informativa e menu contextual para o aluno; Manual geral sem exceção; Finalizar e Encerrar distintos.
+- Validação pedagógica por capacidade, aceitando fita ou pHmetro quando a atividade exige pH.
+- Painel exclusivo por família e função; `VER_SECTIONS`; fallback autorizado; histórico cronológico separado da tabela.
+- Professor com três grupos de recursos, permissões explícitas, painel inicial e orientações em diálogo com impressão própria.
+- Relatórios baseados no contexto e nas técnicas efetivamente registradas; gráficos separam contextos experimentais.
+- `rawMeasurements` preservados; compactação contígua com tolerância por técnica, faixa, contagem, expansão e proteção de regiões críticas; CSV bruto.
+- Contratos visuais dos botões, foco após atualização, tabelas acessíveis pelo teclado e correção da altura do cabeçalho ao redimensionar.
+- `package-lock.json`, testes RC.2, evidências nos três motores e documentação atualizada. Continua candidata à homologação, sem promoção para 1.0.0.
+
 ## 1.0.0-rc.1 — 30/09/2026
 
 Integração das revisões abaixo sobre o pacote 0.8.2 fornecido. Atualizados os arquivos modular e standalone, manifesto, cache, documentação e testes. Corrigidas falhas encontradas na migração das tabelas antigas, seleção da bancada, conservação de conteúdos vinculados, retorno da bancada livre, permissões de instrumentos, rótulos de seletores, impressão e CSV.

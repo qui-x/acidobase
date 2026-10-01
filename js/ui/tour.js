@@ -10,13 +10,13 @@ SIAB.tour = (() => {
   const PASSOS = [
     {
       alvo: "#controls",
-      alvoCelular: "#prepare-btn",
+      alvoCelular: "#workspace-montagem",
       titulo: "Prepare a bancada",
       texto: "Escolha uma solução e uma vidraria na prateleira.",
     },
     {
       alvo: "#modulos",
-      alvoCelular: "#prepare-btn",
+      alvoCelular: "#workspace-montagem",
       titulo: "Escolha um módulo",
       texto:
         "Explorar, Medir e Calcular são independentes. Escolha pelo objetivo da investigação.",
@@ -35,7 +35,7 @@ SIAB.tour = (() => {
     },
     {
       alvo: "#ver-panel",
-      alvoCelular: ".view-tabs",
+      alvoCelular: "#workspace-ver",
       titulo: "Use o VER",
       texto:
         "Observe representações, escolha uma técnica de medição e analise os dados registrados.",
@@ -112,6 +112,13 @@ SIAB.tour = (() => {
   function mostrar(n) {
     atual = n;
     const passo = passos[n];
+    SIAB.workspace.close("left", false);
+    SIAB.workspace.close("right", false);
+    if (!SIAB.bancada.mobile.matches) {
+      if (n === 0) SIAB.workspace.open("left", "preparo");
+      if (n === 1) SIAB.workspace.open("left", "modulo");
+      if (n === 4) SIAB.workspace.open("right", "particulas");
+    }
     $("tour-passo").textContent = `PASSO ${n + 1} DE ${passos.length}`;
     $("tour-titulo").textContent = passo.titulo;
     $("tour-texto").textContent = passo.texto;

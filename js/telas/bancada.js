@@ -41,7 +41,6 @@ SIAB.bancada = (() => {
     $("painel-missao").hidden = modo !== "missao";
     $("controls-title").textContent =
       modo === "missao" ? "Missão" : "Prateleira";
-    closeSheet(false);
   }
 
   /* ---------- Confirmação e painel inferior (celular) ---------- */
@@ -60,50 +59,16 @@ SIAB.bancada = (() => {
     $("confirm-dialog").showModal();
   };
 
-  const bloqueaveis = () => [
-    $("experiment"),
-    $("ver-panel"),
-    document.querySelector(".app-header"),
-    document.querySelector(".bottom-nav"),
-  ];
+  // A mesma apresentação gerencia docas e bottom sheets; os conteúdos e
+  // as ações da bancada continuam nos componentes originais.
   function closeSheet(restore = true) {
-    $("controls").classList.remove("open");
-    $("prepare-btn").setAttribute("aria-expanded", "false");
-    $("sheet-backdrop").hidden = true;
-    document.body.classList.remove("sheet-open");
-    bloqueaveis().forEach((el) => {
-      el.inert = false;
-    });
-    if (mobile.matches) {
-      $("controls").inert = true;
-      $("controls").setAttribute("aria-hidden", "true");
-    }
-    if (restore && lastSheetFocus?.isConnected) lastSheetFocus.focus();
+    SIAB.workspace?.close("left", restore);
   }
   function openSheet() {
-    if (!mobile.matches) return;
-    lastSheetFocus = document.activeElement;
-    $("controls").inert = false;
-    $("controls").classList.add("open");
-    $("prepare-btn").setAttribute("aria-expanded", "true");
-    $("controls").setAttribute("aria-hidden", "false");
-    $("controls").setAttribute("role", "dialog");
-    $("controls").setAttribute("aria-modal", "true");
-    $("sheet-backdrop").hidden = false;
-    document.body.classList.add("sheet-open");
-    bloqueaveis().forEach((el) => {
-      el.inert = true;
-    });
-    $("close-controls").focus();
+    SIAB.workspace?.open("left");
   }
   function responsive() {
-    closeSheet(false);
-    if (!mobile.matches) {
-      $("controls").inert = false;
-      $("controls").removeAttribute("aria-hidden");
-      $("controls").removeAttribute("role");
-      $("controls").removeAttribute("aria-modal");
-    }
+    SIAB.workspace?.refresh();
   }
 
   /* ---------- Gotas ---------- */
@@ -179,6 +144,12 @@ SIAB.bancada = (() => {
       t = SIAB.current(),
       agora = leitura();
     const cor = SIAB.chem.liquid(t, s.indicatorOnly, agora.r);
+    SIAB.targets(t).forEach((x) =>
+      SIAB.instrumentos.evento(
+        x,
+        `${feita.n} ${feita.n === 1 ? "gota adicionada" : "gotas adicionadas"}`,
+      ),
+    );
     mostrarDelta(feita.pH, agora.pH, feita.n);
     // Na lupa, as partículas das gotas entram e reagem.
     if (s.verTab === "particulas")
@@ -227,6 +198,8 @@ SIAB.bancada = (() => {
   function agitar() {
     const t = SIAB.current();
     if (!t) return;
+    SIAB.instrumentos.evento(t, "Agitação realizada");
+    SIAB.atividades?.salvarSessao();
     const ms = SIAB.vidro.agitar($("large-tube"));
     const c = SIAB.chem.liquid(t, SIAB.state.indicatorOnly);
     setTimeout(
@@ -250,6 +223,14 @@ SIAB.bancada = (() => {
 
   const eReagente = (id) => !SIAB.isEveryday(id) && id !== "water";
   function colocar(id) {
+    if (
+      !SIAB.ActivityContext.guard(
+        SIAB.state.destination === "titrant"
+          ? "bench.changeTitrant"
+          : "bench.changeInitialSolution",
+      )
+    )
+      return false;
     const s = SIAB.state,
       x = SIAB.solutions[id];
     if (!x) return;
@@ -333,6 +314,17 @@ SIAB.bancada = (() => {
   }
 
   function aplicarMedidas(evento) {
+    if (
+      !SIAB.ActivityContext.guard([
+        "bench.changePreparation",
+        "bench.changeConcentration",
+        "bench.changeInitialVolume",
+        "vessels.changeVolume",
+      ])
+    ) {
+      evento.preventDefault();
+      return false;
+    }
     evento.preventDefault();
     limparErros("prepare");
     const t = SIAB.current();
@@ -426,6 +418,32 @@ SIAB.bancada = (() => {
   // recipiente continua cheio até a mesma altura) e as gotas recomeçam.
   // Tudo numa só ação de "Desfazer" (que também devolve a vidraria).
   function mudarRecipiente(descricao, mudar) {
+    if (
+      !SIAB.ActivityContext.guard([
+        "bench.changeGlassware",
+        "vessels.changeGlassware",
+      ])
+    )
+      return false;
+    if (!SIAB.ActivityContext.allows("bench.changeGlassware")) {
+      const t = SIAB.current(),
+        draft = {
+          ...SIAB.state,
+          vidraria: t.vidraria || SIAB.state.vidraria,
+          capacidades: { ...SIAB.state.capacidades },
+        };
+      mudar(draft);
+      const capacity = SIAB.capacidadeDaBancada(draft);
+      if (SIAB.chem.solve(t).volume > capacity) {
+        SIAB.notice("O conteúdo não cabe nessa vidraria.");
+        return false;
+      }
+      SIAB.alterar(descricao, () => {
+        t.vidraria = draft.vidraria;
+        t.capacidade = capacity;
+      });
+      return true;
+    }
     const s = SIAB.state;
     const antes = SIAB.capacidadeDaBancada(s);
     const aviso = [];
@@ -463,21 +481,33 @@ SIAB.bancada = (() => {
       );
   }
   function trocarVidraria(valor) {
-    if (!SIAB.VIDRARIAS[valor] || SIAB.state.vidraria === valor) return;
+    const local =
+      !SIAB.ActivityContext.allows("bench.changeGlassware") &&
+      SIAB.ActivityContext.allows("vessels.changeGlassware");
+    const atual = local
+      ? SIAB.current()?.vidraria || SIAB.state.vidraria
+      : SIAB.state.vidraria;
+    if (!SIAB.VIDRARIAS[valor] || atual === valor) return;
     mudarRecipiente("trocar vidraria", (estado) => {
       estado.vidraria = valor;
     });
   }
   function trocarCapacidade(ml) {
     const s = SIAB.state;
+    const local =
+      !SIAB.ActivityContext.allows("bench.changeGlassware") &&
+      SIAB.ActivityContext.allows("vessels.changeGlassware");
+    const vidraria = local
+      ? SIAB.current()?.vidraria || s.vidraria
+      : s.vidraria;
     if (
-      s.vidraria === "tubo" ||
-      !SIAB.VIDRARIAS[s.vidraria].capacidades.includes(ml) ||
-      s.capacidades[s.vidraria] === ml
+      vidraria === "tubo" ||
+      !SIAB.VIDRARIAS[vidraria].capacidades.includes(ml) ||
+      (local ? SIAB.capacidade(SIAB.current()) : s.capacidades[vidraria]) === ml
     )
       return;
     mudarRecipiente("trocar capacidade", (estado) => {
-      estado.capacidades = { ...estado.capacidades, [estado.vidraria]: ml };
+      estado.capacidades = { ...estado.capacidades, [vidraria]: ml };
     });
   }
 
@@ -495,6 +525,7 @@ SIAB.bancada = (() => {
   }
 
   function adicionarTubo() {
+    if (!SIAB.ActivityContext.guard("vessels.add")) return false;
     const s = SIAB.state;
     if (s.tubes.length >= SIAB.MAX_TUBES) return;
     let novo;
@@ -519,6 +550,7 @@ SIAB.bancada = (() => {
   }
 
   function removerTubo() {
+    if (!SIAB.ActivityContext.guard("vessels.remove")) return false;
     const s = SIAB.state;
     const t = SIAB.current();
     if (!t) return;
@@ -550,6 +582,11 @@ SIAB.bancada = (() => {
   }
 
   function compararIndicadores() {
+    if (
+      !SIAB.ActivityContext.guard("vessels.add") ||
+      !SIAB.ActivityContext.guard("measurements.indicator")
+    )
+      return false;
     const s = SIAB.state;
     if (s.tubes.length + 3 > SIAB.MAX_TUBES) return;
     const t = SIAB.current();
@@ -628,6 +665,7 @@ SIAB.bancada = (() => {
   }
 
   function vincularTubos(ids, opcoes = {}) {
+    if (!SIAB.ActivityContext.guard("bench.changePreparation")) return false;
     opcoes = { substancia: false, contaGotas: true };
     if (!config.controles.has("tubos")) return false;
     const s = SIAB.state,
@@ -685,6 +723,7 @@ SIAB.bancada = (() => {
   }
 
   function desvincularTubos(ids) {
+    if (!SIAB.ActivityContext.guard("bench.changePreparation")) return false;
     if (!config.controles.has("tubos")) return false;
     const escolhidos = new Set(ids),
       tubos = SIAB.state.tubes.filter((t) => escolhidos.has(t.id) && t.group);
@@ -896,6 +935,7 @@ SIAB.bancada = (() => {
     });
 
     $("rename-btn").addEventListener("click", () => {
+      if (!SIAB.ActivityContext.guard("vessels.rename")) return;
       $("new-name").value = SIAB.current().name;
       limparErros("rename");
       $("rename-dialog").showModal();
@@ -904,6 +944,7 @@ SIAB.bancada = (() => {
     $("new-name").addEventListener("input", () => limparErros("rename"));
     $("rename-form").addEventListener("submit", (evento) => {
       evento.preventDefault();
+      if (!SIAB.ActivityContext.guard("vessels.rename")) return;
       const nome = $("new-name").value.trim().replace(/\s+/g, " ");
       if (!nome || nome.length > 40) {
         erroForm("rename", "new-name", "Digite um nome com 1 a 40 caracteres.");
@@ -926,7 +967,7 @@ SIAB.bancada = (() => {
     });
     $("indicator-chips").addEventListener("change", (evento) => {
       if (evento.target.name !== "indicador") return;
-      if (!SIAB.instrumentos.permitido("indicador")) {
+      if (!SIAB.ActivityContext.guard("bench.changeIndicator")) {
         SIAB.render(true);
         SIAB.notice("Indicador indisponível nesta atividade.");
         return;
@@ -968,45 +1009,15 @@ SIAB.bancada = (() => {
     document.querySelector(".view-tabs").addEventListener("click", (evento) => {
       const chip = evento.target.closest("[data-ir-ver]");
       if (!chip) return;
-      SIAB.state.verTab = chip.dataset.irVer;
+      if (!SIAB.selecionarVer(chip.dataset.irVer)) return;
       SIAB.loja.avisar();
       $("ver-panel").scrollIntoView({
         block: "start",
         behavior: A11Y.estado.motion ? "auto" : "smooth",
       });
-      $(`tab-${chip.dataset.irVer}`).focus({ preventScroll: true });
+      $(`tab-${chip.dataset.irVer}`)?.focus({ preventScroll: true });
     });
 
-    // Abas do painel VER, com setas do teclado.
-    const abas = () =>
-      [...document.querySelectorAll("#ver-tabs [data-ver]")].filter(
-        (x) => !x.hidden,
-      );
-    $("ver-tabs").addEventListener("click", (evento) => {
-      const aba = evento.target.closest("[data-ver]");
-      if (!aba) return;
-      SIAB.state.verTab = aba.dataset.ver;
-      SIAB.loja.avisar();
-    });
-    $("ver-tabs").addEventListener("keydown", (evento) => {
-      const lista = abas(),
-        atual = lista.indexOf(document.activeElement);
-      if (
-        atual < 0 ||
-        !["ArrowRight", "ArrowLeft", "Home", "End"].includes(evento.key)
-      )
-        return;
-      evento.preventDefault();
-      let proxima = atual;
-      if (evento.key === "ArrowRight") proxima = (atual + 1) % lista.length;
-      if (evento.key === "ArrowLeft")
-        proxima = (atual - 1 + lista.length) % lista.length;
-      if (evento.key === "Home") proxima = 0;
-      if (evento.key === "End") proxima = lista.length - 1;
-      SIAB.state.verTab = lista[proxima].dataset.ver;
-      SIAB.loja.avisar();
-      SIAB.$(`tab-${SIAB.state.verTab}`)?.focus();
-    });
     $("ver-conteudo").addEventListener("click", (evento) => {
       const botao = evento.target.closest("[data-acao]");
       if (!botao) return;
@@ -1031,7 +1042,7 @@ SIAB.bancada = (() => {
           f = botao.dataset.especie,
           naLupa = s.verTab === "particulas";
         s.destaque = naLupa && s.destaque === f ? null : f;
-        s.verTab = "particulas";
+        if (SIAB.verDisponivel("particulas")) s.verTab = "particulas";
         SIAB.loja.avisar();
         [
           ...SIAB.$("ver-conteudo").querySelectorAll(
@@ -1063,6 +1074,7 @@ SIAB.bancada = (() => {
         return;
       }
       if (botao.dataset.acao === "csv") {
+        if (!SIAB.ActivityContext.guard("files.csv")) return;
         const nome =
           SIAB.normalizar(t.name)
             .replace(/[^a-z0-9]+/g, "-")
@@ -1071,6 +1083,7 @@ SIAB.bancada = (() => {
         SIAB.notice("Tabela baixada em CSV.");
       }
       if (botao.dataset.acao === "registrar") {
+        if (!SIAB.ActivityContext.guard("files.notebook")) return;
         const r = SIAB.chem.solve(t);
         SIAB.progresso.anotar({
           tipo: "exploracao",
@@ -1105,30 +1118,6 @@ SIAB.bancada = (() => {
     $("prepare-btn").addEventListener("click", openSheet);
     $("close-controls").addEventListener("click", () => closeSheet());
     $("sheet-backdrop").addEventListener("click", () => closeSheet());
-    document.addEventListener("keydown", (evento) => {
-      if (
-        !$("controls").classList.contains("open") ||
-        document.querySelector("dialog[open]")
-      )
-        return;
-      if (evento.key === "Escape") closeSheet();
-      if (evento.key === "Tab") {
-        const nos = [
-          ...$("controls").querySelectorAll(
-            "button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea,summary,a[href]",
-          ),
-        ].filter((x) => x.offsetParent !== null);
-        const primeiro = nos[0],
-          ultimo = nos.at(-1);
-        if (evento.shiftKey && document.activeElement === primeiro) {
-          evento.preventDefault();
-          ultimo.focus();
-        } else if (!evento.shiftKey && document.activeElement === ultimo) {
-          evento.preventDefault();
-          primeiro.focus();
-        }
-      }
-    });
     $("confirm-yes").addEventListener("click", () => {
       const acao = confirmAction;
       confirmAction = null;
@@ -1146,6 +1135,9 @@ SIAB.bancada = (() => {
   return {
     config,
     configurar,
+    adicionarTubo,
+    removerTubo,
+    aplicarMedidas,
     ligar,
     gotejar,
     meiaGota,

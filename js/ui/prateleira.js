@@ -52,6 +52,7 @@ SIAB.prateleira = (() => {
   function renderLista() {
     const box = SIAB.$("shelf");
     if (!box || !aberto) return;
+    if (!SIAB.ActivityContext.allows(SIAB.state.destination === "titrant" ? "bench.changeTitrant" : "bench.changeInitialSolution")) {box.replaceChildren(); return;}
     const s = SIAB.state,
       t = SIAB.current();
     const query = SIAB.normalizar(SIAB.$("shelf-search").value);
@@ -134,6 +135,7 @@ SIAB.prateleira = (() => {
 
   // Abre o menu de um destino ("tube" ou "titrant"): a lista vai para baixo dele.
   function abrir(destino, { foco = null } = {}) {
+    if (!SIAB.ActivityContext.guard(destino === "titrant" ? "bench.changeTitrant" : "bench.changeInitialSolution")) return;
     const corpo = SIAB.$("menu-frasco-corpo");
     aberto = destino;
     SIAB.state.destination = destino;

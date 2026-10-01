@@ -1,19 +1,23 @@
 {
   "name": "siab-acidobase",
-  "version": "1.0.0-rc.1",
+  "version": "1.0.0-rc.3",
   "private": true,
   "description": "SIAB — investigação em ácidos e bases: temas, missões, roteiros, relatórios e PWA.",
   "license": "GPL-3.0-only",
   "scripts": {
     "start": "python3 -m http.server 8080",
     "build": "python3 build_standalone.py",
-    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs",
+    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/compactacao.test.cjs && node tests/rc2.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs && node tests/entrega.test.cjs && node tests/workspace.test.cjs",
     "test:science": "node tests/ciencia.test.cjs",
     "test:browser": "node tests/fluxos.test.cjs",
     "test:layout": "node tests/layout-bancada.test.cjs",
     "test:regression": "node tests/regressao.test.cjs",
     "test:environment": "node tests/ambiente.test.cjs",
-    "test:print": "node tests/impressao.test.cjs"
+    "test:print": "node tests/impressao.test.cjs",
+    "test:rc2": "node tests/rc2.test.cjs",
+    "test:compaction": "node tests/compactacao.test.cjs",
+    "test:delivery": "node tests/entrega.test.cjs",
+    "test:workspace": "node tests/workspace.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.56.1",

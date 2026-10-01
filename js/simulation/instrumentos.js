@@ -1,16 +1,36 @@
 "use strict";
 SIAB.instrumentos = (() => {
   const timers = new Map();
-  const permitido = (id) =>
-    !SIAB.atividades?.ativa ||
-    SIAB.atividades.ativa.config.instrumentos.includes(id);
-  const dados = (t) =>
-    (t.observacao ||= {
+  const permitido = (id) => SIAB.ActivityContext.resource(id);
+  function dados(t) {
+    const d = (t.observacao ||= {
       modo: "pontual",
       calibracao: "Referência ideal de fábrica",
-      leituras: [],
       eventos: [],
     });
+    d.rawMeasurements ||= d.leituras || [];
+    d.leituras = d.rawMeasurements; // compatibilidade, sem cópia agregada
+    d.eventos ||= [];
+    return d;
+  }
+  function contexto(t) {
+    const ctx = SIAB.ActivityContext.current;
+    return {
+      recipiente: t.id,
+      solucao: t.solution,
+      reagente: t.titrant,
+      concentracao: t.concentration,
+      concentracaoReagente: t.titrantConcentration,
+      volumeInicial: t.initialVolume,
+      diluicao: t.dilution,
+      diluicaoReagente: t.titrantDilution,
+      componentes: t.componentes || null,
+      indicador: t.indicator,
+      modulo: SIAB.state.level,
+      etapa: ctx?.stage || "bancada",
+      atividade: ctx?.activity.item || "livre",
+    };
+  }
   function evento(t, acao, leitura) {
     const d = dados(t),
       r = SIAB.chem.solve(t);
@@ -22,62 +42,98 @@ SIAB.instrumentos = (() => {
       temperatura: r.temperature,
       leitura: leitura || null,
     });
-    if (d.eventos.length > 4000) d.eventos.shift();
   }
   function registrar(t, tecnica) {
-    if (!permitido(tecnica)) return false;
+    if (
+      !t ||
+      !permitido(tecnica) ||
+      ![
+        "fita",
+        "phmetro",
+        "temperatura",
+        "condutividade",
+        "indicador",
+      ].includes(tecnica)
+    )
+      return false;
     const d = dados(t),
       r = SIAB.chem.solve(t);
-    const value =
-      tecnica === "fita"
-        ? Math.max(0, Math.min(14, Math.round(r.pH)))
-        : Number(r.pH.toFixed(2));
+    const values = {
+      fita: [Math.max(0, Math.min(14, Math.round(r.pH))), "pH", 1],
+      phmetro: [Number(r.pH.toFixed(2)), "pH", 0.01],
+      temperatura: [Number(r.temperature.toFixed(1)), "°C", 0.1],
+      condutividade: [Number(r.conductivity.kappa.toFixed(2)), "µS/cm", 0.01],
+      indicador: [r.indicator.name, "cor", null],
+    };
+    const [valor, unidade, resolucao] = values[tecnica];
     const m = {
+      id: `${t.id}-${d.rawMeasurements.length + 1}`,
       tecnica,
-      valor: value,
+      valor,
+      unidade,
+      resolucao,
       signature: r.signature,
       em: new Date().toISOString(),
       temperatura: r.temperature,
       volume: r.volume,
       adicionado: r.added,
-      resolucao: tecnica === "fita" ? 1 : 0.01,
+      context: contexto(t),
     };
-    d.ph = m;
-    d.status = "estável";
-    d.leituras.push(m);
-    evento(t, "Medição de pH", m);
+    if (["fita", "phmetro"].includes(tecnica)) {
+      d.ph = m;
+      d.status = "estável";
+    }
+    if (tecnica === "condutividade") d.condutividade = m;
+    if (tecnica === "temperatura") d.temperatura = m;
+    d.rawMeasurements.push(m);
+    evento(
+      t,
+      {
+        fita: "Fita de pH utilizada",
+        phmetro: "pHmetro estabilizado",
+        temperatura: "Temperatura medida",
+        condutividade: "Condutividade medida",
+        indicador: "Cor do indicador observada",
+      }[tecnica],
+      m,
+    );
     return m;
   }
   function medir(t, tecnica, modo = "pontual") {
     if (!t || !permitido(tecnica)) {
       SIAB.notice("Instrumento não disponível nesta atividade.");
-      return;
+      return false;
     }
     if (SIAB.chem.solve(t).volume <= 0) {
       SIAB.notice(
         "O recipiente está vazio. Adicione uma solução antes de medir.",
       );
-      return;
+      return false;
     }
     const d = dados(t);
-    d.modo = tecnica === "phmetro" ? modo : "pontual";
-    if (tecnica === "fita") {
-      registrar(t, tecnica);
+    if (tecnica !== "phmetro") {
+      if (tecnica === "fita") {
+        d.modo = "pontual";
+        clearTimeout(timers.get(t));
+        timers.delete(t);
+      }
+      const m = registrar(t, tecnica);
       SIAB.loja.avisar();
-      return;
+      return m;
     }
+    d.modo = modo === "continuo" ? "continuo" : "pontual";
     d.status = "estabilizando";
     agendar(t);
     SIAB.render();
+    return true;
   }
   function agendar(t) {
-    const key = t;
-    clearTimeout(timers.get(key));
+    clearTimeout(timers.get(t));
     timers.set(
-      key,
+      t,
       setTimeout(() => {
-        timers.delete(key);
-        if (!SIAB.state.tubes.includes(t)) return;
+        timers.delete(t);
+        if (!SIAB.state.tubes.includes(t) || !permitido("phmetro")) return;
         registrar(t, "phmetro");
         SIAB.loja.avisar();
       }, 500),
@@ -88,8 +144,12 @@ SIAB.instrumentos = (() => {
       const d = dados(t),
         r = SIAB.chem.solve(t);
       if (d.ultimoEstado !== r.signature) {
-        if (d.ultimoEstado) evento(t, "Alteração da solução");
+        if (d.ultimoEstado && d.ultimoVolumeAdicionado === r.added)
+          evento(t, "Condição experimental alterada");
         d.ultimoEstado = r.signature;
+        d.ultimoVolumeAdicionado = r.added;
+        if (permitido("indicador") && t.indicator !== "none")
+          registrar(t, "indicador");
         if (d.modo === "continuo" && permitido("phmetro")) {
           d.status = "estabilizando";
           agendar(t);
@@ -98,37 +158,48 @@ SIAB.instrumentos = (() => {
     }
   }
   function leitura(t) {
-    if (!t)
-      return { texto: "pH não medido", curto: "não medido", valida: false };
-    const d = dados(t),
-      m = d.ph,
+    const vazia = {
+      texto: "pH não medido",
+      curto: "não medido",
+      valida: false,
+    };
+    if (!t) return vazia;
+    const m = dados(t).ph,
       r = SIAB.chem.solve(t);
-    if (!m)
-      return { texto: "pH não medido", curto: "não medido", valida: false };
+    if (!m || !permitido(m.tecnica)) return vazia;
     const stale = m.signature !== r.signature;
     const str = SIAB.format(m.valor, m.tecnica === "fita" ? 0 : 2);
-    const texto = `${m.tecnica === "fita" ? "pH estimado ≈" : "pH medido ="} ${str}${stale ? " · leitura anterior" : ""}`;
     return {
       ...m,
-      texto,
+      texto: `${m.tecnica === "fita" ? "pH estimado ≈" : "pH medido ="} ${str}${stale ? " · leitura anterior" : ""}`,
       curto: `${m.tecnica === "fita" ? "≈ " : ""}${str}${stale ? " (anterior)" : ""}`,
       valida: !stale,
       anterior: stale,
     };
   }
   function indicador(t) {
+    if (!permitido("indicador")) return "Indicador não autorizado.";
     const r = SIAB.chem.solve(t),
       ind = SIAB.indicators[t.indicator];
-    if (t.indicator === "none") return "Adicione um indicador à solução.";
+    if (t.indicator === "none") return "Solução sem indicador.";
     const range = SIAB.chem.colorRange(t.indicator, r.indicator.name);
     return `${ind.name}: ${r.indicator.name}${range ? ` · faixa de cor aproximada ${SIAB.format(range[0], 1)}–${SIAB.format(range[1], 1)}` : ""}. A cor não determina um pH exato.`;
   }
   function parar(t) {
-    if (!t) return;
+    if (!t || !permitido("phmetro")) return false;
     dados(t).modo = "pontual";
     clearTimeout(timers.get(t));
     timers.delete(t);
+    return true;
   }
+  function calibrar(t) {
+    if (!t || !permitido("phmetro")) return false;
+    dados(t).calibracao = "Dois pontos simulados: pH 4,00 e 7,00 a 25 °C";
+    evento(t, "Calibração de dois pontos");
+    return true;
+  }
+  const raw = (t) =>
+    dados(t).rawMeasurements.filter((m) => permitido(m.tecnica));
   return {
     dados,
     medir,
@@ -139,6 +210,8 @@ SIAB.instrumentos = (() => {
     permitido,
     evento,
     parar,
+    calibrar,
+    raw,
   };
 })();
 SIAB.ambiente = { externa: null, bancada: 25, origem: "Referência 25 °C" };

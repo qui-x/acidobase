@@ -12,6 +12,7 @@ SIAB.segredo = (() => {
   const palavraSecreta = (q) =>
     ["arcoiris", "rainbow"].includes(SIAB.normalizar(q).replace(/[^a-z]/g, ""));
   function arcoIris() {
+    if (!SIAB.ActivityContext.guard("vessels.add")) return;
     if (SIAB.atividades?.ativa) return;
     SIAB.usarBancada("lab");
     SIAB.alterar("arco-íris do pH", (s) => {

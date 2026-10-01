@@ -1,255 +1,127 @@
 "use strict";
-/* Adaptação mobile: não substitui o roteador, o renderizador nem as funções de
-   química. Os controles novos usam as ações públicas já existentes. */
+/* Complementos de leitura e enquadramento. Workspace controla todos os painéis,
+   preservando uma única lógica para conteúdo, permissões, foco e apresentação. */
 (() => {
-  const S = window.SIAB,
+  const S = SIAB,
     $ = S.$,
     root = document.documentElement;
   const mobile = matchMedia("(max-width: 900px)");
-  let area = "experimento",
-    agendado = 0,
-    ajudaDestino = null;
+  let frame = 0;
   root.dataset.mobileStudy = "on";
-  root.dataset.mobileShelf = "preparo";
   root.dataset.mobileCards = "lista";
-
-  function botao(id, texto, classe = "secondary-btn") {
+  function button(id, label, cls = "secondary-btn") {
     const el = document.createElement("button");
-    el.type = "button";
     el.id = id;
-    el.className = `mobile-study-control ${classe}`;
-    el.textContent = texto;
+    el.type = "button";
+    el.textContent = label;
+    el.className = `mobile-study-control ${cls}`;
     return el;
   }
-  const analise = botao("mobile-analysis-tab", "Análises", "");
-  analise.setAttribute("aria-controls", "ver-panel");
-  document.querySelector(".view-tabs").append(analise);
-  const doses = botao("mobile-doses-toggle", "Doses ▾");
+  const doses = button("mobile-doses-toggle", "Doses");
   doses.setAttribute("aria-controls", "dose-shortcuts");
   doses.setAttribute("aria-expanded", "false");
   document.querySelector("#dose-area .dose-actions").append(doses);
-  const grupos = document.createElement("nav");
-  grupos.className = "mobile-study-control mobile-shelf-tabs";
-  grupos.setAttribute("aria-label", "Áreas da prateleira");
-  for (const [id, nome] of [
-    ["preparo", "Preparo"],
-    ["medidas", "Medidas"],
-    ["modulos", "Módulos"],
-    ["acoes", "Ações"],
-  ]) {
-    const b = botao(`mobile-shelf-${id}`, nome);
-    b.dataset.mobileGroup = id;
-    b.setAttribute("aria-controls", "painel-laboratorio");
-    b.addEventListener("click", () => {
-      prateleira(id);
-      $("controls").scrollTop = 0;
-    });
-    grupos.append(b);
-  }
-  document.querySelector(".controls-heading").after(grupos);
-  const indice = botao(
+  doses.addEventListener("click", () => {
+    const expanded = root.dataset.mobileDoses !== "on";
+    root.dataset.mobileDoses = expanded ? "on" : "off";
+    doses.setAttribute("aria-expanded", String(expanded));
+    update();
+  });
+  const index = button(
     "mobile-manual-toggle",
-    "Abrir índice do manual ▾",
+    "Abrir índice do manual",
     "quiet-btn",
   );
-  indice.setAttribute("aria-controls", "manual-indice");
-  indice.setAttribute("aria-expanded", "false");
-  document.querySelector(".manual-indice").prepend(indice);
-  const grade = botao("mobile-card-toggle", "Ver em grade");
-  grade.setAttribute("aria-pressed", "false");
-  grade.setAttribute("aria-controls", "overview-grid");
-  document.querySelector(".overview-heading-actions").append(grade);
-  const contexto = document.createElement("span");
-  contexto.className = "mobile-study-control mobile-analysis-context";
-  document.querySelector(".ver-cabecalho").append(contexto);
-  const escala = botao("mobile-scale-toggle", "Escala de pH ▾", "quiet-btn");
-  escala.setAttribute("aria-controls", "ver-regua");
-  escala.setAttribute("aria-expanded", "false");
-  $("ver-regua").before(escala);
-
-  function prateleira(id) {
-    root.dataset.mobileShelf = id;
-    grupos
-      .querySelectorAll("button")
-      .forEach((b) =>
-        b.setAttribute("aria-pressed", String(b.dataset.mobileGroup === id)),
-      );
-  }
-  function agendar() {
-    if (!agendado) agendado = requestAnimationFrame(atualizar);
-  }
-  function atualizar() {
-    agendado = 0;
-    if (!mobile.matches) {
-      delete root.dataset.mobileArea;
-      $("focus-tab").firstChild.textContent = "Tubo em foco";
-      $("overview-tab").firstChild.textContent = "Visão geral ";
-      return;
-    }
-    if (!S.current() || !S.bancada.config.ver.length)
-      area = S.state.view === "overview" ? "tubos" : "experimento";
-    if (S.state.view === "overview") area = "tubos";
-    else if (area === "tubos") area = "experimento";
-    root.dataset.mobileArea = area;
-    $("focus-tab").firstChild.textContent =
-      innerWidth <= 360 ? "Foco" : "Experimento";
-    $("focus-tab").setAttribute("aria-label", "Experimento: tubo em foco");
-    $("overview-tab").firstChild.textContent = "Tubos ";
-    $("focus-tab").setAttribute("aria-pressed", String(area === "experimento"));
-    $("overview-tab").setAttribute("aria-pressed", String(area === "tubos"));
-    analise.setAttribute("aria-pressed", String(area === "analise"));
-    analise.disabled = !S.current() || !S.bancada.config.ver.length;
-    contexto.textContent = S.current()?.name || "";
-    escala.hidden = true;
-    const leitura = $("ver-regua").querySelector("strong")?.textContent || "";
-    escala.textContent = `Escala de pH${leitura ? " · " + leitura : ""} ${root.dataset.mobileScale === "on" ? "▴" : "▾"}`;
-    grade.hidden = $("overview-grid").classList.contains("selecting");
-    const vv = window.visualViewport;
+  index.setAttribute("aria-controls", "manual-indice");
+  index.setAttribute("aria-expanded", "false");
+  document.querySelector(".manual-indice").prepend(index);
+  index.addEventListener("click", () => {
+    const expanded = root.dataset.mobileIndex !== "on";
+    root.dataset.mobileIndex = expanded ? "on" : "off";
+    index.setAttribute("aria-expanded", String(expanded));
+    index.textContent = expanded ? "Fechar índice" : "Abrir índice do manual";
+  });
+  const cards = button("mobile-card-toggle", "Ver em grade");
+  cards.setAttribute("aria-controls", "overview-grid");
+  cards.setAttribute("aria-pressed", "false");
+  document.querySelector(".overview-heading-actions").append(cards);
+  cards.addEventListener("click", () => {
+    const grid = root.dataset.mobileCards !== "grade";
+    root.dataset.mobileCards = grid ? "grade" : "lista";
+    cards.setAttribute("aria-pressed", String(grid));
+    cards.textContent = grid ? "Ver em lista" : "Ver em grade";
+  });
+  function update() {
+    frame = 0;
+    const vv = visualViewport;
     root.style.setProperty(
       "--mobile-visible-height",
       `${Math.round(vv?.height || innerHeight)}px`,
     );
-    if (
-      $("workspace").hidden ||
-      $("focus-view").hidden ||
-      area !== "experimento"
-    )
+    $("focus-tab").firstChild.textContent = "Tubo em foco";
+    cards.hidden = $("overview-grid").classList.contains("selecting");
+    if (!mobile.matches || $("workspace").hidden || $("focus-view").hidden)
       return;
-    const stage = document.querySelector(".tube-stage"),
-      foco = $("focus-view");
+    const stage = document.querySelector(".tube-stage");
     const h = (el) =>
       el?.getClientRects().length ? el.getBoundingClientRect().height : 0;
-    const fixos = [...foco.children]
-      .filter((el) => el !== stage && el.id !== "dose-area")
-      .reduce((n, el) => {
-        if (!el.getClientRects().length) return n;
-        const css = getComputedStyle(el);
-        return (
-          n +
-          h(el) +
-          (parseFloat(css.marginTop) || 0) +
-          (parseFloat(css.marginBottom) || 0)
-        );
-      }, 0);
-    const stats = Math.max(
-      h(document.querySelector(".stage-stats")),
-      h(document.querySelector(".volume-readout")),
-    );
-    const livre =
-      innerHeight -
+    const fixed = [...$("focus-view").children]
+      .filter((el) => el !== stage)
+      .reduce((n, el) => n + h(el), 0);
+    const remaining =
+      (vv?.height || innerHeight) -
       h(document.querySelector(".app-header")) -
-      h(document.querySelector(".view-tabs")) -
-      h(document.querySelector(".bottom-nav")) -
-      h($("dose-area")) -
+      h($("activity-banner")) -
+      h($("workspace-toolbar")) -
+      h($("workspace-launchers")) -
       h(document.querySelector(".tube-strip")) -
-      fixos -
-      stats -
-      36;
+      h($("dose-area")) -
+      fixed -
+      Math.max(
+        h(document.querySelector(".stage-stats")),
+        h(document.querySelector(".volume-readout")),
+      ) -
+      44;
     stage.style.setProperty(
       "--mobile-glass-height",
-      `${Math.round(Math.max(140, Math.min(420, livre)))}px`,
+      `${Math.round(Math.max(130, Math.min(480, remaining)))}px`,
     );
   }
-  function mostrar(valor) {
-    if (!mobile.matches || $("workspace").hidden) return;
-    if (valor === "analise") {
-      if (!S.current() || !S.bancada.config.ver.length) return;
-      if (S.state.view === "overview") $("focus-tab").click();
-      area = "analise";
-    } else {
-      area = valor;
-      $(valor === "tubos" ? "overview-tab" : "focus-tab").click();
-    }
-    atualizar();
-    window.scrollTo(0, 0);
+  function schedule() {
+    if (!frame) frame = requestAnimationFrame(update);
   }
-  analise.addEventListener("click", () => mostrar("analise"));
-  escala.addEventListener("click", () => {
-    const aberto = root.dataset.mobileScale !== "on";
-    root.dataset.mobileScale = aberto ? "on" : "off";
-    escala.setAttribute("aria-expanded", String(aberto));
-    agendar();
+  window.addEventListener("resize", schedule);
+  window.visualViewport?.addEventListener("resize", schedule);
+  document.addEventListener("click", schedule);
+  S.loja.assinar(schedule);
+  new MutationObserver(schedule).observe($("workspace"), {
+    attributes: true,
+    attributeFilter: ["hidden", "class"],
   });
-  $("focus-tab").addEventListener("click", () => {
-    area = "experimento";
-    atualizar();
-    window.scrollTo(0, 0);
-  });
-  $("overview-tab").addEventListener("click", () => {
-    area = "tubos";
-    atualizar();
-    window.scrollTo(0, 0);
-  });
-  doses.addEventListener("click", () => {
-    const aberto = root.dataset.mobileDoses !== "on";
-    root.dataset.mobileDoses = aberto ? "on" : "off";
-    doses.setAttribute("aria-expanded", String(aberto));
-    doses.textContent = aberto ? "Doses ▴" : "Doses ▾";
-    agendar();
-  });
-  indice.addEventListener("click", () => {
-    const aberto = root.dataset.mobileIndex !== "on";
-    root.dataset.mobileIndex = aberto ? "on" : "off";
-    indice.setAttribute("aria-expanded", String(aberto));
-    indice.textContent = aberto
-      ? "Fechar índice ▴"
-      : "Abrir índice do manual ▾";
-  });
-  grade.addEventListener("click", () => {
-    const emGrade = root.dataset.mobileCards !== "grade";
-    root.dataset.mobileCards = emGrade ? "grade" : "lista";
-    grade.setAttribute("aria-pressed", String(emGrade));
-    grade.textContent = emGrade ? "Ver em lista" : "Ver em grade";
-  });
-  document.addEventListener(
-    "click",
-    (e) => {
-      if (!mobile.matches) return;
-      if (e.target.closest("#selecao-relatorio-btn")) prateleira("acoes");
-      const ajudar = e.target.closest("[data-mostrar]");
-      if (ajudar) {
-        const destino = ajudar.dataset.mostrar;
-        prateleira(
-          { modulos: "modulos", medidas: "medidas" }[destino] || "preparo",
-        );
-        ajudaDestino = destino === "ver" ? "analise" : "experimento";
-        if (destino === "prever" && root.dataset.mobileDoses !== "on")
-          doses.click();
-      }
-    },
-    true,
-  );
-  document.addEventListener("click", agendar);
-  window.addEventListener("hashchange", () => {
-    const destino = ajudaDestino;
-    ajudaDestino = null;
-    if (destino && !$("workspace").hidden && S.state.view === "overview")
-      $("focus-tab").click();
-    area = destino || "experimento";
-    atualizar();
-  });
-  window.addEventListener("resize", agendar);
-  window.visualViewport?.addEventListener("resize", agendar);
-  mobile.addEventListener("change", agendar);
-  S.loja.assinar(agendar);
-  const observer = new MutationObserver(agendar);
-  for (const id of ["workspace", "focus-view", "overview-view", "ver-panel"])
-    observer.observe($(id), {
-      attributes: true,
-      attributeFilter: ["hidden", "class"],
-    });
   if (typeof ResizeObserver !== "undefined") {
-    const resize = new ResizeObserver(agendar);
+    const observer = new ResizeObserver(schedule);
     for (const el of [
       document.querySelector(".app-header"),
-      document.querySelector(".view-tabs"),
       $("dose-area"),
       document.querySelector(".focus-heading"),
-      document.querySelector(".color-reading"),
     ])
-      resize.observe(el);
+      observer.observe(el);
+    const banner = document.querySelector(".activity-banner");
+    if (banner) observer.observe(banner);
   }
-  window.SIABMobileStudy = { mostrar, atualizar: agendar, prateleira };
-  prateleira("preparo");
-  agendar();
+  window.SIABMobileStudy = {
+    mostrar(area) {
+      if (area === "analise") S.workspace.open("right");
+      else $(area === "tubos" ? "overview-tab" : "focus-tab").click();
+    },
+    atualizar: schedule,
+    prateleira(group) {
+      S.workspace.open(
+        "left",
+        { medidas: "preparo", modulos: "modulo", acoes: "objetos" }[group] ||
+          group,
+      );
+    },
+  };
+  schedule();
 })();

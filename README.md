@@ -1,6 +1,6 @@
 # SIAB — A química das cores
 
-**Versão entregue: 1.0.0-rc.1.** Evolução integrada da base 0.8.2 recebida. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
+**Versão entregue: 1.0.0-rc.3.** Evolução da RC.2 entregue, com novo workspace contextual. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
 
 O SIAB é um simulador educacional de ácidos e bases. A interface organiza a investigação: observar, medir, interpretar, registrar e explicar. Preserva a marca, a abertura e os três módulos independentes **Explorar**, **Medir** e **Calcular**.
 
@@ -45,7 +45,7 @@ Não é necessário Node, Python ou acesso à internet para usar o HTML único. 
 Node.js 20 ou posterior, Python 3 para gerar o HTML único e OpenSSL para o teste HTTPS local. As dependências são somente de desenvolvimento; o aplicativo não usa Playwright nem axe em produção.
 
 ```sh
-npm install
+npm ci
 npx playwright install --with-deps chromium firefox webkit
 npm run build
 npm test
@@ -55,6 +55,28 @@ npm run test:layout
 Em ambiente Linux que não permita o sandbox de conteúdo do Firefox, o executor de testes usa `MOZ_DISABLE_CONTENT_SANDBOX=1`. O Chromium de testes usa `--no-sandbox`; essas opções pertencem ao processo automatizado, não ao aplicativo distribuído.
 
 Os testes iniciam seu próprio servidor HTTP. `SIAB_TEST_ENGINES=chromium` limita a execução; `SIAB_PLAYWRIGHT_MODULE` e `SIAB_AXE_MODULE` permitem indicar dependências já instaladas. A suíte grava os JSON em `tests/results`. As PDFs são amostras com identificação fictícia.
+
+## Workspace da RC.3
+
+**Montagem** reúne resumo, preparo, objetos e módulo. **Ver** reúne Observar, Medir e Analisar. **Dados** dá acesso rápido ao histórico, à tabela e ao relatório. A bancada começa com as docas recolhidas; gotejar, agitar e medir continuam junto ao recipiente.
+
+No desktop, cada ferramenta define a largura apropriada. Gráficos e tabelas abrem amplos; Expandir ocupa o workspace e Restaurar devolve o tamanho anterior. Fechar ou Esc recolhe e devolve o foco. Na tela compacta, os mesmos conteúdos abrem em painéis inferiores com navegação por níveis e botões de voltar. No tablet, uma doca por vez evita comprimir o experimento.
+
+A reformulação não altera a química, o catálogo, o ActivityContext, a compactação, o motor de instrumentos, os relatórios ou o Professor. A identidade dos arquivos preservados foi verificada por SHA-256 contra a RC.2.
+
+Detalhes: [arquitetura](docs/WORKSPACE-RC3.md), [comparação visual interativa](docs/COMPARACAO-VISUAL.html), [cobertura das 179 orientações](docs/COBERTURA-RC3.md) e [validação](VALIDACAO.md).
+
+## Consolidação da RC.2
+
+O menu inicial prioriza a entrada no laboratório, organiza os caminhos de estudo e mostra o ícone oficial sobre o fundo desfocado. A abertura original foi preservada.
+
+`ActivityContext` é o contrato de atividade para navegação, montagem, recipientes, representações, instrumentos, análises, relatórios e arquivos. O link é decodificado e validado na restauração; permissões persistidas não substituem sua configuração. Na atividade restrita, a montagem é informativa e a ajuda é contextual. Finalizar mantém o contexto; Encerrar sai dele deliberadamente.
+
+O painel declara suas famílias em `VER_SECTIONS`. Apenas a família ativa apresenta submenus. Partículas, Espécies, Equações, Próton, pH, Temperatura, Condutividade, Gráfico, Derivada, Distribuição, Histórico e Tabela têm renderizadores próprios. O professor configura instrumentos, representações e análises separadamente. O guia pedagógico abre em diálogo e tem impressão própria.
+
+As medições originais ficam em `rawMeasurements`; `leituras` é um alias de compatibilidade. Compactação só afeta a apresentação, com faixa, quantidade e expansão por grupo. CSV, gráficos e derivadas usam os registros brutos. As tolerâncias de agrupamento são políticas didáticas de apresentação, não certificados de incerteza instrumental.
+
+Evidências, resultados e limitações: [VALIDACAO.md](VALIDACAO.md), [docs/BUGS-CORRIGIDOS.md](docs/BUGS-CORRIGIDOS.md) e [docs/COBERTURA-RC2.md](docs/COBERTURA-RC2.md).
 
 ## Versões e validação
 

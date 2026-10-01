@@ -17,6 +17,7 @@ SIAB.motor = (() => {
     };
   }
   function iniciar(id) {
+    if (SIAB.ActivityContext?.restricted()) return null;
     const def = SIAB.missoes.find((m) => m.id === id);
     if (!def) return null;
     const b = SIAB.criarBancada(),
@@ -89,6 +90,12 @@ SIAB.motor = (() => {
     return true;
   }
   function restaurar(x) {
+    const ctx = SIAB.ActivityContext?.current;
+    if (
+      ctx?.permissions.navigation.mode === "restricted" &&
+      (ctx.activity.type !== "missao" || ctx.activity.item !== x?.id)
+    )
+      return false;
     const def = SIAB.missoes.find((m) => m.id === x?.id);
     if (def)
       ativa = {

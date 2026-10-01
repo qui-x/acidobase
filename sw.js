@@ -3,7 +3,7 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = "siab-1.0.0-rc.1";
+const VERSAO = "siab-1.0.0-rc.3";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
@@ -22,6 +22,7 @@ const ARQUIVOS = [
   "./js/core/compatibilidade.js",
   "./a11y.js",
   "./css/investigacao.css",
+  "./css/workspace.css",
   "./vendor/dialog-polyfill/dialog-polyfill.js",
   "./js/core/namespace.js",
   "./js/core/util.js",
@@ -46,6 +47,7 @@ const ARQUIVOS = [
   "./js/data/montagens.js",
   "./js/data/experimentos.js",
   "./js/data/manual.js",
+  "./js/core/activity-context.js",
   "./js/simulation/motor-missoes.js",
   "./js/ui/tubo.js",
   "./js/ui/regua-ph.js",
@@ -61,8 +63,10 @@ const ARQUIVOS = [
   "./js/ui/layout-bancada.js",
   "./js/simulation/instrumentos.js",
   "./js/ui/render.js",
+  "./js/simulation/medicoes.js",
   "./js/ui/ver-investigacao.js",
   "./js/ui/gaveta.js",
+  "./js/ui/workspace.js",
   "./js/ui/trilho.js",
   "./js/ui/tour.js",
   "./js/ui/segredo.js",
@@ -81,6 +85,7 @@ const ARQUIVOS = [
   "./js/telas/manual.js",
   "./js/a11y/preferencias.js",
   "./js/init/pwa.js",
+  "./js/ui/activity-ui.js",
   "./js/init/integracao.js",
   "./js/init/app.js",
   "./js/ui/mobile-study.js",

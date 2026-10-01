@@ -27,6 +27,8 @@ Object.defineProperty(SIAB, "state", {
   configurable: true,
 });
 SIAB.usarBancada = (nome) => {
+  const ctx = SIAB.ActivityContext?.current;
+  if (ctx && nome !== (ctx.activity.type === "missao" ? "mission" : "lab")) return false;
   SIAB.activeBench = nome;
 };
 
@@ -141,6 +143,7 @@ SIAB.volumeTexto = (volume, capacidade) =>
   SIAB.format(volume, SIAB.escala(capacidade).casas);
 
 SIAB.newTube = (options = {}, bench = SIAB.state) => {
+  if (SIAB.ActivityContext && !SIAB.ActivityContext.guard("vessels.add")) return null;
   const id = bench.nextId++;
   const tube = {
     id,

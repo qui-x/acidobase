@@ -4,28 +4,25 @@ SIAB.entradaEspecifica = Boolean(
 );
 SIAB.iniciarInvestigacao = () => {
   const $ = SIAB.$;
+  const startupDialog = $("startup-dialog");
+  const atualizarInicializacao = () => {
+    const escolha = SIAB.persistencia.ler("siab_inicializacao", null);
+    startupDialog.querySelectorAll(".startup-opcao").forEach((botao) => {
+      botao.setAttribute(
+        "aria-pressed",
+        String(botao.dataset.startup === escolha),
+      );
+    });
+  };
+  const abrirInicializacao = () => {
+    atualizarInicializacao();
+    if (!startupDialog.open) startupDialog.showModal();
+  };
   const saved = SIAB.persistencia.ler("siab_bancada_v2", null);
   if (saved?.tubes && Array.isArray(saved.tubes)) SIAB.benches.lab = saved;
   $("prof-identificacao").innerHTML = SIAB.identificacaoHTML();
-  const nomes = {
-    indicador: "Indicador",
-    fita: "Fita de pH",
-    phmetro: "pHmetro",
-    condutividade: "Condutividade",
-    temperatura: "Temperatura",
-    particulas: "Partículas",
-    equacoes: "Equações",
-    graficos: "Gráficos",
-  };
-  $("prof-instrumentos").insertAdjacentHTML(
-    "beforeend",
-    SIAB.atividades.instrumentos
-      .map(
-        (id) =>
-          `<label class="check-row"><input type="checkbox" name="instrumentos" value="${id}" checked>${nomes[id]}</label>`,
-      )
-      .join(""),
-  );
+  SIAB.professor.montarRecursos();
+  SIAB.activityUI.bind();
   SIAB.ligarVer();
   SIAB.relatorios.ligar();
   SIAB.atividades.restaurar();
@@ -41,12 +38,14 @@ SIAB.iniciarInvestigacao = () => {
     if (!b) return;
     if (b.hasAttribute("data-startup-settings")) {
       SIAB.gaveta.fechar();
-      $("startup-dialog").showModal();
+      abrirInicializacao();
     }
     if (b.dataset.startup) {
       const choice = b.dataset.startup;
       if (choice === "reset") {
         SIAB.persistencia.salvar("siab_inicializacao", null);
+        atualizarInicializacao();
+        startupDialog.querySelector('[data-startup="inicio"]').focus();
         SIAB.notice("Escolha novamente sua tela inicial.");
         return;
       }
@@ -140,6 +139,24 @@ SIAB.iniciarInvestigacao = () => {
     !SIAB.entradaEspecifica &&
     !SIAB.persistencia.ler("siab_inicializacao", null) &&
     !SIAB.atividades.ativa
-  )
-    setTimeout(() => $("startup-dialog").showModal(), 1200);
+  ) {
+    // A escolha só entra depois da animação; não interrompe uma navegação
+    // ou outro diálogo que o usuário já tenha aberto nesse intervalo.
+    const apresentarInicializacao = () => {
+      if (
+        SIAB.rota.nome !== "inicio" ||
+        SIAB.atividades.ativa ||
+        SIAB.persistencia.ler("siab_inicializacao", null) ||
+        document.querySelector("dialog[open]")
+      )
+        return;
+      const abertura = $("abertura");
+      if (abertura && getComputedStyle(abertura).display !== "none") {
+        setTimeout(apresentarInicializacao, 150);
+        return;
+      }
+      abrirInicializacao();
+    };
+    setTimeout(apresentarInicializacao, 250);
+  }
 };

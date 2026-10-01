@@ -87,13 +87,20 @@ SIAB.render = (syncForm = false) => {
   $("tube-index").textContent =
     `${vidro.curto.toUpperCase()} · ${i + 1} DE ${s.tubes.length}`;
   $("tube-name").textContent = t.name;
-  $("sample-summary").textContent = SIAB.resumoConteudo(t);
+  $("sample-summary").textContent =
+    `${t.componentes?.length ? `Mistura de ${t.componentes.length} componentes` : SIAB.solutionSummary(t.solution, t.concentration, t.dilution)} · ${SIAB.format(r.temperature, 1)} °C`;
   $("sample-model-note").hidden = !r.approximate;
   $("rename-btn").hidden = !pode("renomear");
 
   // Leitura.
   $("ph-value").textContent = SIAB.instrumentos.leitura(t).curto;
-  $("ph-phase").textContent = SIAB.instrumentos.leitura(t).texto;
+  const leitura = SIAB.instrumentos.leitura(t);
+  $("ph-phase").textContent =
+    leitura.valor == null
+      ? ""
+      : leitura.anterior
+        ? "Leitura anterior"
+        : "Leitura registrada";
   // Olho: botão de alternar "Mostrar pH" (pressionado = pH à vista); a dica diz a ação.
   $("ph-toggle").setAttribute("aria-pressed", String(s.showPH));
   $("ph-toggle").title = s.showPH ? "Ocultar pH" : "Mostrar pH";
@@ -213,7 +220,7 @@ SIAB.render = (syncForm = false) => {
     .map((x, n) => {
       const v = SIAB.chem.solve(x),
         cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-      return `<button type="button" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="${SIAB.escape(x.name)}: ${cor.name}${", " + SIAB.instrumentos.leitura(x).texto}">
+      return `<button type="button" class="tube-item-btn" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="${SIAB.escape(x.name)}: ${cor.name}${", " + SIAB.instrumentos.leitura(x).texto}">
       <span class="mini-tube mini-${x.vidraria || s.vidraria}" style="--cor:rgb(${cor.rgb.join(",")});--nivel:${Math.min(1, v.volume / SIAB.capacidade(x))}" aria-hidden="true"></span>
       <span><strong>${SIAB.escape(x.name)}</strong><small>${n + 1} · ${SIAB.escape(SIAB.nomeIndicador(x, true))}${x.group ? " · " + SIAB.nomeGrupo(x) : ""}</small></span>
     </button>`;
@@ -237,10 +244,25 @@ SIAB.render = (syncForm = false) => {
           SIAB.instrumentos.leitura(p.x).valor -
           SIAB.instrumentos.leitura(q.x).valor,
       );
+    let groupSummary = $("overview-group-summary");
+    if (!groupSummary) {
+      groupSummary = document.createElement("div");
+      groupSummary.id = "overview-group-summary";
+      groupSummary.className = "overview-group-summary";
+      $("overview-grid").before(groupSummary);
+    }
+    groupSummary.innerHTML = [
+      ...new Set(s.tubes.map((x) => x.group).filter(Boolean)),
+    ]
+      .map((group) => {
+        const tube = s.tubes.find((x) => x.group === group);
+        return `<p>${SIAB.escape(SIAB.nomeGrupo(tube))} · ${SIAB.targets(tube).length} tubos · gotas compartilhadas${SIAB.textoCompartilhado(tube) ? ` · ${SIAB.escape(SIAB.textoCompartilhado(tube))}` : ""}</p>`;
+      })
+      .join("");
     $("overview-grid").innerHTML = lista
       .map(({ x, n, v }) => {
         const cor = SIAB.chem.liquid(x, s.indicatorOnly, v);
-        return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span><span class="overview-visual">${SIAB.tubeSVG(x, "overview", true, s.vidraria)}</span><span class="overview-details"><strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(",")})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span><span>${SIAB.instrumentos.leitura(x).texto}</span></span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · ${SIAB.targets(x).length} tubos${x.groupMode === "drops" && SIAB.textoCompartilhado(x) ? ` · ${SIAB.textoCompartilhado(x)}` : ""}</span>` : ""}</span></button>`;
+        return `<button type="button" class="overview-tube" data-tube="${x.id}" aria-current="${x.id === s.activeId}" aria-label="Abrir ${SIAB.escape(x.name)}"><span class="overview-num" aria-hidden="true">${n + 1}</span><span class="overview-visual">${SIAB.tubeSVG(x, "overview", true, s.vidraria)}</span><span class="overview-details"><strong>${SIAB.escape(x.name)}</strong><span class="small overview-sample">${SIAB.escape(x.componentes?.length ? `Mistura de ${x.componentes.length} componentes` : SIAB.solutions[x.solution].name)}</span><span class="small">${SIAB.escape(SIAB.nomeIndicador(x))}</span><span class="overview-color"><span class="mini-dot" style="background:rgb(${cor.rgb.join(",")})"></span>${cor.name}</span><span class="overview-readout"><span>${SIAB.volumeTexto(v.volume, SIAB.capacidade(x))} mL</span><span>${SIAB.instrumentos.leitura(x).texto}</span></span>${x.group ? `<span class="small overview-group">↔ ${SIAB.nomeGrupo(x)} · vinculado</span>` : ""}</span></button>`;
       })
       .join("");
   }
@@ -281,6 +303,8 @@ SIAB.render = (syncForm = false) => {
   SIAB.renderVer();
   SIAB.refreshSelects?.();
   SIAB.layoutBancada?.atualizar();
+  SIAB.activityUI?.render();
+  SIAB.workspace?.sync();
 };
 
 // Bancada sem tubos (é assim que o laboratório começa): orienta o primeiro
@@ -315,6 +339,8 @@ SIAB.renderVazia = () => {
   SIAB.renderVidraria();
   SIAB.prateleira.render();
   SIAB.renderVer();
+  SIAB.activityUI?.render();
+  SIAB.workspace?.sync();
 };
 
 // Escolha da vidraria e da capacidade na prateleira.

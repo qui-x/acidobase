@@ -9,6 +9,7 @@ SIAB.loja = (() => {
       return () => assinantes.delete(funcao);
     },
     avisar() {
+      SIAB.ActivityContext?.enforce();
       SIAB.instrumentos?.atualizar();
       assinantes.forEach((funcao) => funcao(SIAB.state));
     },
@@ -19,5 +20,6 @@ SIAB.loja = (() => {
 SIAB.alterar = (descricao, mudanca) => {
   if (descricao) SIAB.registrar(descricao);
   mudanca(SIAB.state);
+  SIAB.ActivityContext?.enforce();
   SIAB.loja.avisar();
 };

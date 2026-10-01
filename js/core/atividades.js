@@ -1,7 +1,9 @@
 "use strict";
 SIAB.atividades = (() => {
   let ativa = null,
-    loading = 0;
+    loading = 0,
+    restoringToken = null,
+    restoringRoute = null;
   const instrumentos = [
     "indicador",
     "fita",
@@ -24,7 +26,7 @@ SIAB.atividades = (() => {
   function validar(c) {
     if (
       !c ||
-      c.schema !== 1 ||
+      ![1, 2].includes(c.schema) ||
       !["roteiro", "missao", "montagem"].includes(c.tipo) ||
       !["livre", "restrita"].includes(c.navegacao) ||
       !["digital", "impresso"].includes(c.relatorio)
@@ -47,9 +49,13 @@ SIAB.atividades = (() => {
       c.temperatura < 0 ||
       c.temperatura > 100 ||
       !Array.isArray(c.instrumentos) ||
-      c.instrumentos.some((x) => !instrumentos.includes(x))
+      c.instrumentos.some(
+        (x) =>
+          !instrumentos.includes(x) && !SIAB.ActivityContext.resourcePaths[x],
+      )
     )
       throw new Error("Instrumentos ou temperatura inválidos.");
+    SIAB.ActivityContext.validate(c);
     return {
       ...c,
       titulo: String(c.titulo || entry.titulo).slice(0, 200),
@@ -103,13 +109,12 @@ SIAB.atividades = (() => {
   const chave = (token) => "siab_atividade_" + token.split(".")[1];
   const rotaAtividade = () => `#/atividade/${ativa.token}`;
   function guardarRota(nome, parametro) {
-    if (!ativa || ativa.config.navegacao !== "restrita")
-      return { nome, parametro };
+    if (restoringToken) return { nome: "atividade", parametro: restoringToken };
+    if (!SIAB.ActivityContext.restricted()) return { nome, parametro };
     const go = () => ({ nome: "atividade", parametro: ativa.token });
     if (nome === "atividade")
       return parametro === ativa.token ? { nome, parametro } : go();
-    if (nome === "manual") return { nome, parametro };
-    if (["bancada", "relatorio"].includes(ativa.etapa)) {
+    if (["bancada", "relatorio", "finalizada"].includes(ativa.etapa)) {
       if (
         nome === "relatorio" &&
         (!parametro || parametro === SIAB.state?.reportId)
@@ -141,34 +146,41 @@ SIAB.atividades = (() => {
             concluida: a.concluida,
           }
         : null;
-    SIAB.persistencia.salvar(chave(ativa.token), ativa);
+    ativa.context.stage = ativa.etapa;
+    ativa.context.identity = { ...ativa.identificacao };
+    SIAB.persistencia.salvar(chave(ativa.token), {
+      ...ativa,
+      context: undefined,
+    });
     try {
       sessionStorage.setItem("siab_atividade_ativa", ativa.token);
     } catch (_) {}
   }
   function restaurar() {
     try {
-      const token = sessionStorage.getItem("siab_atividade_ativa");
-      if (token) {
-        const saved = SIAB.persistencia.ler(chave(token), null);
-        if (saved?.config) {
-          validar(saved.config);
-          ativa = saved;
-          restaurarBancada();
-        }
-      }
+      restoringToken = sessionStorage.getItem("siab_atividade_ativa");
+      restoringRoute = restoringToken ? location.hash : null;
     } catch (_) {
-      ativa = null;
+      restoringToken = null;
     }
   }
   function restaurarBancada() {
     if (!ativa?.bench) return;
     const type = ativa.config.tipo === "missao" ? "mission" : "lab";
+    ativa.bench = SIAB.ActivityContext.sanitize(
+      ativa.bench,
+      ativa.config,
+      ativa.context,
+    );
     SIAB.benches[type] = ativa.bench;
     SIAB.usarBancada(type);
     if (ativa.missao) SIAB.motor.restaurar(ativa.missao);
   }
   async function abrir(token) {
+    if (SIAB.ActivityContext.restricted() && ativa.token !== token) {
+      SIAB.notice("Encerre a atividade antes de abrir outra.");
+      return false;
+    }
     if (!ativa) SIAB.persistencia.salvar("siab_bancada_v2", SIAB.benches.lab);
     const turn = ++loading;
     SIAB.$("atividade-conteudo").innerHTML =
@@ -176,7 +188,8 @@ SIAB.atividades = (() => {
     try {
       const config = await decodificar(token);
       if (turn !== loading) return;
-      const saved = SIAB.persistencia.ler(chave(token), null);
+      const stored = SIAB.persistencia.ler(chave(token), null);
+      const saved = stored?.token === token ? stored : null;
       if (ativa?.token !== token)
         ativa = saved?.config
           ? { ...saved, config, token }
@@ -186,11 +199,30 @@ SIAB.atividades = (() => {
               etapa: "apresentacao",
               identificacao: { ...config.identificacao },
             };
+      ativa.context = SIAB.ActivityContext.create(
+        config,
+        ativa.identificacao,
+        ativa.etapa,
+      );
+      const returnRoute = restoringRoute;
+      restoringToken = null;
+      restoringRoute = null;
       restaurarBancada();
       salvarSessao();
       render();
       atualizarCabecalho();
+      if (
+        ativa.etapa === "bancada" &&
+        /^#\/(laboratorio|missao)(?:\/|$)/.test(returnRoute || "")
+      )
+        retomar();
+      if (
+        returnRoute?.startsWith("#/relatorio") &&
+        ativa.etapa !== "apresentacao"
+      )
+        SIAB.irPara(returnRoute);
     } catch (_) {
+      restoringToken = null;
       SIAB.$("atividade-conteudo").innerHTML =
         '<h1 data-foco tabindex="-1">Não foi possível abrir a atividade</h1><p>O link está incompleto, foi alterado ou usa uma versão incompatível. Solicite o link completo ao professor.</p>';
     }
@@ -204,32 +236,23 @@ SIAB.atividades = (() => {
       `<h1 data-foco tabindex="-1">${e(c.titulo)}</h1><p>${{ roteiro: "Roteiro Experimental", missao: "Missão", montagem: "Montagem pronta" }[c.tipo]} · ${SIAB.MODULOS[c.modulo].nome}</p><p>${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao}</p>${a.etapa === "finalizada" ? '<h2>Atividade finalizada</h2><p>Seu relatório permanece salvo neste navegador.</p><button class="primary-btn" data-activity-close>Encerrar atividade</button>' : ["bancada", "relatorio"].includes(a.etapa) ? '<button class="primary-btn" data-activity-resume>Continuar na bancada</button><button class="secondary-btn" data-open-report>Abrir relatório</button>' : `<p>Prepare sua identificação para começar a investigação.</p><form id="atividade-iniciar">${SIAB.identificacaoHTML(a.identificacao)}<button class="primary-btn">Iniciar atividade</button></form>`}`;
   }
   function iniciar(ident) {
-    if (!ativa) return;
-    ativa.identificacao = ident;
-    ativa.etapa = "bancada";
+    if (!ativa || ativa.etapa !== "apresentacao") return false;
     const c = ativa.config;
-    if (c.tipo === "roteiro")
-      SIAB.montarExperimento(
-        SIAB.experimentos.find((r) => r.id === c.item),
-        ident,
-      );
-    else if (c.tipo === "montagem") SIAB.montarMontagem(c.item);
-    else {
-      SIAB.motor.iniciar(c.item);
-      SIAB.state.tubes.forEach((t) => {
-        t.temperature = c.temperatura;
-      });
-      SIAB.irPara(`#/missao/${c.item}`);
-    }
-    SIAB.state.level = c.modulo;
-    if (!c.instrumentos.includes("indicador"))
-      SIAB.state.tubes.forEach((t) => {
-        t.indicator = "none";
-        delete t.indicadores;
-      });
+    ativa.identificacao = ident;
+    ativa.context.identity = { ...ident };
+    const b = SIAB.ActivityContext.buildBench(c, ident);
+    ativa.bench = SIAB.ActivityContext.sanitize(b, c, ativa.context);
+    const type = c.tipo === "missao" ? "mission" : "lab";
+    SIAB.benches[type] = ativa.bench;
+    SIAB.usarBancada(type);
+    if (c.tipo === "missao") SIAB.motor.restaurar({ id: c.item });
+    ativa.etapa = "bancada";
+    ativa.context.stage = "bancada";
     SIAB.loja.avisar();
     salvarSessao();
     atualizarCabecalho();
+    retomar();
+    return true;
   }
   function retomar() {
     if (!ativa) return;
@@ -250,6 +273,7 @@ SIAB.atividades = (() => {
     if (!ativa) return;
     salvarSessao();
     ativa = null;
+    restoringToken = null;
     try {
       sessionStorage.removeItem("siab_atividade_ativa");
     } catch (_) {}
@@ -258,6 +282,7 @@ SIAB.atividades = (() => {
     SIAB.benches.lab =
       SIAB.persistencia.ler("siab_bancada_v2", null) || SIAB.criarBancada();
     SIAB.usarBancada("lab");
+    SIAB.activityUI?.render();
     SIAB.irPara("#/inicio");
   }
   function atualizarCabecalho() {
@@ -266,6 +291,7 @@ SIAB.atividades = (() => {
     b.hidden = !ativa;
     document.body.dataset.restrita =
       ativa?.config.navegacao === "restrita" ? "true" : "false";
+    SIAB.activityUI?.render();
     if (ativa) {
       SIAB.$("activity-caption").textContent =
         `ATIVIDADE EXPERIMENTAL${ativa.config.navegacao === "restrita" ? " · MODO RESTRITO" : ""} · ${ativa.config.titulo}`;
@@ -281,7 +307,8 @@ SIAB.atividades = (() => {
     });
     document.addEventListener("click", (e) => {
       if (e.target.closest("[data-activity-resume]")) retomar();
-      if (e.target.closest("[data-activity-close]")) encerrar();
+      if (e.target.closest("[data-activity-close]"))
+        SIAB.$("activity-exit").click();
     });
     SIAB.$("activity-finish").onclick = finalizar;
     SIAB.$("activity-exit").onclick = () =>

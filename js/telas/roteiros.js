@@ -13,6 +13,7 @@ SIAB.identificacaoHTML = (valores = {}) =>
     )
     .join("")}</fieldset>`;
 SIAB.montarExperimento = (r, identificacao = {}) => {
+  if (SIAB.ActivityContext?.restricted()) { SIAB.notice("Montagem definida pela atividade."); return false; }
   if (!r || r.tubos.length > SIAB.MAX_TUBES)
     throw new Error("Montagem inválida.");
   const bench = SIAB.criarBancada(),
@@ -88,6 +89,7 @@ SIAB.telas.montagens = {
   },
 };
 SIAB.montarMontagem = (id) => {
+  if (SIAB.ActivityContext?.restricted()) return false;
   const m = SIAB.montagens.find((x) => x.id === id);
   if (!m) return;
   SIAB.montarExperimento({ ...m, modulo: m.nivel });

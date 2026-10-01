@@ -1,5 +1,5 @@
-/* Adaptação mobile SIAB 0.8.2. Regras apenas para telas até 900 px; os
-   componentes originais conservam seus IDs, sua posição no DOM e eventos. */
+/* Complementos de leitura em telas compactas. A bancada RC.3 é apresentada
+   por workspace.css; páginas de conteúdo conservam os componentes maduros. */
 .mobile-study-control { display: none; }
 @media screen and (max-width: 900px) {
   :root[data-mobile-study=on] .mobile-study-control { display: inline-flex; }
@@ -20,23 +20,12 @@
   :root[data-mobile-study=on] .view-tabs .chip-ver,
   :root[data-mobile-study=on] .view-tabs .chip-sep,
   :root[data-mobile-study=on] .view-tabs-mode { display: none !important; }
-  :root[data-mobile-study=on] #mobile-analysis-tab { justify-content: center; align-items: center; }
   :root[data-mobile-study=on] .workspace.sem-ver .view-tabs,
   :root[data-mobile-study=on] .workspace.vazia .view-tabs { grid-template-columns: 1fr 1fr; }
-  :root[data-mobile-study=on] .workspace.sem-ver #mobile-analysis-tab,
-  :root[data-mobile-study=on] .workspace.vazia #mobile-analysis-tab { display: none; }
-  :root[data-mobile-study=on]:not([data-mobile-area=analise]) #ver-panel { display: none; }
-  :root[data-mobile-study=on][data-mobile-area=analise] #focus-view { display: contents; }
-  :root[data-mobile-study=on][data-mobile-area=analise] #focus-view > :not(.dose-area) { display: none !important; }
-  :root[data-mobile-study=on][data-mobile-area=analise] #ver-panel {
-    background: var(--bg); border-top: 0; padding: 12px 14px 20px; scroll-margin-top: calc(var(--header-h) + 60px);
-  }
   :root[data-mobile-study=on] .ver-cabecalho { flex-wrap: wrap; }
-  :root[data-mobile-study=on] .mobile-analysis-context { font-weight: 600; font-size: .85rem; margin-left: auto; color: var(--text); }
   :root[data-mobile-study=on] .ver-tabs { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
   :root[data-mobile-study=on] .ver-tabs button { min-height: 44px; font-size: .78rem; }
   :root[data-mobile-study=on] .ver-regua { margin-bottom: 10px; }
-  :root[data-mobile-study=on] #mobile-scale-toggle { width: 100%; min-height: 44px; margin-bottom: 8px; padding: 8px 0; text-align: left; align-items: center; }
   :root[data-mobile-study=on]:not([data-mobile-scale=on]) #ver-regua { display: none; }
   :root[data-mobile-study=on] .grafico-modos { flex-wrap: wrap; }
   :root[data-mobile-study=on] .grafico-modos button { min-height: 40px; }
@@ -79,18 +68,6 @@
   :root[data-mobile-study=on] .controls-heading {
     position: sticky; top: 0; z-index: 3; min-height: 48px; background: var(--panel); margin: 0; padding: 4px 0;
   }
-  :root[data-mobile-study=on] .mobile-shelf-tabs {
-    display: grid; grid-template-columns: repeat(4,minmax(0,1fr)); gap: 5px;
-    position: sticky; top: 48px; z-index: 2; padding: 4px 0 10px; background: var(--panel);
-  }
-  :root[data-mobile-study=on] .mobile-shelf-tabs button { min-height: 44px; min-width: 0; padding: 6px 2px; font-size: .72rem; }
-  :root[data-mobile-study=on] .mobile-shelf-tabs button[aria-pressed=true] { border-color: var(--accent); color: var(--accent); background: var(--panel2); }
-  :root[data-mobile-study=on] .workspace[data-modo=missao] .mobile-shelf-tabs { display: none; }
-  :root[data-mobile-study=on] #painel-laboratorio .painel-secao { display: none; }
-  :root[data-mobile-study=on][data-mobile-shelf=preparo] #painel-laboratorio :is([data-secao=vidraria],[data-secao=frascos],[data-secao=indicador]),
-  :root[data-mobile-study=on][data-mobile-shelf=medidas] #painel-laboratorio [data-secao=ajustes],
-  :root[data-mobile-study=on][data-mobile-shelf=modulos] #painel-laboratorio [data-secao=nivel],
-  :root[data-mobile-study=on][data-mobile-shelf=acoes] #painel-laboratorio [data-secao=acoes] { display: block; }
   :root[data-mobile-study=on] .overview-view { padding: 12px; }
   :root[data-mobile-study=on] .overview-heading h1 { font-size: 1.1rem; }
   :root[data-mobile-study=on] .overview-heading-actions { margin-top: 6px; gap: 6px; }

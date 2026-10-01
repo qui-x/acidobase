@@ -76,10 +76,11 @@ SIAB.selecaoTubos = (() => {
   function comparar() {
     const ts = tubos();
     $("comparacao-corpo").innerHTML =
-      `<div class="table-scroll"><table><thead><tr><th>Recipiente</th><th>Conteúdo</th><th>pH</th><th>Temperatura</th><th>Condutividade medida</th></tr></thead><tbody>${ts.map((t) => `<tr><td>${SIAB.escape(t.name)}</td><td>${SIAB.escape(SIAB.resumoConteudo(t))}</td><td>${SIAB.escape(SIAB.instrumentos.leitura(t).texto)}</td><td>${SIAB.format(SIAB.chem.solve(t).temperature, 1)} °C</td><td>${t.observacao?.condutividade ? SIAB.format(t.observacao.condutividade.valor) + " µS/cm" : "Não medida"}</td></tr>`).join("")}</tbody></table></div><p>A comparação conserva os conteúdos e não cria vínculo.</p>`;
+      `<div class="table-scroll" tabindex="0" role="region" aria-label="Dados da investigação"><table><thead><tr><th>Recipiente</th><th>Conteúdo</th><th>pH</th><th>Temperatura</th><th>Condutividade medida</th></tr></thead><tbody>${ts.map((t) => `<tr><td>${SIAB.escape(t.name)}</td><td>${SIAB.escape(SIAB.resumoConteudo(t))}</td><td>${SIAB.escape(SIAB.instrumentos.leitura(t).texto)}</td><td>${SIAB.format(SIAB.chem.solve(t).temperature, 1)} °C</td><td>${t.observacao?.condutividade ? SIAB.format(t.observacao.condutividade.valor) + " µS/cm" : "Não medida"}</td></tr>`).join("")}</tbody></table></div><p>A comparação conserva os conteúdos e não cria vínculo.</p>`;
     $("comparacao-dialog").showModal();
   }
   function misturar(ids, destinoId) {
+    if (!SIAB.ActivityContext.guard("vessels.changeContent")) return false;
     const selected = SIAB.state.tubes.filter((t) => ids.includes(t.id)),
       dest = SIAB.state.tubes.find((t) => t.id === destinoId);
     if (selected.length < 2 || !dest)

@@ -126,13 +126,7 @@ SIAB.modulos = (() => {
 
   function ativar(id) {
     if (!SIAB.MODULOS[id]) return;
-    if (
-      SIAB.atividades?.ativa?.config.navegacao === "restrita" &&
-      id !== SIAB.atividades.ativa.config.modulo
-    ) {
-      SIAB.notice("Módulo definido pela atividade.");
-      return;
-    }
+    if (!SIAB.ActivityContext.guard("modules.allowed", id)) return;
     if (SIAB.state.level === id) {
       SIAB.announce(`O módulo ${SIAB.MODULOS[id].nome} já está em uso.`);
       return;
