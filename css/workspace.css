@@ -600,8 +600,8 @@
     gap: 6px;
   }
   :root[data-workspace="rc3"] .workspace #dose-area .dose-actions {
-    display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 76px;
+    display: flex;
+    align-items: stretch;
     flex: 1 1 100%;
     gap: 6px;
   }
@@ -610,6 +610,15 @@
     padding: 5px;
     min-width: 0;
     font-size: 0.78rem;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-area #undo-btn {
+    flex: 0 0 44px;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-area #drop-btn {
+    flex: 1 1 0;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-area #mobile-doses-toggle {
+    flex: 0 0 76px;
   }
   :root[data-workspace="rc3"] .workspace #undo-btn span {
     display: none;

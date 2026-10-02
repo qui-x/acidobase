@@ -53,7 +53,7 @@
   :root[data-mobile-study=on] .dose-info { gap: 3px 7px; font-size: .7rem; margin-bottom: 4px; }
   :root[data-mobile-study=on] .dose-info .ajuda-link { width: 44px; height: 44px; min-width: 44px; }
   :root[data-mobile-study=on] .dose-barra { gap: 6px; }
-  :root[data-mobile-study=on] #dose-area .dose-actions { grid-template-columns: 44px minmax(0, 1fr) 76px; flex-basis: 100%; gap: 6px; }
+  :root[data-mobile-study=on] #dose-area .dose-actions { flex-basis: 100%; gap: 6px; }
   :root[data-mobile-study=on] #dose-area .dose-actions button { min-height: 44px; padding: 6px; }
   :root[data-mobile-study=on] #dose-area .dose-actions #undo-btn span { display: none; }
   :root[data-mobile-study=on] #dose-area .dose-actions #drop-btn { font-size: .82rem; white-space: normal; }

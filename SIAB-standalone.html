@@ -1674,7 +1674,7 @@ dialog.tour + .backdrop { background: transparent; }
   :root[data-mobile-study=on] .dose-info { gap: 3px 7px; font-size: .7rem; margin-bottom: 4px; }
   :root[data-mobile-study=on] .dose-info .ajuda-link { width: 44px; height: 44px; min-width: 44px; }
   :root[data-mobile-study=on] .dose-barra { gap: 6px; }
-  :root[data-mobile-study=on] #dose-area .dose-actions { grid-template-columns: 44px minmax(0, 1fr) 76px; flex-basis: 100%; gap: 6px; }
+  :root[data-mobile-study=on] #dose-area .dose-actions { flex-basis: 100%; gap: 6px; }
   :root[data-mobile-study=on] #dose-area .dose-actions button { min-height: 44px; padding: 6px; }
   :root[data-mobile-study=on] #dose-area .dose-actions #undo-btn span { display: none; }
   :root[data-mobile-study=on] #dose-area .dose-actions #drop-btn { font-size: .82rem; white-space: normal; }
@@ -4599,8 +4599,8 @@ button:disabled {
     gap: 6px;
   }
   :root[data-workspace="rc3"] .workspace #dose-area .dose-actions {
-    display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 76px;
+    display: flex;
+    align-items: stretch;
     flex: 1 1 100%;
     gap: 6px;
   }
@@ -4609,6 +4609,15 @@ button:disabled {
     padding: 5px;
     min-width: 0;
     font-size: 0.78rem;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-area #undo-btn {
+    flex: 0 0 44px;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-area #drop-btn {
+    flex: 1 1 0;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-area #mobile-doses-toggle {
+    flex: 0 0 76px;
   }
   :root[data-workspace="rc3"] .workspace #undo-btn span {
     display: none;
@@ -6139,7 +6148,7 @@ button:disabled {
 
 </style>
     <style>
-/* RC.4 — contrato visual mobile. Apenas dimensões e espaçamento:
+/* RC.4.1 — contrato visual mobile. Apenas dimensões e espaçamento:
    workspace.js continua responsável por navegação, painéis e foco. */
 @media screen and (max-width: 900px) {
   :root[data-mobile-study="on"] {
@@ -6163,6 +6172,26 @@ button:disabled {
   :root[data-mobile-study="on"] body button {
     min-width: var(--mobile-target);
     max-width: 100%;
+  }
+  :root[data-mobile-study="on"] .header-brand,
+  :root[data-mobile-study="on"] .manual-map-actions a,
+  :root[data-mobile-study="on"] .manual-shortcuts a,
+  :root[data-mobile-study="on"] .dock .field-hint a[href] {
+    min-height: var(--mobile-target);
+  }
+  :root[data-mobile-study="on"] .dock .field-hint a[href] {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 4px;
+  }
+  :root[data-mobile-study="on"] .manual-article a[href]:not([class]) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--mobile-target);
+    vertical-align: middle;
+  }
+  :root[data-mobile-study="on"] .manual-search-field > button[type="submit"] {
+    flex: none;
   }
   :root[data-mobile-study="on"] body summary {
     align-items: center;
@@ -6256,6 +6285,13 @@ button:disabled {
   :root[data-mobile-study="on"] .check-row,
   :root[data-mobile-study="on"] .overview-link-options label {
     min-height: var(--mobile-target);
+  }
+}
+
+@media screen and (max-width: 370px) {
+  :root[data-mobile-study="on"] .workspace-launchers > button {
+    gap: 4px;
+    padding-inline: 5px;
   }
 }
 
@@ -9633,7 +9669,7 @@ button:disabled {
 </script>
     <script>
 "use strict";
-window.SIAB = { version: "1.0.0-rc.4", MAX_TUBES: 10, CAPACITY_ML: 5 };
+window.SIAB = { version: "1.0.0-rc.4.1", MAX_TUBES: 10, CAPACITY_ML: 5 };
 
 </script>
     <script>

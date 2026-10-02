@@ -1,6 +1,6 @@
 # SIAB — A química das cores
 
-**Versão entregue: 1.0.0-rc.4.** Evolução da RC.3 entregue, com Manual interativo e ajuda contextual integrados. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
+**Versão entregue: 1.0.0-rc.4.1.** Manual interativo integrado e contrato visual mobile auditado em quatro larguras. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
 
 O SIAB é um simulador educacional de ácidos e bases. A interface organiza a investigação: observar, medir, interpretar, registrar e explicar. Preserva a marca, a abertura e os três módulos independentes **Explorar**, **Medir** e **Calcular**.
 

@@ -1,4 +1,4 @@
-/* RC.4 — contrato visual mobile. Apenas dimensões e espaçamento:
+/* RC.4.1 — contrato visual mobile. Apenas dimensões e espaçamento:
    workspace.js continua responsável por navegação, painéis e foco. */
 @media screen and (max-width: 900px) {
   :root[data-mobile-study="on"] {
@@ -22,6 +22,26 @@
   :root[data-mobile-study="on"] body button {
     min-width: var(--mobile-target);
     max-width: 100%;
+  }
+  :root[data-mobile-study="on"] .header-brand,
+  :root[data-mobile-study="on"] .manual-map-actions a,
+  :root[data-mobile-study="on"] .manual-shortcuts a,
+  :root[data-mobile-study="on"] .dock .field-hint a[href] {
+    min-height: var(--mobile-target);
+  }
+  :root[data-mobile-study="on"] .dock .field-hint a[href] {
+    display: inline-flex;
+    align-items: center;
+    padding-inline: 4px;
+  }
+  :root[data-mobile-study="on"] .manual-article a[href]:not([class]) {
+    display: inline-flex;
+    align-items: center;
+    min-height: var(--mobile-target);
+    vertical-align: middle;
+  }
+  :root[data-mobile-study="on"] .manual-search-field > button[type="submit"] {
+    flex: none;
   }
   :root[data-mobile-study="on"] body summary {
     align-items: center;
@@ -115,5 +135,12 @@
   :root[data-mobile-study="on"] .check-row,
   :root[data-mobile-study="on"] .overview-link-options label {
     min-height: var(--mobile-target);
+  }
+}
+
+@media screen and (max-width: 370px) {
+  :root[data-mobile-study="on"] .workspace-launchers > button {
+    gap: 4px;
+    padding-inline: 5px;
   }
 }

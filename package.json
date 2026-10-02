@@ -1,6 +1,6 @@
 {
   "name": "siab-acidobase",
-  "version": "1.0.0-rc.4",
+  "version": "1.0.0-rc.4.1",
   "private": true,
   "description": "SIAB — investigação em ácidos e bases: temas, missões, roteiros, relatórios e PWA.",
   "license": "GPL-3.0-only",
