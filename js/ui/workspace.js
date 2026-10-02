@@ -753,21 +753,6 @@ SIAB.workspace = (() => {
         }
       }
     });
-    document.addEventListener("click", (e) => {
-      const link = e.target.closest(
-        ".dock .ajuda-link,.stage-stats .ajuda-link",
-      );
-      if (!link || S.ActivityContext.restricted()) return;
-      e.preventDefault();
-      S.activityUI.dialog(
-        false,
-        link.closest("#controls")
-          ? "montagem"
-          : link.closest(".stage-stats")
-            ? "ph"
-            : state.activeTool,
-      );
-    });
     const activityBanner = $("activity-banner");
     if (activityBanner && typeof ResizeObserver !== "undefined") {
       new ResizeObserver(() => {

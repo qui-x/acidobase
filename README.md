@@ -1,6 +1,6 @@
 # SIAB — A química das cores
 
-**Versão entregue: 1.0.0-rc.3.** Evolução da RC.2 entregue, com novo workspace contextual. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
+**Versão entregue: 1.0.0-rc.4.** Evolução da RC.3 entregue, com Manual interativo e ajuda contextual integrados. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
 
 O SIAB é um simulador educacional de ácidos e bases. A interface organiza a investigação: observar, medir, interpretar, registrar e explicar. Preserva a marca, a abertura e os três módulos independentes **Explorar**, **Medir** e **Calcular**.
 
@@ -40,6 +40,10 @@ Não é necessário Node, Python ou acesso à internet para usar o HTML único. 
 | `tests/results/` | Resultados reais, capturas e amostras de impressão |
 | `docs/` | Manual, migração, modelo, limites e acompanhamento do prompt |
 
+## Ajuste visual dos controles mobile
+
+A barra de gotejamento usa Desfazer de 44 px, Doses de 76 px e Gotejar flexível. Agitar e Medir pH são botões irmãos com largura e altura iguais. Chips, capacidade, fontes e ferramentas têm alvo mínimo de 44 px em telas de até 900 px; ações inteiras do painel chegam a 48 px. A suíte `npm run test:mobile-controls` mede 320, 360, 390 e 414 px em três motores e gera sete capturas.
+
 ## Reproduzir os testes
 
 Node.js 20 ou posterior, Python 3 para gerar o HTML único e OpenSSL para o teste HTTPS local. As dependências são somente de desenvolvimento; o aplicativo não usa Playwright nem axe em produção.
@@ -55,6 +59,16 @@ npm run test:layout
 Em ambiente Linux que não permita o sandbox de conteúdo do Firefox, o executor de testes usa `MOZ_DISABLE_CONTENT_SANDBOX=1`. O Chromium de testes usa `--no-sandbox`; essas opções pertencem ao processo automatizado, não ao aplicativo distribuído.
 
 Os testes iniciam seu próprio servidor HTTP. `SIAB_TEST_ENGINES=chromium` limita a execução; `SIAB_PLAYWRIGHT_MODULE` e `SIAB_AXE_MODULE` permitem indicar dependências já instaladas. A suíte grava os JSON em `tests/results`. As PDFs são amostras com identificação fictícia.
+
+## Manual interativo da RC.4
+
+O Manual agora reúne **13 categorias e 51 tópicos**, com busca local, sinônimos, passos de uso, exemplos, diagramas e detalhes expansíveis. Links diretos como `#/manual/phmetro` abrem a página correspondente. No celular, o índice abre por botão e o conteúdo ocupa a largura disponível.
+
+Os botões de ajuda da bancada usam o mesmo registro de conteúdo. Abrem uma explicação curta, um próximo passo e o link **Abrir no Manual**. Em atividade restrita, a ajuda permanece no contexto e não oferece links de saída. O Manual explica Montagens prontas e Roteiros em páginas distintas; os botões levam aos respectivos catálogos.
+
+**Iniciar tour da bancada** reutiliza o tour existente. A impressão oferece tópico completo ou guia rápido linear. O conteúdo essencial funciona na PWA offline e no HTML independente. Motor químico, instrumentos, dados brutos, compactação, permissões e documentos operacionais permanecem preservados.
+
+Consulte [arquitetura e auditoria de conteúdo](docs/MANUAL-RC4.md), [lista de páginas](docs/PAGINAS-MANUAL.md), [termos da busca](docs/TERMOS-BUSCA.md), [cobertura das 169 orientações](docs/COBERTURA-RC4.md) e [validação](VALIDACAO.md). `npm run build:manual-docs` regenera os documentos derivados do registro; `npm run build` também gera o standalone.
 
 ## Workspace da RC.3
 

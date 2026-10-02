@@ -1103,62 +1103,11 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 .boas-vindas p { flex: 1 1 260px; }
 .boas-vindas > div { display: flex; gap: 6px; align-items: center; }
 .boas-vindas .secondary-btn { min-height: 36px; padding: 6px 12px; }
-.tela-manual { max-width: 1120px; }
-.manual-acoes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; margin-top: 14px; }
-.manual-busca { flex: 1 1 260px; margin: 0; }
-.manual-grade { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; }
-.manual-indice { position: sticky; top: calc(var(--header-h) + 12px); border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 12px; }
-.manual-indice ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
-.manual-indice a { display: block; padding: 6px 8px; border-radius: 6px; color: var(--secondary); text-decoration: none; font-size: .85rem; }
-.manual-indice a:hover { background: var(--hover); color: var(--text); }
-.manual-conteudo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-.manual-secao { min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px 20px; scroll-margin-top: calc(var(--header-h) + 12px); }
-.manual-secao > h2 { font-size: 1.25rem; margin-bottom: 4px; }
-.manual-secao > p, .manual-secao li, .manual-secao dd { color: var(--secondary); font-size: .92rem; line-height: 1.6; }
-.manual-secao > p { margin-top: 10px; }
-.manual-resumo { color: var(--muted) !important; font-size: .85rem !important; margin-top: 0 !important; }
+/* Manual interativo: css/manual.css. Listas compartilhadas com roteiros. */
 .manual-lista, .manual-passos { padding-left: 22px; margin: 10px 0; display: grid; gap: 6px; }
 .manual-lista strong { color: var(--text); }
 .manual-passos li::marker { color: var(--accent); font-weight: 700; }
-.manual-dica { padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--panel2); border-radius: 4px; }
-.manual-dica strong { color: var(--accent); }
-.manual-teclas { display: grid; gap: 6px; margin: 12px 0; }
-.manual-teclas > div { display: grid; grid-template-columns: minmax(130px, 32%) 1fr; gap: 10px; align-items: center; }
-.manual-teclas dd { margin: 0; }
 kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--bg); color: var(--text); }
-.manual-faq { margin: 12px 0; }
-.manual-faq dt { font-weight: 600; color: var(--text); margin-top: 12px; }
-.manual-faq dd { margin: 4px 0 0; }
-.manual-acoes-secao { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
-.manual-figura { margin: 14px 0; }
-.manual-figura figcaption { font-size: .8rem; color: var(--muted); margin-top: 6px; }
-.diagrama { width: 100%; max-width: 560px; height: auto; }
-.manual-layout-maps { display: grid; gap: 18px; margin: 14px 0 4px; }
-.manual-layout-map { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; }
-.manual-layout-map > .eyebrow { margin: 0 0 4px; color: var(--accent); }
-.manual-layout-map > h3 { margin: 0 0 10px; font-size: 1rem; }
-.manual-map-grid-desktop { display: grid; grid-template-columns: minmax(110px, .9fr) minmax(150px, 1.25fr) minmax(110px, .9fr); grid-template-rows: minmax(82px, 1fr) minmax(60px, .75fr) minmax(42px, .42fr); gap: 7px; }
-.manual-map-card { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 3px; border: 1px solid var(--border); border-radius: 7px; background: var(--panel); padding: 9px 10px; }
-.manual-map-card strong { color: var(--text); font-size: .84rem; line-height: 1.2; }
-.manual-map-card span:last-child { color: var(--muted); font-size: .72rem; line-height: 1.35; }
-.manual-map-n { width: 20px; height: 20px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--bg) !important; font-size: .72rem !important; font-weight: 700; }
-.map-shelf { grid-column: 1; grid-row: 1 / 3; }
-.map-experiment { grid-column: 2; grid-row: 1; }
-.map-dose { grid-column: 2; grid-row: 2; }
-.map-ver { grid-column: 3; grid-row: 1 / 3; }
-.map-strip { grid-column: 2; grid-row: 3; }
-.manual-map-grid-mobile { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
-.manual-map-grid-mobile .manual-map-card { min-height: 58px; }
-.map-mobile-header, .map-mobile-experiment, .map-mobile-shelf { grid-column: 1 / -1; }
-.map-mobile-header { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
-.map-mobile-shelf { background: var(--panel2); }
-.manual-map-caption { margin: 9px 0 0; color: var(--muted); font-size: .8rem !important; line-height: 1.45 !important; }
-.manual-map-caption strong { color: var(--text); }
-.diag-caixa { fill: var(--panel2); stroke: var(--border); stroke-width: 1.2; }
-.diag-bola { fill: var(--accent); }
-.diag-num { fill: var(--bg); font: 700 11px 'Segoe UI', system-ui, sans-serif; }
-.diag-texto { fill: var(--text); font: 600 12px 'Segoe UI', system-ui, sans-serif; }
-.diag-sub { fill: var(--muted); font: 9.5px 'Segoe UI', system-ui, sans-serif; }
 .roteiros { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin-top: 12px; }
 .roteiro { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; display: flex; flex-direction: column; gap: 6px; }
 .roteiro h3 { margin: 0; font-size: 1rem; }
@@ -1303,21 +1252,11 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .detetive-tubo .tube-svg, .titulacao-tubo .tube-svg { max-height: 190px; margin: 0 auto; width: auto; }
   .memoria-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tela { padding: 20px 16px 32px; }
-  .manual-grade { grid-template-columns: minmax(0, 1fr); }
-  .manual-indice { position: static; }
-  .manual-indice ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .manual-secao { padding: 16px 14px; }
   .item-trilha { grid-template-columns: 34px 1fr; }
   .item-status { grid-column: 2; text-align: left; }
 }
 @media (max-width: 760px) {
-  .manual-map-grid-desktop { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
-  .manual-map-grid-desktop .map-shelf, .manual-map-grid-desktop .map-ver, .manual-map-grid-desktop .map-strip { grid-column: 1 / -1; grid-row: auto; }
-  .manual-map-grid-desktop .map-experiment { grid-column: 1; grid-row: auto; }
-  .manual-map-grid-desktop .map-dose { grid-column: 2; grid-row: auto; }
-  .manual-map-card { padding: 8px; }
-  .manual-map-card strong { font-size: .8rem; }
-  .manual-map-card span:last-child { font-size: .7rem; }
 }
 @media (max-width: 420px) {
   .header-actions .text-btn { font-size: .72rem; padding: 6px 8px; }
@@ -1548,7 +1487,6 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .roteiro-linhas { margin-bottom: 2mm; }
   /* Manual */
   .manual-acoes, .manual-acoes-secao, .roteiro .primary-btn, .manual-indice { display: none !important; }
-  .manual-grade { display: block; }
   /* Seções podem continuar na página seguinte (sem meias páginas vazias), mas título,
      itens, dicas, figuras e linhas de tabela não se partem. */
   .manual-secao { break-inside: auto; background: #fff; border: 0; border-top: .6pt solid #999; border-radius: 0; padding: 4mm 0; color: #000; }

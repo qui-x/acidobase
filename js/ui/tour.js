@@ -12,7 +12,7 @@ SIAB.tour = (() => {
       alvo: "#controls",
       alvoCelular: "#workspace-montagem",
       titulo: "Prepare a bancada",
-      texto: "Escolha uma solução e uma vidraria na prateleira.",
+      texto: "Abra Montagem para escolher uma solução em Preparo e uma vidraria em Objetos.",
     },
     {
       alvo: "#modulos",

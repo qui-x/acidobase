@@ -29,7 +29,8 @@ SIAB.rotear = () => {
   }
   if (nome === "missao" && SIAB.missaoAlias?.[parametro])
     parametro = SIAB.missaoAlias[parametro];
-  if (nome === "manual" && parametro === "roteiros") parametro = "montagens";
+  if (nome === "manual" && SIAB.manualRegistry?.aliases[parametro])
+    parametro = SIAB.manualRegistry.aliases[parametro];
   if (SIAB.atividades) {
     const permitido = SIAB.atividades.guardarRota(nome, parametro);
     nome = permitido.nome;

@@ -1197,62 +1197,11 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 .boas-vindas p { flex: 1 1 260px; }
 .boas-vindas > div { display: flex; gap: 6px; align-items: center; }
 .boas-vindas .secondary-btn { min-height: 36px; padding: 6px 12px; }
-.tela-manual { max-width: 1120px; }
-.manual-acoes { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 10px; margin-top: 14px; }
-.manual-busca { flex: 1 1 260px; margin: 0; }
-.manual-grade { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 24px; align-items: start; }
-.manual-indice { position: sticky; top: calc(var(--header-h) + 12px); border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 12px; }
-.manual-indice ol { list-style: none; padding: 0; margin: 0; display: grid; gap: 2px; }
-.manual-indice a { display: block; padding: 6px 8px; border-radius: 6px; color: var(--secondary); text-decoration: none; font-size: .85rem; }
-.manual-indice a:hover { background: var(--hover); color: var(--text); }
-.manual-conteudo { display: grid; grid-template-columns: minmax(0, 1fr); gap: 18px; }
-.manual-secao { min-width: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px 20px; scroll-margin-top: calc(var(--header-h) + 12px); }
-.manual-secao > h2 { font-size: 1.25rem; margin-bottom: 4px; }
-.manual-secao > p, .manual-secao li, .manual-secao dd { color: var(--secondary); font-size: .92rem; line-height: 1.6; }
-.manual-secao > p { margin-top: 10px; }
-.manual-resumo { color: var(--muted) !important; font-size: .85rem !important; margin-top: 0 !important; }
+/* Manual interativo: css/manual.css. Listas compartilhadas com roteiros. */
 .manual-lista, .manual-passos { padding-left: 22px; margin: 10px 0; display: grid; gap: 6px; }
 .manual-lista strong { color: var(--text); }
 .manual-passos li::marker { color: var(--accent); font-weight: 700; }
-.manual-dica { padding: 10px 12px; border-left: 3px solid var(--accent); background: var(--panel2); border-radius: 4px; }
-.manual-dica strong { color: var(--accent); }
-.manual-teclas { display: grid; gap: 6px; margin: 12px 0; }
-.manual-teclas > div { display: grid; grid-template-columns: minmax(130px, 32%) 1fr; gap: 10px; align-items: center; }
-.manual-teclas dd { margin: 0; }
 kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--bg); color: var(--text); }
-.manual-faq { margin: 12px 0; }
-.manual-faq dt { font-weight: 600; color: var(--text); margin-top: 12px; }
-.manual-faq dd { margin: 4px 0 0; }
-.manual-acoes-secao { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 14px; }
-.manual-figura { margin: 14px 0; }
-.manual-figura figcaption { font-size: .8rem; color: var(--muted); margin-top: 6px; }
-.diagrama { width: 100%; max-width: 560px; height: auto; }
-.manual-layout-maps { display: grid; gap: 18px; margin: 14px 0 4px; }
-.manual-layout-map { min-width: 0; border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; }
-.manual-layout-map > .eyebrow { margin: 0 0 4px; color: var(--accent); }
-.manual-layout-map > h3 { margin: 0 0 10px; font-size: 1rem; }
-.manual-map-grid-desktop { display: grid; grid-template-columns: minmax(110px, .9fr) minmax(150px, 1.25fr) minmax(110px, .9fr); grid-template-rows: minmax(82px, 1fr) minmax(60px, .75fr) minmax(42px, .42fr); gap: 7px; }
-.manual-map-card { min-width: 0; display: flex; flex-direction: column; justify-content: center; gap: 3px; border: 1px solid var(--border); border-radius: 7px; background: var(--panel); padding: 9px 10px; }
-.manual-map-card strong { color: var(--text); font-size: .84rem; line-height: 1.2; }
-.manual-map-card span:last-child { color: var(--muted); font-size: .72rem; line-height: 1.35; }
-.manual-map-n { width: 20px; height: 20px; display: inline-grid; place-items: center; border-radius: 50%; background: var(--accent); color: var(--bg) !important; font-size: .72rem !important; font-weight: 700; }
-.map-shelf { grid-column: 1; grid-row: 1 / 3; }
-.map-experiment { grid-column: 2; grid-row: 1; }
-.map-dose { grid-column: 2; grid-row: 2; }
-.map-ver { grid-column: 3; grid-row: 1 / 3; }
-.map-strip { grid-column: 2; grid-row: 3; }
-.manual-map-grid-mobile { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 7px; }
-.manual-map-grid-mobile .manual-map-card { min-height: 58px; }
-.map-mobile-header, .map-mobile-experiment, .map-mobile-shelf { grid-column: 1 / -1; }
-.map-mobile-header { border-color: color-mix(in srgb, var(--accent) 55%, var(--border)); }
-.map-mobile-shelf { background: var(--panel2); }
-.manual-map-caption { margin: 9px 0 0; color: var(--muted); font-size: .8rem !important; line-height: 1.45 !important; }
-.manual-map-caption strong { color: var(--text); }
-.diag-caixa { fill: var(--panel2); stroke: var(--border); stroke-width: 1.2; }
-.diag-bola { fill: var(--accent); }
-.diag-num { fill: var(--bg); font: 700 11px 'Segoe UI', system-ui, sans-serif; }
-.diag-texto { fill: var(--text); font: 600 12px 'Segoe UI', system-ui, sans-serif; }
-.diag-sub { fill: var(--muted); font: 9.5px 'Segoe UI', system-ui, sans-serif; }
 .roteiros { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin-top: 12px; }
 .roteiro { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; display: flex; flex-direction: column; gap: 6px; }
 .roteiro h3 { margin: 0; font-size: 1rem; }
@@ -1397,21 +1346,11 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .detetive-tubo .tube-svg, .titulacao-tubo .tube-svg { max-height: 190px; margin: 0 auto; width: auto; }
   .memoria-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tela { padding: 20px 16px 32px; }
-  .manual-grade { grid-template-columns: minmax(0, 1fr); }
-  .manual-indice { position: static; }
-  .manual-indice ol { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .manual-secao { padding: 16px 14px; }
   .item-trilha { grid-template-columns: 34px 1fr; }
   .item-status { grid-column: 2; text-align: left; }
 }
 @media (max-width: 760px) {
-  .manual-map-grid-desktop { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: auto; }
-  .manual-map-grid-desktop .map-shelf, .manual-map-grid-desktop .map-ver, .manual-map-grid-desktop .map-strip { grid-column: 1 / -1; grid-row: auto; }
-  .manual-map-grid-desktop .map-experiment { grid-column: 1; grid-row: auto; }
-  .manual-map-grid-desktop .map-dose { grid-column: 2; grid-row: auto; }
-  .manual-map-card { padding: 8px; }
-  .manual-map-card strong { font-size: .8rem; }
-  .manual-map-card span:last-child { font-size: .7rem; }
 }
 @media (max-width: 420px) {
   .header-actions .text-btn { font-size: .72rem; padding: 6px 8px; }
@@ -1642,7 +1581,6 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .roteiro-linhas { margin-bottom: 2mm; }
   /* Manual */
   .manual-acoes, .manual-acoes-secao, .roteiro .primary-btn, .manual-indice { display: none !important; }
-  .manual-grade { display: block; }
   /* Seções podem continuar na página seguinte (sem meias páginas vazias), mas título,
      itens, dicas, figuras e linhas de tabela não se partem. */
   .manual-secao { break-inside: auto; background: #fff; border: 0; border-top: .6pt solid #999; border-radius: 0; padding: 4mm 0; color: #000; }
@@ -1711,7 +1649,7 @@ dialog.tour + .backdrop { background: transparent; }
   :root[data-mobile-study=on] .ver-regua { margin-bottom: 10px; }
   :root[data-mobile-study=on]:not([data-mobile-scale=on]) #ver-regua { display: none; }
   :root[data-mobile-study=on] .grafico-modos { flex-wrap: wrap; }
-  :root[data-mobile-study=on] .grafico-modos button { min-height: 40px; }
+  :root[data-mobile-study=on] .grafico-modos button { min-height: 44px; }
   :root[data-mobile-study=on] .focus-view { padding: 10px 14px 6px; }
   :root[data-mobile-study=on] .focus-heading h1 { font-size: 1.08rem; }
   :root[data-mobile-study=on] .resumo-linha { font-size: .77rem; }
@@ -1734,10 +1672,10 @@ dialog.tour + .backdrop { background: transparent; }
   :root[data-mobile-study=on] .strip-add { min-height: 44px; padding: 6px 8px; font-size: .72rem; }
   :root[data-mobile-study=on] .workspace:not(.vazia) .dose-area { padding: 6px 12px 8px; box-shadow: 0 -3px 12px #0002; }
   :root[data-mobile-study=on] .dose-info { gap: 3px 7px; font-size: .7rem; margin-bottom: 4px; }
-  :root[data-mobile-study=on] .dose-info .ajuda-link { width: 24px; height: 24px; min-width: 24px; }
+  :root[data-mobile-study=on] .dose-info .ajuda-link { width: 44px; height: 44px; min-width: 44px; }
   :root[data-mobile-study=on] .dose-barra { gap: 6px; }
-  :root[data-mobile-study=on] #dose-area .dose-actions { grid-template-columns: 44px minmax(0, 1fr) 66px; flex-basis: 100%; gap: 6px; }
-  :root[data-mobile-study=on] #dose-area .dose-actions button { min-height: 46px; padding: 6px; }
+  :root[data-mobile-study=on] #dose-area .dose-actions { grid-template-columns: 44px minmax(0, 1fr) 76px; flex-basis: 100%; gap: 6px; }
+  :root[data-mobile-study=on] #dose-area .dose-actions button { min-height: 44px; padding: 6px; }
   :root[data-mobile-study=on] #dose-area .dose-actions #undo-btn span { display: none; }
   :root[data-mobile-study=on] #dose-area .dose-actions #drop-btn { font-size: .82rem; white-space: normal; }
   :root[data-mobile-study=on] #mobile-doses-toggle { align-items: center; justify-content: center; font-size: .75rem; }
@@ -1785,14 +1723,6 @@ dialog.tour + .backdrop { background: transparent; }
   :root[data-mobile-study=on] .tela-cabecalho { margin-bottom: 14px; }
   :root[data-mobile-study=on] .tela-cabecalho h1 { font-size: 1.4rem; }
   :root[data-mobile-study=on] .tela-cabecalho > p:not(.eyebrow) { font-size: .86rem; }
-  :root[data-mobile-study=on] .manual-acoes { gap: 6px; }
-  :root[data-mobile-study=on] .manual-acoes .manual-busca { flex: 1 1 100%; }
-  :root[data-mobile-study=on] .manual-acoes > :not(.manual-busca) { flex: 1; min-height: 44px; font-size: .75rem; padding: 6px; }
-  :root[data-mobile-study=on] .manual-indice { padding: 6px 10px; }
-  :root[data-mobile-study=on] #mobile-manual-toggle { width: 100%; min-height: 44px; justify-content: space-between; align-items: center; padding: 6px; }
-  :root[data-mobile-study=on]:not([data-mobile-index=on]) #manual-indice { display: none; }
-  :root[data-mobile-study=on][data-mobile-index=on] #manual-indice { max-height: 45dvh; overflow-y: auto; grid-template-columns: 1fr; }
-  :root[data-mobile-study=on] .manual-secao { padding: 14px 12px; }
   :root[data-mobile-study=on] .caderno-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   :root[data-mobile-study=on] .caderno-acoes button { min-height: 44px; padding: 6px; font-size: .77rem; }
   :root[data-mobile-study=on] #caderno-limpar { grid-column: 1 / -1; }
@@ -1824,7 +1754,7 @@ dialog.tour + .backdrop { background: transparent; }
 }
 @media screen and (max-width: 900px) and (max-height: 500px) and (min-width: 600px) {
   :root[data-mobile-study=on] { --bottom-h: calc(48px + env(safe-area-inset-bottom)); }
-  :root[data-mobile-study=on] .bottom-nav a { min-height: 42px; padding-block: 2px; }
+  :root[data-mobile-study=on] .bottom-nav a { min-height: 44px; padding-block: 2px; }
   :root[data-mobile-study=on] .bottom-nav a svg { height: 16px; }
   :root[data-mobile-study=on] .app-header { padding-block: 2px; padding-top: calc(2px + env(safe-area-inset-top)); }
   :root[data-mobile-study=on] .view-tabs { min-height: 48px; padding-block: 2px; }
@@ -4269,6 +4199,7 @@ button:disabled {
 .context-action-bar .agitar-btn {
   min-width: 100px;
   justify-content: center;
+  margin-left: 0;
 }
 .context-action-bar .agitar-btn svg {
   width: 18px;
@@ -4669,7 +4600,7 @@ button:disabled {
   }
   :root[data-workspace="rc3"] .workspace #dose-area .dose-actions {
     display: grid;
-    grid-template-columns: 44px minmax(0, 1fr) 58px;
+    grid-template-columns: 44px minmax(0, 1fr) 76px;
     flex: 1 1 100%;
     gap: 6px;
   }
@@ -4684,13 +4615,25 @@ button:disabled {
   }
   :root[data-workspace="rc3"] .workspace .context-action-bar {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: stretch;
     margin-top: 6px;
     gap: 6px;
   }
   :root[data-workspace="rc3"] .workspace .context-action-bar button {
+    min-width: 0;
+    min-height: 44px;
+    width: 100%;
+    margin: 0;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--panel2);
+    color: var(--text);
     justify-content: center;
     font-size: 0.77rem;
+    font-weight: 600;
+    line-height: 1.25;
   }
   :root[data-workspace="rc3"] .workspace .dose-shortcuts {
     display: none;
@@ -4958,6 +4901,1361 @@ button:disabled {
   .workspace .stage-stats .ajuda-link {
     min-width: 44px;
     min-height: 44px;
+  }
+}
+
+</style>
+    <style>
+/* RC.4 — consulta integrada aos tokens e controles do SIAB. */
+.tela-manual {
+  max-width: 1320px;
+  padding: 24px 32px 64px;
+  --manual-reading: 72ch;
+}
+.manual-topbar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.manual-home-link {
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  color: var(--text);
+  padding: 10px 0;
+}
+#manual-search-form {
+  flex: 1;
+  max-width: 680px;
+  margin: auto;
+  min-width: 0;
+}
+#manual-search-form > label {
+  display: block;
+  color: var(--secondary);
+  font-size: 0.8rem;
+  margin-bottom: 5px;
+}
+.manual-search-field {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+#manual-busca {
+  min-width: 0;
+  width: 100%;
+  height: 46px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--panel);
+  color: var(--text);
+}
+#manual-busca::placeholder {
+  color: var(--muted);
+}
+.manual-topbar > .secondary-btn {
+  flex-shrink: 0;
+  align-self: flex-end;
+}
+.manual-tools {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  margin: 8px 0 16px;
+}
+#manual-index-toggle {
+  display: none;
+}
+.manual-shell {
+  display: grid;
+  grid-template-columns: 218px minmax(0, 1fr);
+  gap: 44px;
+  align-items: start;
+}
+[data-manual-view="home"] .manual-shell,
+[data-manual-view="search"] .manual-shell {
+  display: block;
+}
+[data-manual-view="home"] .manual-index,
+[data-manual-view="search"] .manual-index {
+  display: none;
+}
+.manual-index {
+  position: sticky;
+  top: calc(var(--header-h) + 16px);
+  max-height: calc(100dvh - var(--header-h) - 36px);
+  overflow: auto;
+  padding: 0 12px 8px 0;
+  border-right: 1px solid var(--border);
+  scrollbar-width: thin;
+}
+.manual-index a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 10px 8px;
+  min-height: 44px;
+  text-decoration: none;
+  color: var(--secondary);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+}
+.manual-index a svg {
+  flex-shrink: 0;
+}
+.manual-index a:hover {
+  background: var(--hover);
+  color: var(--text);
+}
+.manual-index a[aria-current="page"] {
+  background: var(--panel2);
+  color: var(--accent);
+  font-weight: 700;
+  box-shadow: inset 3px 0 currentColor;
+}
+.manual-index ul {
+  list-style: none;
+  padding: 0;
+  margin: 12px 0 0;
+}
+.manual-index ul ul {
+  margin: 0 0 6px 17px;
+  padding-left: 9px;
+  border-left: 1px solid var(--border);
+}
+.manual-index ul ul a {
+  font-size: 0.825rem;
+  padding: 8px;
+  min-height: 38px;
+}
+.manual-index-home {
+  font-weight: 600;
+}
+#manual-conteudo {
+  min-width: 0;
+}
+.manual-hero {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: 42px;
+  align-items: center;
+  padding: 8px 0 30px;
+}
+.manual-hero h1 {
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  line-height: 1.16;
+  letter-spacing: -0.025em;
+  max-width: 14ch;
+  margin: 14px 0 18px;
+  font-weight: 650;
+}
+.manual-hero > div > p:not(.eyebrow) {
+  color: var(--secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+  max-width: 49ch;
+}
+.manual-hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 22px;
+}
+.manual-hero-actions .quiet-btn {
+  font-size: 0.875rem;
+}
+.manual-diagram {
+  margin: 24px 0;
+  padding: 22px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--panel);
+  min-width: 0;
+  max-width: 100%;
+}
+.manual-diagram figcaption {
+  color: var(--secondary);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  margin-top: 16px;
+  max-width: var(--manual-reading);
+}
+.manual-hero .manual-diagram {
+  margin: 0;
+  background:
+    radial-gradient(
+      ellipse at 50% 70%,
+      color-mix(in srgb, var(--accent) 8%, transparent),
+      transparent 70%
+    ),
+    var(--panel);
+}
+.manual-map-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+.manual-map-actions a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 40px;
+  padding: 6px 9px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel2);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+.manual-map-actions a:hover {
+  border-color: var(--accent);
+}
+.manual-map-scene {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  min-height: 174px;
+  padding-top: 8px;
+}
+.manual-map-scene > svg {
+  width: 125px;
+  max-width: 40%;
+  height: auto;
+  flex-shrink: 0;
+}
+.manual-map-scene > div {
+  display: grid;
+  gap: 7px;
+}
+.manual-map-scene strong {
+  font-size: 0.95rem;
+}
+.manual-map-scene span {
+  color: var(--secondary);
+  font-size: 0.8rem;
+}
+.manual-diagram .glass {
+  fill: none;
+  stroke: var(--secondary);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.manual-diagram .ticks {
+  fill: none;
+  stroke: var(--secondary);
+  stroke-width: 2;
+}
+.manual-diagram .liquid {
+  fill: var(--accent);
+  opacity: 0.65;
+}
+.manual-diagram .bubble {
+  fill: var(--bg);
+}
+.manual-diagram .device {
+  fill: var(--panel2);
+  stroke: var(--border);
+  stroke-width: 2;
+}
+.manual-diagram .screen {
+  fill: var(--bg);
+  stroke: var(--secondary);
+}
+.manual-diagram .probe {
+  fill: var(--panel2);
+  stroke: var(--secondary);
+  stroke-width: 2;
+}
+.manual-diagram text {
+  fill: var(--text);
+  font:
+    18px "Segoe UI",
+    system-ui,
+    sans-serif;
+}
+.manual-diagram .readout {
+  font:
+    30px Consolas,
+    monospace;
+}
+.manual-instrument {
+  width: 100%;
+  max-width: 520px;
+  height: auto;
+  margin: auto;
+}
+.manual-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
+  padding: 18px 0;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+.manual-shortcuts > span {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--muted);
+}
+.manual-shortcuts a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.875rem;
+  min-height: 36px;
+  text-decoration: none;
+}
+.manual-shortcuts a:hover {
+  text-decoration: underline;
+}
+.manual-category-section {
+  margin-top: 30px;
+}
+.manual-category-section > h2 {
+  font-size: 1rem;
+  letter-spacing: 0.01em;
+  margin-bottom: 14px;
+}
+.manual-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(225px, 100%), 1fr));
+  gap: 14px;
+}
+.manual-category {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  text-decoration: none;
+  color: var(--text);
+  transition:
+    border-color 0.15s,
+    background 0.15s;
+}
+.manual-category:hover {
+  background: var(--panel2);
+  border-color: var(--accent);
+}
+.manual-symbol {
+  display: inline-flex;
+  color: var(--accent);
+  margin-bottom: 12px;
+}
+.manual-symbol svg {
+  width: 26px;
+  height: 26px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.manual-category h3 {
+  margin: 0 0 8px;
+  font-size: 1rem;
+}
+.manual-category p {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--secondary);
+  margin-bottom: 16px;
+  max-width: 50ch;
+}
+.manual-category-action {
+  margin-top: auto;
+  padding-top: 5px;
+  font-size: 0.8rem;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.manual-breadcrumb {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 24px;
+}
+.manual-breadcrumb a {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  text-underline-offset: 3px;
+}
+.manual-article > header {
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+.manual-article h1 {
+  font-size: clamp(1.7rem, 2.5vw, 2.35rem);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 10px 0 16px;
+}
+.manual-lead {
+  font-size: 1.1rem;
+  color: var(--text);
+  max-width: 62ch;
+  line-height: 1.65;
+}
+.manual-article p {
+  max-width: var(--manual-reading);
+  line-height: 1.7;
+}
+.manual-article > section {
+  margin: 26px 0;
+}
+.manual-article h2 {
+  font-size: 1.12rem;
+  margin: 0 0 12px;
+}
+.manual-purpose p,
+.manual-steps,
+.manual-details p,
+.manual-note {
+  font-size: 0.975rem;
+  color: var(--secondary);
+}
+.manual-steps {
+  list-style: none;
+  counter-reset: manual-step;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0;
+  max-width: var(--manual-reading);
+}
+.manual-steps li {
+  counter-increment: manual-step;
+  position: relative;
+  min-height: 54px;
+  padding: 4px 0 18px 42px;
+  line-height: 1.7;
+}
+.manual-steps li:before {
+  content: counter(manual-step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 5px;
+  font:
+    0.8rem/24px Consolas,
+    monospace;
+  color: var(--accent);
+  width: 30px;
+  border-bottom: 1px solid var(--border);
+}
+.manual-steps li + li {
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+.manual-steps li + li:before {
+  top: 13px;
+}
+.manual-example {
+  padding: 18px 20px;
+  border-left: 3px solid var(--accent);
+  background: var(--panel);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 20px 0;
+  max-width: var(--manual-reading);
+}
+.manual-example strong {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+}
+.manual-example p {
+  font-size: 0.95rem;
+  color: var(--secondary);
+  margin-top: 6px;
+}
+.manual-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 24px 0;
+}
+.manual-actions > p {
+  width: 100%;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+.manual-accordion {
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+}
+.manual-accordion h3 {
+  margin: 0;
+}
+.manual-accordion button {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  text-align: left;
+  gap: 16px;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 16px 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text);
+}
+.manual-accordion button:hover {
+  background: var(--panel);
+}
+.manual-accordion button > span {
+  color: var(--accent);
+  font-size: 1.25rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.manual-accordion > div {
+  padding: 0 12px 18px 0;
+}
+.manual-related {
+  margin-top: 32px;
+  padding-top: 22px;
+  border-top: 1px solid var(--border);
+}
+.manual-related > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+}
+.manual-related a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  font-size: 0.9rem;
+  text-underline-offset: 4px;
+}
+.manual-back {
+  margin-top: 26px;
+  font-size: 0.9rem;
+}
+.manual-topic-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+.manual-topic-link {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  color: var(--text);
+  text-decoration: none;
+  min-width: 0;
+}
+.manual-topic-link:hover {
+  background: var(--panel);
+  border-color: var(--accent);
+}
+.manual-topic-link > .manual-symbol {
+  margin: 0;
+}
+.manual-topic-link > .manual-symbol svg {
+  width: 20px;
+  height: 20px;
+}
+.manual-topic-link > span:nth-child(2) {
+  flex: 1;
+  min-width: 0;
+}
+.manual-topic-link strong {
+  display: block;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+.manual-topic-link > span > span {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--secondary);
+  display: block;
+}
+.manual-topic-link > svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  margin-top: 3px;
+  color: var(--accent);
+}
+.manual-flow {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.manual-flow li {
+  position: relative;
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+.manual-flow li:not(:last-child):after {
+  content: "→";
+  position: absolute;
+  right: -18px;
+  top: -2px;
+  color: var(--accent);
+}
+.manual-flow.independent li:after {
+  content: none;
+}
+.manual-flow strong {
+  font-size: 0.9rem;
+}
+.manual-flow span {
+  font-size: 0.85rem;
+  color: var(--secondary);
+}
+.manual-comparison {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 20px;
+  align-items: center;
+}
+.manual-comparison strong {
+  color: var(--accent);
+}
+.manual-comparison p {
+  margin: 8px 0;
+  font-size: 0.95rem;
+}
+.manual-comparison span {
+  color: var(--secondary);
+  font-size: 0.85rem;
+}
+.manual-strip {
+  display: flex;
+  gap: 24px;
+  align-items: center;
+}
+.manual-strip > span {
+  width: 32px;
+  height: 145px;
+  background: linear-gradient(var(--secondary) 0 67%, var(--accent) 67%);
+  flex-shrink: 0;
+  border: 2px solid var(--border);
+  border-radius: 3px;
+}
+.manual-strip p {
+  color: var(--secondary);
+  margin-top: 10px;
+  font-size: 0.95rem;
+}
+.manual-reference-table {
+  max-width: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin: 24px 0;
+}
+.manual-reference-table table {
+  width: 100%;
+  min-width: 460px;
+  font-size: 0.875rem;
+  border-collapse: collapse;
+}
+.manual-reference-table caption {
+  font-weight: 600;
+  text-align: left;
+  padding: 14px;
+  background: var(--panel);
+}
+.manual-reference-table th,
+.manual-reference-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text);
+  white-space: normal;
+  font-family: inherit;
+}
+.manual-reference-table thead th {
+  background: var(--panel2);
+  color: var(--secondary);
+  font-size: 0.8rem;
+}
+.manual-reference-table .mini-dot {
+  display: inline-block;
+  margin: 0 4px 0 6px;
+}
+.manual-search-results {
+  max-width: 870px;
+  margin: auto;
+}
+.manual-search-results h1,
+.manual-empty h1 {
+  font-size: 1.6rem;
+  margin: 8px 0 14px;
+  overflow-wrap: anywhere;
+}
+.manual-search-results > p,
+.manual-empty p {
+  color: var(--secondary);
+}
+.manual-search-results ul {
+  padding: 0;
+  list-style: none;
+  margin: 24px 0;
+}
+.manual-search-results li {
+  border-bottom: 1px solid var(--border);
+}
+.manual-search-results li a {
+  display: block;
+  position: relative;
+  padding: 20px 38px 20px 0;
+  text-decoration: none;
+  color: var(--text);
+}
+.manual-search-results li a:hover {
+  background: var(--panel);
+}
+.manual-search-results li h2 {
+  margin: 8px 0;
+  font-size: 1.1rem;
+}
+.manual-search-results li p {
+  color: var(--secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  max-width: var(--manual-reading);
+}
+.manual-search-results li svg {
+  position: absolute;
+  right: 6px;
+  top: 40px;
+  color: var(--accent);
+}
+.manual-empty {
+  padding: 30px 0;
+}
+.manual-empty a {
+  margin-top: 18px;
+}
+.manual-context p {
+  line-height: 1.65;
+  color: var(--secondary);
+  font-size: 0.95rem;
+}
+.manual-context .manual-context-summary {
+  font-size: 1.05rem;
+  color: var(--text);
+  margin-bottom: 12px;
+}
+.manual-context-next {
+  margin: 16px 0;
+  padding: 12px 14px;
+  background: var(--panel2);
+  border-left: 3px solid var(--accent);
+  border-radius: 4px;
+}
+.manual-context-next strong {
+  font-size: 0.8rem;
+  color: var(--accent);
+}
+.manual-context-next p {
+  margin-top: 6px;
+}
+.manual-context-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+#manual-print {
+  display: none;
+}
+:root[data-contrast="on"] .manual-category,
+:root[data-contrast="on"] .manual-diagram,
+:root[data-contrast="on"] .manual-example {
+  background: var(--panel);
+  border-color: var(--border);
+}
+@media (min-width: 1800px) {
+  .tela-manual {
+    max-width: 1440px;
+  }
+  .manual-category-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 1100px) {
+  .tela-manual {
+    padding: 20px 24px 50px;
+  }
+  .manual-shell {
+    grid-template-columns: 190px minmax(0, 1fr);
+    gap: 26px;
+  }
+  .manual-hero {
+    gap: 24px;
+  }
+  .manual-map-scene {
+    gap: 6px;
+  }
+  .manual-topic-list {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 800px) {
+  .tela-manual {
+    padding: 18px 16px 40px;
+  }
+  .manual-topbar {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+  }
+  .manual-topbar .manual-home-link {
+    order: 0;
+    flex: 1;
+  }
+  .manual-topbar > .secondary-btn {
+    order: 1;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+  #manual-search-form {
+    order: 2;
+    flex-basis: 100%;
+    max-width: none;
+  }
+  .manual-tools {
+    justify-content: space-between;
+    margin: 12px 0 20px;
+  }
+  #manual-index-toggle {
+    display: inline-flex;
+    font-size: 0.85rem;
+  }
+  .manual-tools > .quiet-btn {
+    font-size: 0.8rem;
+  }
+  .manual-shell {
+    display: block;
+  }
+  .manual-index {
+    display: none;
+    position: static;
+    max-height: none;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    background: var(--panel);
+    margin-bottom: 24px;
+  }
+  .manual-index-open .manual-index,
+  .manual-index-open[data-manual-view="home"] .manual-index,
+  .manual-index-open[data-manual-view="search"] .manual-index {
+    display: block;
+  }
+  .manual-index a {
+    min-height: 44px;
+  }
+  .manual-index ul ul a {
+    min-height: 44px;
+    font-size: 0.875rem;
+  }
+  .tela-manual .quiet-btn,
+  .manual-related a,
+  .manual-breadcrumb a {
+    min-height: 44px;
+  }
+  .manual-hero {
+    grid-template-columns: 1fr;
+    gap: 26px;
+    padding: 0 0 24px;
+  }
+  .manual-hero h1 {
+    font-size: 2rem;
+    max-width: 18ch;
+    margin: 10px 0 14px;
+  }
+  .manual-hero > div > p:not(.eyebrow) {
+    font-size: 1rem;
+    max-width: 55ch;
+  }
+  .manual-hero .manual-diagram {
+    max-width: 600px;
+    width: 100%;
+  }
+  .manual-map-scene {
+    min-height: 150px;
+  }
+  .manual-category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .manual-category {
+    padding: 18px;
+  }
+  .manual-shortcuts {
+    gap: 8px 20px;
+  }
+  .manual-shortcuts > span {
+    flex-basis: 100%;
+  }
+  .manual-shortcuts a {
+    min-height: 40px;
+  }
+  .manual-breadcrumb {
+    margin-bottom: 14px;
+  }
+  .manual-article h1 {
+    font-size: 1.8rem;
+  }
+  .manual-lead {
+    font-size: 1.025rem;
+  }
+  .manual-diagram {
+    padding: 18px;
+  }
+  .manual-article p {
+    overflow-wrap: anywhere;
+  }
+  .manual-topic-list {
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 460px) {
+  .manual-category-grid {
+    grid-template-columns: 1fr;
+  }
+  .manual-category {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    column-gap: 14px;
+  }
+  .manual-category > .manual-symbol {
+    grid-column: 1;
+    grid-row: 1/4;
+  }
+  .manual-category h3,
+  .manual-category p,
+  .manual-category-action {
+    grid-column: 2;
+  }
+  .manual-category p {
+    margin-bottom: 10px;
+  }
+  .manual-hero h1 {
+    font-size: 1.8rem;
+  }
+  .manual-hero-actions {
+    gap: 4px 10px;
+  }
+  .manual-hero .manual-diagram {
+    padding: 14px;
+  }
+  .manual-map-scene > svg {
+    width: 92px;
+  }
+  .manual-map-scene strong {
+    font-size: 0.875rem;
+  }
+  .manual-map-actions {
+    gap: 5px;
+  }
+  .manual-map-actions a {
+    padding: 6px;
+    font-size: 0.8rem;
+  }
+  .manual-map-actions a svg {
+    width: 15px;
+    height: 15px;
+  }
+  .manual-flow {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+  .manual-flow li:not(:last-child):after {
+    content: "↓";
+    right: 0;
+    top: 10px;
+  }
+  .manual-flow.independent li:after {
+    content: none;
+  }
+  .manual-flow li {
+    gap: 4px;
+    padding-right: 20px;
+  }
+  .manual-comparison {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .manual-comparison > span {
+    display: none;
+  }
+  .manual-comparison > div + div {
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  .manual-topbar > .secondary-btn {
+    font-size: 0.75rem;
+  }
+  .manual-search-field .secondary-btn {
+    padding: 10px;
+  }
+  .manual-tools {
+    gap: 4px;
+  }
+  .manual-tools button {
+    font-size: 0.75rem !important;
+  }
+  .manual-strip {
+    gap: 16px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .manual-category {
+    transition: none;
+  }
+}
+:root[data-motion="reduce"] .manual-category {
+  transition: none;
+}
+@media (forced-colors: active) {
+  .manual-category,
+  .manual-diagram,
+  .manual-example {
+    border: 1px solid CanvasText;
+    background: Canvas;
+  }
+  .manual-index a[aria-current="page"] {
+    outline: 2px solid Highlight;
+  }
+  .manual-diagram .liquid {
+    fill: Highlight;
+    opacity: 1;
+  }
+  .manual-symbol {
+    color: LinkText;
+  }
+}
+@media print {
+  #manual-print .manual-related {
+    display: none;
+  }
+  body[data-rota="manual"] .tela-manual {
+    padding: 0;
+    max-width: none;
+  }
+  body[data-rota="manual"] .tela-manual > :not(#manual-print) {
+    display: none !important;
+  }
+  body[data-rota="manual"] #manual-print {
+    display: block !important;
+    background: #fff;
+    color: #111;
+    font-size: 10pt;
+  }
+  #manual-print h1 {
+    font-size: 21pt;
+    margin: 0 0 5mm;
+  }
+  #manual-print h2 {
+    font-size: 12pt;
+    margin: 5mm 0 2mm;
+    break-after: avoid;
+  }
+  #manual-print h3 {
+    font-size: 10.5pt;
+    margin: 4mm 0 1mm;
+    break-after: avoid;
+  }
+  #manual-print header {
+    margin-bottom: 5mm;
+    border-bottom: 0.6pt solid #999;
+    padding-bottom: 4mm;
+  }
+  #manual-print p,
+  #manual-print li {
+    font-size: 10pt;
+    line-height: 1.55;
+    color: #222 !important;
+    max-width: none;
+  }
+  #manual-print .manual-lead {
+    font-size: 11pt;
+  }
+  #manual-print .manual-diagram {
+    padding: 3mm;
+    margin: 4mm 0;
+    background: #fff;
+    border: 0.6pt solid #aaa;
+    break-inside: avoid;
+    max-width: 155mm;
+  }
+  #manual-print .manual-diagram figcaption {
+    font-size: 8.5pt;
+    color: #333;
+  }
+  #manual-print .manual-diagram .glass,
+  #manual-print .manual-diagram .ticks {
+    stroke: #444;
+  }
+  #manual-print .manual-diagram .device,
+  #manual-print .manual-diagram .screen,
+  #manual-print .manual-diagram .probe {
+    fill: #fff;
+    stroke: #555;
+  }
+  #manual-print .manual-diagram text {
+    fill: #111;
+  }
+  #manual-print .manual-diagram .liquid {
+    fill: #777;
+    opacity: 0.45;
+  }
+  #manual-print .manual-instrument {
+    max-height: 40mm;
+  }
+  #manual-print .manual-diagram .manual-map-actions {
+    display: none;
+  }
+  #manual-print .manual-map-scene {
+    min-height: 0;
+  }
+  #manual-print .manual-map-scene > svg {
+    max-height: 35mm;
+  }
+  #manual-print .manual-article > section {
+    margin: 4mm 0;
+  }
+  #manual-print .manual-steps li {
+    padding-top: 1mm;
+    padding-bottom: 2mm;
+    min-height: 0;
+    break-inside: avoid;
+  }
+  #manual-print .manual-steps li:before {
+    top: 1mm;
+    color: #222;
+  }
+  #manual-print .manual-steps li + li:before {
+    top: 1mm;
+  }
+  #manual-print .manual-example {
+    background: #fff;
+    border-color: #777;
+    margin: 4mm 0;
+    padding: 2mm 4mm;
+    break-inside: avoid;
+  }
+  #manual-print .manual-example strong,
+  #manual-print a {
+    color: #111;
+  }
+  #manual-print .manual-related svg {
+    display: none;
+  }
+  #manual-print .manual-related a {
+    font-size: 9pt;
+    min-height: 0;
+  }
+  #manual-print .manual-reference-table {
+    overflow: visible;
+    border: 0;
+  }
+  #manual-print table {
+    min-width: 0;
+    font-size: 8.5pt;
+  }
+  #manual-print table th,
+  #manual-print table td {
+    color: #111;
+    background: #fff;
+    padding: 2mm;
+    border-bottom: 0.5pt solid #aaa;
+  }
+  #manual-print tr {
+    break-inside: avoid;
+  }
+  #manual-print thead {
+    display: table-header-group;
+  }
+  #manual-print .manual-print-category {
+    break-inside: avoid;
+    border-bottom: 0.5pt solid #aaa;
+    padding: 2mm 0 4mm;
+  }
+  #manual-print .manual-print-category ol {
+    margin: 2mm 0;
+    padding-left: 6mm;
+  }
+  #manual-print .manual-flow {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 5mm;
+  }
+  #manual-print .manual-flow li:after {
+    content: none;
+  }
+  #manual-print .manual-note {
+    margin: 3mm 0;
+  }
+  #manual-print .manual-related {
+    margin: 4mm 0 0;
+    padding-top: 3mm;
+  }
+  #manual-print .manual-reference-table caption {
+    background: #fff;
+  }
+}
+
+</style>
+    <style>
+/* RC.4 — contrato visual mobile. Apenas dimensões e espaçamento:
+   workspace.js continua responsável por navegação, painéis e foco. */
+@media screen and (max-width: 900px) {
+  :root[data-mobile-study="on"] {
+    --mobile-target: 44px;
+    --mobile-sheet-action: 48px;
+    --mobile-control-gap: 8px;
+  }
+
+  /* Inclui controles inseridos dinamicamente. Não alcança desenhos,
+     amostras de cor, badges ou indicadores meramente decorativos. */
+  :root[data-mobile-study="on"] body :is(button, summary),
+  :root[data-mobile-study="on"]
+    body
+    :is(.chip, .segmented label, .capacidade-opcoes label, .opcoes-tubo .opcao),
+  :root[data-mobile-study="on"]
+    body
+    :is(input:not([type="checkbox"], [type="radio"]), select, textarea) {
+    min-height: var(--mobile-target);
+  }
+
+  :root[data-mobile-study="on"] body button {
+    min-width: var(--mobile-target);
+    max-width: 100%;
+  }
+  :root[data-mobile-study="on"] body summary {
+    align-items: center;
+  }
+
+  /* Ícone pequeno, alvo de toque completo. */
+  :root[data-mobile-study="on"]
+    body
+    :is(
+      .icon-btn,
+      .olho-btn,
+      .ajuda-link,
+      .fontstep-btn,
+      .menu-btn,
+      .drawer-close
+    ) {
+    width: var(--mobile-target);
+    height: var(--mobile-target);
+    min-width: var(--mobile-target);
+    min-height: var(--mobile-target);
+    padding: 0;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+  }
+  :root[data-mobile-study="on"] .dose-info .ajuda-link {
+    margin: 0;
+  }
+
+  :root[data-mobile-study="on"] .chip-list {
+    gap: var(--mobile-control-gap);
+    align-items: stretch;
+  }
+  :root[data-mobile-study="on"] .chip {
+    padding: 8px 12px;
+    max-width: 100%;
+    flex-shrink: 0;
+    line-height: 1.3;
+  }
+  :root[data-mobile-study="on"] .chip-cor {
+    flex: none;
+  }
+  :root[data-mobile-study="on"] .opcoes-tubo {
+    gap: var(--mobile-control-gap);
+  }
+  :root[data-mobile-study="on"] .opcoes-tubo .opcao {
+    flex: 1 1 110px;
+    min-width: 0;
+    padding: 8px 12px;
+  }
+  :root[data-mobile-study="on"] .overview-heading-actions > button {
+    border-radius: 6px;
+    padding: 8px 10px;
+    line-height: 1.3;
+  }
+
+  :root[data-mobile-study="on"] .ver-acoes,
+  :root[data-mobile-study="on"] .grafico-modos {
+    gap: var(--mobile-control-gap);
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+  :root[data-mobile-study="on"] .ver-acoes > button,
+  :root[data-mobile-study="on"] .grafico-modos > button {
+    flex: 1 1 112px;
+    min-width: 0;
+    padding: 8px 10px;
+    justify-content: center;
+    line-height: 1.3;
+  }
+
+  /* Ações que ocupam uma linha do bottom sheet. Famílias e ferramentas
+     mantêm seus cards de seleção de 52 px em workspace.css. */
+  :root[data-mobile-study="on"]
+    .dock
+    :is(.full-width, .dock-data-menu > button),
+  :root[data-mobile-study="on"] .dock .panel-actions > button,
+  :root[data-mobile-study="on"]
+    .dock
+    .ver-conteudo
+    > .instrument-section
+    > button {
+    min-height: var(--mobile-sheet-action);
+  }
+  :root[data-mobile-study="on"] .dock .panel-actions {
+    gap: var(--mobile-control-gap);
+  }
+
+  /* O desenho do checkbox/switch permanece pequeno; o label inteiro
+     aciona o controle e oferece a área mínima de toque. */
+  :root[data-mobile-study="on"] .check-row,
+  :root[data-mobile-study="on"] .overview-link-options label {
+    min-height: var(--mobile-target);
   }
 }
 
@@ -5477,50 +6775,71 @@ button:disabled {
         <div id="caderno-lista" class="caderno-lista"></div>
       </section>
 
-      <!-- MANUAL -->
+      <!-- MANUAL: conteúdo e índice gerados pelo registro central -->
       <section
         data-tela="manual"
         class="tela tela-manual"
         aria-labelledby="manual-titulo"
         hidden
       >
-        <header class="tela-cabecalho">
-          <p class="eyebrow">MANUAL DA BANCADA</p>
-          <h1 id="manual-titulo" data-foco tabindex="-1">
-            Como usar cada parte
-          </h1>
-          <p>
-            Cada seção explica uma parte da bancada. Use “Mostrar na bancada”
-            para ver onde ela fica e “Montar na bancada” para preparar um teste
-            pronto.
-          </p>
-          <div class="manual-acoes">
-            <label class="field manual-busca"
-              >Buscar no manual
+        <div class="manual-topbar">
+          <a class="manual-home-link" href="#/manual">Manual</a>
+          <form
+            id="manual-search-form"
+            role="search"
+            aria-label="Busca no Manual"
+          >
+            <label for="manual-busca">Buscar no Manual</label>
+            <div class="manual-search-field">
               <input
                 id="manual-busca"
                 type="search"
+                maxlength="120"
                 autocomplete="off"
-                placeholder="gota, gráfico, indicador…"
-              />
-            </label>
-            <button type="button" id="manual-imprimir" class="secondary-btn">
-              Imprimir manual
-            </button>
-            <a class="secondary-btn back-btn" href="#/laboratorio"
-              >Voltar à bancada</a
-            >
-          </div>
-          <p id="manual-vazio" class="vazio" hidden>
-            Nada encontrado. Tente outra palavra.
-          </p>
-        </header>
-        <div class="manual-grade">
-          <nav class="manual-indice" aria-label="Seções do manual">
-            <ol id="manual-indice"></ol>
-          </nav>
-          <div id="manual-conteudo" class="manual-conteudo"></div>
+                placeholder="pHmetro, titulação, relatório…"
+                aria-describedby="manual-status"
+              /><button
+                id="manual-clear"
+                type="button"
+                class="icon-btn"
+                aria-label="Limpar busca"
+                hidden
+              >
+                ×</button
+              ><button class="secondary-btn" type="submit">Buscar</button>
+            </div>
+          </form>
+          <a class="secondary-btn" href="#/laboratorio">Voltar à bancada</a>
         </div>
+        <div class="manual-tools">
+          <button
+            id="manual-index-toggle"
+            type="button"
+            class="secondary-btn"
+            aria-expanded="false"
+            aria-controls="manual-indice"
+          >
+            Índice do Manual</button
+          ><button id="manual-imprimir" type="button" class="quiet-btn">
+            Imprimir guia rápido
+          </button>
+        </div>
+        <p
+          id="manual-status"
+          class="sr-only"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+        <div class="manual-shell">
+          <nav
+            id="manual-indice"
+            class="manual-index"
+            aria-label="Índice do Manual"
+          ></nav>
+          <div id="manual-conteudo"></div>
+        </div>
+        <div id="manual-print"></div>
       </section>
 
       <!-- BANCADA: laboratório livre e missões -->
@@ -5924,10 +7243,20 @@ button:disabled {
 
         <section id="experiment" class="experiment" aria-label="Bancada">
           <nav class="view-tabs" aria-label="Visualização da bancada">
-            <button class="view-tab-btn" id="focus-tab" type="button" aria-pressed="true">
+            <button
+              class="view-tab-btn"
+              id="focus-tab"
+              type="button"
+              aria-pressed="true"
+            >
               Tubo em foco
             </button>
-            <button class="view-tab-btn" id="overview-tab" type="button" aria-pressed="false">
+            <button
+              class="view-tab-btn"
+              id="overview-tab"
+              type="button"
+              aria-pressed="false"
+            >
               Visão geral <span id="overview-count"></span>
             </button>
             <span class="chip-sep" aria-hidden="true"></span>
@@ -8304,7 +9633,7 @@ button:disabled {
 </script>
     <script>
 "use strict";
-window.SIAB = { version: "1.0.0-rc.3", MAX_TUBES: 10, CAPACITY_ML: 5 };
+window.SIAB = { version: "1.0.0-rc.4", MAX_TUBES: 10, CAPACITY_ML: 5 };
 
 </script>
     <script>
@@ -12810,7 +14139,8 @@ SIAB.rotear = () => {
   }
   if (nome === "missao" && SIAB.missaoAlias?.[parametro])
     parametro = SIAB.missaoAlias[parametro];
-  if (nome === "manual" && parametro === "roteiros") parametro = "montagens";
+  if (nome === "manual" && SIAB.manualRegistry?.aliases[parametro])
+    parametro = SIAB.manualRegistry.aliases[parametro];
   if (SIAB.atividades) {
     const permitido = SIAB.atividades.guardarRota(nome, parametro);
     nome = permitido.nome;
@@ -15150,177 +16480,1694 @@ SIAB.experimentos = (() => {
 </script>
     <script>
 "use strict";
-SIAB.manual = [
-  [
-    "comecar",
-    "Primeiros passos",
-    "Escolha Página inicial ou Laboratório na primeira visita. Essa preferência muda apenas a tela de entrada; Temas, Missões, Roteiros, Professor e Caderno continuam disponíveis. Links específicos abrem diretamente seu contexto.",
-    [
-      "Abra o Laboratório e escolha um dos três módulos.",
-      "Escolha vidraria, solução, volume e indicador.",
-      "Observe a cor e o volume; use VER → Medir → pH para realizar uma leitura.",
-      "Adicione gotas, interprete e registre somente o que quiser no Caderno.",
-    ],
+/* RC.4: registro central do Manual. Texto de uso, sem dados privados de atividades. */
+SIAB.manualContent = {
+  categories: [
+    {
+      id: "comecar",
+      title: "Comece por aqui",
+      summary: "Primeiros passos, navegação e uso offline.",
+      icon: "book",
+      group: "Orientação",
+    },
+    {
+      id: "bancada",
+      title: "Bancada",
+      summary: "Prepare soluções e acompanhe cada recipiente.",
+      icon: "tube",
+      group: "Investigue",
+    },
+    {
+      id: "explorar",
+      title: "Explorar",
+      summary: "Conecte cores, partículas e transformações.",
+      icon: "eye",
+      group: "Investigue",
+    },
+    {
+      id: "medir",
+      title: "Medir",
+      summary: "Use instrumentos e registre evidências.",
+      icon: "ruler",
+      group: "Investigue",
+    },
+    {
+      id: "calcular",
+      title: "Calcular",
+      summary: "Interprete concentrações, tabelas e gráficos.",
+      icon: "chart",
+      group: "Investigue",
+    },
+    {
+      id: "instrumentos",
+      title: "Instrumentos",
+      summary: "Escolha a técnica e compreenda seus limites.",
+      icon: "meter",
+      group: "Investigue",
+    },
+    {
+      id: "montagens",
+      title: "Montagens prontas",
+      summary: "Conheça as bancadas pré-configuradas.",
+      icon: "flask",
+      group: "Prepare e registre",
+    },
+    {
+      id: "roteiros",
+      title: "Roteiros Experimentais",
+      summary: "Siga uma investigação com objetivo e tarefas.",
+      icon: "list",
+      group: "Prepare e registre",
+    },
+    {
+      id: "relatorios",
+      title: "Relatórios",
+      summary: "Reúna resultados, interpretação e conclusão.",
+      icon: "report",
+      group: "Prepare e registre",
+    },
+    {
+      id: "caderno",
+      title: "Caderno",
+      summary: "Guarde notas e investigações escolhidas por você.",
+      icon: "book",
+      group: "Prepare e registre",
+    },
+    {
+      id: "acessibilidade",
+      title: "Acessibilidade",
+      summary: "Ajuste leitura, cores e navegação.",
+      icon: "access",
+      group: "Orientação",
+    },
+    {
+      id: "problemas",
+      title: "Ajuda e solução de problemas",
+      summary: "Encontre uma resposta para dúvidas frequentes.",
+      icon: "help",
+      group: "Orientação",
+    },
+    {
+      id: "professor",
+      title: "Área do Professor",
+      summary: "Configure atividades e consulte orientações.",
+      icon: "teacher",
+      group: "Para ensinar",
+    },
   ],
-  [
-    "layout",
-    "Mapa da interface",
-    "No desktop, a prateleira fica à esquerda, o recipiente no centro e o VER à direita. No celular, use Prateleira para ajustes e Experimento, Tubos e Análises para alternar o espaço principal. A barra de doses acompanha o experimento.",
+  topics: [
+    {
+      id: "comecar",
+      title: "Primeiros passos",
+      category: "comecar",
+      summary:
+        "Monte um experimento, observe as mudanças e escolha como registrar suas descobertas.",
+      purpose:
+        "A bancada livre permite explorar sem uma atividade restrita. Uma nova bancada começa vazia; uma sessão já salva pode ser retomada.",
+      steps: [
+        "Abra o Laboratório. Se a bancada estiver vazia, escolha uma solução para criar o primeiro recipiente.",
+        "Abra Montagem para escolher preparo, vidraria e módulo.",
+        "Use Ver para observar, medir ou analisar. As ações de gotejar e agitar ficam junto à bancada.",
+        "Abra Dados para consultar medições e acessar o relatório.",
+      ],
+      example:
+        "Comece com uma solução e um indicador. Adicione uma gota, observe a cor e faça uma leitura de pH.",
+      related: ["bancada", "ph", "menu", "app"],
+      keywords: ["inicio", "começar", "primeira visita", "bancada livre"],
+      details: [],
+      diagram: "workspace",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+        {
+          label: "Iniciar tour da bancada",
+          command: "tour",
+        },
+      ],
+    },
+    {
+      id: "bancada",
+      title: "Usar a bancada",
+      category: "bancada",
+      summary:
+        "O recipiente fica em foco; Montagem, Ver e Dados abrem as ferramentas de que você precisa.",
+      purpose:
+        "Prepare em Montagem, investigue em Ver e reúna registros em Dados. Fechar um painel libera espaço para o experimento.",
+      steps: [
+        "Em Montagem, use Resumo para consultar as condições e Preparo para escolher soluções e indicador.",
+        "Use Objetos para vidrarias e recipientes, e Módulo para Explorar, Medir ou Calcular.",
+        "Abra Ver e escolha Observar, Medir ou Analisar. Use Dados para tabela, histórico e relatório.",
+        "No celular, os mesmos botões ficam na parte inferior. Voltar retorna um nível; Fechar devolve o foco à bancada.",
+      ],
+      example:
+        "Abra a Tabela e use Expandir quando precisar de mais espaço. Feche o painel para voltar ao recipiente.",
+      related: ["prateleira", "vidraria", "conta-gotas", "tubos"],
+      keywords: [
+        "layout",
+        "montagem",
+        "docas",
+        "painel",
+        "celular",
+        "mobile",
+        "tablet",
+        "workspace",
+      ],
+      details: [
+        {
+          title: "Bancada livre e atividade",
+          text: "Na bancada livre você escolhe a montagem. Em uma atividade, só aparecem as opções disponibilizadas pelo professor. Consulte [[atividades|Atividades por link]].",
+        },
+      ],
+      diagram: "workspace",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "menu",
+      title: "Página inicial e navegação",
+      category: "comecar",
+      summary: "A Página inicial reúne os caminhos principais do SIAB.",
+      purpose:
+        "Use Aprender para conceitos, Missões para desafios de investigação, Roteiros Experimentais para atividades estruturadas, Laboratório para exploração e Caderno para registros.",
+      steps: [
+        "Escolha um caminho na Página inicial ou abra o Menu.",
+        "No Menu, entre em Configurações → Inicialização para escolher a tela de entrada.",
+        "Use Manual para consulta e Área do Professor para preparar atividades.",
+      ],
+      example: "",
+      related: ["comecar", "aprender", "roteiros"],
+      keywords: ["menu", "inicialização", "tela inicial"],
+      details: [],
+      actions: [
+        {
+          label: "Abrir Página inicial",
+          route: "#/inicio",
+        },
+      ],
+    },
+    {
+      id: "modulos",
+      title: "Escolher um módulo",
+      category: "comecar",
+      summary:
+        "Explorar, Medir e Calcular são três modos independentes de investigar.",
+      purpose:
+        "O módulo muda os controles e o detalhamento. Não é necessário concluir um módulo para usar outro.",
+      steps: [
+        "Abra Montagem → Módulo.",
+        "Escolha Explorar, Medir ou Calcular pelo objetivo da investigação.",
+        "Ative o módulo desejado. Em atividades, a escolha pode estar definida pelo professor.",
+      ],
+      example: "",
+      related: ["explorar", "medir", "calcular"],
+      keywords: ["modo", "módulos", "nível"],
+      details: [],
+      diagram: "modules",
+    },
+    {
+      id: "explorar",
+      title: "Explorar: observar e manipular",
+      category: "explorar",
+      summary:
+        "Compare cores, indicadores e transformações visíveis antes de aprofundar os números.",
+      purpose:
+        "O módulo Explorar enfatiza soluções, indicadores e vidrarias. As ferramentas de Ver continuam sujeitas à configuração da atividade.",
+      steps: [
+        "Ative Explorar em Montagem → Módulo.",
+        "Escolha solução e indicador em Preparo.",
+        "Goteje e observe cor, volume, turvação ou sólido, quando representados.",
+        "Use Ver → Observar para conectar a cena às representações.",
+      ],
+      example:
+        "Compare a mesma solução com dois indicadores. Uma diferença de cor não significa que a solução mudou de pH.",
+      related: ["indicadores", "observar", "tubos"],
+      keywords: ["observação", "cor", "manipulação"],
+      details: [],
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "medir",
+      title: "Medir: coletar evidências",
+      category: "medir",
+      summary:
+        "Controle volumes e diluições e obtenha leituras com os instrumentos disponíveis.",
+      purpose:
+        "O módulo Medir acrescenta ajustes de volume inicial, diluição e tamanho da gota. Medir também é o nome da família de instrumentos em Ver; os dois controles têm funções diferentes.",
+      steps: [
+        "Ative o módulo em Montagem → Módulo.",
+        "Em Preparo, confira volume inicial, diluição e volume da gota.",
+        "Abra Ver → Medir e selecione pH, Temperatura ou Condutividade.",
+        "Acione a medição e consulte os registros em Dados.",
+      ],
+      example:
+        "Faça uma leitura de pH, adicione uma dose e meça novamente. Compare as duas evidências na Tabela.",
+      related: ["painel-medir", "phmetro", "fita", "titulacao"],
+      keywords: ["medida", "medição", "medidor", "coletar"],
+      details: [],
+      diagram: "measurement",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "calcular",
+      title: "Calcular: interpretar quantidades",
+      category: "calcular",
+      summary:
+        "Relacione concentrações e equilíbrio químico às observações e medições.",
+      purpose:
+        "O módulo Calcular acrescenta concentrações no preparo e detalhes quantitativos nas representações. Valores calculados pelo modelo são diferentes de leituras instrumentais.",
+      steps: [
+        "Ative Calcular em Montagem → Módulo.",
+        "Em Preparo, confira as concentrações disponíveis.",
+        "Use Ver → Observar para espécies e equações; use Analisar para interpretar os registros.",
+        "Compare o que foi medido com o que foi calculado, respeitando os limites de cada um.",
+      ],
+      example:
+        "Compare uma leitura de pH com as concentrações de H₃O⁺ e OH⁻ mostradas pelo modelo.",
+      related: ["especies", "equacao", "analisar", "limites"],
+      keywords: ["concentração", "mol", "cálculo", "quantitativo"],
+      details: [],
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "prateleira",
+      title: "Escolher soluções e reagentes",
+      category: "bancada",
+      summary:
+        "Em Montagem → Preparo, escolha qual solução vai para o recipiente e qual vai para o conta-gotas.",
+      purpose:
+        "A escolha do destino evita trocar o conteúdo do tubo quando você queria mudar apenas o reagente adicionado.",
+      steps: [
+        "Abra Montagem → Preparo.",
+        "Selecione o destino Tubo ou Conta-gotas.",
+        "Escolha o frasco e confira o nome exibido na bancada.",
+        "Se necessário, ajuste o indicador e os valores permitidos pelo módulo.",
+      ],
+      example:
+        "Para adicionar base a um ácido, mantenha o ácido no Tubo e escolha a base no Conta-gotas.",
+      related: ["conta-gotas", "medidas", "frascos"],
+      keywords: ["solução", "reagente", "frasco", "preparo", "prateleira"],
+      details: [
+        {
+          title: "Troca de solução",
+          text: "Trocar o preparo altera o experimento. Confira o recipiente em foco antes de modificar a solução. Uma medição anterior não representa automaticamente o novo preparo.",
+        },
+      ],
+    },
+    {
+      id: "vidraria",
+      title: "Vidrarias e capacidade",
+      category: "bancada",
+      summary:
+        "Tubo de ensaio, béquer e erlenmeyer oferecem formatos e capacidades diferentes.",
+      purpose: "Escolha a vidraria adequada ao volume que pretende manipular.",
+      steps: [
+        "Abra Montagem → Objetos.",
+        "Escolha a vidraria e, quando disponível, sua capacidade.",
+        "Confira o volume inicial e o espaço livre antes de adicionar reagente.",
+      ],
+      example:
+        "Uma titulação com mais volume pode usar um erlenmeyer. A capacidade limita a quantidade que cabe no recipiente.",
+      related: ["medidas", "tubos"],
+      keywords: ["recipiente", "béquer", "erlenmeyer", "tubo", "capacidade"],
+      details: [
+        {
+          title: "Limites do desenho",
+          text: "As marcas são representações didáticas, não vidrarias volumétricas certificadas. Em um grupo vinculado, a adição respeita o recipiente com menor espaço livre.",
+        },
+      ],
+    },
+    {
+      id: "medidas",
+      title: "Volumes, diluição e concentração",
+      category: "bancada",
+      summary:
+        "Os ajustes de preparo definem as quantidades usadas no experimento.",
+      purpose:
+        "Medir permite ajustar volume inicial, diluição e tamanho da gota. Calcular também expõe concentrações em mol/L.",
+      steps: [
+        "Abra Montagem → Preparo e os ajustes do preparo.",
+        "Informe os valores disponíveis no módulo e aplique a preparação.",
+        "Confira as condições exibidas antes de iniciar novas medições.",
+      ],
+      example:
+        "Compare uma solução antes e depois da diluição. Adicionar água conserva a quantidade de soluto e pode mudar o equilíbrio.",
+      related: ["medir", "calcular", "conta-gotas"],
+      keywords: ["volume", "concentração", "diluir", "diluição", "gota"],
+      details: [
+        {
+          title: "Hipóteses do modelo",
+          text: "O modelo considera volumes aditivos. Não faz média de pH: calcula novamente o equilíbrio a partir da composição.",
+        },
+      ],
+    },
+    {
+      id: "conta-gotas",
+      title: "Gotejar, adicionar volume e agitar",
+      category: "bancada",
+      summary:
+        "As ações próximas ao recipiente permitem intervir e observar o que mudou.",
+      purpose:
+        "Use gotas pequenas para acompanhar mudanças graduais e os botões de volume para doses maiores.",
+      steps: [
+        "Confira o reagente mostrado no conta-gotas.",
+        "Toque em Segure para gotejar para adicionar uma gota, ou mantenha pressionado para repetir.",
+        "Use os atalhos de gotas e volume quando necessário; no celular, abra Doses.",
+        "Use Agitar para uniformizar a representação e Desfazer para recuperar uma intervenção recente.",
+      ],
+      example:
+        "Faça uma leitura, adicione uma gota e leia novamente. O valor anterior permanece identificado até uma nova medição.",
+      related: ["titulacao", "prever", "ph"],
+      keywords: [
+        "conta gotas",
+        "gotejamento",
+        "gotas",
+        "agitação",
+        "agitar",
+        "dose",
+        "desfazer",
+      ],
+      details: [
+        {
+          title: "Agitação e equilíbrio",
+          text: "O equilíbrio químico é imediato no modelo. Agitar atua na representação visual, sem simular cinética. A adição para ao atingir a capacidade.",
+        },
+        {
+          title: "Meia gota",
+          text: "O erlenmeyer oferece a ação de meia gota. Use apenas os controles apresentados para a vidraria atual.",
+        },
+      ],
+    },
+    {
+      id: "tubos",
+      title: "Selecionar e comparar recipientes",
+      category: "bancada",
+      summary:
+        "Alterne o recipiente em foco ou abra Visão geral para trabalhar com várias amostras.",
+      purpose:
+        "Comparar observa recipientes lado a lado; vincular faz com que recebam as mesmas intervenções do conta-gotas.",
+      steps: [
+        "Toque no nome de um recipiente na faixa da bancada para colocá-lo em foco.",
+        "Abra Visão geral e use Selecionar recipientes para ações em conjunto.",
+        "Escolha Comparar para observar, ou Vincular para sincronizar intervenções futuras.",
+        "Para Misturar, escolha o destino e confira a capacidade antes de confirmar.",
+      ],
+      example:
+        "Compare soluções com indicadores diferentes. Vincule apenas se quiser adicionar o mesmo reagente a todas.",
+      related: ["bancada", "vidraria", "conta-gotas"],
+      keywords: [
+        "múltiplos tubos",
+        "grupo",
+        "comparação",
+        "mistura",
+        "vincular",
+        "selecionar",
+      ],
+      details: [
+        {
+          title: "Vínculo não mistura",
+          text: "Vincular sincroniza reagente, concentração e quantidade do conta-gotas, preservando o conteúdo que já estava nos recipientes.",
+        },
+        {
+          title: "Mistura transfere conteúdo",
+          text: "Misturar reúne todo o conteúdo no destino e esvazia as origens. A temperatura final usa média ponderada por volume para soluções aquosas; não há aquecimento de reação no modelo.",
+        },
+      ],
+    },
+    {
+      id: "prever",
+      title: "Prever e gotejar",
+      category: "bancada",
+      summary:
+        "Compare sua previsão com as evidências observadas após uma intervenção.",
+      purpose:
+        "A sequência ajuda a separar hipótese, observação e interpretação.",
+      steps: [
+        "Abra Prever e gotejar.",
+        "Registre uma previsão e escolha a intervenção.",
+        "Execute e compare antes e depois.",
+        "Escreva sua interpretação e use Registrar no Caderno se quiser guardá-la.",
+      ],
+      example: "",
+      related: ["conta-gotas", "caderno"],
+      keywords: ["previsão", "hipótese", "investigação"],
+      details: [
+        {
+          title: "Registro",
+          text: "A explicação é opcional na bancada livre. Uma atividade pode solicitá-la como parte da investigação.",
+        },
+      ],
+    },
+    {
+      id: "ph",
+      title: "O que o pH informa",
+      category: "medir",
+      summary:
+        "O pH indica a condição ácido-base da solução e precisa ser interpretado junto à temperatura e à técnica de leitura.",
+      purpose:
+        "Use uma técnica disponível para obter evidência: [[indicadores|indicador]], [[fita|fita de pH]] ou [[phmetro|pHmetro]].",
+      steps: [
+        "Coloque o recipiente desejado em foco.",
+        "Abra Ver → Medir → pH.",
+        "Escolha a técnica disponível e execute a leitura.",
+        "Após uma intervenção, faça nova leitura ou acompanhe a medição contínua.",
+      ],
+      example:
+        "“pH não medido” significa que ainda não houve leitura instrumental. A solução pode ter cor mesmo sem essa leitura.",
+      related: ["painel-medir", "fita", "phmetro", "temperatura"],
+      keywords: ["acidez", "basicidade", "ácido", "base", "como medir ph"],
+      details: [
+        {
+          title: "Neutralidade",
+          text: "A referência de neutralidade depende da temperatura: pH neutro = pKw(T)/2. Em torno de 25 °C, a referência usual é próxima de 7.",
+        },
+        {
+          title: "Leitura anterior",
+          text: "Uma intervenção pode invalidar a medida pontual. “Leitura anterior” preserva a informação histórica e pede uma nova medição, sem atualizar o valor por conta própria.",
+        },
+      ],
+    },
+    {
+      id: "painel-medir",
+      title: "Usar Ver → Medir",
+      category: "medir",
+      summary: "A família Medir reúne pH, Temperatura e Condutividade.",
+      purpose:
+        "Cada instrumento registra uma grandeza diferente. Só aparecem os recursos liberados para a atividade.",
+      steps: [
+        "Abra Ver e selecione a família Medir.",
+        "Escolha pH, Temperatura ou Condutividade.",
+        "Acione o botão de medição da ferramenta.",
+        "Consulte as medições em Dados → Tabela.",
+      ],
+      example: "",
+      related: ["phmetro", "fita", "condutividade", "temperatura"],
+      keywords: ["painel medir", "instrumentação", "ferramenta", "medição"],
+      details: [],
+      diagram: "measurement",
+    },
+    {
+      id: "instrumentos",
+      title: "Escolher um instrumento",
+      category: "instrumentos",
+      summary:
+        "Indicador, fita, pHmetro, termômetro e condutivímetro oferecem evidências diferentes.",
+      purpose:
+        "Escolha a técnica pela pergunta da investigação, pela grandeza medida e pela resolução disponível.",
+      steps: [
+        "Confira quais instrumentos aparecem em Ver → Medir.",
+        "Leia como usar e quais limites a técnica apresenta.",
+        "Meça no recipiente em foco e identifique a técnica ao comparar resultados.",
+      ],
+      example: "",
+      related: [
+        "indicadores",
+        "fita",
+        "phmetro",
+        "condutividade",
+        "temperatura",
+      ],
+      keywords: ["instrumento", "aparelho", "técnica"],
+      details: [],
+      diagram: "instruments",
+    },
+    {
+      id: "indicadores",
+      title: "Indicadores ácido-base",
+      category: "instrumentos",
+      summary:
+        "Um indicador adicionado à solução muda de cor em uma faixa de pH.",
+      purpose:
+        "É útil para observar tendências e regiões de viragem; a cor não equivale a uma leitura numérica precisa.",
+      steps: [
+        "Abra Montagem → Preparo e escolha um indicador.",
+        "Observe a cor junto ao recipiente e leia seu nome.",
+        "Adicione reagente e compare as mudanças com a faixa do indicador.",
+      ],
+      example:
+        "A mesma solução pode produzir cores diferentes com indicadores distintos. Consulte a faixa de cada um.",
+      related: ["tabela-indicadores", "fita", "ph"],
+      keywords: [
+        "indicador",
+        "cor",
+        "viragem",
+        "fenolftaleína",
+        "bromotimol",
+        "repolho",
+      ],
+      details: [
+        {
+          title: "Cor própria da amostra",
+          text: "Sem indicador preserva a cor própria. Realçar indicador muda a apresentação dos pigmentos da amostra, sem alterar o equilíbrio.",
+        },
+        {
+          title: "Limitação",
+          text: "A carta é didática e as cores aproximadas. Um indicador informa uma faixa; não substitui uma análise física de uma amostra real.",
+        },
+      ],
+    },
+    {
+      id: "fita",
+      title: "Fita de pH",
+      category: "instrumentos",
+      summary:
+        "A fita de pH fornece uma estimativa aproximada pela comparação de cor.",
+      purpose:
+        "Use-a quando uma faixa de pH for suficiente ou quando for a técnica disponibilizada na atividade.",
+      steps: [
+        "Coloque o recipiente em foco e abra Ver → Medir → pH.",
+        "Toque em Mergulhar fita no recipiente.",
+        "Compare a cor com a escala de 0 a 14 e leia a estimativa.",
+        "Após adicionar reagente, mergulhe uma nova fita para obter outra leitura.",
+      ],
+      example:
+        "“≈ 4” é uma estimativa em passos de uma unidade, não uma leitura de 4,00.",
+      related: ["phmetro", "indicadores", "compactacao"],
+      keywords: [
+        "papel indicador",
+        "papel de ph",
+        "fita de ph",
+        "tira",
+        "estimativa",
+      ],
+      details: [
+        {
+          title: "Resolução e extremos",
+          text: "A resolução didática é de 1 unidade. Valores nos extremos da escala não descrevem com precisão soluções fora dessa faixa.",
+        },
+        {
+          title: "Comparar técnicas",
+          text: "Diferencie a estimativa da fita da resolução de 0,01 do [[phmetro|pHmetro]]. Mais casas na exibição não eliminam os limites do modelo.",
+        },
+      ],
+      diagram: "strip",
+    },
+    {
+      id: "phmetro",
+      title: "pHmetro",
+      category: "instrumentos",
+      summary:
+        "O pHmetro fornece uma leitura numérica de pH após a estabilização.",
+      purpose:
+        "Use-o para acompanhar variações menores do que as distinguidas pela [[fita|fita de pH]].",
+      steps: [
+        "Coloque o recipiente em foco e abra Ver → Medir → pH.",
+        "No pHmetro, toque em Medir uma vez para iniciar a leitura com o eletrodo.",
+        "Aguarde o aviso de leitura estável. O resultado é registrado.",
+        "Para acompanhar intervenções, escolha Medição contínua; encerre com Retirar eletrodo.",
+      ],
+      example:
+        "Meça antes de adicionar reagente e repita depois. No modo pontual, a leitura antiga não muda sozinha.",
+      related: ["ph", "fita", "titulacao", "tabela"],
+      keywords: [
+        "medidor de ph",
+        "ph meter",
+        "eletrodo",
+        "calibração",
+        "estabilização",
+        "medição contínua",
+      ],
+      details: [
+        {
+          title: "Como interpretar",
+          text: "A resolução exibida é de 0,01. Isso descreve a mecânica didática do instrumento, não uma garantia de exatidão para uma amostra real.",
+        },
+        {
+          title: "Calibração simulada",
+          text: "Calibrar com padrões 4,00 e 7,00 usa referências a 25 °C. Não há ruído aleatório. A estabilização é parte da interação; o equilíbrio da solução já foi calculado.",
+        },
+        {
+          title: "Leitura anterior",
+          text: "Depois de mudar o preparo ou adicionar reagente, repita a leitura pontual. No modo contínuo, novas leituras são registradas após as mudanças.",
+        },
+      ],
+      diagram: "meter",
+    },
+    {
+      id: "condutividade",
+      title: "Condutivímetro",
+      category: "instrumentos",
+      summary:
+        "O condutivímetro estima a condução elétrica da solução a partir de suas espécies iônicas.",
+      purpose:
+        "Compare a presença e as contribuições dos íons; condutividade não é sinônimo de pH.",
+      steps: [
+        "Abra Ver → Medir → Condutividade.",
+        "Toque em Medir condutividade.",
+        "Leia o resultado em µS/cm e confira se a leitura é atual ou anterior.",
+        "Após uma intervenção, meça novamente.",
+      ],
+      example:
+        "Soluções com pH semelhante podem ter condutividades diferentes por causa de sua composição iônica.",
+      related: ["especies", "temperatura", "limites"],
+      keywords: [
+        "condutividade",
+        "condutivimetro",
+        "condutimetro",
+        "condução",
+        "eletricidade",
+        "ions",
+      ],
+      details: [
+        {
+          title: "Limites",
+          text: "A estimativa ideal soma contribuições iônicas e usa mobilidades de referência a 25 °C. Algumas mobilidades são estimadas. Não se aplica uma correção térmica arbitrária.",
+        },
+      ],
+    },
+    {
+      id: "temperatura",
+      title: "Temperatura da solução",
+      category: "instrumentos",
+      summary:
+        "O termômetro registra a temperatura usada para o recipiente em foco.",
+      purpose:
+        "A temperatura da solução, o ambiente da bancada e a referência meteorológica são condições diferentes.",
+      steps: [
+        "Abra Ver → Medir → Temperatura.",
+        "Toque em Registrar temperatura.",
+        "Se o controle estiver disponível, informe um valor e aplique à solução.",
+        "Faça novas medições para comparar as condições.",
+      ],
+      example:
+        "Alterar a temperatura pode mudar a referência de neutralidade; pH neutro não é sempre exatamente 7.",
+      related: ["ph", "condutividade", "atividades"],
+      keywords: [
+        "termômetro",
+        "temperatura",
+        "ambiente",
+        "cidade",
+        "neutralidade",
+      ],
+      details: [
+        {
+          title: "Referências",
+          text: "Você pode usar a referência de 25 °C ou a temperatura do ambiente da bancada. A consulta opcional por cidade depende da internet; sem resposta, há referência de 25 °C e ajuste manual.",
+        },
+        {
+          title: "Limites térmicos",
+          text: "O modelo ajusta a autoionização da água. Ka, pKIn, Kps e mobilidades mantêm valores de referência; não há dependências térmicas inventadas.",
+        },
+      ],
+    },
+    {
+      id: "observar",
+      title: "Usar Ver → Observar",
+      category: "explorar",
+      summary:
+        "Partículas, Espécies, Equações e Transferência de próton mostram perspectivas complementares da solução.",
+      purpose:
+        "Conecte o que aparece no recipiente ao modelo de moléculas, íons e equilíbrio.",
+      steps: [
+        "Abra Ver → Observar.",
+        "Escolha uma representação disponível.",
+        "Consulte a legenda e selecione uma espécie quando o controle existir.",
+        "Compare a mesma espécie em outra representação.",
+      ],
+      example: "",
+      related: ["particulas", "especies", "equacao", "proton"],
+      keywords: ["representações", "microscópico", "macroscópico", "simbólico"],
+      details: [],
+      diagram: "representations",
+    },
+    {
+      id: "particulas",
+      title: "Partículas",
+      category: "explorar",
+      summary:
+        "A visão de partículas representa moléculas e íons de forma proporcional e simplificada.",
+      purpose:
+        "Observe quais espécies predominam e conecte-as à cor e ao equilíbrio.",
+      steps: [
+        "Abra Ver → Observar → Partículas.",
+        "Consulte a legenda e selecione a espécie que deseja destacar.",
+        "Quando disponível, compare as escalas de representação.",
+      ],
+      example: "",
+      related: ["especies", "equacao", "distribuicao"],
+      keywords: ["moléculas", "íons", "lupa", "microscópico"],
+      details: [
+        {
+          title: "Escala",
+          text: "O número de desenhos não é uma contagem literal de partículas. A escala logarítmica amplia espécies raras para que possam ser vistas.",
+        },
+      ],
+    },
+    {
+      id: "especies",
+      title: "Espécies em solução",
+      category: "explorar",
+      summary:
+        "A tabela de espécies mostra concentrações calculadas pelo modelo químico.",
+      purpose:
+        "Use fórmula, carga e predominância para interpretar a composição.",
+      steps: [
+        "Abra Ver → Observar → Espécies.",
+        "Leia a concentração em mol/L e a indicação de predominância.",
+        "Selecione uma espécie para conectá-la às demais representações.",
+      ],
+      example: "",
+      related: ["particulas", "distribuicao", "calcular"],
+      keywords: ["espécie", "concentração", "carga", "predominância"],
+      details: [
+        {
+          title: "Cálculo não é medição",
+          text: "Esses valores resultam do modelo. Uma leitura instrumental só existe depois de usar a técnica correspondente.",
+        },
+      ],
+    },
+    {
+      id: "equacao",
+      title: "Equações",
+      category: "explorar",
+      summary:
+        "As equações descrevem simbolicamente o equilíbrio e as espécies envolvidas.",
+      purpose:
+        "Use-as para relacionar ácidos, bases e produtos aos dados da solução.",
+      steps: [
+        "Abra Ver → Observar → Equações.",
+        "Identifique reagentes, produtos e as informações quantitativas disponíveis no módulo.",
+        "Compare a equação com Partículas e Espécies.",
+      ],
+      example: "",
+      related: ["proton", "calcular", "especies"],
+      keywords: ["equação", "reação", "equilíbrio", "neutralização"],
+      details: [
+        {
+          title: "Interpretação",
+          text: "Uma equação é uma representação do sistema químico. Ela não é um registro instrumental nem comprova que uma medição foi feita.",
+        },
+      ],
+    },
+    {
+      id: "proton",
+      title: "Transferência de próton",
+      category: "explorar",
+      summary: "Na descrição de Brønsted, o ácido doa H⁺ e a base recebe H⁺.",
+      purpose:
+        "Compare os pares ácido-base conjugados, que diferem por um próton.",
+      steps: [
+        "Abra Ver → Observar → Transferência de próton.",
+        "Identifique doador e receptor.",
+        "Selecione um componente e conecte-o às outras representações.",
+      ],
+      example: "",
+      related: ["equacao", "especies"],
+      keywords: ["proton", "prótons", "Brønsted", "par conjugado"],
+      details: [
+        {
+          title: "Em água",
+          text: "A água pode receber o próton e formar H₃O⁺. Na neutralização, H₃O⁺ doa o próton e OH⁻ o recebe, formando água.",
+        },
+      ],
+    },
+    {
+      id: "analisar",
+      title: "Usar Ver → Analisar",
+      category: "calcular",
+      summary:
+        "Gráfico, ΔpH/ΔV, Distribuição de espécies, Histórico e Tabela ajudam a interpretar a investigação.",
+      purpose:
+        "Gráfico e derivada usam leituras registradas; distribuição descreve o equilíbrio calculado; histórico organiza eventos.",
+      steps: [
+        "Abra Ver → Analisar e escolha uma ferramenta.",
+        "Confira a origem dos dados antes de interpretar.",
+        "Use Expandir quando a tabela ou o gráfico precisar de mais espaço.",
+      ],
+      example: "",
+      related: ["grafico", "derivada", "distribuicao", "historico", "tabela"],
+      keywords: ["análise", "analisar", "dados"],
+      details: [],
+    },
+    {
+      id: "grafico",
+      title: "Gráfico de pH por volume",
+      category: "calcular",
+      summary:
+        "O gráfico conecta medições de pH ao volume de reagente adicionado.",
+      purpose:
+        "Compare o avanço de uma titulação usando evidências registradas, não uma curva prevista automaticamente.",
+      steps: [
+        "Faça pelo menos duas medições com uma técnica de pH disponível.",
+        "Adicione reagente entre leituras para acompanhar a variação com o volume.",
+        "Abra Ver → Analisar → Gráfico.",
+        "Leia o volume adicionado no eixo horizontal e o pH no vertical.",
+      ],
+      example:
+        "Fita usa linha tracejada; pHmetro, linha contínua. Compare séries da mesma técnica e do mesmo preparo.",
+      related: ["titulacao", "derivada", "tabela"],
+      keywords: ["gráfico", "curva", "eixo", "volume", "ponto"],
+      details: [
+        {
+          title: "Origem dos pontos",
+          text: "Sem leituras suficientes, o gráfico informa o que falta. As linhas apenas conectam registros. Mudanças de preparo e de técnica separam séries.",
+        },
+      ],
+    },
+    {
+      id: "derivada",
+      title: "ΔpH/ΔV: mudança por volume",
+      category: "calcular",
+      summary:
+        "ΔpH/ΔV mostra quanto o pH mudou entre leituras para cada volume adicionado.",
+      purpose:
+        "Valores mais intensos indicam regiões onde uma pequena adição produziu maior mudança de pH.",
+      steps: [
+        "Registre leituras sucessivas com a mesma técnica, em volumes distintos.",
+        "Abra Ver → Analisar → ΔpH/ΔV.",
+        "Compare a variação com o gráfico e os dados de origem.",
+      ],
+      example:
+        "Se o pH muda de 4 para 5 após 1 mL, a razão nesse intervalo é 1 unidade de pH por mL. É um exemplo ilustrativo.",
+      related: ["grafico", "titulacao", "compactacao"],
+      keywords: ["derivada", "delta", "ΔpH/ΔV", "salto", "equivalência"],
+      details: [
+        {
+          title: "Resolução importa",
+          text: "Intervalos de volume nulo não produzem essa razão. A derivada usa dados brutos sucessivos da mesma técnica; a resolução da fita pode gerar degraus. Um pico isolado exige interpretação, não identifica sozinho uma equivalência exata.",
+        },
+      ],
+    },
+    {
+      id: "distribuicao",
+      title: "Distribuição de espécies",
+      category: "calcular",
+      summary:
+        "A distribuição compara frações de espécies de um mesmo sistema químico.",
+      purpose:
+        "Observe como as formas ácido-base variam e qual delas predomina.",
+      steps: [
+        "Abra Ver → Analisar → Distribuição de espécies.",
+        "Leia as frações ou percentuais e selecione a espécie de interesse.",
+        "Compare com Espécies e Equações.",
+      ],
+      example: "",
+      related: ["especies", "equacao", "limites"],
+      keywords: ["distribuição", "fração", "percentual"],
+      details: [
+        {
+          title: "Disponibilidade",
+          text: "A representação depende da presença de uma família química apropriada na solução. Os percentuais vêm do equilíbrio calculado, não de medições instrumentais.",
+        },
+      ],
+    },
+    {
+      id: "historico",
+      title: "Histórico da sessão",
+      category: "calcular",
+      summary: "O Histórico mostra a sequência cronológica de ações e eventos.",
+      purpose:
+        "Consulte o que foi feito e em que ordem para interpretar as evidências.",
+      steps: [
+        "Abra Dados → Histórico ou Ver → Analisar → Histórico.",
+        "Leia os eventos em ordem e relacione-os às intervenções.",
+        "Use a Tabela para consultar medições de forma estruturada.",
+      ],
+      example: "",
+      related: ["tabela", "caderno", "relatorios"],
+      keywords: ["histórico", "eventos", "cronologia", "registro"],
+      details: [
+        {
+          title: "Histórico não é Caderno",
+          text: "O Histórico não é compactado e não é copiado automaticamente para o Caderno. O [[caderno|Caderno]] reúne registros que você escolhe guardar.",
+        },
+      ],
+    },
+    {
+      id: "tabela",
+      title: "Tabela de medições",
+      category: "calcular",
+      summary:
+        "A Tabela organiza as leituras registradas com técnica, valor e contexto.",
+      purpose:
+        "Compare resultados sem confundir medição com a sequência de eventos do Histórico.",
+      steps: [
+        "Abra Dados → Tabela ou Ver → Analisar → Tabela.",
+        "Escolha Compacta para agrupar leituras semelhantes ou Completa para ver cada registro.",
+        "Use Ver medições para expandir um grupo e Expandir para ampliar o painel.",
+        "Quando necessário, exporte CSV com os dados brutos.",
+      ],
+      example: "",
+      related: ["compactacao", "historico", "relatorios"],
+      keywords: ["tabela", "medições", "CSV", "exportar", "dados"],
+      details: [],
+      diagram: "compaction",
+    },
+    {
+      id: "compactacao",
+      title: "Tabela compacta e completa",
+      category: "calcular",
+      summary:
+        "A tabela compacta reúne medições semelhantes sem apagar os dados originais.",
+      purpose:
+        "A leitura fica mais curta, preservando contagem, faixa e acesso a cada registro.",
+      steps: [
+        "Na Tabela, escolha Compacta.",
+        "Confira a quantidade de leituras e a faixa do grupo.",
+        "Use Ver medições para inspecionar seus registros.",
+        "Escolha Completa para voltar à lista individual.",
+      ],
+      example:
+        "Leituras repetidas com a mesma técnica e condições podem formar um grupo. Trocar o instrumento ou o preparo separa os registros.",
+      related: ["tabela", "derivada", "fita", "phmetro"],
+      keywords: [
+        "compactação",
+        "agrupar",
+        "agrupamento",
+        "expandir",
+        "completa",
+        "compacta",
+        "repetidos",
+      ],
+      details: [
+        {
+          title: "Critério do agrupamento",
+          text: "A compactação considera a resolução do instrumento e o contexto da medição, agrupando apenas registros contíguos compatíveis. Não une indiscriminadamente toda a sessão.",
+        },
+        {
+          title: "Dados preservados",
+          text: "Os dados brutos não são apagados. Cálculos, derivada e exportação CSV continuam usando os registros originais.",
+        },
+      ],
+      diagram: "compaction",
+    },
+    {
+      id: "titulacao",
+      title: "Titulação ácido-base",
+      category: "medir",
+      summary:
+        "Uma titulação acompanha a resposta da solução à adição gradual de um reagente.",
+      purpose: "Relacione volume adicionado, mudança de cor e leituras de pH.",
+      steps: [
+        "Confira solução inicial, reagente e condições de preparo.",
+        "Faça uma leitura inicial com a técnica disponível.",
+        "Adicione uma dose conhecida e meça novamente; repita em passos menores perto de uma mudança rápida.",
+        "Interprete a Tabela, o Gráfico e, quando disponível, ΔpH/ΔV.",
+      ],
+      example:
+        "Use um [[roteiros|Roteiro Experimental]] para uma investigação orientada, ou uma [[montagens|Montagem pronta]] para iniciar a exploração.",
+      related: ["conta-gotas", "phmetro", "grafico", "derivada"],
+      keywords: [
+        "titulação",
+        "titular",
+        "titulante",
+        "equivalência",
+        "ácido base",
+      ],
+      details: [
+        {
+          title: "Cor e equivalência",
+          text: "O ponto de viragem depende do indicador. A interpretação da equivalência depende do sistema e das evidências; não presuma que toda equivalência tem pH 7.",
+        },
+      ],
+      diagram: "titration",
+    },
+    {
+      id: "montagens",
+      title: "Montagens prontas",
+      category: "montagens",
+      summary:
+        "Uma Montagem pronta é uma bancada pré-configurada para exploração.",
+      purpose:
+        "Use-a para começar rapidamente e comparar condições. Ela não exige a estrutura de identificação e relatório de um [[roteiros|Roteiro Experimental]].",
+      steps: [
+        "Use Abrir Montagens prontas para entrar no catálogo.",
+        "Escolha uma montagem e leia o que ela propõe observar.",
+        "Monte na bancada e explore os recipientes preparados.",
+        "Para retomar o experimento, use Laboratório na navegação.",
+      ],
+      example:
+        "Uma montagem com indicadores diferentes permite comparar as cores em condições preparadas.",
+      related: ["roteiros", "bancada"],
+      keywords: [
+        "montagem",
+        "montagens prontas",
+        "pré-configurada",
+        "catálogo",
+      ],
+      details: [],
+      actions: [
+        {
+          label: "Abrir Montagens prontas",
+          route: "#/montagens",
+        },
+      ],
+    },
+    {
+      id: "roteiros",
+      title: "Roteiros Experimentais",
+      category: "roteiros",
+      summary:
+        "Um Roteiro Experimental é uma atividade estruturada com objetivo e tarefas de investigação.",
+      purpose:
+        "Cada roteiro pertence a um único módulo e conduz à coleta e interpretação de evidências.",
+      steps: [
+        "Abra o catálogo de Roteiros Experimentais e selecione uma ficha.",
+        "Leia objetivo, tarefas e montagem. Preencha a identificação solicitada.",
+        "Use Montar na bancada para iniciar a experiência.",
+        "Realize a investigação e abra o Relatório da Experiência.",
+      ],
+      example:
+        "A coleção contempla as substâncias do catálogo em investigações temáticas. Escolha pelo objetivo e pelo módulo indicado.",
+      related: ["montagens", "relatorios", "atividades"],
+      keywords: [
+        "roteiro",
+        "experimento",
+        "atividade estruturada",
+        "identificação",
+        "ficha",
+      ],
+      details: [
+        {
+          title: "Montagem ou Roteiro?",
+          text: "Montagem pronta configura a bancada para explorar. Roteiro acrescenta objetivo, tarefas e registro da experiência. Esta página explica o recurso; o catálogo é aberto pelo botão acima.",
+        },
+      ],
+      diagram: "report",
+      actions: [
+        {
+          label: "Abrir Roteiros Experimentais",
+          route: "#/roteiros",
+        },
+      ],
+    },
+    {
+      id: "aprender",
+      title: "Temas e Missões",
+      category: "roteiros",
+      summary:
+        "Temas apresentam conceitos; Missões propõem problemas e objetivos de investigação.",
+      purpose:
+        "Escolha a abordagem que ajuda sua pergunta, sem uma sequência obrigatória entre módulos.",
+      steps: [
+        "Em Aprender, escolha um Tema para consultar conceitos e conexões.",
+        "Em Missões, leia o problema e os objetivos.",
+        "Investigue e registre evidências. Uma missão concluída pode ser refeita.",
+      ],
+      example: "",
+      related: ["comecar", "prever", "caderno"],
+      keywords: ["tema", "missão", "missões", "aprender", "objetivo"],
+      details: [],
+      actions: [
+        {
+          label: "Abrir Aprender",
+          route: "#/aprender",
+        },
+        {
+          label: "Abrir Missões",
+          route: "#/missoes",
+        },
+      ],
+    },
+    {
+      id: "relatorios",
+      title: "Relatórios",
+      category: "relatorios",
+      summary:
+        "O relatório reúne a montagem, os dados obtidos e a interpretação escrita da investigação.",
+      purpose:
+        "Uma experiência formal gera Relatório da Experiência; a bancada livre gera Relatório da Bancada, sem inventar objetivo ou pergunta.",
+      steps: [
+        "Abra Dados → Abrir relatório.",
+        "Confira a identificação, a montagem e os resultados automáticos.",
+        "Preencha os campos de observação, interpretação e conclusão disponíveis.",
+        "Após novas medições, use Atualizar dados da bancada. Imprima, baixe HTML ou registre no Caderno conforme os controles oferecidos.",
+      ],
+      example:
+        "Use a impressão preenchida para entregar a investigação, ou Em branco para escrever à mão.",
+      related: ["roteiros", "tabela", "caderno"],
+      keywords: [
+        "relatório",
+        "imprimir",
+        "exportar",
+        "PDF",
+        "conclusão",
+        "HTML",
+      ],
+      details: [
+        {
+          title: "Dados e texto",
+          text: "Resultados automáticos vêm do experimento e são protegidos contra edição direta. Identificação e textos de interpretação são editáveis e salvos no navegador.",
+        },
+        {
+          title: "Imprimir ou salvar PDF",
+          text: "A impressão usa um formato próprio para papel. Na janela de impressão do navegador, escolha uma impressora ou Salvar como PDF, se essa opção estiver disponível.",
+        },
+      ],
+      diagram: "report",
+      actions: [
+        {
+          label: "Abrir relatório atual",
+          route: "#/relatorio",
+        },
+      ],
+    },
+    {
+      id: "caderno",
+      title: "Caderno de investigação",
+      category: "caderno",
+      summary:
+        "O Caderno reúne experiências, missões, explorações e anotações guardadas no navegador.",
+      purpose:
+        "Guarde hipóteses e descobertas escolhidas por você, além das referências a relatórios.",
+      steps: [
+        "Abra Caderno pela navegação.",
+        "Escreva uma anotação ou consulte os registros existentes.",
+        "Filtre o tipo de registro quando precisar localizar uma investigação.",
+        "Exporte CSV ou imprima para manter uma cópia.",
+      ],
+      example:
+        "Uma exploração livre só vai para o Caderno quando você pede para registrar.",
+      related: ["historico", "relatorios", "persistencia"],
+      keywords: ["caderno", "anotação", "notas", "salvar"],
+      details: [
+        {
+          title: "Três registros diferentes",
+          text: "Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda registros e referências escolhidos.",
+        },
+      ],
+      actions: [
+        {
+          label: "Abrir Caderno",
+          route: "#/caderno",
+        },
+      ],
+    },
+    {
+      id: "acessibilidade",
+      title: "Ajustar a experiência de uso",
+      category: "acessibilidade",
+      summary:
+        "Tema, contraste, texto, cores e movimento podem ser adaptados no painel Acessibilidade.",
+      purpose:
+        "Escolha uma apresentação confortável para ler e interagir; os nomes e símbolos acompanham as informações de cor.",
+      steps: [
+        "Abra Acessibilidade no cabeçalho ou no Menu.",
+        "Ajuste tema claro ou escuro, contraste, tamanho e espaçamento do texto.",
+        "Confira os filtros de cor e a opção de reduzir movimento.",
+        "Use Tab para percorrer os controles e veja [[atalhos|Navegação por teclado]].",
+      ],
+      example: "",
+      related: ["atalhos", "app"],
+      keywords: [
+        "acessível",
+        "contraste",
+        "daltonismo",
+        "tema claro",
+        "escuro",
+        "fonte",
+        "movimento",
+        "Libras",
+      ],
+      details: [
+        {
+          title: "Libras e internet",
+          text: "O tradutor VLibras é opcional e depende da internet. O restante da consulta essencial do Manual funciona offline junto ao aplicativo.",
+        },
+      ],
+      actions: [
+        {
+          label: "Abrir Acessibilidade",
+          command: "a11y",
+        },
+      ],
+    },
+    {
+      id: "atalhos",
+      title: "Navegação por teclado",
+      category: "acessibilidade",
+      summary:
+        "Use as teclas de navegação dos controles para percorrer o SIAB sem depender do mouse.",
+      purpose:
+        "O foco visível indica qual link, botão ou campo vai responder à próxima ação.",
+      steps: [
+        "Use Tab para avançar e Shift+Tab para voltar entre controles.",
+        "Use Enter em links; Enter ou Espaço ativam botões e expansores.",
+        "Use as setas nas abas da família Ver.",
+        "Use Esc para fechar diálogos e painéis contextuais; no Manual, Esc fecha o índice móvel aberto.",
+      ],
+      example: "",
+      related: ["acessibilidade", "bancada"],
+      keywords: [
+        "teclado",
+        "atalho",
+        "Tab",
+        "Shift",
+        "Enter",
+        "Espaço",
+        "Esc",
+        "setas",
+      ],
+      details: [],
+    },
+    {
+      id: "problemas",
+      title: "Ajuda e solução de problemas",
+      category: "problemas",
+      summary:
+        "Encontre o motivo de uma opção ausente ou de um resultado que ainda não apareceu.",
+      purpose:
+        "Uma restrição da atividade pode ser intencional. Confira o contexto antes de reiniciar sua investigação.",
+      steps: [
+        "Identifique o recipiente em foco e o módulo atual.",
+        "Confira se está em uma atividade enviada pelo professor.",
+        "Consulte a dúvida abaixo e siga o próximo passo indicado.",
+      ],
+      example: "",
+      related: ["atividades", "grafico", "compactacao", "persistencia"],
+      keywords: ["erro", "problema", "não aparece", "não consigo", "travado"],
+      details: [
+        {
+          title: "Não consigo alterar a solução",
+          text: "Em uma atividade enviada pelo professor, o preparo pode estar definido. Consulte Montagem → Resumo e as orientações. Isso faz parte da configuração da atividade.",
+        },
+        {
+          title: "Um instrumento não aparece",
+          text: "Só aparecem instrumentos disponibilizados para o contexto. Confira Ver → Medir e consulte o professor se a investigação pedir uma técnica que não foi oferecida.",
+        },
+        {
+          title: "Não consigo abrir outro Roteiro",
+          text: "Uma atividade restrita mantém você na investigação atual. Para sair, use Encerrar atividade e confirme, quando for o momento apropriado.",
+        },
+        {
+          title: "O gráfico ainda não apareceu",
+          text: "Faça ao menos duas leituras com uma técnica de pH disponível. Para acompanhar volume e calcular ΔpH/ΔV, adicione reagente entre as leituras. Veja [[grafico|Gráfico de pH por volume]].",
+        },
+        {
+          title: "Minha tabela está compactada",
+          text: "Isso é uma forma de apresentar leituras semelhantes. Use Completa ou Ver medições; os dados originais foram preservados. Veja [[compactacao|Tabela compacta e completa]].",
+        },
+        {
+          title: "Vejo uma leitura anterior",
+          text: "O valor foi registrado antes da última intervenção. Faça nova medição pontual ou use a medição contínua do pHmetro, quando disponível.",
+        },
+      ],
+    },
+    {
+      id: "atividades",
+      title: "Atividades por link e modo restrito",
+      category: "problemas",
+      summary:
+        "Em atividades enviadas pelo professor, algumas opções ficam indisponíveis por fazerem parte da configuração.",
+      purpose:
+        "O ambiente concentra a investigação nos recursos escolhidos; uma opção ausente não significa necessariamente erro.",
+      steps: [
+        "Abra o link recebido e leia a apresentação.",
+        "Inicie a atividade e consulte a montagem preparada.",
+        "Use os botões de ajuda para dúvidas curtas, sem abandonar o experimento.",
+        "Preencha o relatório e finalize. Encerrar atividade é a ação específica para sair desse contexto.",
+      ],
+      example: "",
+      related: ["problemas", "roteiros", "relatorios"],
+      keywords: [
+        "restrito",
+        "restrita",
+        "permissão",
+        "link do aluno",
+        "professor",
+        "bloqueado",
+      ],
+      details: [
+        {
+          title: "Ajuda durante a atividade",
+          text: "Em modo restrito, a ajuda contextual continua disponível, mas não oferece acesso ao Manual completo nem a outras áreas. As opções só reaparecem quando você sai da atividade pela ação própria.",
+        },
+      ],
+    },
+    {
+      id: "professor",
+      title: "Preparar uma atividade",
+      category: "professor",
+      summary:
+        "A Área do Professor reúne configuração, link do aluno e orientações para conduzir a investigação.",
+      purpose:
+        "Prepare uma Missão, um Roteiro Experimental ou uma Montagem pronta com os recursos adequados à turma.",
+      steps: [
+        "Abra a Área do Professor e escolha o tipo e o item da atividade.",
+        "Configure identificação, módulo, temperatura, instrumentos, representações, análises e permissões oferecidas.",
+        "Gere o link e use Abrir como aluno para conferir a experiência configurada.",
+        "Consulte Orientações e a impressão do guia na própria Área do Professor.",
+      ],
+      example:
+        "Atividades recentes podem ser reabertas ou duplicadas para preparar outra configuração.",
+      related: ["atividades", "roteiros", "projetor"],
+      keywords: [
+        "docente",
+        "professor",
+        "criar atividade",
+        "configurar",
+        "gerar link",
+        "orientações",
+        "impressão",
+      ],
+      details: [
+        {
+          title: "Orientações do professor",
+          text: "Referências de resposta e orientações específicas ficam na Área do Professor. Esta página explica o fluxo de preparação e não reproduz resultados esperados para o estudante.",
+        },
+      ],
+      actions: [
+        {
+          label: "Abrir Área do Professor",
+          route: "#/professor",
+        },
+      ],
+    },
+    {
+      id: "projetor",
+      title: "Modo projetor",
+      category: "professor",
+      summary:
+        "O modo projetor amplia a apresentação da mesma bancada para uso coletivo.",
+      purpose:
+        "Apresente o experimento com melhor leitura a distância, mantendo as ferramentas contextuais.",
+      steps: [
+        "Ative Modo projetor pelo controle disponível no Menu ou na Área do Professor.",
+        "Abra apenas Montagem, Ver ou Dados conforme a explicação.",
+        "Desative o modo ao voltar ao uso individual.",
+      ],
+      example: "",
+      related: ["bancada", "acessibilidade"],
+      keywords: ["projeção", "projetor", "aula", "ampliar"],
+      details: [],
+    },
+    {
+      id: "app",
+      title: "Instalação e uso offline",
+      category: "comecar",
+      summary:
+        "O Manual essencial acompanha o aplicativo e pode ser consultado sem conexão após o preparo do acesso offline.",
+      purpose:
+        "Use a versão instalada ou o arquivo HTML independente conforme a forma de acesso disponível.",
+      steps: [
+        "Na versão oferecida por um endereço compatível, abra o aplicativo uma vez conectado.",
+        "Use Instalar quando o navegador oferecer essa opção.",
+        "Teste a abertura sem conexão antes da aula.",
+        "O HTML independente pode ser aberto diretamente no navegador e também inclui este Manual.",
+      ],
+      example: "",
+      related: ["persistencia", "acessibilidade"],
+      keywords: [
+        "offline",
+        "sem internet",
+        "PWA",
+        "instalar",
+        "standalone",
+        "arquivo HTML",
+      ],
+      details: [
+        {
+          title: "Recursos externos",
+          text: "A consulta meteorológica e o VLibras dependem da internet. Não são necessários para ler o Manual ou executar a bancada.",
+        },
+        {
+          title: "Instalação disponível",
+          text: "A opção de instalar depende do navegador e da forma como o aplicativo foi disponibilizado. Abrir o HTML como arquivo local não instala a PWA.",
+        },
+      ],
+    },
+    {
+      id: "persistencia",
+      title: "Guardar e recuperar registros",
+      category: "comecar",
+      summary:
+        "O SIAB guarda preferências, Caderno e relatórios no navegador utilizado.",
+      purpose: "Mantenha cópias exportadas do que precisa conservar ou enviar.",
+      steps: [
+        "Confira os registros no Caderno e os textos no relatório.",
+        "Use as opções de exportação e impressão para guardar uma cópia.",
+        "Se aparecer um aviso de armazenamento indisponível ou cheio, exporte antes de fechar.",
+        "Para retomar uma atividade, conserve também o link recebido.",
+      ],
+      example: "",
+      related: ["caderno", "relatorios", "app"],
+      keywords: [
+        "salvamento",
+        "salvar",
+        "recuperar",
+        "armazenamento",
+        "backup",
+      ],
+      details: [
+        {
+          title: "Mesmo navegador",
+          text: "Limpar os dados do site ou usar outro navegador pode impedir a retomada dos registros locais. Uma exportação é a forma de manter uma cópia independente.",
+        },
+      ],
+    },
+    {
+      id: "limites",
+      title: "O que o modelo representa",
+      category: "calcular",
+      summary:
+        "O SIAB é um modelo didático de soluções aquosas e equilíbrio ácido-base.",
+      purpose:
+        "Use as representações para investigar relações, sem tratar o resultado como medição de uma amostra física.",
+      steps: [
+        "Confira a classificação da solução ou amostra utilizada.",
+        "Diferencie cálculo do modelo e leitura instrumental simulada.",
+        "Interprete os resultados considerando as condições de preparo e os limites apresentados.",
+      ],
+      example: "",
+      related: ["calcular", "frascos", "precipitacao"],
+      keywords: ["modelo", "limitação", "ideal", "precisão"],
+      details: [
+        {
+          title: "Hipóteses",
+          text: "O equilíbrio é imediato e usa conservação de matéria e balanço de cargas em solução ideal. O pH de uma mistura não é uma média dos pHs.",
+        },
+        {
+          title: "Não representado",
+          text: "O modelo não inclui atividades químicas, cinética, aquecimento de reação ou troca gasosa aberta. Amostras representativas têm composição parcial.",
+        },
+      ],
+    },
+    {
+      id: "precipitacao",
+      title: "Precipitação e redissolução",
+      category: "calcular",
+      summary:
+        "Algumas suspensões de hidróxidos podem apresentar sólido e mudanças de solubilidade.",
+      purpose:
+        "Observe o sólido quando o sistema químico utilizado incluir esse comportamento.",
+      steps: [
+        "Escolha uma solução ou suspensão apropriada do catálogo.",
+        "Observe a representação de sólido e faça intervenções permitidas.",
+        "Compare a cena com Espécies e Equações.",
+      ],
+      example: "",
+      related: ["limites", "frascos", "observar"],
+      keywords: [
+        "precipitação",
+        "precipitado",
+        "solubilidade",
+        "sólido",
+        "Kps",
+        "redissolução",
+      ],
+      details: [
+        {
+          title: "Limite do recurso",
+          text: "O modelo representa sistemas específicos com produto de solubilidade. Não há um banco geral de precipitados para todas as combinações de frascos.",
+        },
+      ],
+    },
+    {
+      id: "frascos",
+      title: "Biblioteca de substâncias",
+      category: "bancada",
+      summary:
+        "Consulte as substâncias disponíveis e sua classificação no modelo.",
+      purpose:
+        "A biblioteca é uma referência explicativa. Escolha frascos em Montagem → Preparo para montar um experimento.",
+      steps: [
+        "Localize a substância e confira seu tipo.",
+        "Interprete amostras representativas como aproximações de composição.",
+        "Abra a bancada para preparar a solução nas condições que deseja investigar.",
+      ],
+      example: "",
+      related: ["prateleira", "limites"],
+      keywords: [
+        "substância",
+        "catálogo",
+        "biblioteca",
+        "frascos",
+        "ácidos",
+        "bases",
+        "sais",
+      ],
+      details: [],
+      generated: "substances",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "tabela-indicadores",
+      title: "Biblioteca de indicadores",
+      category: "instrumentos",
+      summary:
+        "Compare nomes, faixas de viragem e cores dos indicadores presentes no SIAB.",
+      purpose:
+        "Use a faixa para escolher um indicador coerente com a investigação.",
+      steps: [
+        "Consulte a faixa e os nomes das cores na tabela.",
+        "Em Montagem → Preparo, selecione o indicador desejado.",
+        "Compare a cor observada e a leitura de uma técnica disponível.",
+      ],
+      example: "",
+      related: ["indicadores", "fita", "titulacao"],
+      keywords: [
+        "biblioteca indicadores",
+        "carta de cores",
+        "faixa de viragem",
+      ],
+      details: [
+        {
+          title: "Carta didática",
+          text: "Cores e faixas são referências de interpretação no simulador. Não use esta carta como instrumento físico de análise.",
+        },
+      ],
+      generated: "indicators",
+    },
   ],
-  [
-    "menu",
-    "Página inicial e navegação",
-    "A Página inicial reúne Aprender, Missões, Roteiros Experimentais, Laboratório e Caderno. Manual e Área do Professor são acessos secundários. Menu → Configurações → Inicialização permite escolher ou redefinir a tela inicial.",
-  ],
-  [
-    "modulos",
-    "Explorar, Medir e Calcular",
-    "Explorar privilegia evidências visuais. Medir dá controle de volumes, diluição e tamanho de gota. Calcular expõe concentrações e relações quantitativas. Todos são independentes; não há sequência obrigatória. Instrumentos continuam respeitando a configuração de uma atividade.",
-  ],
-  [
-    "prateleira",
-    "Soluções e indicadores",
-    "Escolha o destino Tubo ou Conta-gotas antes de tocar no frasco. O indicador é adicionado à solução; Sem indicador permite observar a cor própria. O realce do indicador suprime visualmente pigmentos da amostra, sem mudar o equilíbrio.",
-  ],
-  [
-    "vidraria",
-    "Vidrarias e capacidade",
-    "Tubos, béqueres e erlenmeyers têm capacidades diferentes. A adição é limitada pelo recipiente de menor espaço livre no grupo vinculado. Não interprete os desenhos como vidrarias volumétricas certificadas.",
-  ],
-  [
-    "medidas",
-    "Preparo, volumes e diluição",
-    "Em Medir ajuste volume inicial, diluição e volume da gota; em Calcular ajuste concentrações. A água adicionada conserva os mols de soluto e provoca um novo equilíbrio. Volumes são considerados aditivos.",
-  ],
-  [
-    "conta-gotas",
-    "Gotas, doses, agitação e desfazer",
-    "Um toque adiciona uma gota. Segurar repete a intervenção até soltar ou atingir a capacidade. Erlenmeyers permitem meia gota. Os atalhos adicionam doses maiores. Agitar uniformiza a representação; o equilíbrio químico é instantâneo no modelo. Desfazer recupera estados recentes.",
-  ],
-  [
-    "leitura",
-    "De onde vêm as medidas",
-    "Um recipiente começa com pH não medido. Indicadores fornecem cor e faixa; fita fornece uma estimativa; pHmetro fornece resolução de 0,01. Alterar a solução invalida uma medida pontual, preservada como leitura anterior.",
-  ],
-  [
-    "ver",
-    "Painel VER",
-    "OBSERVAR: partículas, espécies, equações e próton. MEDIR: pH, temperatura e condutividade. ANALISAR: gráfico, derivada, distribuição, histórico e tabela. Somente os submenus da família selecionada aparecem; o link do professor determina os recursos disponíveis. Histórico é uma linha do tempo de eventos; Tabela reúne medições. Todos usam o mesmo estado químico. Valores numéricos nas representações são identificados como cálculos do modelo.",
-  ],
-  [
-    "indicadores",
-    "Indicador, fita e pHmetro",
-    "Adicione um indicador físico à solução para interpretar sua cor. Mergulhe a fita no recipiente em foco e compare a escala 0–14. No pHmetro, escolha pontual ou contínuo; aguarde estabilizar. O modo contínuo registra novas leituras após mudanças. A calibração de dois pontos é simulada com padrões de referência a 25 °C, sem ruído aleatório.",
-  ],
-  [
-    "temperatura",
-    "Temperatura e neutralidade",
-    "Temperatura externa, ambiente da bancada e solução são condições distintas. A consulta opcional usa apenas cidade e não guarda coordenadas. Falha ou offline usa referência de 25 °C; também é possível informar manualmente. pH neutro = pKw(T)/2. Ka, pKIn, Kps e mobilidades são valores de referência, sem dependências térmicas inventadas.",
-  ],
-  [
-    "condutividade",
-    "Condutivímetro",
-    "A condutividade é uma estimativa ideal da soma das contribuições iônicas, em µS/cm. Alguns íons têm mobilidade estimada. A referência é 25 °C, sem correção térmica arbitrária. Uma leitura anterior não se atualiza sozinha.",
-  ],
-  [
-    "representacoes",
-    "Conectar representações",
-    "Observe cor, turvação, sólido, bolhas e volume no nível macroscópico. Moléculas e íons representam o nível submicroscópico. Equações e gráficos representam o simbólico. A seleção de uma espécie é mantida entre partículas, equações, distribuição e pares conjugados. Partículas são uma representação proporcional simplificada; a escala logarítmica amplia espécies raras.",
-  ],
-  [
-    "historico",
-    "Histórico da sessão e gráficos",
-    "O histórico registra intervenções e medições da sessão; não entra automaticamente no Caderno. O gráfico distingue medidas de fita e pHmetro; a derivada usa dados brutos sucessivos da mesma técnica em volumes distintos. Distribuição de espécies é um cálculo do modelo. A Tabela oferece Compacta e Completa; cada grupo expande os registros originais. A faixa e a contagem preservam a resolução da técnica. O CSV exporta todos os dados brutos.",
-  ],
-  [
-    "prever",
-    "Prever e gotejar",
-    "Registre uma previsão fechada (aumenta, diminui ou permanece) ou aberta. Faça a intervenção, compare observações antes/depois e explique. A explicação é opcional na bancada livre. A atividade pode solicitá-la. Use Registrar no Caderno para guardar a investigação.",
-  ],
-  [
-    "tubos",
-    "Seleção, comparação, vínculo e mistura",
-    "Em Tubos/Visão geral, use Selecionar recipientes. Comparar não cria vínculo. Vincular sincroniza reagente, concentração e quantidade do conta-gotas, preservando o conteúdo que já estava nos recipientes. Misturar pede um destino, valida a capacidade, combina todo o conteúdo e esvazia as origens. A temperatura final usa média ponderada por volume, assumindo soluções aquosas de mesma capacidade térmica; não modela calor de reação.",
-  ],
-  [
-    "montagens",
-    "Montagens prontas",
-    "Montagens prontas configuram rapidamente a bancada e sugerem o que observar. Não exigem identificação nem relatório. Roteiros Experimentais são investigações estruturadas e têm ficha própria. Abra Montagens prontas pelo menu.",
-  ],
-  [
-    "aprender",
-    "Temas e Missões",
-    "Temas oferecem conceitos e conexões com a bancada. Missões apresentam um problema, objetivos e condições de sucesso. Escolha estratégias e registre evidências, sem sequência universal. Concluído é apenas um marcador; todo conteúdo pode ser refeito.",
-  ],
-  [
-    "roteiros",
-    "Roteiros Experimentais",
-    "A lista compacta informa título, subtítulo e um único módulo. Abra a ficha para conhecer problema, pergunta, objetivo, tarefas e montagem. Informe Nome, Turma, Data, Professor e Grupo, então monte a bancada. Todas as substâncias do catálogo são contempladas na coleção.",
-  ],
-  [
-    "relatorios",
-    "Relatórios digital e impresso",
-    "Roteiros geram Relatório da Experiência com proposta, montagem, resultados, observações, interpretação, resposta e conclusão. Bancada livre gera Relatório da Bancada sem inventar pergunta ou objetivo. Dados automáticos são protegidos; textos do aluno e identificação são editáveis e salvos localmente. Atualizar dados da bancada captura novas medições. Impressão preenchida remove campos de formulário; em branco cria espaços para escrita.",
-  ],
-  [
-    "caderno",
-    "Caderno pessoal de investigação",
-    "O Caderno é uma timeline com Experiências, Missões, Explorações e Anotações. Experiência guarda referência ao relatório. Missão concluída guarda uma síntese. Exploração livre só é salva por solicitação. Anote hipóteses e descobertas, filtre registros, exporte CSV ou imprima. Registros antigos aproveitáveis são preservados.",
-  ],
-  [
-    "professor",
-    "Área do Professor",
-    "Prepare Missão, Roteiro ou Montagem. Configure identificação, temperatura, instrumentos, representações, análises, painel inicial, permissões de preparo, navegação e formato do relatório. A validação aceita técnicas alternativas para capacidades obrigatórias, como fita OU pHmetro. Gere a atividade, copie o link ou abra como aluno. Configurações recentes podem ser abertas ou duplicadas. Orientações, conceitos, respostas de referência e BNCC abrem em um diálogo na área do professor, com impressão separada. O projetor amplia a mesma bancada.",
-  ],
-  [
-    "atividades",
-    "Atividades por link e modo restrito",
-    "O link usa um token opaco com configuração criptografada no fragmento; não inclui respostas do professor. Funciona sem servidor de dados e pode ser reaberto no mesmo endereço do aplicativo. O modo restrito valida rotas, módulo, instrumentos e contexto, inclusive após refresh. A ajuda abre orientações contextuais sem sair da atividade; o Manual geral não abre no modo restrito. A montagem mostra as condições liberadas, sem a prateleira completa. Finalizar salva o relatório; Encerrar atividade libera a navegação. É uma restrição pedagógica no cliente, não um mecanismo inviolável de avaliação. Não envie informações sigilosas no link.",
-  ],
-  [
-    "acessibilidade",
-    "Teclado e acessibilidade",
-    "Tab e Shift+Tab percorrem ações; Enter e Espaço ativam botões. Use setas nas abas VER e Esc para fechar diálogos. O menu oferece contraste, fonte ampliada, filtros de cor e redução de movimento. Campos móveis usam rolagem contextual e adaptação ao visualViewport.",
-  ],
-  [
-    "app",
-    "Instalação e uso offline",
-    "O HTML único funciona por file:// com as limitações do navegador, sem instalação PWA. Sirva a pasta em localhost ou HTTPS para habilitar service worker e cache local. Visite o aplicativo uma vez conectado e teste a abertura offline. Temperatura meteorológica e VLibras precisam de internet e têm comportamento independente.",
-  ],
-  [
-    "persistencia",
-    "Salvamento e migração",
-    "Preferências, conclusões, Caderno, relatórios e atividades ficam no navegador. A migração é idempotente e preserva a chave antiga como origem recuperável. Não se apagam registros para converter dados. Armazenamento bloqueado ou cheio gera aviso: exporte os registros antes de fechar.",
-  ],
-  [
-    "limites",
-    "Modelo científico e limitações",
-    "O motor resolve eletroneutralidade e balanços de massa em solução aquosa ideal, com equilíbrio imediato. Não calcula pH por média. Suspensões de hidróxidos com Kps permitem precipitação e redissolução; não há banco geral de precipitados para todas as combinações. O modelo não inclui atividades, cinética, aquecimento de reação ou troca gasosa aberta. Amostras calibradas têm composição parcial. A matriz de compatibilidade identifica testes executados e verificações ainda pendentes.",
-  ],
-  [
-    "frascos",
-    "Biblioteca de substâncias",
-    "A classificação indica solução mecanística, modelo aproximado ou amostra representativa. Propriedades reais variam com composição e condições.",
-  ],
-  [
-    "tabela-indicadores",
-    "Biblioteca de indicadores",
-    "As cartas de cores são didáticas. Não use o simulador como instrumento físico de análise.",
-  ],
-].map(([id, titulo, p, passos]) => ({
-  id,
-  titulo,
-  resumo: p.split(". ")[0] + ".",
-  blocos: [
-    { p },
-    ...(passos ? [{ passos }] : []),
-    ...(id === "frascos"
-      ? [{ gerado: "frascos" }]
-      : id === "tabela-indicadores"
-        ? [{ gerado: "indicadores" }]
-        : []),
-  ],
-}));
+  aliases: {
+    layout: "bancada",
+    montagem: "bancada",
+    leitura: "ph",
+    ver: "painel-medir",
+    representacoes: "observar",
+    phmeter: "phmetro",
+    "ph-strip": "fita",
+    titration: "titulacao",
+    mounts: "montagens",
+    reports: "relatorios",
+    equacoes: "equacao",
+  },
+};
+SIAB.manualRegistry = (() => {
+  const { categories, topics, aliases } = SIAB.manualContent;
+  const byId = new Map(topics.map((t) => [t.id, t]));
+  const categoryMap = new Map(categories.map((c) => [c.id, c]));
+  const resolve = (id) => byId.get(aliases[id] || id);
+  const normalize = (value) =>
+    String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9Δ]+/gi, " ")
+      .trim();
+  const stem = (word) =>
+    word.length > 4
+      ? word.replace(/oes$/, "ao").replace(/ais$/, "al").replace(/s$/, "")
+      : word;
+  const stop = new Set([
+    "a",
+    "o",
+    "as",
+    "os",
+    "de",
+    "do",
+    "da",
+    "dos",
+    "das",
+    "um",
+    "uma",
+    "e",
+    "como",
+    "para",
+    "no",
+    "na",
+    "com",
+    "meu",
+    "minha",
+  ]);
+  const tokens = (value) =>
+    normalize(value)
+      .split(/\s+/)
+      .filter((w) => w && !stop.has(w))
+      .map(stem);
+  const index = topics.map((topic) => ({
+    topic,
+    title: normalize(topic.title),
+    keys: normalize(topic.keywords.join(" ")),
+    words: tokens(
+      [
+        topic.title,
+        topic.summary,
+        topic.purpose,
+        ...topic.keywords,
+        ...topic.steps,
+        topic.example,
+        ...topic.details.map((d) => d.title + " " + d.text),
+      ].join(" "),
+    ),
+  }));
+  function search(query) {
+    const clean = normalize(String(query).slice(0, 120)),
+      terms = tokens(clean);
+    if (!terms.length) return [];
+    return index
+      .map((x) => ({
+        topic: x.topic,
+        score: terms.every((t) =>
+          x.words.some((w) => w === t || (t.length > 2 && w.startsWith(t))),
+        )
+          ? 1 +
+            (x.title === clean ? 100 : 0) +
+            (x.title.includes(clean) ? 30 : 0) +
+            (x.keys.includes(clean) ? 20 : 0) +
+            terms.reduce(
+              (n, t) =>
+                n + (tokens(x.title).some((w) => w.startsWith(t)) ? 5 : 0),
+              0,
+            )
+          : 0,
+      }))
+      .filter((x) => x.score > 0)
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          topics.indexOf(a.topic) - topics.indexOf(b.topic),
+      )
+      .map((x) => x.topic);
+  }
+  return {
+    categories,
+    topics,
+    aliases,
+    resolve,
+    category: (id) => categoryMap.get(id),
+    search,
+    normalize,
+    index,
+  };
+})();
+// Compatibility for integrations that inspect the list; rendering uses the registry.
+SIAB.manual = SIAB.manualContent.topics;
 
 </script>
     <script>
@@ -18572,10 +21419,10 @@ SIAB.MODULOS = {
     nome: "Medir",
     icone: "M4 17 17 4l3 3L7 20H4v-3ZM8 13l1.5 1.5M11 10l1.5 1.5M14 7l1.5 1.5",
     define:
-      "Controlar as quantidades: diluição, volume inicial e tamanho da gota. O gráfico prevê o volume de equivalência.",
+      "Controlar as quantidades: diluição, volume inicial e tamanho da gota. Registre leituras para acompanhar a variação de pH no gráfico.",
     fatos: [
       ["Libera", "Ajustes de medida"],
-      ["Gráfico", "Volume de equivalência previsto"],
+      ["Gráfico", "Leituras de pH por volume adicionado"],
       ["Equação", "pOH e pH + pOH (Kw)"],
       ["Bom para", "Titulações, diluições e tampões"],
     ],
@@ -20960,21 +23807,6 @@ SIAB.workspace = (() => {
         }
       }
     });
-    document.addEventListener("click", (e) => {
-      const link = e.target.closest(
-        ".dock .ajuda-link,.stage-stats .ajuda-link",
-      );
-      if (!link || S.ActivityContext.restricted()) return;
-      e.preventDefault();
-      S.activityUI.dialog(
-        false,
-        link.closest("#controls")
-          ? "montagem"
-          : link.closest(".stage-stats")
-            ? "ph"
-            : state.activeTool,
-      );
-    });
     const activityBanner = $("activity-banner");
     if (activityBanner && typeof ResizeObserver !== "undefined") {
       new ResizeObserver(() => {
@@ -21093,7 +23925,7 @@ SIAB.tour = (() => {
       alvo: "#controls",
       alvoCelular: "#workspace-montagem",
       titulo: "Prepare a bancada",
-      texto: "Escolha uma solução e uma vidraria na prateleira.",
+      texto: "Abra Montagem para escolher uma solução em Preparo e uma vidraria em Objetos.",
     },
     {
       alvo: "#modulos",
@@ -24241,303 +27073,436 @@ SIAB.telas.caderno = {
 </script>
     <script>
 "use strict";
-/* Manual digital: monta as seções de js/data/manual.js, as tabelas geradas a
-   partir do catálogo e os montagens prontas.
-   "Mostrar na bancada" destaca a parte na bancada; "Montar na bancada"
-   prepara os tubos de um roteiro (dá para desfazer na bancada). */
-SIAB.ajuda = (() => {
-  const VISTO = "siab_manual_visto";
-  let pendente = null;
-
-  // Leva à bancada e destaca a parte descrita na seção do manual.
-  function mostrar(id) {
-    const secao = SIAB.manual.find((x) => x.id === id);
-    if (!secao?.alvo) return;
-    pendente = secao;
-    SIAB.irPara("#/laboratorio");
-  }
-
-  // Chamado pela tela da bancada. Espera o roteador terminar (foco e rolagem).
-  function aplicarPendente() {
-    if (!pendente) return;
-    const secao = pendente;
-    pendente = null;
-    requestAnimationFrame(() => {
-      const ordem = ["explorar", "medir", "calcular"];
-      if (
-        secao.nivel &&
-        ordem.indexOf(SIAB.state.level) < ordem.indexOf(secao.nivel)
-      ) {
-        SIAB.state.level = secao.nivel;
-        SIAB.render(true);
-      }
-      if (secao.painel && SIAB.bancada.mobile.matches) SIAB.bancada.openSheet();
-      let alvo = document.querySelector(secao.alvo);
-      if (!alvo) return;
-      // Bancada vazia: leitura, conta-gotas e ajustes só aparecem com um tubo.
-      if (!alvo.getClientRects().length && !SIAB.current()) {
-        alvo = SIAB.$("bancada-vazia");
-        SIAB.notice(
-          `A bancada está vazia. Escolha um frasco na prateleira para ver: ${secao.titulo}.`,
-        );
-        alvo.scrollIntoView({ block: "center" });
-        alvo.classList.add("ajuda-destaque");
-        setTimeout(() => alvo.classList.remove("ajuda-destaque"), 4500);
-        return;
-      }
-      if (alvo.tagName === "DETAILS") alvo.open = true;
-      alvo.scrollIntoView({
-        block: "center",
-        behavior: window.A11Y?.estado?.motion ? "auto" : "smooth",
-      });
-      alvo.classList.remove("ajuda-destaque");
-      void alvo.offsetWidth;
-      alvo.classList.add("ajuda-destaque");
-      setTimeout(() => alvo.classList.remove("ajuda-destaque"), 4500);
-      SIAB.notice(`Destacado na bancada: ${secao.titulo}.`);
-    });
-  }
-
-  return {
-    mostrar,
-    aplicarPendente,
-    jaViu: () => SIAB.armazenamento.ler(VISTO, false),
-    marcarVisto: () => SIAB.armazenamento.gravar(VISTO, true),
-  };
-})();
-
+/* RC.4 — consulta sob demanda. Nenhuma ação do Manual cria tubos ou medições. */
 SIAB.manualTela = (() => {
-  const $ = SIAB.$,
-    esc = SIAB.escape;
-  const tubo = (spec) => {
-    const { grupo, ...resto } = spec;
-    return {
-      id: 0,
-      name: "tubo",
-      ...SIAB.TUBE_DEFAULTS,
-      ...resto,
-      additions: [],
-    };
+  const S = SIAB,
+    $ = S.$,
+    esc = S.escape,
+    R = S.manualRegistry;
+  let current = "",
+    bound = false;
+  const paths = {
+    book: "M4 4h7l1 2 1-2h7v16h-7l-1 1-1-1H4ZM12 6v15M7 8h2M15 8h2M7 12h2M15 12h2",
+    tube: "M8 3h8M9 3v14a3 3 0 0 0 6 0V3M9 11h6",
+    eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
+    ruler: "M4 17 17 4l3 3L7 20H4ZM8 13l2 2M11 10l2 2M14 7l2 2",
+    chart: "M4 3v17h17M7 16l4-5 4 2 5-8",
+    meter:
+      "M3 4h12v15H3ZM6 7h6v5H6ZM15 7h3a3 3 0 0 1 3 3v4M19 14h3v7h-3ZM6 15h2M11 15h1",
+    flask: "M9 3h6M10 3v6L4 19q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10",
+    list: "M6 4h14v17H4V4h2M8 2h8v4H8ZM8 10h8M8 14h8M8 18h5",
+    report: "M5 3h10l4 4v14H5ZM15 3v5h4M8 12h8M8 16h8",
+    access:
+      "M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0M4 8l8 2 8-2M12 10v5M7 22l5-7 5 7",
+    help: "M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0M9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3M12 17h.01",
+    teacher: "M3 4h18v12H3ZM8 21l4-5 4 5M7 8h10M7 12h6",
+    arrow: "M5 12h14M13 6l6 6-6 6",
+    back: "M19 12H5M11 6l-6 6 6 6",
+    search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
   };
-
-  // "Rótulo: texto" vira rótulo em negrito.
-  function rotulado(item) {
-    const i = item.indexOf(": ");
-    return i > 0 && i < 45
-      ? `<strong>${esc(item.slice(0, i))}:</strong> ${esc(item.slice(i + 2))}`
-      : esc(item);
-  }
-
-  /* ---------- Conteúdo gerado ---------- */
-  function diagrama() {
-    const card = (
-      classe,
-      numero,
-      titulo,
-      texto,
-    ) => `<div class="manual-map-card ${classe}">
-      ${numero ? `<span class="manual-map-n" aria-hidden="true">${numero}</span>` : ""}
-      <strong>${titulo}</strong><span>${texto}</span>
-    </div>`;
-    return `<div class="manual-layout-maps" aria-label="Mapas de localização do simulador">
-      <section class="manual-layout-map manual-map-desktop" aria-labelledby="manual-map-desktop-title">
-        <p class="eyebrow">DESKTOP · TUDO VISÍVEL</p>
-        <h3 id="manual-map-desktop-title">A bancada ocupa a largura e mantém as áreas lado a lado</h3>
-        <div class="manual-map-grid-desktop" role="img" aria-label="No desktop, a prateleira fica à esquerda, o experimento e as doses ficam no centro, o painel VER fica à direita e a tira de tubos fica abaixo.">
-          ${card("map-shelf", "1", "Prateleira", "frascos · indicador · medidas")}
-          ${card("map-experiment", "2", "Experimento", "vidraria · pH · volume · cor")}
-          ${card("map-dose", "3", "Conta-gotas / Doses", "gotas · Desfazer · atalhos")}
-          ${card("map-ver", "4", "Painel VER", "gráfico · partículas · condução · equação · histórico")}
-          ${card("map-strip", "5", "Tira de tubos", "troca rápida do recipiente ativo")}
-        </div>
-        <p class="manual-map-caption">Use a prateleira para montar, o centro para operar a vidraria e o painel VER para interpretar o resultado.</p>
-      </section>
-
-      <section class="manual-layout-map manual-map-mobile" aria-labelledby="manual-map-mobile-title">
-        <p class="eyebrow">MOBILE · UMA TAREFA POR VEZ</p>
-        <h3 id="manual-map-mobile-title">A mesma bancada vira uma sequência curta de áreas</h3>
-        <div class="manual-map-grid-mobile" role="img" aria-label="No mobile, o cabeçalho alterna entre Experimento, Tubos e Análises; a prateleira abre em uma folha inferior com Preparo, Medidas, Módulos e Ações.">
-          ${card("map-mobile-header", "", "Cabeçalho + 3 áreas", "Experimento · Tubos · Análises")}
-          ${card("map-mobile-experiment", "", "Experimento", "vidraria e leitura")}
-          ${card("map-mobile-strip", "", "Tubos / tira", "troca rápida")}
-          ${card("map-mobile-analysis", "", "Análises", "painel VER")}
-          ${card("map-mobile-dose", "", "Doses fixas", "Desfazer · gotejar · Doses ▾")}
-          ${card("map-mobile-nav", "", "Navegação", "Aprender · Bancada · Caderno")}
-          ${card("map-mobile-shelf", "", "Prateleira", "Preparo · Medidas · Módulos · Ações")}
-        </div>
-        <p class="manual-map-caption">No celular, toque em <strong>Prateleira</strong> para abrir as ferramentas; a faixa de doses fica acima da navegação inferior para não cobrir a vidraria.</p>
-      </section>
-    </div>`;
-  }
-
-  // Primeira gota em que a cor do indicador muda.
-  function roteiros() {
-    return '<p><a class="primary-btn" href="#/montagens">Abrir Montagens prontas</a></p>';
-  }
-
-  function frascos() {
-    const grupos = Object.entries(SIAB.solutionGroups)
-      .map(([grupo, rotulo]) => {
-        const itens = Object.entries(SIAB.solutions).filter(
-          ([, x]) => x.group === grupo,
-        );
-        if (!itens.length) return "";
-        const linhas = itens
-          .map(([id, x]) => {
-            const reagente = x.kind !== "sample" && x.kind !== "water";
-            const r = SIAB.chem.solve(
-              tubo({
-                solution: id,
-                concentration: reagente ? 0.01 : 0,
-                titrant: "water",
-                indicator: "none",
-              }),
-            );
-            return `<tr><td>${esc(x.name)}</td><td>${esc(x.kind === "sample" ? "—" : x.formula || "—")}</td><td>${esc(x.label || "")}</td><td>${SIAB.phFormat(r)}</td></tr>`;
-          })
-          .join("");
-        return `<tbody><tr class="tabela-grupo"><th colspan="4" scope="rowgroup">${esc(rotulo)}</th></tr>${linhas}</tbody>`;
+  const icon = (name) =>
+    `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${paths[name] || paths.book}"/></svg>`;
+  const href = (id) => "#/manual/" + encodeURIComponent(id);
+  function rich(text) {
+    return String(text || "")
+      .split(/(\[\[[^\]]+\]\])/g)
+      .map((s) => {
+        const match = s.match(/^\[\[([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/);
+        if (!match) return esc(s);
+        const t = R.resolve(match[1]);
+        return t
+          ? `<a href="${href(t.id)}">${esc(match[2] || t.title)}</a>`
+          : esc(match[2] || match[1]);
       })
       .join("");
-    return `<div class="tabela-rolagem"><table class="manual-tabela"><caption class="sr-only">Frascos da prateleira e pH de cada um sozinho</caption>
-      <thead><tr><th scope="col">Frasco</th><th scope="col">Fórmula</th><th scope="col">Tipo</th><th scope="col">pH sozinho</th></tr></thead>${grupos}</table></div>`;
   }
-
-  function indicadores() {
-    const amostra = (id, pH) =>
-      `<span class="mini-dot" style="background:rgb(${SIAB.chem.color(id, pH).rgb.join(",")})" aria-hidden="true"></span>`;
-    const linhas = Object.entries(SIAB.indicators)
-      .filter(([id]) => id !== "none")
-      .map(([id, x]) => {
-        let faixa, cores;
-        if (x.acid) {
-          faixa = `${SIAB.format(x.low, 1)} a ${SIAB.format(x.high, 1)}`;
-          cores = `${amostra(id, 0)} ${esc(x.acidName)} → ${amostra(id, (x.low + x.high) / 2)} ${esc(x.middleName)} → ${amostra(id, 14)} ${esc(x.baseName)}`;
-        } else {
-          faixa = "carta de 1 a 14 (aproximada)";
-          const pontos = [];
-          for (const nome of SIAB.chem.colorNames(id)) {
-            const [a, b] = SIAB.chem.colorRange(id, nome);
-            pontos.push(
-              `${amostra(id, (a + b) / 2)} ${esc(nome)} (${SIAB.format(a, 0)}–${SIAB.format(b, 0)})`,
-            );
-          }
-          cores = pontos.join(" · ");
-        }
-        return `<tr><td>${esc(x.name)}</td><td>${faixa}</td><td class="celula-cores">${cores}</td></tr>`;
-      })
+  function actions(topic) {
+    return (topic.actions || [])
+      .map((a) =>
+        a.route
+          ? `<a class="secondary-btn" href="${esc(a.route)}">${esc(a.label)} ${icon("arrow")}</a>`
+          : `<button type="button" class="secondary-btn" data-manual-command="${esc(a.command)}">${esc(a.label)}</button>`,
+      )
       .join("");
-    return `<div class="tabela-rolagem"><table class="manual-tabela"><caption class="sr-only">Indicadores, faixas de viragem e cores</caption>
-      <thead><tr><th scope="col">Indicador</th><th scope="col">Faixa de viragem (pH)</th><th scope="col">Cores (ácido → básico)</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
   }
-
-  const GERADOS = { diagrama, roteiros, frascos, indicadores };
-
-  function bloco(b) {
-    if (b.p) return `<p>${esc(b.p)}</p>`;
-    if (b.lista)
-      return `<ul class="manual-lista">${b.lista.map((item) => `<li>${rotulado(item)}</li>`).join("")}</ul>`;
-    if (b.passos)
-      return `<ol class="manual-passos">${b.passos.map((item) => `<li>${esc(item)}</li>`).join("")}</ol>`;
-    if (b.dica)
-      return `<p class="manual-dica"><strong>Dica:</strong> ${esc(b.dica)}</p>`;
-    if (b.teclas)
-      return `<dl class="manual-teclas">${b.teclas.map(([tecla, acao]) => `<div><dt><kbd>${esc(tecla)}</kbd></dt><dd>${esc(acao)}</dd></div>`).join("")}</dl>`;
-    if (b.faq)
-      return `<dl class="manual-faq">${b.faq.map(([pergunta, resposta]) => `<dt>${esc(pergunta)}</dt><dd>${esc(resposta)}</dd>`).join("")}</dl>`;
-    if (b.gerado) return GERADOS[b.gerado]();
+  function topicLink(t, compact = false) {
+    const cat = R.category(t.category);
+    return `<a class="manual-topic-link${compact ? " compact" : ""}" href="${href(t.id)}"><span class="manual-symbol">${icon(cat.icon)}</span><span><strong>${esc(t.title)}</strong><span>${esc(t.summary)}</span></span>${icon("arrow")}</a>`;
+  }
+  function diagram(kind) {
+    if (kind === "workspace")
+      return `<figure class="manual-diagram manual-workspace-map"><div class="manual-map-actions"><a href="${href("bancada")}">${icon("flask")}Montagem</a><a href="${href("painel-medir")}">${icon("eye")}Ver</a><a href="${href("tabela")}">${icon("report")}Dados</a></div><div class="manual-map-scene"><svg viewBox="0 0 180 160" role="img" aria-label="Recipiente ao centro, com espaço livre para observar o experimento"><path class="glass" d="M62 12h56M68 12v112a22 22 0 0 0 44 0V12"/><path class="liquid" d="M70 91h40v33a20 20 0 0 1-40 0Z"/><path class="ticks" d="M102 35h10M105 51h7M102 67h10"/><circle cx="77" cy="111" r="3" class="bubble"/><circle cx="96" cy="123" r="2" class="bubble"/></svg><div><strong>Seu experimento em foco</strong><span>Gotejar · Agitar · Medir</span></div></div><figcaption>Abra uma ferramenta quando precisar. Fechar o painel devolve espaço à bancada.</figcaption></figure>`;
+    if (kind === "meter")
+      return `<figure class="manual-diagram"><svg class="manual-instrument" viewBox="0 0 520 210" role="img" aria-label="Esquema do pHmetro: visor ligado por um cabo ao eletrodo mergulhado na solução. Aguarde estabilizar antes de interpretar a leitura."><rect x="25" y="30" width="218" height="150" rx="16" class="device"/><rect x="45" y="52" width="177" height="64" rx="6" class="screen"/><text x="63" y="91" class="readout">— —</text><text x="165" y="94">pH</text><text x="46" y="150">Visor</text><path d="M242 65C310 0 395 20 395 64" class="glass"/><path d="M348 95v76q0 22 46 22t46-22V95" class="glass"/><path d="M351 140h86v30q0 20-43 20t-43-20Z" class="liquid"/><rect x="389" y="62" width="13" height="98" rx="5" class="probe"/><text x="312" y="47">Eletrodo</text></svg><figcaption>Esquema do instrumento. O visor só apresenta uma leitura depois da medição.</figcaption></figure>`;
+    if (kind === "strip")
+      return `<figure class="manual-diagram"><div class="manual-strip"><span aria-hidden="true"></span><div><strong>Uma estimativa por faixa</strong><p>Compare a cor com a escala de 0 a 14. A leitura é apresentada em passos de 1 unidade de pH.</p></div></div><figcaption>A descrição e o número acompanham a cor; não é necessário distinguir apenas o tom.</figcaption></figure>`;
+    if (kind === "compaction")
+      return `<figure class="manual-diagram"><div class="manual-comparison"><div><strong>Compacta</strong><p>Um grupo de leituras compatíveis</p><span>Contagem + faixa + Ver medições</span></div><span aria-hidden="true">↔</span><div><strong>Completa</strong><p>Cada leitura individual</p><span>Técnica + valor + contexto</span></div></div><figcaption>São duas apresentações dos mesmos dados. O agrupamento não remove registros.</figcaption></figure>`;
+    if (kind === "instruments")
+      return `<div class="manual-reference-table" role="region" aria-label="Comparação dos instrumentos" tabindex="0"><table><caption>Qual evidência você precisa?</caption><thead><tr><th scope="col">Técnica</th><th scope="col">Evidência</th><th scope="col">Limite principal</th></tr></thead><tbody><tr><th scope="row"><a href="${href("indicadores")}">Indicador</a></th><td>Cor e faixa de viragem</td><td>Não dá pH exato</td></tr><tr><th scope="row"><a href="${href("fita")}">Fita de pH</a></th><td>Estimativa de pH</td><td>Resolução de 1 unidade</td></tr><tr><th scope="row"><a href="${href("phmetro")}">pHmetro</a></th><td>Leitura numérica</td><td>Resolução simulada de 0,01</td></tr><tr><th scope="row"><a href="${href("condutividade")}">Condutivímetro</a></th><td>Condução em µS/cm</td><td>Estimativa ideal</td></tr><tr><th scope="row"><a href="${href("temperatura")}">Termômetro</a></th><td>Temperatura da solução</td><td>Condição do modelo</td></tr></tbody></table></div>`;
+    const flow = {
+      measurement: [
+        ["Selecionar", "Recipiente em foco"],
+        ["Medir", "Acionar o instrumento"],
+        ["Interpretar", "Conferir técnica e valor"],
+      ],
+      titration: [
+        ["Preparar", "Solução e reagente"],
+        ["Adicionar e medir", "Registrar a cada intervenção"],
+        ["Analisar", "Volume e mudança de pH"],
+      ],
+      report: [
+        ["Investigar", "Obter evidências"],
+        ["Interpretar", "Escrever suas conclusões"],
+        ["Compartilhar", "Imprimir ou exportar"],
+      ],
+      modules: [
+        ["Explorar", "Observar e manipular"],
+        ["Medir", "Controlar volumes e coletar"],
+        ["Calcular", "Relacionar quantidades"],
+      ],
+      representations: [
+        ["Recipiente", "Cor e transformação visível"],
+        ["Partículas", "Moléculas e íons"],
+        ["Símbolos", "Equações e números"],
+      ],
+    }[kind];
+    return flow
+      ? `<figure class="manual-diagram"><ol class="manual-flow${kind === "modules" ? " independent" : ""}">${flow.map(([title, detail]) => `<li><strong>${esc(title)}</strong><span>${esc(detail)}</span></li>`).join("")}</ol><figcaption>${kind === "modules" ? "Módulos independentes: escolha pelo objetivo, sem ordem obrigatória." : kind === "representations" ? "Três formas de interpretar o mesmo sistema." : "Uma sequência de consulta para orientar sua investigação."}</figcaption></figure>`
+      : "";
+  }
+  function generated(kind) {
+    if (kind === "substances") {
+      return `<p class="manual-note">Referência: soluções mecanísticas a 0,0100 mol/L, temperatura de 25 °C, sem adições. Amostras usam sua composição representativa. O pH abaixo é calculado, não medido.</p><div class="manual-reference-table" tabindex="0" role="region" aria-label="Biblioteca de substâncias"><table><caption>Substâncias do catálogo</caption><thead><tr><th scope="col">Substância</th><th scope="col">Fórmula</th><th scope="col">Classificação</th><th scope="col">pH calculado</th></tr></thead><tbody>${Object.entries(
+        S.solutions,
+      )
+        .map(([id, x]) => {
+          const t = {
+            ...S.TUBE_DEFAULTS,
+            id: 0,
+            name: "Referência",
+            solution: id,
+            concentration: x.kind === "sample" || x.kind === "water" ? 0 : 0.01,
+            titrant: "water",
+            indicator: "none",
+            temperature: 25,
+            additions: [],
+          };
+          return `<tr><th scope="row">${esc(x.name)}</th><td>${esc(x.kind === "sample" ? "—" : x.formula || "—")}</td><td>${esc(x.label || x.kind)}</td><td>${S.phFormat(S.chem.solve(t))}</td></tr>`;
+        })
+        .join("")}</tbody></table></div>`;
+    }
+    if (kind === "indicators")
+      return `<div class="manual-reference-table" tabindex="0" role="region" aria-label="Biblioteca de indicadores"><table><caption>Faixas e cores de referência</caption><thead><tr><th scope="col">Indicador</th><th scope="col">Faixa de pH</th><th scope="col">Cores</th></tr></thead><tbody>${Object.entries(
+        S.indicators,
+      )
+        .filter(([id]) => id !== "none")
+        .map(([id, x]) => {
+          const dot = (pH) =>
+            `<span class="mini-dot" aria-hidden="true" style="background:rgb(${S.chem.color(id, pH).rgb.join(",")})"></span>`;
+          const colors = x.acid
+            ? `${dot(0)}${esc(x.acidName)} → ${dot((x.low + x.high) / 2)}${esc(x.middleName)} → ${dot(14)}${esc(x.baseName)}`
+            : S.chem
+                .colorNames(id)
+                .map((name) => {
+                  const [a, b] = S.chem.colorRange(id, name);
+                  return `${dot((a + b) / 2)}${esc(name)} (${S.format(a, 0)}–${S.format(b, 0)})`;
+                })
+                .join(" · ");
+          return `<tr><th scope="row">${esc(x.name)}</th><td>${x.acid ? S.format(x.low, 1) + " a " + S.format(x.high, 1) : "Carta aproximada de 1 a 14"}</td><td>${colors}</td></tr>`;
+        })
+        .join("")}</tbody></table></div>`;
     return "";
   }
-
-  function render() {
-    $("manual-indice").innerHTML = SIAB.manual
-      .map(
-        (s, i) =>
-          `<li data-indice="${s.id}"><a href="#/manual/${s.id}">${i + 1}. ${esc(s.titulo)}</a></li>`,
-      )
-      .join("");
-    $("manual-conteudo").innerHTML = SIAB.manual
-      .map(
-        (
-          s,
-          i,
-        ) => `<section class="manual-secao" id="manual-${s.id}" aria-labelledby="manual-h-${s.id}">
-      <h2 id="manual-h-${s.id}" tabindex="-1">${i + 1}. ${esc(s.titulo)}</h2>
-      <p class="manual-resumo">${esc(s.resumo)}</p>
-      ${s.blocos.map(bloco).join("")}
-      <div class="manual-acoes-secao">
-        ${s.alvo ? `<button type="button" class="secondary-btn" data-mostrar="${s.id}">Mostrar na bancada</button>` : ""}
-        ${s.link ? `<a class="secondary-btn" href="${s.link[0]}">${esc(s.link[1])}</a>` : ""}
-        <a class="secondary-btn back-btn" href="#/manual">Voltar ao índice</a>
-      </div>
-    </section>`,
+  function accordion(t, print = false) {
+    return t.details
+      .map((d, i) =>
+        print
+          ? `<section class="manual-print-detail"><h3>${esc(d.title)}</h3><p>${rich(d.text)}</p></section>`
+          : `<section class="manual-accordion"><h3><button type="button" class="secondary-btn" aria-expanded="false" aria-controls="manual-detail-${t.id}-${i}" id="manual-toggle-${t.id}-${i}" data-manual-expand>${esc(d.title)}<span aria-hidden="true">+</span></button></h3><div id="manual-detail-${t.id}-${i}" aria-labelledby="manual-toggle-${t.id}-${i}" hidden><p>${rich(d.text)}</p></div></section>`,
       )
       .join("");
   }
-
-  function filtrar() {
-    const busca = SIAB.normalizar($("manual-busca").value.trim());
-    let visiveis = 0;
-    SIAB.manual.forEach((s) => {
-      const secao = $(`manual-${s.id}`);
-      const mostra =
-        !busca || SIAB.normalizar(secao.textContent).includes(busca);
-      secao.hidden = !mostra;
-      document.querySelector(`[data-indice="${s.id}"]`).hidden = !mostra;
-      if (mostra) visiveis++;
+  function article(t, print = false) {
+    const cat = R.category(t.category),
+      children =
+        t.id === cat.id
+          ? R.topics.filter((x) => x.category === cat.id && x.id !== t.id)
+          : [];
+    return `${!print ? `<nav class="manual-breadcrumb" aria-label="Caminho do Manual"><a href="#/manual">Manual</a>${t.id !== cat.id ? `<span aria-hidden="true">/</span><a href="${href(cat.id)}">${esc(cat.title)}</a>` : ""}<span aria-hidden="true">/</span><span aria-current="page">${esc(t.title)}</span></nav>` : ""}<article class="manual-article" data-manual-topic="${t.id}"><header><p class="eyebrow">${esc(cat.title)}</p><h1 ${!print ? 'id="manual-titulo" data-foco tabindex="-1"' : ""}>${esc(t.title)}</h1><p class="manual-lead">${rich(t.summary)}</p></header><section class="manual-purpose"><h2>Para que serve</h2><p>${rich(t.purpose)}</p></section>${t.diagram ? diagram(t.diagram) : ""}<section class="manual-how"><h2>Como usar</h2><ol class="manual-steps">${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></section>${t.example ? `<aside class="manual-example" aria-label="Exemplo"><strong>Exemplo</strong><p>${rich(t.example)}</p></aside>` : ""}${!print && t.actions?.length ? `<div class="manual-actions"><p>Use a função no programa</p>${actions(t)}</div>` : ""}${t.generated ? generated(t.generated) : ""}${t.details.length ? `<section class="manual-details"><h2>Detalhes importantes</h2>${accordion(t, print)}</section>` : ""}${!print && children.length ? `<section class="manual-more"><h2>Nesta categoria</h2><div class="manual-topic-list">${children.map((x) => topicLink(x, true)).join("")}</div></section>` : ""}${
+      t.related.length
+        ? `<nav class="manual-related" aria-label="Veja também"><h2>Veja também</h2><div>${t.related
+            .map((id) => {
+              const x = R.resolve(id);
+              return `<a href="${href(x.id)}">${esc(x.title)} ${icon("arrow")}</a>`;
+            })
+            .join("")}</div></nav>`
+        : ""
+    }</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
+  }
+  function home() {
+    return `<header class="manual-hero"><div><p class="eyebrow">MANUAL DO USUÁRIO</p><h1 id="manual-titulo" data-foco tabindex="-1">Encontre seu próximo passo.</h1><p>Uma dúvida na bancada? Consulte uma ferramenta, entenda uma leitura ou descubra por onde começar.</p><div class="manual-hero-actions"><a class="primary-btn" href="${href("comecar")}">Começar a usar ${icon("arrow")}</a><button class="quiet-btn" type="button" data-manual-command="tour">Iniciar tour da bancada</button></div></div>${diagram("workspace")}</header><nav class="manual-shortcuts" aria-label="Consultas rápidas"><span>QUERO SABER</span>${[
+      ["phmetro", "Como medir pH"],
+      ["montagens", "Como abrir uma montagem"],
+      ["problemas", "Por que uma opção não aparece"],
+    ]
+      .map(
+        ([id, label]) =>
+          `<a href="${href(id)}">${esc(label)} ${icon("arrow")}</a>`,
+      )
+      .join("")}</nav>${[
+      "Investigue",
+      "Prepare e registre",
+      "Orientação",
+      "Para ensinar",
+    ]
+      .map(
+        (group) =>
+          `<section class="manual-category-section"><h2>${group}</h2><div class="manual-category-grid">${R.categories
+            .filter((c) => c.group === group)
+            .map(
+              (c) =>
+                `<a class="manual-category" href="${href(c.id)}"><span class="manual-symbol">${icon(c.icon)}</span><h3>${esc(c.title)}</h3><p>${esc(c.summary)}</p><span class="manual-category-action">Consultar ${icon("arrow")}</span></a>`,
+            )
+            .join("")}</div></section>`,
+      )
+      .join("")}`;
+  }
+  function setIndex(open, focus = false) {
+    const button = $("manual-index-toggle");
+    button.setAttribute("aria-expanded", String(open));
+    button.textContent = open ? "Fechar índice" : "Índice do Manual";
+    document
+      .querySelector(".tela-manual")
+      .classList.toggle("manual-index-open", open);
+    if (focus) button.focus();
+  }
+  function index(id) {
+    const cat = R.resolve(id)?.category;
+    $("manual-indice").innerHTML =
+      `<a class="manual-index-home" href="#/manual">${icon("book")}Início do Manual</a><ul>${R.categories
+        .map(
+          (c) =>
+            `<li><a href="${href(c.id)}" ${id === c.id ? 'aria-current="page"' : ""}>${icon(c.icon)}${esc(c.title)}</a>${
+              cat === c.id
+                ? `<ul>${R.topics
+                    .filter((t) => t.category === c.id && t.id !== c.id)
+                    .map(
+                      (t) =>
+                        `<li><a href="${href(t.id)}" ${t.id === id ? 'aria-current="page"' : ""}>${esc(t.title)}</a></li>`,
+                    )
+                    .join("")}</ul>`
+                : ""
+            }</li>`,
+        )
+        .join("")}</ul>`;
+  }
+  function render(id = "", options = {}) {
+    current = id;
+    const topic = R.resolve(id),
+      screen = document.querySelector(".tela-manual");
+    screen.dataset.manualView = id ? "topic" : "home";
+    if (!options.keepSearch) $("manual-busca").value = "";
+    $("manual-clear").hidden = !$("manual-busca").value;
+    setIndex(false);
+    index(topic?.id || "");
+    $("manual-imprimir").textContent =
+      id && topic ? "Imprimir tópico" : "Imprimir guia rápido";
+    $("manual-conteudo").innerHTML = id
+      ? topic
+        ? article(topic)
+        : `<div class="manual-empty"><h1 id="manual-titulo" data-foco tabindex="-1">Tópico não encontrado</h1><p>Este endereço não corresponde a um tópico do Manual.</p><a class="secondary-btn" href="#/manual">Voltar ao índice</a></div>`
+      : home();
+    $("manual-status").textContent = "";
+  }
+  function search() {
+    const query = $("manual-busca").value.trim();
+    $("manual-clear").hidden = !query;
+    if (!query) {
+      render(current, { keepSearch: true });
+      return;
+    }
+    const items = R.search(query);
+    document.querySelector(".tela-manual").dataset.manualView = "search";
+    setIndex(false);
+    $("manual-status").textContent = items.length
+      ? `${items.length} ${items.length === 1 ? "tópico encontrado" : "tópicos encontrados"}.`
+      : "Nenhum tópico encontrado.";
+    $("manual-conteudo").innerHTML =
+      `<section class="manual-search-results"><p class="eyebrow">BUSCA NO MANUAL</p><h1 id="manual-titulo" data-foco tabindex="-1">${items.length ? "Resultados para “" + esc(query) + "”" : "Nenhum tópico encontrado"}</h1><p>${items.length ? "Escolha um tópico para abrir a explicação." : "Tente outro termo, como “pHmetro”, “fita” ou “relatório”. Você também pode voltar ao índice."}</p>${items.length ? `<ul>${items.map((t) => `<li><a href="${href(t.id)}"><span class="eyebrow">${esc(R.category(t.category).title)}</span><h2>${esc(t.title)}</h2><p>${esc(t.summary)}</p>${icon("arrow")}</a></li>`).join("")}</ul>` : ""}<a class="quiet-btn" href="#/manual">Voltar ao índice</a></section>`;
+    $("manual-imprimir").textContent = "Imprimir guia rápido";
+  }
+  function preparePrint() {
+    if (S.rota.nome !== "manual") return;
+    const topic = R.resolve(current),
+      searching = Boolean($("manual-busca").value.trim());
+    $("manual-print").innerHTML =
+      topic && !searching
+        ? article(topic, true)
+        : `<header><p>SIAB · Manual do Usuário</p><h1>Guia rápido de consulta</h1><p>Escolha o caminho pela sua dúvida. O Manual digital inclui instruções e referências completas para cada tópico.</p></header>${R.categories
+            .map((c) => {
+              const t = R.resolve(c.id);
+              return `<section class="manual-print-category"><h2>${esc(c.title)}</h2><p>${rich(t.summary)}</p><ol>${t.steps
+                .slice(0, 3)
+                .map((s) => `<li>${rich(s)}</li>`)
+                .join("")}</ol></section>`;
+            })
+            .join("")}`;
+  }
+  function bind() {
+    if (bound) return;
+    bound = true;
+    $("manual-busca").addEventListener("input", search);
+    $("manual-search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      search();
+      $("manual-titulo")?.focus();
     });
-    $("manual-vazio").hidden = visiveis > 0;
-  }
-
-  // Substitui os tubos da bancada pelos do roteiro (fica no Desfazer).
-  function montar(id) {
-    SIAB.montarMontagem(id);
-  }
-
-  function ligar() {
-    $("manual-busca").addEventListener("input", filtrar);
-    $("manual-imprimir").addEventListener("click", () => {
+    $("manual-clear").addEventListener("click", () => {
       $("manual-busca").value = "";
-      filtrar();
+      search();
+      $("manual-busca").focus();
+    });
+    $("manual-index-toggle").addEventListener("click", () =>
+      setIndex(
+        $("manual-index-toggle").getAttribute("aria-expanded") !== "true",
+      ),
+    );
+    document.querySelector(".tela-manual").addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        $("manual-index-toggle").getAttribute("aria-expanded") === "true"
+      ) {
+        e.preventDefault();
+        setIndex(false, true);
+      }
+    });
+    document.querySelector(".tela-manual").addEventListener("click", (e) => {
+      const expand = e.target.closest("[data-manual-expand]");
+      if (expand) {
+        const open = expand.getAttribute("aria-expanded") !== "true";
+        expand.setAttribute("aria-expanded", String(open));
+        $(expand.getAttribute("aria-controls")).hidden = !open;
+        expand.querySelector("span").textContent = open ? "−" : "+";
+      }
+      const command = e.target.closest("[data-manual-command]")?.dataset
+        .manualCommand;
+      if (S.ActivityContext.restricted()) return;
+      if (command === "tour") S.tour.iniciar();
+      if (command === "a11y") S.gaveta.abrir("acessibilidade");
+      const same = e.target.closest("a[href]");
+      if (same && same.getAttribute("href") === location.hash) {
+        e.preventDefault();
+        S.irPara(same.getAttribute("href"));
+      }
+    });
+    $("manual-imprimir").addEventListener("click", () => {
+      preparePrint();
       window.print();
     });
-    $("manual-conteudo").addEventListener("click", (evento) => {
-      const botao = evento.target.closest("button");
-      if (!botao) return;
-      if (botao.dataset.mostrar) SIAB.ajuda.mostrar(botao.dataset.mostrar);
-      if (botao.dataset.roteiro) montar(botao.dataset.roteiro);
+    window.addEventListener("beforeprint", preparePrint);
+    window.addEventListener("afterprint", () => {
+      $("manual-print").innerHTML = "";
     });
     $("boas-vindas-fechar").addEventListener("click", () => {
-      SIAB.ajuda.marcarVisto();
+      S.ajuda.marcarVisto();
       $("boas-vindas").hidden = true;
-      $(SIAB.current() ? "tube-name" : "vazia-titulo").focus();
+      $(S.current() ? "tube-name" : "vazia-titulo").focus();
     });
+    S.ajuda.bind();
   }
-
-  return { render, ligar, montar };
+  return {
+    render,
+    ligar: bind,
+    prepararImpressao: preparePrint,
+    icon,
+    rich,
+    href,
+    // Compatibility: the drawer still owns the operational catalog action.
+    montar: (id) => S.montarMontagem(id),
+  };
 })();
 
+SIAB.ajuda = (() => {
+  const S = SIAB,
+    $ = S.$,
+    R = S.manualRegistry,
+    VISTO = "siab_manual_visto";
+  let opener = null;
+  function topicFor(target) {
+    if (target?.dataset.manualHelp) return target.dataset.manualHelp;
+    const id = target?.getAttribute("href")?.match(/^#\/manual\/(.+)$/)?.[1];
+    // The general Ver help follows the active tool; other help links keep their own topic.
+    if (id === "ver" || target?.hasAttribute("data-activity-help"))
+      return S.state.verTab || "bancada";
+    return id || S.state.verTab || "bancada";
+  }
+  function contextual(id = S.state.verTab, target = document.activeElement) {
+    const t = R.resolve(id) || R.resolve("bancada"),
+      restricted = S.ActivityContext.restricted();
+    opener = target;
+    S.gaveta.fechar();
+    $("activity-help-title").textContent = t.title;
+    $("activity-help-content").innerHTML =
+      `<div class="manual-context"><p class="manual-context-summary">${S.escape(t.summary)}</p><p>${S.escape(t.purpose.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, key, label) => label || R.resolve(key)?.title || key))}</p><div class="manual-context-next"><strong>Próximo passo</strong><p>${S.escape(t.steps[0] || "")}</p></div>${restricted ? '<p class="field-hint">A ajuda permanece nesta atividade. Use somente os recursos disponibilizados pelo professor.</p>' : `<div class="manual-context-links">${t.id === "ph" ? '<a class="secondary-btn" data-manual-help-link href="#/manual/painel-medir">Como medir pH</a>' : ""}<a class="secondary-btn" data-manual-help-link href="${S.manualTela.href(t.id)}">Abrir no Manual ${S.manualTela.icon("arrow")}</a></div>`}</div>`;
+    const dialog = $("activity-help-dialog");
+    if (!dialog.open) dialog.showModal();
+  }
+  function bind() {
+    document.addEventListener(
+      "click",
+      (e) => {
+        const link = e.target.closest(".ajuda-link,[data-manual-help]");
+        if (!link) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        contextual(topicFor(link), link);
+      },
+      true,
+    );
+    $("activity-help-dialog").addEventListener("click", (e) => {
+      const a = e.target.closest("[data-manual-help-link]");
+      if (!a) return;
+      e.preventDefault();
+      if (S.ActivityContext.restricted()) return;
+      opener = null;
+      $("activity-help-dialog").close();
+      S.irPara(a.getAttribute("href"));
+    });
+    $("activity-help-dialog").addEventListener("close", () => {
+      const target = opener;
+      opener = null;
+      requestAnimationFrame(() => {
+        if (S.rota.nome !== "laboratorio" && S.rota.nome !== "missao") return;
+        if (
+          target?.isConnected &&
+          target.getClientRects().length &&
+          !target.closest("[inert]")
+        )
+          target.focus({ preventScroll: true });
+      });
+    });
+  }
+  return {
+    contextual,
+    topicFor,
+    bind,
+    jaViu: () => S.armazenamento.ler(VISTO, false),
+    marcarVisto: () => S.armazenamento.gravar(VISTO, true),
+    aplicarPendente: () => {},
+    mostrar: (id) =>
+      S.irPara(S.manualTela.href(R.resolve(id)?.id || "bancada")),
+  };
+})();
 SIAB.telas.manual = {
   secao: "manual",
-  titulo: () => "Manual",
-  montado: false,
-  entrar(parametro) {
+  titulo: (id) => SIAB.manualRegistry.resolve(id)?.title || "Manual",
+  entrar(id) {
     SIAB.ajuda.marcarVisto();
-    if (!this.montado) {
-      SIAB.manualTela.render();
-      this.montado = true;
-    }
-    const secao = parametro && document.getElementById(`manual-${parametro}`);
-    if (secao) {
-      // Depois que o roteador termina, rola até a seção pedida.
-      requestAnimationFrame(() => {
-        secao.hidden = false;
-        secao.scrollIntoView({ block: "start" });
-        document
-          .getElementById(`manual-h-${parametro}`)
-          .focus({ preventScroll: true });
-      });
-    }
+    SIAB.manualTela.render(id);
+  },
+  sair() {
+    SIAB.$("manual-print").innerHTML = "";
   },
 };
 
@@ -24999,35 +27964,9 @@ SIAB.activityUI = (() => {
       $("prepare-btn").title = "Montagem da atividade";
     }
   }
-  const help = {
-    montagem:
-      "Em Resumo, consulte a montagem. Em Preparo, escolha solução, conta-gotas e indicador. Objetos reúne vidraria e recipientes; Módulo seleciona a experiência de exploração, medição ou cálculo. Em uma atividade, somente as alterações autorizadas ficam disponíveis.",
-    ph: "Use somente as técnicas disponíveis. A fita estima o pH por faixas de uma unidade. O pHmetro estabiliza antes de registrar a leitura; depois de adicionar reagente, faça outra medição ou mantenha o modo contínuo.",
-    temperatura:
-      "O termômetro registra a temperatura da solução. Altere a temperatura somente quando a atividade oferecer esse controle. A neutralidade varia com pKw(T).",
-    condutividade:
-      "Toque em Medir condutividade. O valor é uma estimativa do modelo com mobilidades iônicas de referência a 25 °C. Após uma intervenção, meça novamente.",
-    grafico:
-      "Cada ponto vem de uma medição efetivamente registrada. Compare volumes adicionados e a técnica utilizada. O gráfico não substitui uma medição.",
-    derivada:
-      "ΔpH/ΔV compara leituras sucessivas no mesmo recipiente e com a mesma técnica. Intervalos de volume nulo não produzem derivada. A fita tem resolução limitada.",
-    tabela:
-      "A tabela reúne medições. Compacta agrupa apenas registros contíguos compatíveis com a resolução; Ver medições expande cada grupo. Completa e CSV preservam todos os dados brutos.",
-    historico:
-      "O histórico registra os eventos da sessão em ordem cronológica. Ele não é compactado; o Caderno recebe apenas registros que você decide guardar.",
-    particulas:
-      "A representação microscópica é um modelo proporcional simplificado. Consulte a legenda; algumas espécies pouco abundantes precisam de escala ampliada.",
-    especies:
-      "As concentrações de espécies são calculadas pelo modelo. Elas não representam medidas instrumentais.",
-    equacao:
-      "A equação descreve simbolicamente o equilíbrio e as espécies do modelo.",
-    proton:
-      "Identifique quem doa e quem recebe o próton e compare o par ácido/base conjugada.",
-    distribuicao:
-      "Compare a fração de cada espécie do mesmo sistema químico. Os percentuais provêm do equilíbrio calculado.",
-  };
   function dialog(about = false, topic = SIAB.state.verTab) {
-    if (about && !A.current) return;
+    if (!about) return SIAB.ajuda.contextual(topic);
+    if (!A.current) return;
     SIAB.gaveta.fechar();
     const c = SIAB.atividades.ativa?.config,
       r = c ? A.entry(c) : null,
@@ -25037,7 +27976,7 @@ SIAB.activityUI = (() => {
       : "Ajuda da investigação";
     $("activity-help-content").innerHTML = about
       ? `<h3>${e(c.titulo)}</h3><p>${e(r.problema || r.resumo || r.objetivo || "Investigue a montagem preparada.")}</p><h3>Objetivo</h3><p>${e(r.objetivo || r.professor?.objetivo || r.resumo)}</p>${r.tarefas ? `<ol>${r.tarefas.map((v) => `<li>${e(v)}</li>`).join("")}</ol>` : ""}<p>Registre as evidências, escreva suas conclusões no relatório e finalize a atividade. Encerrar atividade sai deste contexto.</p>`
-      : `<p>${e(help[topic] || "Selecione um recipiente, realize as intervenções propostas e use os recursos liberados no painel. A montagem mostra as condições do experimento.")}</p>`;
+      : "";
     $("activity-help-dialog").showModal();
   }
   function bind() {
@@ -25051,7 +27990,7 @@ SIAB.activityUI = (() => {
           if (target.matches(".ajuda-link,[data-activity-help]")) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            dialog();
+            SIAB.ajuda.contextual(SIAB.ajuda.topicFor(target), target);
             return;
           }
           for (const [selector, path] of bindings) {
@@ -25353,20 +28292,6 @@ SIAB.iniciarInvestigacao = () => {
     root.dataset.mobileDoses = expanded ? "on" : "off";
     doses.setAttribute("aria-expanded", String(expanded));
     update();
-  });
-  const index = button(
-    "mobile-manual-toggle",
-    "Abrir índice do manual",
-    "quiet-btn",
-  );
-  index.setAttribute("aria-controls", "manual-indice");
-  index.setAttribute("aria-expanded", "false");
-  document.querySelector(".manual-indice").prepend(index);
-  index.addEventListener("click", () => {
-    const expanded = root.dataset.mobileIndex !== "on";
-    root.dataset.mobileIndex = expanded ? "on" : "off";
-    index.setAttribute("aria-expanded", String(expanded));
-    index.textContent = expanded ? "Fechar índice" : "Abrir índice do manual";
   });
   const cards = button("mobile-card-toggle", "Ver em grade");
   cards.setAttribute("aria-controls", "overview-grid");

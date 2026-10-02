@@ -187,35 +187,9 @@ SIAB.activityUI = (() => {
       $("prepare-btn").title = "Montagem da atividade";
     }
   }
-  const help = {
-    montagem:
-      "Em Resumo, consulte a montagem. Em Preparo, escolha solução, conta-gotas e indicador. Objetos reúne vidraria e recipientes; Módulo seleciona a experiência de exploração, medição ou cálculo. Em uma atividade, somente as alterações autorizadas ficam disponíveis.",
-    ph: "Use somente as técnicas disponíveis. A fita estima o pH por faixas de uma unidade. O pHmetro estabiliza antes de registrar a leitura; depois de adicionar reagente, faça outra medição ou mantenha o modo contínuo.",
-    temperatura:
-      "O termômetro registra a temperatura da solução. Altere a temperatura somente quando a atividade oferecer esse controle. A neutralidade varia com pKw(T).",
-    condutividade:
-      "Toque em Medir condutividade. O valor é uma estimativa do modelo com mobilidades iônicas de referência a 25 °C. Após uma intervenção, meça novamente.",
-    grafico:
-      "Cada ponto vem de uma medição efetivamente registrada. Compare volumes adicionados e a técnica utilizada. O gráfico não substitui uma medição.",
-    derivada:
-      "ΔpH/ΔV compara leituras sucessivas no mesmo recipiente e com a mesma técnica. Intervalos de volume nulo não produzem derivada. A fita tem resolução limitada.",
-    tabela:
-      "A tabela reúne medições. Compacta agrupa apenas registros contíguos compatíveis com a resolução; Ver medições expande cada grupo. Completa e CSV preservam todos os dados brutos.",
-    historico:
-      "O histórico registra os eventos da sessão em ordem cronológica. Ele não é compactado; o Caderno recebe apenas registros que você decide guardar.",
-    particulas:
-      "A representação microscópica é um modelo proporcional simplificado. Consulte a legenda; algumas espécies pouco abundantes precisam de escala ampliada.",
-    especies:
-      "As concentrações de espécies são calculadas pelo modelo. Elas não representam medidas instrumentais.",
-    equacao:
-      "A equação descreve simbolicamente o equilíbrio e as espécies do modelo.",
-    proton:
-      "Identifique quem doa e quem recebe o próton e compare o par ácido/base conjugada.",
-    distribuicao:
-      "Compare a fração de cada espécie do mesmo sistema químico. Os percentuais provêm do equilíbrio calculado.",
-  };
   function dialog(about = false, topic = SIAB.state.verTab) {
-    if (about && !A.current) return;
+    if (!about) return SIAB.ajuda.contextual(topic);
+    if (!A.current) return;
     SIAB.gaveta.fechar();
     const c = SIAB.atividades.ativa?.config,
       r = c ? A.entry(c) : null,
@@ -225,7 +199,7 @@ SIAB.activityUI = (() => {
       : "Ajuda da investigação";
     $("activity-help-content").innerHTML = about
       ? `<h3>${e(c.titulo)}</h3><p>${e(r.problema || r.resumo || r.objetivo || "Investigue a montagem preparada.")}</p><h3>Objetivo</h3><p>${e(r.objetivo || r.professor?.objetivo || r.resumo)}</p>${r.tarefas ? `<ol>${r.tarefas.map((v) => `<li>${e(v)}</li>`).join("")}</ol>` : ""}<p>Registre as evidências, escreva suas conclusões no relatório e finalize a atividade. Encerrar atividade sai deste contexto.</p>`
-      : `<p>${e(help[topic] || "Selecione um recipiente, realize as intervenções propostas e use os recursos liberados no painel. A montagem mostra as condições do experimento.")}</p>`;
+      : "";
     $("activity-help-dialog").showModal();
   }
   function bind() {
@@ -239,7 +213,7 @@ SIAB.activityUI = (() => {
           if (target.matches(".ajuda-link,[data-activity-help]")) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            dialog();
+            SIAB.ajuda.contextual(SIAB.ajuda.topicFor(target), target);
             return;
           }
           for (const [selector, path] of bindings) {

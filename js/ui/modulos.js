@@ -33,10 +33,10 @@ SIAB.MODULOS = {
     nome: "Medir",
     icone: "M4 17 17 4l3 3L7 20H4v-3ZM8 13l1.5 1.5M11 10l1.5 1.5M14 7l1.5 1.5",
     define:
-      "Controlar as quantidades: diluição, volume inicial e tamanho da gota. O gráfico prevê o volume de equivalência.",
+      "Controlar as quantidades: diluição, volume inicial e tamanho da gota. Registre leituras para acompanhar a variação de pH no gráfico.",
     fatos: [
       ["Libera", "Ajustes de medida"],
-      ["Gráfico", "Volume de equivalência previsto"],
+      ["Gráfico", "Leituras de pH por volume adicionado"],
       ["Equação", "pOH e pH + pOH (Kw)"],
       ["Bom para", "Titulações, diluições e tampões"],
     ],

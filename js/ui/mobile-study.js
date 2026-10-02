@@ -27,20 +27,6 @@
     doses.setAttribute("aria-expanded", String(expanded));
     update();
   });
-  const index = button(
-    "mobile-manual-toggle",
-    "Abrir índice do manual",
-    "quiet-btn",
-  );
-  index.setAttribute("aria-controls", "manual-indice");
-  index.setAttribute("aria-expanded", "false");
-  document.querySelector(".manual-indice").prepend(index);
-  index.addEventListener("click", () => {
-    const expanded = root.dataset.mobileIndex !== "on";
-    root.dataset.mobileIndex = expanded ? "on" : "off";
-    index.setAttribute("aria-expanded", String(expanded));
-    index.textContent = expanded ? "Fechar índice" : "Abrir índice do manual";
-  });
   const cards = button("mobile-card-toggle", "Ver em grade");
   cards.setAttribute("aria-controls", "overview-grid");
   cards.setAttribute("aria-pressed", "false");
