@@ -181,6 +181,7 @@ SIAB.selecaoTubos = (() => {
           sair();
         },
         "Remover",
+        "danger",
       );
     };
     $("selecao-misturar-btn").onclick = () => {

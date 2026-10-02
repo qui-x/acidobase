@@ -171,6 +171,7 @@ SIAB.selecionarVer = (id) => {
   );
   SIAB.state.verFamily = family.id;
   SIAB.state.verTab = id;
+  SIAB.state.reportViews = [...new Set([...(SIAB.state.reportViews || []), id])];
   (SIAB.state.verLastTabs ||= {})[family.id] = id;
   SIAB.renderVer();
   SIAB.workspace?.sync();

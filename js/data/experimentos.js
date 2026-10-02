@@ -62,7 +62,7 @@ SIAB.experimentos = (() => {
       "Como intervir sem ultrapassar a faixa de interesse?",
     ],
   };
-  const list = SIAB.montagens.map((m) => {
+  const list = SIAB.montagens.filter(m => stories[m.id]).map((m) => {
     const [titulo, subtitulo, problema, pergunta] = stories[m.id];
     return {
       id: m.id,

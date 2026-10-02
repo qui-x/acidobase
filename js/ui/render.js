@@ -294,7 +294,7 @@ SIAB.render = (syncForm = false) => {
       s.level !== "calcular" || amostraGotas || t.titrant === "water";
     $("dilution-field").hidden = !amostraTubo;
     $("titrant-dilution-field").hidden = !amostraGotas;
-    $("compare-btn").disabled = s.tubes.length + 3 > SIAB.MAX_TUBES;
+    $("compare-btn").disabled = SIAB.ActivityContext.restricted();
     $("unlink-btn").hidden = !t.group;
     $("restart-btn").disabled = !t.additions.length;
     if (syncForm) SIAB.syncForm();

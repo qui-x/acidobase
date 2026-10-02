@@ -54,6 +54,7 @@ SIAB.bancada = (() => {
     $("confirm-title").textContent = titulo;
     $("confirm-text").textContent = mensagem;
     $("confirm-yes").textContent = rotulo;
+    $("confirm-yes").className = intencao === "danger" ? "danger-btn" : "primary-btn";
     $("confirm-dialog").dataset.intent = intencao;
     confirmAction = acao;
     $("confirm-dialog").showModal();
@@ -582,40 +583,8 @@ SIAB.bancada = (() => {
   }
 
   function compararIndicadores() {
-    if (
-      !SIAB.ActivityContext.guard("vessels.add") ||
-      !SIAB.ActivityContext.guard("measurements.indicator")
-    )
-      return false;
-    const s = SIAB.state;
-    if (s.tubes.length + 3 > SIAB.MAX_TUBES) return;
-    const t = SIAB.current();
-    let primeiro;
-    SIAB.alterar("comparar indicadores", (estado) => {
-      const grupo = estado.nextGroup++;
-      ["btb", "phenol", "universal"].forEach((indicator, n) => {
-        const copia = SIAB.newTube({
-          name: `${t.name} · ${SIAB.indicators[indicator].short}`.slice(0, 40),
-          solution: t.solution,
-          concentration: t.concentration,
-          initialVolume: t.initialVolume,
-          titrant: t.titrant,
-          titrantConcentration: t.titrantConcentration,
-          dropVolume: t.dropVolume,
-          dilution: t.dilution,
-          titrantDilution: t.titrantDilution,
-          additions: t.additions,
-          temperature: t.temperature,
-          indicator,
-          group: grupo,
-        });
-        if (n === 0) primeiro = copia;
-      });
-    });
-    selecionarTubo(primeiro.id);
-    SIAB.notice(
-      "Comparação criada: três tubos vinculados. Cada gota cai nos três.",
-    );
+    if (SIAB.ActivityContext.restricted() || !SIAB.ActivityContext.guard("measurements.indicator")) return false;
+    return SIAB.montarMontagem("tres-indicadores");
   }
 
   // Vínculo manual: as gotas sempre; opcionalmente a substância do tubo e o
@@ -1001,9 +970,6 @@ SIAB.bancada = (() => {
     $("unlink-btn").addEventListener("click", desvincular);
     $("restart-btn").addEventListener("click", recomecar);
     $("remove-btn").addEventListener("click", removerTubo);
-    $("guide-btn").addEventListener("click", () =>
-      $("guide-dialog").showModal(),
-    );
 
     // Chips do VER (celular e tablet): escolhem a aba e rolam até o painel.
     document.querySelector(".view-tabs").addEventListener("click", (evento) => {

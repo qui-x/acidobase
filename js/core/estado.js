@@ -71,7 +71,7 @@ SIAB.limparGrupos = (bench = SIAB.state) => {
 };
 
 SIAB.TUBE_DEFAULTS = {
-  solution: "hcl",
+  solution: "water",
   concentration: 0.01,
   initialVolume: 1,
   dilution: 1,
@@ -166,7 +166,7 @@ SIAB.capacidade = (tube, vidraria = SIAB.state?.vidraria) =>
     : null) ||
   SIAB.CAPACITY_ML;
 
-// Mistura geral (modo secreto): junta tudo o que há nos tubos — soluções,
+// Mistura geral (montagem): junta tudo o que há nos tubos — soluções,
 // gotas e indicadores — num só recipiente. Função pura, sem mexer na bancada.
 // Componentes iguais (mesmo frasco, concentração e diluição) somam o volume.
 SIAB.misturarTubos = (tubos) => {

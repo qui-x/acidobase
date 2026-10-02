@@ -7,27 +7,7 @@ SIAB.manualTela = (() => {
     R = S.manualRegistry;
   let current = "",
     bound = false;
-  const paths = {
-    book: "M4 4h7l1 2 1-2h7v16h-7l-1 1-1-1H4ZM12 6v15M7 8h2M15 8h2M7 12h2M15 12h2",
-    tube: "M8 3h8M9 3v14a3 3 0 0 0 6 0V3M9 11h6",
-    eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
-    ruler: "M4 17 17 4l3 3L7 20H4ZM8 13l2 2M11 10l2 2M14 7l2 2",
-    chart: "M4 3v17h17M7 16l4-5 4 2 5-8",
-    meter:
-      "M3 4h12v15H3ZM6 7h6v5H6ZM15 7h3a3 3 0 0 1 3 3v4M19 14h3v7h-3ZM6 15h2M11 15h1",
-    flask: "M9 3h6M10 3v6L4 19q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10",
-    list: "M6 4h14v17H4V4h2M8 2h8v4H8ZM8 10h8M8 14h8M8 18h5",
-    report: "M5 3h10l4 4v14H5ZM15 3v5h4M8 12h8M8 16h8",
-    access:
-      "M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0M4 8l8 2 8-2M12 10v5M7 22l5-7 5 7",
-    help: "M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0M9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3M12 17h.01",
-    teacher: "M3 4h18v12H3ZM8 21l4-5 4 5M7 8h10M7 12h6",
-    arrow: "M5 12h14M13 6l6 6-6 6",
-    back: "M19 12H5M11 6l-6 6 6 6",
-    search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
-  };
-  const icon = (name) =>
-    `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${paths[name] || paths.book}"/></svg>`;
+  const icon = S.icons.svg;
   const href = (id) => "#/manual/" + encodeURIComponent(id);
   function rich(text) {
     return String(text || "")
@@ -164,7 +144,7 @@ SIAB.manualTela = (() => {
             })
             .join("")}</div></nav>`
         : ""
-    }</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
+    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map(ref => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
   }
   function home() {
     return `<header class="manual-hero"><div><p class="eyebrow">MANUAL DO USUÁRIO</p><h1 id="manual-titulo" data-foco tabindex="-1">Encontre seu próximo passo.</h1><p>Uma dúvida na bancada? Consulte uma ferramenta, entenda uma leitura ou descubra por onde começar.</p><div class="manual-hero-actions"><a class="primary-btn" href="${href("comecar")}">Começar a usar ${icon("arrow")}</a><button class="quiet-btn" type="button" data-manual-command="tour">Iniciar tour da bancada</button></div></div>${diagram("workspace")}</header><nav class="manual-shortcuts" aria-label="Consultas rápidas"><span>QUERO SABER</span>${[

@@ -96,10 +96,6 @@ SIAB.progresso = (() => {
       dados.temas[chave] = { concluida: true, data: new Date().toISOString() };
       salvar();
     },
-    marcarUltima(rota, titulo) {
-      dados.ultima = { rota, titulo };
-      salvar();
-    },
     anotar(entrada) {
       const chave = id();
       dados.caderno.unshift({

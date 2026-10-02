@@ -324,3 +324,45 @@ SIAB.montagens = [
     extra: (medir) => [["Lago depois de 11 gotas", medir("Lago", 11)]],
   },
 ];
+
+// Catálogo operacional: inclusive a investigação antes escondida no cabeçalho.
+SIAB.montagens.push({
+  id: "arco-iris-ph",
+  titulo: "Arco-íris do pH",
+  nivel: "explorar",
+  ver: "ph",
+  visao: "overview",
+  objetivo:
+    "Investigar como o indicador universal muda entre meios ácidos, neutro e básicos.",
+  tubos: [
+    { solution: "hcl", concentration: 0.1 },
+    { solution: "hcl", concentration: 0.001 },
+    { solution: "nh4cl", concentration: 0.1 },
+    { solution: "water" },
+    { solution: "ch3coona", concentration: 0.1 },
+    { solution: "ammonia", concentration: 0.1 },
+    { solution: "naoh", concentration: 0.1 },
+  ].map((t, i) => ({
+    ...t,
+    name: `Cor ${i + 1}`,
+    indicator: "universal",
+    titrant: "water",
+  })),
+  instrumentos: ["Indicador universal", "Fita de pH", "pHmetro"],
+  recursos: ["Visão geral", "Tabela de medições", "Relatório"],
+  passos: [
+    "Compare as cores na visão geral.",
+    "Meça o pH e relacione a leitura com a faixa do indicador.",
+    "Registre no Caderno as descobertas que desejar guardar.",
+  ],
+});
+SIAB.montagens.forEach((m) => {
+  m.instrumentos ||=
+    m.nivel === "explorar"
+      ? ["Indicador", "Fita de pH"]
+      : ["Indicador", "pHmetro", "Termômetro"];
+  m.recursos ||=
+    m.nivel === "calcular"
+      ? ["Equação", "Distribuição", "Tabela", "Relatório"]
+      : ["Tabela de medições", "Gráfico pH × volume", "Relatório"];
+});

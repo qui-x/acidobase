@@ -89,6 +89,7 @@ SIAB.activityUI = (() => {
         visibility(el, closed && !el.querySelector("#a11y-toggle"));
       });
     $("activity-menu").hidden = !closed;
+    document.querySelectorAll("[data-unrestricted-menu]").forEach(el => visibility(el, closed));
     $("drawer-title").textContent = closed ? "Menu da atividade" : "Menu";
     $("activity-montagem").hidden = !ctx;
     if (closed) {

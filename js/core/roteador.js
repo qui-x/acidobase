@@ -19,7 +19,6 @@ SIAB.rotear = () => {
     desafio: "missao",
     aula: "missoes",
     trilhas: "aprender",
-    montagens: "montagens",
   };
   if (antigas[nome]) {
     nome = antigas[nome];

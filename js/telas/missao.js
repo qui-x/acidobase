@@ -10,8 +10,8 @@ SIAB.missaoTela = (() => {
       .map((p, i) => ({ p, i }))
       .filter((x) => x.p.tipo === "agir");
     $("painel-missao").innerHTML =
-      `<article class="missao-card"><p class="eyebrow">MISSÃO · ${a.concluida ? "Concluído" : "Não realizado"}</p><h2 data-foco tabindex="-1">${esc(m.titulo)}</h2><h3>O problema</h3><p>${esc(m.resumo)}</p><h3>Objetivo e regras</h3><p>Escolha sua estratégia. Registre evidências da bancada e uma conclusão que responda ao problema.</p><ul class="mission-objectives">${tasks.map(({ p, i }) => `<li data-objective="${i}">${esc(p.texto)} <strong>${a.evidencias[i] ? "Concluído" : ""}</strong></li>`).join("")}</ul>${tasks.length ? "" : "<p>Faça uma intervenção ou medição e use a evidência em sua conclusão.</p>"}${m.bancada.controles?.includes("temperatura") ? "<p>Ajuste a temperatura no VER → Medir → Temperatura.</p>" : ""}<details><summary>Perguntas para investigar</summary>${m.passos
-        .filter((p) => p.tipo === "prever" || p.tipo === "explicar")
+      `<article class="missao-card"><p class="eyebrow">MISSÃO · ${a.concluida ? "Concluído" : "Não realizado"}</p><h2 data-foco tabindex="-1">${esc(m.titulo)}</h2><h3>O problema</h3><p>${esc(m.resumo)}</p><h3>Objetivo e regras</h3><p>Escolha sua estratégia. Registre evidências da bancada e uma conclusão que responda ao problema.</p><ul class="mission-objectives">${tasks.map(({ p, i }) => `<li data-objective="${i}">${esc(p.texto)} <strong>${a.evidencias[i] ? "Concluído" : ""}</strong></li>`).join("")}</ul>${tasks.length ? "" : "<p>Faça uma intervenção ou medição e use a evidência em sua conclusão.</p>"}${m.bancada.controles?.includes("temperatura") ? "<p>Ajuste a temperatura no VER → Medir → Temperatura.</p>" : ""}<details><summary>Contexto e evidências</summary>${m.passos.filter(p => p.tipo === "contexto" || p.tipo === "evidencia").map(p => `<p>${esc(p.texto)}</p>`).join("")}</details><details><summary>Perguntas para investigar</summary>${m.passos
+        .filter((p) => p.tipo === "pergunta" || p.tipo === "interpretacao")
         .map(
           (p) => `<p>${esc(p.pergunta || "Que evidência você procura?")}</p>`,
         )

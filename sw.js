@@ -3,7 +3,7 @@
    index.html): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = "siab-1.0.0-rc.4.1";
+const VERSAO = "siab-1.0.0-rc.4.5";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
@@ -25,9 +25,11 @@ const ARQUIVOS = [
   "./css/workspace.css",
   "./css/manual.css",
   "./css/mobile-controls.css",
+  "./css/refinements.css",
   "./vendor/dialog-polyfill/dialog-polyfill.js",
   "./js/core/namespace.js",
   "./js/core/util.js",
+  "./js/ui/icons.js",
   "./js/data/catalogo.js",
   "./js/data/cotidiano.js",
   "./js/data/sais.js",

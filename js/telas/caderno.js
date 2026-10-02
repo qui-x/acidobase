@@ -61,7 +61,7 @@ SIAB.telas.caderno = {
       ? notas
           .map(
             (n) =>
-              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="quiet-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
+              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="danger-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
           )
           .join("")
       : "<p>Nenhum registro neste filtro. Registre uma exploração na bancada ou escreva uma anotação.</p>";
@@ -93,13 +93,26 @@ SIAB.telas.caderno = {
           SIAB.progresso.limparCaderno();
           SIAB.telas.caderno.entrar();
         },
-        "Apagar",
+        "Apagar Caderno",
+        "danger",
       );
     SIAB.$("caderno-lista").onclick = (e) => {
       const b = e.target.closest("[data-apagar-nota]");
       if (b) {
-        SIAB.progresso.removerNota(b.dataset.apagarNota);
-        SIAB.telas.caderno.entrar();
+        const nota = SIAB.progresso.dados.caderno.find(
+          (n) => n.id === b.dataset.apagarNota,
+        );
+        if (!nota) return;
+        SIAB.confirmar(
+          "Apagar nota?",
+          `“${nota.titulo}” será removida. Esta ação não pode ser desfeita.`,
+          () => {
+            SIAB.progresso.removerNota(nota.id);
+            SIAB.telas.caderno.entrar();
+          },
+          "Apagar nota",
+          "danger",
+        );
       }
       const t = e.target.closest("[data-baixar-tabela]");
       if (t) {

@@ -75,13 +75,13 @@ main:focus { outline: none; }
 
 /* 3. CONTROLES -------------------------------------------------------- */
 .icon-btn, .text-btn {
-  background: transparent; border: 1px solid var(--border); border-radius: 5px; min-height: 38px;
+  background: transparent; border: 1px solid var(--border); border-radius: 5px; min-height: 44px;
   padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   color: var(--text); text-decoration: none;
 }
-.icon-btn { min-width: 38px; font-size: 1.1rem; }
+.icon-btn { min-width: 44px; font-size: 1.1rem; }
 .text-btn { font-size: .8rem; }
-.primary-btn, .secondary-btn {
+.primary-btn, .secondary-btn, .quiet-btn, .danger-btn {
   border-radius: 6px; min-height: 44px; padding: 10px 15px; display: inline-flex; align-items: center;
   justify-content: center; gap: 8px; font-size: .875rem; font-weight: 600; text-decoration: none; text-align: center;
 }
@@ -90,22 +90,20 @@ main:focus { outline: none; }
 .primary-btn:hover:not(:disabled) { filter: brightness(1.1); }
 .secondary-btn:hover:not(:disabled), .icon-btn:hover, .text-btn:hover { border-color: var(--accent); background: var(--hover); }
 .secondary-btn[aria-pressed=true] { border-color: var(--accent); color: var(--accent); }
-.quiet-btn {
-  background: transparent; border: 0; text-decoration: underline; text-underline-offset: 3px;
-  color: var(--secondary); font-size: .8rem; min-height: 40px; padding: 6px;
-  display: inline-flex; align-items: center; gap: 5px;
-}
-.quiet-btn:hover:not(:disabled) { color: var(--accent); }
-.quiet-btn.danger { color: var(--danger); }
-.quiet-btn.danger:hover:not(:disabled) { color: var(--danger-hover); }
-.primary-btn.danger { background: #a51529; color: #fff; }
+.quiet-btn { background: var(--panel); border: 1px solid var(--border); color: var(--secondary); }
+.quiet-btn:hover:not(:disabled) { background: var(--hover); border-color: var(--accent); color: var(--text); }
+.danger-btn { background: var(--panel); border: 1px solid var(--danger); color: var(--danger); }
+.danger-btn:hover:not(:disabled) { background: var(--hover); border-color: var(--danger-hover); color: var(--danger-hover); }
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn):active:not(:disabled) { transform: translateY(1px); filter: brightness(.94); }
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn):disabled { opacity: .5; cursor: not-allowed; transform: none; }
 .back-btn { justify-content: flex-start; }
 .full-width { width: 100%; }
 
 .field { display: flex; flex-direction: column; gap: 5px; font-size: .8rem; color: var(--secondary); margin: 12px 0; }
 .field .unit { font-size: .75rem; color: var(--muted); }
 input, select, textarea {
-  width: 100%; min-width: 0; min-height: 42px; border: 1px solid var(--border); background: var(--bg);
+  width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--border); background: var(--bg);
   color: var(--text); border-radius: 5px; padding: 9px 10px; font-size: .875rem;
 }
 textarea { resize: vertical; line-height: 1.5; }
@@ -162,7 +160,7 @@ td { font-family: Consolas, monospace; }
   position: relative; display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   border: 1px solid var(--border); background: var(--bg); color: var(--text);
 }
-.chip { border-radius: 999px; padding: 6px 11px; min-height: 38px; font-size: .8rem; }
+.chip { border-radius: 999px; padding: 6px 11px; min-height: 44px; font-size: .8rem; }
 .chip input, .segmented input, .opcao input { position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; opacity: 0; margin: 0; cursor: pointer; width: 100%; height: 100%; min-height: 0; }
 .chip:has(input:checked), .segmented label:has(input:checked), .opcao:has(input:checked) { border-color: var(--accent); background: var(--panel2); color: var(--accent); font-weight: 600; }
 .chip:has(input:focus-visible), .segmented label:has(input:focus-visible), .opcao:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
@@ -525,7 +523,7 @@ button.cartao { font: inherit; cursor: pointer; }
 .modulo-cab[aria-expanded="true"] svg.chevron { transform: rotate(180deg); color: var(--mod); }
 .modulo-corpo { padding: 10px 11px 11px; animation: abrir-menu .22s ease-out; }
 .modulo-ativar {
-  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 42px; padding: 8px 12px; margin: 0 0 10px;
+  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 8px 12px; margin: 0 0 10px;
   border-radius: 6px; border: 1px solid var(--border); background: var(--panel); color: var(--text);
   font-size: .82rem; font-weight: 600; text-align: left; transition: border-color .18s, background .18s;
 }
@@ -670,7 +668,7 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .regua-svg text { fill: var(--muted); font: 10px Consolas, monospace; }
 .regua-marcador { fill: var(--text); stroke: var(--bg); stroke-width: 1.5; transition: transform .25s; }
 .regua-neutro { stroke: var(--text); stroke-width: 1; opacity: .7; }
-.stage-stats .quiet-btn { align-self: flex-start; padding-left: 0; font-size: .72rem; }
+.stage-stats .quiet-btn { align-self: flex-start; font-size: .72rem; }
 .stage-stats { max-width: 190px; }
 #poe-btn { gap: 0; }
 .large-tube { align-self: stretch; display: flex; justify-content: center; align-items: center; min-width: 0; position: relative; }
@@ -842,12 +840,12 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 /* 7. PAINEL VER ------------------------------------------------------- */
 .ver-panel h2 { margin-bottom: 8px; }
 .ver-tabs { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 12px; }
-.ver-tabs button { flex: 1 1 auto; min-height: 38px; border: 1px solid var(--border); background: var(--bg); border-radius: 6px; font-size: .72rem; padding: 6px 3px; color: var(--secondary); }
+.ver-tabs button { flex: 1 1 auto; min-height: 44px; border: 1px solid var(--border); background: var(--bg); border-radius: 6px; font-size: .72rem; padding: 6px 3px; color: var(--secondary); }
 .ver-tabs button[aria-selected=true] { border-color: var(--accent); color: var(--accent); background: var(--panel2); font-weight: 600; }
 .ver-conteudo { min-height: 120px; }
 .ver-oculto { color: var(--secondary); font-size: .85rem; padding: 18px; border: 1px dashed var(--border); border-radius: var(--radius); text-align: center; }
 .ver-acoes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-.ver-acoes .secondary-btn { flex: 1; min-height: 38px; font-size: .75rem; padding: 6px 8px; }
+.ver-acoes .secondary-btn { flex: 1; min-height: 44px; font-size: .75rem; padding: 6px 8px; }
 
 .grafico-svg { width: 100%; height: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); }
 /* Condução: lâmpada, leitura do condutímetro e quem carrega a corrente. */
@@ -958,7 +956,7 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .opcao { border-radius: 8px; padding: 10px 12px; font-size: .85rem; min-height: 44px; }
 .opcoes-tubo { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
 .opcoes-tubo legend { color: var(--text); font-size: .8rem; width: 100%; }
-.opcoes-tubo .opcao { flex: 1; justify-content: center; padding: 7px 8px; font-size: .78rem; min-height: 38px; }
+.opcoes-tubo .opcao { flex: 1; justify-content: center; padding: 7px 8px; font-size: .78rem; min-height: 44px; }
 .agir-status { margin-top: 10px; font-weight: 600; font-size: .85rem; padding: 8px 10px; border-radius: 6px; background: var(--panel2); color: var(--secondary) !important; }
 .agir-status.feito { color: var(--ok) !important; border: 1px solid var(--ok); }
 .modelo { margin-top: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--ok); background: var(--panel2); font-size: .85rem; }
@@ -1058,26 +1056,6 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 .bancada-vazia-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
 .workspace.vazia #focus-view > :not(#bancada-vazia, #boas-vindas) { display: none !important; }
 .workspace.vazia :is(#indicator-group, #indicator-range, .indicator-mode, #ajustes, #compare-btn, #unlink-btn, #restart-btn, #remove-btn, .chip-ver, .chip-sep) { display: none !important; }
-/* Easter egg "Arco-íris do pH" (js/ui/segredo.js). */
-.segredo { margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel2); font-size: .85rem; }
-.segredo p { margin: 0 0 6px; color: var(--secondary); }
-.segredo .segredo-titulo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--text); font-size: .95rem; }
-.segredo-faixa-cores, .bottle-secreto .bottle-dot { background: linear-gradient(90deg, #d22b3a, #ef5b29, #ebc92a, #49a756, #239aab, #445ed1, #6c49bf); }
-.segredo-faixa-cores { display: inline-block; width: 44px; height: 10px; border-radius: 999px; }
-.segredo-faixa { list-style: none; margin: 8px 0 4px; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-.segredo-faixa li { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .72rem; text-align: center; color: var(--secondary); }
-.segredo-faixa strong { color: var(--text); font-size: .75rem; white-space: nowrap; }
-.segredo-cor { width: 100%; height: 18px; border-radius: 5px; border: 1px solid var(--border); }
-.bottle-secreto { border-color: var(--accent); }
-.bottle-secreto .bottle-dot { border-radius: 50%; }
-.nota[data-tipo=descoberta] { border-left-color: transparent; background: linear-gradient(#d22b3a, #ef5b29, #ebc92a, #49a756, #239aab, #445ed1, #6c49bf) left / 4px 100% no-repeat, var(--panel); }
-.chuva-arco-iris { position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0; z-index: 1500; pointer-events: none; overflow: hidden; }
-.chuva-arco-iris span { position: absolute; top: -24px; width: 10px; height: 14px; border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%; background: var(--cor); opacity: .9; animation-name: chover; animation-timing-function: cubic-bezier(.45, 0, .8, .6); animation-fill-mode: both; }
-@keyframes chover { to { transform: translateY(calc(100vh + 40px)); } }
-@media (max-width: 600px) {
-  .segredo-faixa { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-.mistura-aviso { margin-top: 10px; }
 /* Mistura geral: os tubos vão até o béquer e são despejados. */
 .despejo { position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0; z-index: 1600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: #050a14cc; cursor: pointer; }
 .despejo-palco { position: relative; width: min(420px, 92vw); height: 270px; }

@@ -17,6 +17,8 @@ SIAB.instrumentos = (() => {
     const ctx = SIAB.ActivityContext.current;
     return {
       recipiente: t.id,
+      vidraria: t.vidraria || SIAB.state.vidraria,
+      incremento: t.dropVolume,
       solucao: t.solution,
       reagente: t.titrant,
       concentracao: t.concentration,

@@ -47,14 +47,7 @@ SIAB.workspace = (() => {
       modulo: ["nivel"],
       missao: ["missao"],
     };
-  const icons = {
-    montagem:
-      "M9 3h6M10 3v6L5 19a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2L14 9V3",
-    ver: "M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Zm7 0a3 3 0 1 0 6 0 3 3 0 0 0-6 0",
-    dados: "M4 4h16v16H4ZM4 9h16M4 14h16M10 4v16",
-  };
-  const icon = (name) =>
-    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icons[name]}"/></svg>`;
+  const icon = S.icons.svg;
   const create = (tag, id, cls, html = "") => {
     const el = document.createElement(tag);
     if (id) el.id = id;
@@ -219,6 +212,7 @@ SIAB.workspace = (() => {
             ? "tools"
             : "families";
       if (
+        !S.state.initialView &&
         valid &&
         S.verDisponivel(preferences.tool) &&
         S.state.verTab !== preferences.tool
@@ -229,6 +223,7 @@ SIAB.workspace = (() => {
       if (document.body.classList.contains("projetor"))
         state.left = state.right = "collapsed";
     }
+    delete S.state.initialView;
     const selected = groups
       .flatMap((g) => g.items)
       .find((x) => x.id === S.state.verTab);

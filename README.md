@@ -1,6 +1,6 @@
 # SIAB — A química das cores
 
-**Versão entregue: 1.0.0-rc.4.1.** Manual interativo integrado e contrato visual mobile auditado em quatro larguras. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
+**Versão entregue: 1.0.0-rc.4.5.** Relatório experimental, gerenciamento de atividades, menu contextual e controles refinados, preservando o contrato visual mobile. Candidata à homologação; não é uma declaração de validação em Safari/iOS, Android ou em todos os navegadores comerciais.
 
 O SIAB é um simulador educacional de ácidos e bases. A interface organiza a investigação: observar, medir, interpretar, registrar e explicar. Preserva a marca, a abertura e os três módulos independentes **Explorar**, **Medir** e **Calcular**.
 
@@ -14,11 +14,13 @@ Não é necessário Node, Python ou acesso à internet para usar o HTML único. 
 
 ## O que mudou
 
+A rodada RC.4.5 está descrita em [docs/RC45.md](docs/RC45.md), com [cobertura dos 118 requisitos](docs/COBERTURA-RC45.md) e [evidências visuais](docs/EVIDENCIAS-RC45.html).
+
 - Estado químico central, com equilíbrio, espécies, frações, sólidos, indicadores e condutividade coerentes. Mistura conserva quantidades de matéria e volumes.
 - A bancada inicia com **pH não medido**. Indicador, fita e pHmetro têm comportamentos distintos. O eletrodo estabiliza; medidas pontuais ficam marcadas como anteriores após alterações; o modo contínuo registra novas leituras.
 - VER organizado em Observar, Medir e Analisar. Gráficos de medição usam leituras realizadas; valores internos em representações são identificados como modelo.
 - Temperatura manual e consulta opcional por cidade; neutralidade por pKw(T)/2. Falha da consulta retorna referência de 25 °C.
-- 14 Temas, 19 Missões, 10 Montagens prontas e 35 Roteiros Experimentais. As 140 substâncias aparecem na coleção de roteiros. Conclusão simples, sem pontos, ranking ou sequência obrigatória.
+- 14 Temas, 19 Missões, 11 Montagens prontas e 35 Roteiros Experimentais. As 140 substâncias aparecem na coleção de roteiros. Conclusão simples, sem pontos, ranking ou sequência obrigatória.
 - Seleção temporária para comparar, vincular, misturar, registrar e remover. Vínculos sincronizam gotas e conservam os conteúdos anteriores.
 - Caderno com anotações, explorações voluntárias, sínteses de missões e referências a relatórios.
 - Relatórios digital e impresso gerados do mesmo conteúdo, com campos do aluno editáveis e dados experimentais protegidos.
@@ -62,7 +64,7 @@ Os testes iniciam seu próprio servidor HTTP. `SIAB_TEST_ENGINES=chromium` limit
 
 ## Manual interativo da RC.4
 
-O Manual agora reúne **13 categorias e 51 tópicos**, com busca local, sinônimos, passos de uso, exemplos, diagramas e detalhes expansíveis. Links diretos como `#/manual/phmetro` abrem a página correspondente. No celular, o índice abre por botão e o conteúdo ocupa a largura disponível.
+O Manual agora reúne **13 categorias e 52 tópicos**, com busca local, sinônimos, passos de uso, exemplos, diagramas e detalhes expansíveis. Links diretos como `#/manual/phmetro` abrem a página correspondente. No celular, o índice abre por botão e o conteúdo ocupa a largura disponível.
 
 Os botões de ajuda da bancada usam o mesmo registro de conteúdo. Abrem uma explicação curta, um próximo passo e o link **Abrir no Manual**. Em atividade restrita, a ajuda permanece no contexto e não oferece links de saída. O Manual explica Montagens prontas e Roteiros em páginas distintas; os botões levam aos respectivos catálogos.
 
@@ -104,4 +106,4 @@ Sem conta, servidor de dados ou analytics. Caderno, relatórios, atividades e pr
 
 O token contém a configuração da atividade. A chave que permite abri-lo acompanha o token; a opacidade evita parâmetros legíveis, mas **não é sigilo contra quem recebe o link**. A restrição é pedagógica no cliente, não uma plataforma de provas com autenticação. Não coloque informações sigilosas na configuração.
 
-Licença do projeto: [GNU GPL v3](LICENSE). `dialog-polyfill` 0.5.6: BSD-3-Clause, aviso em `vendor/dialog-polyfill/LICENSE`. A versão dessa dependência não é uma versão histórica do SIAB. As referências científicas originais permanecem em Sobre o SIAB e em [docs/MODELO-CIENTIFICO.md](docs/MODELO-CIENTIFICO.md).
+Licença do projeto: [GNU GPL v3](LICENSE). `dialog-polyfill` 0.5.6: BSD-3-Clause, aviso em `vendor/dialog-polyfill/LICENSE`. A versão dessa dependência não é uma versão histórica do SIAB. As referências científicas originais permanecem em Manual → Referências e créditos e em [docs/MODELO-CIENTIFICO.md](docs/MODELO-CIENTIFICO.md).

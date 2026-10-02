@@ -169,13 +169,13 @@ main:focus { outline: none; }
 
 /* 3. CONTROLES -------------------------------------------------------- */
 .icon-btn, .text-btn {
-  background: transparent; border: 1px solid var(--border); border-radius: 5px; min-height: 38px;
+  background: transparent; border: 1px solid var(--border); border-radius: 5px; min-height: 44px;
   padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
   color: var(--text); text-decoration: none;
 }
-.icon-btn { min-width: 38px; font-size: 1.1rem; }
+.icon-btn { min-width: 44px; font-size: 1.1rem; }
 .text-btn { font-size: .8rem; }
-.primary-btn, .secondary-btn {
+.primary-btn, .secondary-btn, .quiet-btn, .danger-btn {
   border-radius: 6px; min-height: 44px; padding: 10px 15px; display: inline-flex; align-items: center;
   justify-content: center; gap: 8px; font-size: .875rem; font-weight: 600; text-decoration: none; text-align: center;
 }
@@ -184,22 +184,20 @@ main:focus { outline: none; }
 .primary-btn:hover:not(:disabled) { filter: brightness(1.1); }
 .secondary-btn:hover:not(:disabled), .icon-btn:hover, .text-btn:hover { border-color: var(--accent); background: var(--hover); }
 .secondary-btn[aria-pressed=true] { border-color: var(--accent); color: var(--accent); }
-.quiet-btn {
-  background: transparent; border: 0; text-decoration: underline; text-underline-offset: 3px;
-  color: var(--secondary); font-size: .8rem; min-height: 40px; padding: 6px;
-  display: inline-flex; align-items: center; gap: 5px;
-}
-.quiet-btn:hover:not(:disabled) { color: var(--accent); }
-.quiet-btn.danger { color: var(--danger); }
-.quiet-btn.danger:hover:not(:disabled) { color: var(--danger-hover); }
-.primary-btn.danger { background: #a51529; color: #fff; }
+.quiet-btn { background: var(--panel); border: 1px solid var(--border); color: var(--secondary); }
+.quiet-btn:hover:not(:disabled) { background: var(--hover); border-color: var(--accent); color: var(--text); }
+.danger-btn { background: var(--panel); border: 1px solid var(--danger); color: var(--danger); }
+.danger-btn:hover:not(:disabled) { background: var(--hover); border-color: var(--danger-hover); color: var(--danger-hover); }
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn):focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn):active:not(:disabled) { transform: translateY(1px); filter: brightness(.94); }
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn):disabled { opacity: .5; cursor: not-allowed; transform: none; }
 .back-btn { justify-content: flex-start; }
 .full-width { width: 100%; }
 
 .field { display: flex; flex-direction: column; gap: 5px; font-size: .8rem; color: var(--secondary); margin: 12px 0; }
 .field .unit { font-size: .75rem; color: var(--muted); }
 input, select, textarea {
-  width: 100%; min-width: 0; min-height: 42px; border: 1px solid var(--border); background: var(--bg);
+  width: 100%; min-width: 0; min-height: 44px; border: 1px solid var(--border); background: var(--bg);
   color: var(--text); border-radius: 5px; padding: 9px 10px; font-size: .875rem;
 }
 textarea { resize: vertical; line-height: 1.5; }
@@ -256,7 +254,7 @@ td { font-family: Consolas, monospace; }
   position: relative; display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
   border: 1px solid var(--border); background: var(--bg); color: var(--text);
 }
-.chip { border-radius: 999px; padding: 6px 11px; min-height: 38px; font-size: .8rem; }
+.chip { border-radius: 999px; padding: 6px 11px; min-height: 44px; font-size: .8rem; }
 .chip input, .segmented input, .opcao input { position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; opacity: 0; margin: 0; cursor: pointer; width: 100%; height: 100%; min-height: 0; }
 .chip:has(input:checked), .segmented label:has(input:checked), .opcao:has(input:checked) { border-color: var(--accent); background: var(--panel2); color: var(--accent); font-weight: 600; }
 .chip:has(input:focus-visible), .segmented label:has(input:focus-visible), .opcao:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
@@ -619,7 +617,7 @@ button.cartao { font: inherit; cursor: pointer; }
 .modulo-cab[aria-expanded="true"] svg.chevron { transform: rotate(180deg); color: var(--mod); }
 .modulo-corpo { padding: 10px 11px 11px; animation: abrir-menu .22s ease-out; }
 .modulo-ativar {
-  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 42px; padding: 8px 12px; margin: 0 0 10px;
+  display: flex; align-items: center; gap: 8px; width: 100%; min-height: 44px; padding: 8px 12px; margin: 0 0 10px;
   border-radius: 6px; border: 1px solid var(--border); background: var(--panel); color: var(--text);
   font-size: .82rem; font-weight: 600; text-align: left; transition: border-color .18s, background .18s;
 }
@@ -764,7 +762,7 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .regua-svg text { fill: var(--muted); font: 10px Consolas, monospace; }
 .regua-marcador { fill: var(--text); stroke: var(--bg); stroke-width: 1.5; transition: transform .25s; }
 .regua-neutro { stroke: var(--text); stroke-width: 1; opacity: .7; }
-.stage-stats .quiet-btn { align-self: flex-start; padding-left: 0; font-size: .72rem; }
+.stage-stats .quiet-btn { align-self: flex-start; font-size: .72rem; }
 .stage-stats { max-width: 190px; }
 #poe-btn { gap: 0; }
 .large-tube { align-self: stretch; display: flex; justify-content: center; align-items: center; min-width: 0; position: relative; }
@@ -936,12 +934,12 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 /* 7. PAINEL VER ------------------------------------------------------- */
 .ver-panel h2 { margin-bottom: 8px; }
 .ver-tabs { display: flex; gap: 3px; flex-wrap: wrap; margin-bottom: 12px; }
-.ver-tabs button { flex: 1 1 auto; min-height: 38px; border: 1px solid var(--border); background: var(--bg); border-radius: 6px; font-size: .72rem; padding: 6px 3px; color: var(--secondary); }
+.ver-tabs button { flex: 1 1 auto; min-height: 44px; border: 1px solid var(--border); background: var(--bg); border-radius: 6px; font-size: .72rem; padding: 6px 3px; color: var(--secondary); }
 .ver-tabs button[aria-selected=true] { border-color: var(--accent); color: var(--accent); background: var(--panel2); font-weight: 600; }
 .ver-conteudo { min-height: 120px; }
 .ver-oculto { color: var(--secondary); font-size: .85rem; padding: 18px; border: 1px dashed var(--border); border-radius: var(--radius); text-align: center; }
 .ver-acoes { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
-.ver-acoes .secondary-btn { flex: 1; min-height: 38px; font-size: .75rem; padding: 6px 8px; }
+.ver-acoes .secondary-btn { flex: 1; min-height: 44px; font-size: .75rem; padding: 6px 8px; }
 
 .grafico-svg { width: 100%; height: auto; background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius); }
 /* Condução: lâmpada, leitura do condutímetro e quem carrega a corrente. */
@@ -1052,7 +1050,7 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .opcao { border-radius: 8px; padding: 10px 12px; font-size: .85rem; min-height: 44px; }
 .opcoes-tubo { display: flex; flex-wrap: wrap; gap: 5px; margin: 10px 0; }
 .opcoes-tubo legend { color: var(--text); font-size: .8rem; width: 100%; }
-.opcoes-tubo .opcao { flex: 1; justify-content: center; padding: 7px 8px; font-size: .78rem; min-height: 38px; }
+.opcoes-tubo .opcao { flex: 1; justify-content: center; padding: 7px 8px; font-size: .78rem; min-height: 44px; }
 .agir-status { margin-top: 10px; font-weight: 600; font-size: .85rem; padding: 8px 10px; border-radius: 6px; background: var(--panel2); color: var(--secondary) !important; }
 .agir-status.feito { color: var(--ok) !important; border: 1px solid var(--ok); }
 .modelo { margin-top: 10px; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--ok); background: var(--panel2); font-size: .85rem; }
@@ -1152,26 +1150,6 @@ dialog h3 { margin-bottom: 6px; color: var(--accent); }
 .bancada-vazia-acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin-top: 6px; }
 .workspace.vazia #focus-view > :not(#bancada-vazia, #boas-vindas) { display: none !important; }
 .workspace.vazia :is(#indicator-group, #indicator-range, .indicator-mode, #ajustes, #compare-btn, #unlink-btn, #restart-btn, #remove-btn, .chip-ver, .chip-sep) { display: none !important; }
-/* Easter egg "Arco-íris do pH" (js/ui/segredo.js). */
-.segredo { margin: 0 0 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel2); font-size: .85rem; }
-.segredo p { margin: 0 0 6px; color: var(--secondary); }
-.segredo .segredo-titulo { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; color: var(--text); font-size: .95rem; }
-.segredo-faixa-cores, .bottle-secreto .bottle-dot { background: linear-gradient(90deg, #d22b3a, #ef5b29, #ebc92a, #49a756, #239aab, #445ed1, #6c49bf); }
-.segredo-faixa-cores { display: inline-block; width: 44px; height: 10px; border-radius: 999px; }
-.segredo-faixa { list-style: none; margin: 8px 0 4px; padding: 0; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 6px; }
-.segredo-faixa li { display: flex; flex-direction: column; align-items: center; gap: 2px; font-size: .72rem; text-align: center; color: var(--secondary); }
-.segredo-faixa strong { color: var(--text); font-size: .75rem; white-space: nowrap; }
-.segredo-cor { width: 100%; height: 18px; border-radius: 5px; border: 1px solid var(--border); }
-.bottle-secreto { border-color: var(--accent); }
-.bottle-secreto .bottle-dot { border-radius: 50%; }
-.nota[data-tipo=descoberta] { border-left-color: transparent; background: linear-gradient(#d22b3a, #ef5b29, #ebc92a, #49a756, #239aab, #445ed1, #6c49bf) left / 4px 100% no-repeat, var(--panel); }
-.chuva-arco-iris { position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0; z-index: 1500; pointer-events: none; overflow: hidden; }
-.chuva-arco-iris span { position: absolute; top: -24px; width: 10px; height: 14px; border-radius: 50% 50% 50% 50% / 38% 38% 62% 62%; background: var(--cor); opacity: .9; animation-name: chover; animation-timing-function: cubic-bezier(.45, 0, .8, .6); animation-fill-mode: both; }
-@keyframes chover { to { transform: translateY(calc(100vh + 40px)); } }
-@media (max-width: 600px) {
-  .segredo-faixa { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-}
-.mistura-aviso { margin-top: 10px; }
 /* Mistura geral: os tubos vão até o béquer e são despejados. */
 .despejo { position: fixed; top: 0; right: 0; bottom: 0; left: 0; inset: 0; z-index: 1600; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; background: #050a14cc; cursor: pointer; }
 .despejo-palco { position: relative; width: min(420px, 92vw); height: 270px; }
@@ -6296,6 +6274,293 @@ button:disabled {
 }
 
 </style>
+    <style>
+/* RC.4.5 — contrato visual compartilhado; a geometria da bancada continua na RC.4.1. */
+:is(.primary-btn, .secondary-btn, .quiet-btn, .danger-btn) {
+  min-height: 44px;
+  border-radius: 6px;
+  padding: 10px 15px;
+  gap: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.35;
+  text-decoration: none;
+  text-align: center;
+  max-width: 100%;
+}
+.quiet-btn {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  color: var(--secondary);
+}
+.danger-btn {
+  background: var(--panel);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+}
+.quiet-btn:hover:not(:disabled) {
+  background: var(--hover);
+  border-color: var(--accent);
+  color: var(--text);
+}
+.danger-btn:hover:not(:disabled) {
+  background: var(--hover);
+  color: var(--danger-hover);
+}
+.stage-stats .quiet-btn {
+  padding: 10px 15px;
+}
+.siab-icon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+}
+.drawer-section {
+  padding-block: 16px;
+}
+.drawer-link {
+  gap: 12px;
+  min-height: 44px;
+  width: 100%;
+  text-decoration: none;
+  text-align: left;
+  justify-content: flex-start;
+}
+.drawer-link.quiet-btn {
+  margin-block: 4px;
+}
+.drawer-link input[type="checkbox"] {
+  width: 22px;
+  min-width: 22px;
+  height: 22px;
+  min-height: 22px;
+  margin-left: auto;
+}
+.drawer-now {
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: 10px;
+  background: var(--panel2);
+}
+.drawer-now p {
+  margin: 6px 0 12px;
+  color: var(--secondary);
+  font-size: 0.875rem;
+}
+.drawer-now strong {
+  font-size: 1.05rem;
+}
+.drawer-chevron {
+  margin-left: auto;
+}
+.about-links {
+  display: grid;
+  gap: 12px;
+  margin-block: 20px;
+}
+.about-links a {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+.bottom-nav a {
+  gap: 3px;
+}
+.bottom-nav .siab-icon {
+  width: 22px;
+  height: 22px;
+}
+.recent-activity {
+  margin: 12px 0;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+.recent-activity .actions {
+  margin-top: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.report-actions {
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.report-settings {
+  background: var(--panel2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px 0;
+}
+.report-settings h2 {
+  font-size: 1rem;
+  margin: 0 0 10px;
+}
+.report-setting-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+  gap: 8px 20px;
+}
+.report-settings .check-row {
+  flex-wrap: nowrap;
+  min-height: 44px;
+  margin: 0;
+}
+.report-settings summary {
+  min-height: 44px;
+  align-items: center;
+}
+.report-settings textarea {
+  min-height: 88px;
+}
+.report-table {
+  max-width: 100%;
+  overflow: auto;
+}
+.report-table caption {
+  text-align: left;
+  font-weight: 600;
+  margin: 8px 0;
+}
+.report-table td {
+  font-family: inherit;
+}
+.report-author-field {
+  margin: 14px 0 24px;
+}
+.report-author-field h3 {
+  margin-bottom: 8px;
+}
+.digital-report .writing-space {
+  height: auto;
+  min-height: 0;
+  background: none;
+  border: 0;
+  border-radius: 0;
+  padding: 0;
+}
+.response-line {
+  height: 7mm;
+  border-bottom: 1px solid var(--border);
+}
+.report-model-note {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  border-top: 1px solid var(--border);
+  margin-top: 24px;
+}
+.report-source {
+  font-size: 0.875rem;
+  border-left: 3px solid var(--accent);
+  padding-left: 12px;
+}
+.report-result svg {
+  max-width: 100%;
+  height: auto;
+}
+.report-chart {
+  margin: 16px 0;
+}
+.report-chart figcaption {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+@media (max-width: 900px) {
+  .report-settings {
+    padding: 14px;
+  }
+  .report-actions > button {
+    flex: 1 1 140px;
+  }
+  .recent-activity .actions > :is(a, button) {
+    flex: 1 1 112px;
+  }
+  .drawer {
+    max-width: calc(100vw - 16px);
+  }
+  .drawer .drawer-close {
+    width: 44px;
+    height: 44px;
+  }
+  .setup-card .secondary-btn {
+    min-height: 48px;
+  }
+}
+@media print {
+  .report-settings,
+  .report-actions,
+  #relatorio-config {
+    display: none !important;
+  }
+  .digital-report .report-result,
+  .digital-report section,
+  .digital-report .report-author-field,
+  .digital-report .writing-space {
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  .digital-report .writing-space {
+    min-height: 0;
+    height: auto;
+    margin: 0 0 4mm;
+  }
+  .digital-report .response-line {
+    height: 7mm;
+    border-bottom: 0.3pt solid #999;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .digital-report h2,
+  .digital-report h3,
+  .digital-report caption {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .digital-report .report-table {
+    overflow: visible;
+  }
+  .digital-report table {
+    width: 100%;
+    font-size: 8pt;
+  }
+  .digital-report td,
+  .digital-report th {
+    overflow-wrap: anywhere;
+    font-size: 8pt;
+  }
+  .digital-report thead {
+    display: table-header-group;
+  }
+  .digital-report tr {
+    break-inside: avoid;
+  }
+  .digital-report svg {
+    break-inside: avoid;
+    max-height: 70mm;
+  }
+  .digital-report figure {
+    break-inside: avoid;
+    max-height: none;
+  }
+  .digital-report figcaption {
+    break-after: avoid;
+  }
+  .report-model-note {
+    color: #333;
+  }
+  .report-source {
+    border-color: #888;
+  }
+}
+
+</style>
   </head>
   <body>
     <noscript
@@ -6388,9 +6653,6 @@ button:disabled {
         <button id="install-btn" class="text-btn" type="button" hidden>
           Instalar app
         </button>
-        <a class="text-btn header-notebook" href="#/caderno" data-nav="caderno"
-          >Caderno</a
-        >
         <button
           id="prepare-btn"
           class="header-btn so-bancada"
@@ -6452,11 +6714,7 @@ button:disabled {
           <a class="caminho caminho-laboratorio" href="#/laboratorio">
             <span class="inicio-card-topo">
               <span class="inicio-card-icone"
-                ><svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M9 3h6M10 3v6L5 19a1.4 1.4 0 0 0 1.3 2h11.4a1.4 1.4 0 0 0 1.3-2L14 9V3M8 15h8"
-                  />
-                  <path d="M10 18h.01M14 17h.01" /></svg
+                ><span data-app-icon="lab"></span
               ></span>
               <span class="inicio-tag">Bancada livre</span>
             </span>
@@ -6478,11 +6736,7 @@ button:disabled {
           <a class="caminho caminho-aprender" href="#/aprender">
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
-                ><svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 5v15M12 5C9 3 5 3 3 4v15c3-1 6-1 9 1 3-2 6-2 9-1V4c-2-1-6-1-9 1Z"
-                  />
-                  <path d="M6 8h3m-3 4h3m6-4h3m-3 4h3" /></svg></span
+                ><span data-app-icon="learn"></span></span
               ><svg
                 class="inicio-card-seta"
                 viewBox="0 0 24 24"
@@ -6499,10 +6753,7 @@ button:disabled {
           <a class="caminho caminho-missoes" href="#/missoes">
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
-                ><svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="8" />
-                  <circle cx="12" cy="12" r="4" />
-                  <path d="m12 12 8-8m-4 0h4v4" /></svg></span
+                ><span data-app-icon="mission"></span></span
               ><svg
                 class="inicio-card-seta"
                 viewBox="0 0 24 24"
@@ -6519,11 +6770,7 @@ button:disabled {
           <a class="caminho caminho-roteiros" href="#/roteiros">
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
-                ><svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M9 5H6a2 2 0 0 0-2 2v13h16V7a2 2 0 0 0-2-2h-3M9 3h6v4H9Z"
-                  />
-                  <path d="m8 12 1 1 2-2m2 1h3m-8 5h8" /></svg></span
+                ><span data-app-icon="protocol"></span></span
               ><svg
                 class="inicio-card-seta"
                 viewBox="0 0 24 24"
@@ -6540,10 +6787,7 @@ button:disabled {
           <a class="caminho caminho-caderno" href="#/caderno">
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
-                ><svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M6 3h14v18H6zM3 7h5m-5 5h5m-5 5h5m4-10h5m-5 4h5m-5 4h3"
-                  /></svg></span
+                ><span data-app-icon="notebook"></span></span
               ><svg
                 class="inicio-card-seta"
                 viewBox="0 0 24 24"
@@ -6695,7 +6939,9 @@ button:disabled {
             </select></label
           >
           <p id="prof-erro" role="alert"></p>
-          <button class="primary-btn" type="submit">
+          <button type="button" id="prof-cancel-edit" class="quiet-btn" hidden>
+            Cancelar edição</button
+          ><button class="primary-btn" type="submit">
             Validar e gerar atividade
           </button>
         </form>
@@ -6725,6 +6971,10 @@ button:disabled {
           </p>
         </section>
         <h2>Atividades criadas</h2>
+        <p class="field-hint">
+          Atividades ficam neste navegador. Editar ou excluir não altera links
+          de aluno já enviados: cada link guarda a sua própria configuração.
+        </p>
         <div id="atividades-recentes"></div>
         <section id="prof-guia" class="teacher-material">
           <div>
@@ -6752,13 +7002,14 @@ button:disabled {
           ><button id="relatorio-baixar" class="secondary-btn">
             Baixar relatório</button
           ><button id="relatorio-print" class="secondary-btn">
-            Imprimir preenchido</button
+            Imprimir relatório</button
           ><button id="relatorio-blank" class="secondary-btn">
-            Imprimir em branco</button
+            Imprimir para preencher à mão</button
           ><button class="quiet-btn" data-activity-resume>
             Voltar à bancada
           </button>
         </div>
+        <div id="relatorio-config"></div>
         <div id="relatorio-conteudo"></div>
       </section>
       <!-- CADERNO -->
@@ -6771,7 +7022,7 @@ button:disabled {
         <header class="tela-cabecalho">
           <p class="eyebrow">CADERNO DE LABORATÓRIO</p>
           <h1 id="caderno-titulo" data-foco tabindex="-1">Seu caderno</h1>
-          <p>Histórico pessoal de investigações, hipóteses e descobertas.</p>
+          <p>Registros pessoais de investigações, hipóteses e descobertas.</p>
         </header>
         <div class="caderno-acoes">
           <button type="button" id="caderno-csv" class="secondary-btn">
@@ -6780,7 +7031,7 @@ button:disabled {
           <button type="button" id="caderno-imprimir" class="secondary-btn">
             Imprimir
           </button>
-          <button type="button" id="caderno-limpar" class="quiet-btn danger">
+          <button type="button" id="caderno-limpar" class="danger-btn">
             Apagar caderno
           </button>
         </div>
@@ -7238,19 +7489,12 @@ button:disabled {
                   <button id="restart-btn" type="button" class="quiet-btn">
                     Recomeçar gotas
                   </button>
-                  <button
-                    id="remove-btn"
-                    type="button"
-                    class="quiet-btn danger"
-                  >
+                  <button id="remove-btn" type="button" class="danger-btn">
                     Remover tubo
                   </button>
-                  <a class="secondary-btn" href="#/manual/roteiros"
+                  <a class="secondary-btn" href="#/montagens"
                     >Montagens prontas</a
                   >
-                  <button id="guide-btn" type="button" class="quiet-btn">
-                    Ideias para uma aula acessível
-                  </button>
                 </div>
               </div>
             </div>
@@ -7379,21 +7623,11 @@ button:disabled {
               </div>
             </div>
             <div id="group-notice" class="group-notice" hidden></div>
-            <div id="mistura-aviso" class="segredo mistura-aviso" hidden>
-              <p class="segredo-titulo">
-                <span class="segredo-faixa-cores" aria-hidden="true"></span
-                >Mistura secreta: <strong id="mistura-titulo"></strong>
-              </p>
-              <p id="mistura-texto"></p>
-              <button type="button" class="quiet-btn" id="mistura-fechar">
-                Fechar
-              </button>
-            </div>
             <div id="boas-vindas" class="boas-vindas" role="note" hidden>
               <p>
                 <strong>Primeira vez no laboratório?</strong> O tour mostra cada
-                parte da bancada em 1 minuto. O manual explica tudo e traz
-                testes prontos.
+                doca da bancada. Consulte o Manual e explore Montagens prontas,
+                Roteiros e Missões.
               </p>
               <div>
                 <button type="button" class="primary-btn" id="boas-vindas-tour">
@@ -7441,18 +7675,17 @@ button:disabled {
               </svg>
               <h1 id="vazia-titulo" data-foco tabindex="-1">Bancada vazia</h1>
               <p>
-                Escolha um frasco na prateleira: ele vai para o
-                <strong>Tubo 1</strong>. Depois escolha o indicador e o que vai
-                no conta-gotas.
+                Abra <strong>Montagem → Preparo</strong> para escolher uma
+                solução. Depois ajuste o indicador e o reagente do conta-gotas.
               </p>
               <div class="bancada-vazia-acoes">
                 <button type="button" id="vazia-prateleira" class="primary-btn">
-                  Escolher um frasco
+                  Abrir Montagem
                 </button>
                 <button type="button" id="vazia-agua" class="secondary-btn">
                   + Tubo com água
                 </button>
-                <a class="secondary-btn" href="#/manual/roteiros"
+                <a class="secondary-btn" href="#/montagens"
                   >Montagens prontas</a
                 >
                 <button
@@ -7712,7 +7945,7 @@ button:disabled {
                 ><button
                   type="button"
                   id="selecao-remover-btn"
-                  class="secondary-btn"
+                  class="danger-btn"
                 >
                   Remover</button
                 ><button
@@ -7809,10 +8042,15 @@ button:disabled {
     </main>
 
     <nav class="bottom-nav" aria-label="Navegação principal">
-      <a href="#/inicio" data-nav="inicio">Início</a
-      ><a href="#/aprender" data-nav="aprender">Aprender</a
-      ><a href="#/laboratorio" data-nav="laboratorio">Laboratório</a
-      ><a href="#/caderno" data-nav="caderno">Caderno</a>
+      <a href="#/inicio" data-nav="inicio"
+        ><span data-app-icon="home"></span>Início</a
+      ><a href="#/aprender" data-nav="aprender"
+        ><span data-app-icon="learn"></span>Aprender</a
+      ><a href="#/laboratorio" data-nav="laboratorio"
+        ><span data-app-icon="lab"></span>Laboratório</a
+      ><a href="#/caderno" data-nav="caderno"
+        ><span data-app-icon="notebook"></span>Caderno</a
+      >
     </nav>
 
     <button
@@ -7941,19 +8179,18 @@ button:disabled {
         <h2 id="drawer-title" class="drawer-title">Menu</h2>
         <button
           type="button"
-          class="drawer-close"
+          class="drawer-close icon-btn"
           data-close="app-drawer"
           aria-label="Fechar menu"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M6 6l12 12M18 6 6 18" />
-          </svg>
+          ×
         </button>
       </div>
       <div class="drawer-body">
         <section class="drawer-section" id="activity-menu" hidden>
           <h3 class="drawer-section-title">Atividade em andamento</h3>
-          <button class="drawer-link" data-activity-about>
+          <p id="drawer-activity-context"></p>
+          <button class="drawer-link quiet-btn" data-activity-about>
             Sobre esta atividade
           </button>
           <button class="drawer-link" data-activity-help>Ajuda</button>
@@ -7965,54 +8202,84 @@ button:disabled {
             Encerrar atividade
           </button>
         </section>
-        <section class="drawer-section">
-          <h3 class="drawer-section-title">Navegar</h3>
-          <ul class="drawer-lista">
-            <li>
-              <a class="drawer-link" href="#/inicio" data-nav="inicio"
-                >Início</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/aprender" data-nav="aprender"
-                >Aprender</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/missoes" data-nav="missoes"
-                >Missões</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/roteiros" data-nav="roteiros"
-                >Roteiros Experimentais</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/laboratorio" data-nav="laboratorio"
-                >Laboratório</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/caderno" data-nav="caderno"
-                >Caderno</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/manual" data-nav="manual"
-                >Manual</a
-              >
-            </li>
-            <li>
-              <a class="drawer-link" href="#/montagens">Montagens prontas</a>
-            </li>
-          </ul>
-          <a class="quiet-btn" href="#/professor">Área do Professor</a>
+        <section class="drawer-section drawer-now">
+          <h3 class="drawer-section-title">Agora</h3>
+          <strong id="drawer-now-title"></strong>
+          <p id="drawer-now-detail"></p>
+          <button class="quiet-btn" id="drawer-continue">Continuar</button>
         </section>
         <section class="drawer-section">
-          <h3>Configurações</h3>
-          <button class="drawer-link" data-startup-settings>
-            Inicialização
+          <button
+            class="drawer-cat-expand drawer-link quiet-btn"
+            aria-controls="drawer-navigation"
+            aria-expanded="true"
+          >
+            <span data-app-icon="tour"></span>Navegar<span
+              class="drawer-chevron"
+              >⌄</span
+            >
+          </button>
+          <nav id="drawer-navigation" aria-label="Todos os destinos">
+            <ul class="drawer-lista">
+              <li>
+                <a class="drawer-link" href="#/inicio" data-nav="inicio"
+                  ><span data-app-icon="home"></span><span>Início</span></a
+                >
+              </li>
+              <li>
+                <a class="drawer-link" href="#/aprender" data-nav="aprender"
+                  ><span data-app-icon="learn"></span><span>Aprender</span></a
+                >
+              </li>
+              <li>
+                <a class="drawer-link" href="#/missoes" data-nav="missoes"
+                  ><span data-app-icon="mission"></span><span>Missões</span></a
+                >
+              </li>
+              <li>
+                <a class="drawer-link" href="#/roteiros" data-nav="roteiros"
+                  ><span data-app-icon="protocol"></span
+                  ><span>Roteiros Experimentais</span></a
+                >
+              </li>
+              <li>
+                <a
+                  class="drawer-link"
+                  href="#/laboratorio"
+                  data-nav="laboratorio"
+                  ><span data-app-icon="lab"></span><span>Laboratório</span></a
+                >
+              </li>
+              <li>
+                <a class="drawer-link" href="#/caderno" data-nav="caderno"
+                  ><span data-app-icon="notebook"></span><span>Caderno</span></a
+                >
+              </li>
+              <li>
+                <a class="drawer-link" href="#/manual" data-nav="manual"
+                  ><span data-app-icon="manual"></span><span>Manual</span></a
+                >
+              </li>
+            </ul>
+          </nav>
+        </section>
+        <section class="drawer-section">
+          <h3 class="drawer-section-title">Recursos</h3>
+          <a class="drawer-link" href="#/montagens"
+            ><span data-app-icon="mount"></span>Montagens prontas</a
+          ><button class="drawer-link quiet-btn" id="drawer-tour">
+            <span data-app-icon="tour"></span>Tour da bancada
+          </button>
+        </section>
+        <section class="drawer-section">
+          <h3 class="drawer-section-title">Professor</h3>
+          <a class="drawer-link" href="#/professor"
+            ><span data-app-icon="professor"></span>Área do Professor</a
+          ><a class="drawer-link" href="#/manual/professor"
+            ><span data-app-icon="protocol"></span>Apoio pedagógico</a
+          ><button class="drawer-link quiet-btn" id="drawer-guia">
+            <span data-app-icon="accessibility"></span>Ideias para uma aula
+            acessível
           </button>
         </section>
         <section class="drawer-section" aria-labelledby="drawer-preferencias">
@@ -8026,10 +8293,7 @@ button:disabled {
             aria-expanded="false"
             aria-controls="a11y-panel"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                d="M12 6.3a1.8 1.8 0 1 0 0-3.6 1.8 1.8 0 0 0 0 3.6ZM5 8.5c2.3.7 4.6 1 7 1s4.7-.3 7-1M12 9.5V14m0 0-3 6.5M12 14l3 6.5"
-              /></svg
+            <span data-app-icon="accessibility"></span
             ><span>Acessibilidade</span
             ><svg viewBox="0 0 24 24" aria-hidden="true" class="drawer-chevron">
               <path d="m9 6 6 6-6 6" />
@@ -8260,55 +8524,31 @@ button:disabled {
               >Restaurar padrões
             </button>
           </div>
+          <div data-unrestricted-menu>
+            <button class="drawer-link quiet-btn" data-startup-settings>
+              <span data-app-icon="home"></span>Tela inicial
+            </button>
+            <label class="drawer-link"
+              ><span data-app-icon="projector"></span
+              ><span>Apresentação · Modo projetor</span
+              ><input
+                type="checkbox"
+                id="drawer-projector"
+                aria-label="Modo projetor"
+            /></label>
+            <a href="#/manual/projetor" class="drawer-link"
+              ><span data-app-icon="manual"></span>Como apresentar à turma</a
+            >
+          </div>
         </section>
-
-        <section class="drawer-section" aria-labelledby="drawer-app">
+        <section class="drawer-section">
           <h3 class="drawer-section-title" id="drawer-app">Aplicativo</h3>
-          <ul class="drawer-lista">
-            <li>
-              <button type="button" class="drawer-link" id="drawer-tour">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm3.5-12.5-2 5-5 2 2-5 5-2Z"
-                  /></svg
-                ><span>Tour guiado da bancada</span>
-              </button>
-            </li>
-            <li>
-              <button
-                type="button"
-                class="drawer-link"
-                id="drawer-install"
-                hidden
-              >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12 4v11m0 0-4-4m4 4 4-4M5 20h14" /></svg
-                ><span>Instalar app</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="drawer-link" id="drawer-guia">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2.1h5c0-.9.4-1.6 1-2.1A6 6 0 0 0 12 3Z"
-                  /></svg
-                ><span>Ideias para uma aula acessível</span>
-              </button>
-            </li>
-            <li>
-              <button type="button" class="drawer-link" id="about-btn">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18ZM12 11v5M12 8v.5"
-                  /></svg
-                ><span>Sobre o SIAB</span>
-              </button>
-            </li>
-          </ul>
-          <p class="drawer-versao">
-            Versão <span id="drawer-versao"></span> · veja o uso offline no
-            manual
-          </p>
+          <button class="drawer-link quiet-btn" id="drawer-install" hidden>
+            <span data-app-icon="install"></span>Instalar app</button
+          ><button class="drawer-link quiet-btn" id="about-btn">
+            <span data-app-icon="about"></span>Sobre o SIAB
+          </button>
+          <p class="drawer-versao">Versão <span id="drawer-versao"></span></p>
         </section>
       </div>
     </dialog>
@@ -8319,7 +8559,7 @@ button:disabled {
       aria-labelledby="about-title"
     >
       <div class="dialog-heading">
-        <h2 id="about-title">A química das cores</h2>
+        <h2 id="about-title">Sobre o SIAB</h2>
         <button
           type="button"
           class="icon-btn"
@@ -8329,135 +8569,24 @@ button:disabled {
           ×
         </button>
       </div>
+      <p><strong>Simulador Interativo de Ácidos e Bases</strong></p>
       <p>
-        <strong>SIAB — Simulador Interativo de Ácidos e Bases</strong> · versão
-        <span id="about-version"></span>
+        Uma bancada virtual para investigar soluções, observar transformações e
+        interpretar evidências.
       </p>
+      <p>Versão <span id="about-version"></span></p>
       <p>
-        Bancada virtual de ácidos e bases: tubo, partículas, gráfico e equação
-        mudam juntos a cada gota. Para saber como usar cada parte, abra o
-        <a href="#/manual" data-close="about-dialog">Manual</a>.
+        SIAB · GNU GPL v3. Interface de diálogos com dialog-polyfill,
+        BSD-3-Clause.
       </p>
-      <h3>Como interpretar</h3>
-      <p>
-        O ponto de equivalência depende das quantidades de ácido e base. A
-        viragem depende do indicador. Eles podem ocorrer em momentos diferentes.
-      </p>
-      <h3>Condições do modelo</h3>
-      <p>
-        Soluções ideais, volumes aditivos e mistura completa depois de cada
-        gota, a 25 °C (Kw acompanha a temperatura da solução). A cor que aparece
-        onde a gota cai, antes de misturar, usa o mesmo cálculo numa zona
-        pequena do líquido. Indicadores em quantidade traço: a cor soma as duas
-        formas do indicador (fração pelo pKIn, mistura pela lei de
-        Beer–Lambert). As tonalidades são representações didáticas; a cor do
-        indicador universal varia conforme a formulação. A fenolftaleína não
-        desbota em meio muito alcalino neste modelo.
-      </p>
-      <h3>Amostras do cotidiano e do ambiente</h3>
-      <p>
-        Frutas, alimentos e chuva usam equilíbrios representativos. O símbolo ≈
-        indica estimativa. Não se simulam coagulação, espuma nem escape de
-        gases: o CO₂ fica em sistema fechado.
-      </p>
-      <h3>Antiácidos</h3>
-      <p>
-        Mg(OH)₂ e Al(OH)₃ dissolvem até o limite do Kps. Atividade didática: não
-        é orientação de saúde.
-      </p>
-      <h3>Instalar e usar sem internet</h3>
-      <p>
-        Aberto por um endereço web (http ou https), o SIAB pode ser instalado
-        como aplicativo e funciona sem internet. Aberto direto do arquivo,
-        funciona normalmente, mas sem instalação.
-      </p>
-      <h3>Referências</h3>
-      <ul>
-        <li>
-          <a
-            href="https://openstax.org/books/chemistry-2e/pages/14-introduction"
-            target="_blank"
-            rel="noopener"
-            >OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids"
-            target="_blank"
-            rel="noopener"
-            >OpenStax — Apêndice H (Ka de ácidos fracos)</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases"
-            target="_blank"
-            rel="noopener"
-            >OpenStax — Apêndice I (Kb de bases fracas)</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://openstax.org/books/chemistry-2e/pages/j-solubility-products"
-            target="_blank"
-            rel="noopener"
-            >OpenStax — Apêndice J (Kps)</a
-          >
-        </li>
-        <li>
-          D. C. Harris, <cite>Análise Química Quantitativa</cite>: constantes de
-          dissociação e indicadores
-        </li>
-        <li>
-          <cite>CRC Handbook of Chemistry and Physics</cite>: pKa e
-          condutividade iônica limite (λ°)
-        </li>
-        <li>
-          Nelson e Cox, <cite>Princípios de Bioquímica de Lehninger</cite>: pKa
-          dos aminoácidos
-        </li>
-        <li>
-          Baes e Mesmer, <cite>The Hydrolysis of Cations</cite>: acidez dos
-          cátions metálicos hidratados
-        </li>
-        <li>
-          <a
-            href="https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations"
-            target="_blank"
-            rel="noopener"
-            >OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://goldbook.iupac.org/terms/view/09042"
-            target="_blank"
-            rel="noopener"
-            >IUPAC — Ponto de equivalência</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions"
-            target="_blank"
-            rel="noopener"
-            >PhET — Soluções ácido-base (lupa de partículas)</a
-          >
-        </li>
-        <li>
-          <a
-            href="https://www.acs.org/education/activities/red-cabbage-indicator.html"
-            target="_blank"
-            rel="noopener"
-            >ACS — Indicador de repolho roxo</a
-          >
-        </li>
-      </ul>
-      <p class="small">
-        Seu progresso e o caderno ficam guardados só neste navegador. Não há
-        contas nem envio de dados.
-      </p>
+      <nav class="about-links" aria-label="Documentação">
+        <a href="#/manual" data-close="about-dialog">Manual de uso</a
+        ><a href="#/manual/limites" data-close="about-dialog"
+          >Modelo científico</a
+        ><a href="#/manual/referencias" data-close="about-dialog"
+          >Referências e créditos</a
+        >
+      </nav>
     </dialog>
 
     <dialog
@@ -8662,8 +8791,7 @@ button:disabled {
           </button>
           <button class="startup-opcao" data-startup="laboratorio">
             <span class="startup-opcao-icone"
-              ><svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M9 3h6M10 3v6L5 19h14L14 9V3M8 15h8" /></svg
+              ><span data-app-icon="lab"></span
             ></span>
             <span
               ><strong>Laboratório</strong
@@ -9669,7 +9797,70 @@ button:disabled {
 </script>
     <script>
 "use strict";
-window.SIAB = { version: "1.0.0-rc.4.1", MAX_TUBES: 10, CAPACITY_ML: 5 };
+window.SIAB = { version: "1.0.0-rc.4.5", MAX_TUBES: 10, CAPACITY_ML: 5 };
+
+</script>
+    <script>
+"use strict";
+/* Única fonte para ícones semânticos. Diagramas e instrumentos conservam seus SVGs próprios. */
+SIAB.icons = (() => {
+  const paths = Object.freeze({
+    home: "M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9",
+    learn:
+      "M12 6C8 3 4 4 3 5v15c3-1 6-1 9 1 3-2 6-2 9-1V5c-2-1-5-2-9 1ZM12 6v15M6 9h3M6 13h3M16 8v5m-2-2h4",
+    mission: "M20 12a8 8 0 1 1-8-8M16 12a4 4 0 1 1-4-4M12 12l9-9M17 3h4v4",
+    protocol: "M8 5H5v16h14V5h-3M8 3h8v4H8ZM8 11l1 1 2-2M13 11h3M8 16h8",
+    lab: "M4 4h8M5 4v14a3 3 0 0 0 6 0V4M5 13h6M18 5c1 2 3 4 3 6a3 3 0 0 1-6 0c0-2 2-4 3-6Z",
+    notebook: "M6 3h14v18H6ZM3 7h5M3 12h5M3 17h5M11 7h5M11 11h5M11 15h3",
+    manual:
+      "M12 5C8 3 4 3 2 4v16c4-1 7-1 10 1 3-2 6-2 10-1V4c-3-1-6-1-10 1ZM12 5v16M16 6v7l2-2 2 2V6",
+    mount:
+      "M2 18h20M4 18v3M20 18v3M5 3h6M6 3v10a2 2 0 0 0 4 0V3M6 10h4M16 6v4l-3 5h8l-3-5V6M15 6h4",
+    professor:
+      "M8 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M2 20v-5a3 3 0 0 1 6 0v5M13 6h8v15h-9V6h1M14 3h5v5h-5ZM15 12h3M15 16h3",
+    accessibility:
+      "M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0M4 8l8 2 8-2M12 10v5M7 22l5-7 5 7",
+    settings: "M4 7h9M17 7h3M4 17h3M11 17h9M13 4v6M7 14v6",
+    tour: "M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M16 8l-3 5-5 3 3-5Z",
+    install: "M12 3v12M8 11l4 4 4-4M4 17v4h16v-4",
+    about: "M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0M12 11v6M12 7h.01",
+    eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
+    ruler: "M4 17 17 4l3 3L7 20H4ZM8 13l2 2M11 10l2 2M14 7l2 2",
+    chart: "M4 3v17h17M7 16l4-5 4 2 5-8",
+    meter:
+      "M3 4h12v15H3ZM6 7h6v5H6ZM15 7h3a3 3 0 0 1 3 3v4M19 14h3v7h-3ZM6 15h2M11 15h1",
+    report: "M5 3h10l4 4v14H5ZM15 3v5h4M8 12h8M8 16h8",
+    data: "M4 4h16v16H4ZM4 9h16M4 14h16M10 4v16",
+    help: "M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0M9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3M12 17h.01",
+    arrow: "M5 12h14M13 6l6 6-6 6",
+    back: "M19 12H5M11 6l-6 6 6 6",
+    search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
+    projector: "M3 4h18v13H3ZM8 22l4-5 4 5M12 17v5",
+  });
+  const aliases = {
+    book: "manual",
+    tube: "lab",
+    flask: "lab",
+    list: "protocol",
+    access: "accessibility",
+    teacher: "professor",
+    montagem: "mount",
+    ver: "eye",
+    dados: "data",
+  };
+  function svg(name) {
+    name = aliases[name] || name;
+    if (!paths[name]) name = "help";
+    return `<svg class="siab-icon" data-icon="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${paths[name]}"/></svg>`;
+  }
+  function hydrate(root = document) {
+    root.querySelectorAll("[data-app-icon]").forEach((el) => {
+      el.outerHTML = svg(el.dataset.appIcon);
+    });
+  }
+  document.addEventListener("DOMContentLoaded", () => hydrate());
+  return Object.freeze({ svg, hydrate, paths });
+})();
 
 </script>
     <script>
@@ -13492,7 +13683,7 @@ SIAB.limparGrupos = (bench = SIAB.state) => {
 };
 
 SIAB.TUBE_DEFAULTS = {
-  solution: "hcl",
+  solution: "water",
   concentration: 0.01,
   initialVolume: 1,
   dilution: 1,
@@ -13587,7 +13778,7 @@ SIAB.capacidade = (tube, vidraria = SIAB.state?.vidraria) =>
     : null) ||
   SIAB.CAPACITY_ML;
 
-// Mistura geral (modo secreto): junta tudo o que há nos tubos — soluções,
+// Mistura geral (montagem): junta tudo o que há nos tubos — soluções,
 // gotas e indicadores — num só recipiente. Função pura, sem mexer na bancada.
 // Componentes iguais (mesmo frasco, concentração e diluição) somam o volume.
 SIAB.misturarTubos = (tubos) => {
@@ -14105,10 +14296,6 @@ SIAB.progresso = (() => {
       dados.temas[chave] = { concluida: true, data: new Date().toISOString() };
       salvar();
     },
-    marcarUltima(rota, titulo) {
-      dados.ultima = { rota, titulo };
-      salvar();
-    },
     anotar(entrada) {
       const chave = id();
       dados.caderno.unshift({
@@ -14165,7 +14352,6 @@ SIAB.rotear = () => {
     desafio: "missao",
     aula: "missoes",
     trilhas: "aprender",
-    montagens: "montagens",
   };
   if (antigas[nome]) {
     nome = antigas[nome];
@@ -14220,48 +14406,9 @@ SIAB.rotear = () => {
 </script>
     <script>
 "use strict";
-/* Missões guiadas, escritas como dados.
-   Para criar uma missão nova, copie uma existente e mude os textos e os tubos.
-
-   bancada: tubos (como em SIAB.newTube; "grupo" vincula tubos), mostrarPH,
-            nivel (explorar/medir/calcular), ver (abas do painel VER),
-            controles (gotas, atalhos, indicador, realcar, temperatura, ph).
-   passos:  ler · prever · observar · agir · explicar · quiz
-            - prever: pergunta, opcoes, gabarito (texto, mapa ou função), porTubo
-            - observar: revelar ['ph'], ver (aba), conferir (id de um prever)
-            - agir: concluido(ctx) → true/false; demo() faz a ação (testes e "Mostrar como")
-            - quiz: opcoes, correta (índice), explicacao
-            - explicar: pergunta, modelo (resposta possível, mostrada depois)
-   ctx (contexto): tubos, tubo(nome) → { tube, r (resultado), cor }, ativo, estado. */
-
-// Ajudantes das demonstrações: agem na bancada da missão como o estudante faria.
-SIAB.demo = {
-  tubo: (nome) => SIAB.state.tubes.find((t) => t.name === nome),
-  gotas(nome, n) {
-    const tubo = SIAB.demo.tubo(nome);
-    const alvos = tubo.group
-      ? SIAB.state.tubes.filter((t) => t.group === tubo.group)
-      : [tubo];
-    for (let i = 0; i < n; i++) {
-      if (
-        alvos.some(
-          (x) =>
-            SIAB.chem.solve(x).volume + x.dropVolume > SIAB.CAPACITY_ML + 1e-9,
-        )
-      )
-        break;
-      alvos.forEach((x) => x.additions.push(x.dropVolume));
-    }
-    SIAB.loja.avisar();
-  },
-  selecionar(nome, aba) {
-    SIAB.state.activeId = SIAB.demo.tubo(nome).id;
-    if (aba) SIAB.state.verTab = aba;
-    SIAB.loja.avisar();
-  },
-};
-
-// Concepções alternativas que as missões confrontam.
+/* Missões investigativas: problema, ações verificáveis, evidências e perguntas abertas.
+   A ordem é preservada para compatibilidade dos registros de evidência existentes.
+   Interpretações de referência são exibidas somente no apoio do professor. */
 SIAB.concepcoes = {
   C1: "Ácido forte é o mesmo que ácido concentrado.",
   C2: "Neutralização sempre dá pH 7.",
@@ -14274,7 +14421,6 @@ SIAB.concepcoes = {
   C9: "Ponto de viragem e ponto de equivalência são a mesma coisa.",
   C10: "Neutro é sempre pH 7.",
 };
-// Habilidades da BNCC citadas (resumo; confira a redação oficial).
 SIAB.bncc = {
   EM13CNT104:
     "Avaliar benefícios e riscos de materiais e produtos à saúde e ao ambiente.",
@@ -14287,17 +14433,9 @@ SIAB.bncc = {
   EM13CNT307:
     "Analisar propriedades dos materiais para avaliar seu uso e propor soluções seguras.",
 };
-
-// Classificação calculada pelo motor ("ácida", "neutra" ou "básica") para cada tubo.
-const meioDosTubos = (ctx) =>
-  Object.fromEntries(ctx.tubos.map((x) => [x.nome, x.r.phase.toLowerCase()]));
-const MEIOS = ["ácida", "neutra", "básica"];
-
 SIAB.missoes = [
-  /* ---------------- Trilha 1 · Cores e indicadores ---------------- */
   {
     id: "repolho-roxo",
-    trilha: 1,
     titulo: "O que o repolho roxo revela",
     resumo:
       "Classifique amostras do cotidiano pela cor de um indicador natural.",
@@ -14347,52 +14485,36 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Um indicador na cozinha",
+        tipo: "contexto",
         texto:
           "O extrato de repolho roxo muda de cor conforme o meio. Os cinco tubos têm amostras do cotidiano com algumas gotas do extrato. Toque em cada tubo na bancada para ver a cor.",
       },
       {
-        tipo: "prever",
-        id: "meios",
-        porTubo: true,
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Classifique cada amostra.",
-        opcoes: MEIOS,
-        gabarito: meioDosTubos,
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        conferir: "meios",
+        tipo: "evidencia",
         texto:
-          "O pH agora aparece. pH menor que 7: ácido. Igual a 7: neutro. Maior que 7: básico. Compare com suas previsões.",
+          "Use a técnica de pH disponível para conferir. pH menor que 7: ácido. Igual a 7: neutro. Maior que 7: básico. Compare com suas previsões.",
       },
       {
-        tipo: "quiz",
-        id: "cor-acida",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta: "Que cor o repolho roxo mostra em meio ácido?",
-        opcoes: ["Rosa ou vermelho", "Violeta", "Verde ou amarelo"],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "No limão e no vinagre (pH 2,3 e 2,5) o extrato fica rosa. Perto do neutro, violeta; em meio básico, azul e depois verde.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Por que o bicarbonato e o sabão ficaram de cor diferente do limão?",
-        modelo:
+        interpretacao:
           "Bicarbonato e sabão formam soluções básicas (mais OH⁻ que H₃O⁺). Os pigmentos do repolho mudam de estrutura, e de cor, conforme a quantidade de H₃O⁺ do meio.",
       },
     ],
   },
   {
     id: "tres-indicadores",
-    trilha: 1,
     titulo: "Um tubo, três olhares",
     resumo: "A mesma titulação vista por três indicadores diferentes.",
     professor: {
@@ -14441,72 +14563,43 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Mesma solução, três indicadores",
+        tipo: "contexto",
         texto:
           "Os três tubos têm 1 mL de HCl 0,01 mol/L, cada um com um indicador. As gotas de NaOH 0,01 mol/L caem nos três ao mesmo tempo (adições vinculadas).",
       },
       {
-        tipo: "prever",
-        id: "ordem",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Ao gotejar NaOH, qual indicador muda de cor primeiro?",
-        opcoes: [
-          "Alaranjado de metila",
-          "Azul de bromotimol",
-          "Fenolftaleína",
-          "Os três ao mesmo tempo",
-        ],
-        gabarito: "Alaranjado de metila",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto: "Segure o botão de gotejar até a fenolftaleína ficar rosa.",
         concluido: (ctx) =>
           ["rosa claro", "rosa"].includes(ctx.tubo("Fenolftaleína").cor),
-        progresso: (ctx) =>
-          `${ctx.tubos[0].r.drops} gotas · fenolftaleína ${ctx.tubo("Fenolftaleína").cor}`,
-        demo: () => SIAB.demo.gotas("Fenolftaleína", 21),
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        ver: "grafico",
-        conferir: "ordem",
+        tipo: "evidencia",
         texto:
           "O alaranjado de metila muda entre pH 3,1 e 4,4; o bromotimol entre 6,0 e 7,6; a fenolftaleína entre 8,2 e 10. No gráfico, a faixa colorida mostra a viragem do indicador do tubo selecionado.",
       },
       {
-        tipo: "quiz",
-        id: "equivalencia",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "Na 20ª gota, as quantidades de HCl e NaOH ficaram iguais (pH 7). Qual indicador estava na cor de transição nesse ponto?",
-        opcoes: [
-          "Alaranjado de metila (amarelo)",
-          "Azul de bromotimol (verde)",
-          "Fenolftaleína (incolor)",
-        ],
-        correta: 1,
-        explicacao:
+        interpretacao:
           "O verde do bromotimol aparece entre pH 6,0 e 7,6. Por isso ele é uma boa escolha para titular ácido forte com base forte.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Por que os três indicadores mudaram de cor em momentos diferentes, se a solução era a mesma?",
-        modelo:
+        interpretacao:
           "Cada indicador tem sua própria faixa de viragem. Conforme o pH sobe, a solução atravessa primeiro a faixa do alaranjado de metila, depois a do bromotimol e por último a da fenolftaleína.",
       },
     ],
   },
   {
     id: "cor-que-engana",
-    trilha: 1,
     titulo: "Nem toda cor é do indicador",
     resumo: "Pigmentos de alimentos podem esconder a cor do indicador.",
     professor: {
@@ -14536,72 +14629,42 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Amostras com cor própria",
+        tipo: "contexto",
         texto:
           "Café e suco de morango têm pigmentos. Os dois tubos também têm extrato de repolho roxo. A cor que você vê é uma mistura.",
       },
       {
-        tipo: "prever",
-        id: "olhar",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Dá para saber, só olhando, se o café é ácido?",
-        opcoes: [
-          "Sim, pela cor marrom",
-          "Não, a cor própria atrapalha a leitura",
-          "Só se estiver quente",
-        ],
-        gabarito: "Não, a cor própria atrapalha a leitura",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Ative “Realçar indicador” (abaixo, neste cartão) para ver só a cor do indicador.",
         concluido: (ctx) => ctx.estado.indicatorOnly === true,
-        demo: () => {
-          SIAB.state.indicatorOnly = true;
-          SIAB.loja.avisar();
-        },
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        conferir: "olhar",
+        tipo: "evidencia",
         texto:
           "Com o realce, o repolho mostra violeta no café (pH ≈ 5,0, levemente ácido) e rosa no morango (pH ≈ 3,4). O realce é um recurso do simulador: no laboratório real a cor própria continua lá.",
       },
       {
-        tipo: "quiz",
-        id: "real",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "No laboratório real, o que pode ajudar a ler o indicador em uma amostra muito colorida?",
-        opcoes: [
-          "Diluir a amostra com água",
-          "Acrescentar mais corante",
-          "Aquecer a amostra",
-        ],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "Diluir clareia os pigmentos. Mas atenção: diluir também aproxima o pH de 7, então a leitura muda um pouco. Outra saída é usar um medidor de pH.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta: "Por que a cor do café não basta para dizer se ele é ácido?",
-        modelo:
+        interpretacao:
           "A cor marrom vem dos pigmentos do café, não do meio ácido. A cor observada mistura pigmento e indicador; é preciso separar as duas contribuições.",
       },
     ],
   },
-
-  /* ---------------- Trilha 2 · Ácidos, bases e sais ---------------- */
   {
     id: "ionizacao",
-    trilha: 2,
     titulo: "Dentro da água: ionização",
     resumo:
       "Use a lupa para ver o que acontece com as moléculas de ácido na água.",
@@ -14636,84 +14699,52 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "A mesma concentração",
+        tipo: "contexto",
         texto:
           "Os dois tubos têm ácido a 0,01 mol/L. O painel Partículas funciona como uma lupa: mostra íons e moléculas dissolvidos (a água fica de fora).",
       },
       {
-        tipo: "prever",
-        id: "hcl",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Na água, o que acontece com as moléculas de HCl?",
-        opcoes: [
-          "Quase todas se ionizam em H₃O⁺ e Cl⁻",
-          "Quase todas continuam inteiras",
-          "Cerca de metade se ioniza",
-        ],
-        gabarito: "Quase todas se ionizam em H₃O⁺ e Cl⁻",
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        ver: "particulas",
-        conferir: "hcl",
+        tipo: "evidencia",
         texto:
           "Na lupa do tubo HCl só há íons: H₃O⁺ e Cl⁻. O HCl é um ácido forte: HCl + H₂O → H₃O⁺ + Cl⁻.",
       },
       {
-        tipo: "prever",
-        id: "acetico",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "E o ácido acético, na mesma concentração?",
-        opcoes: [
-          "Quase todas se ionizam",
-          "Quase todas continuam inteiras",
-          "Cerca de metade se ioniza",
-        ],
-        gabarito: "Quase todas continuam inteiras",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Selecione o tubo “Ácido acético” na bancada e veja suas partículas.",
         concluido: (ctx) =>
           ctx.ativo === "Ácido acético" && ctx.estado.verTab === "particulas",
-        demo: () => SIAB.demo.selecionar("Ácido acético", "particulas"),
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        conferir: "acetico",
+        tipo: "evidencia",
         texto:
           "Só cerca de 4 % das moléculas de ácido acético se ionizam (α ≈ 4,2 %). Por isso o pH dele (3,38) é maior que o do HCl (2,00), mesmo com a mesma concentração.",
       },
       {
-        tipo: "quiz",
-        id: "seta",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta: "Qual equação representa um ácido fraco?",
-        opcoes: ["HCl + H₂O → H₃O⁺ + Cl⁻", "CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻"],
-        correta: 1,
-        explicacao:
+        interpretacao:
           "A seta dupla (⇌) indica equilíbrio: a maior parte das moléculas continua inteira. A seta simples indica ionização praticamente completa.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Explique, com partículas, a diferença entre um ácido forte e um ácido fraco.",
-        modelo:
+        interpretacao:
           "No ácido forte, praticamente todas as moléculas doam H⁺ à água e viram íons. No fraco, a maioria das moléculas continua inteira; só uma pequena fração se ioniza.",
       },
     ],
   },
   {
     id: "forte-ou-concentrado",
-    trilha: 2,
     titulo: "Forte ou concentrado?",
     resumo: "Um ácido forte diluído contra um ácido fraco concentrado.",
     professor: {
@@ -14750,75 +14781,47 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "O duelo",
+        tipo: "contexto",
         texto:
           "Tubo A: ácido clorídrico, forte, diluído (0,001 mol/L). Tubo B: ácido acético, fraco, concentrado (0,1 mol/L). Os dois têm 1 mL.",
       },
       {
-        tipo: "prever",
-        id: "menor",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Qual tubo tem o menor pH (mais ácido)?",
-        opcoes: ["Tubo A", "Tubo B", "Iguais"],
-        gabarito: (ctx) =>
-          ctx.tubo("Tubo A").r.pH < ctx.tubo("Tubo B").r.pH
-            ? "Tubo A"
-            : "Tubo B",
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        conferir: "menor",
+        tipo: "evidencia",
         texto:
           "O ácido fraco concentrado tem pH um pouco menor: 2,88 contra 3,00. Força não é o mesmo que concentração.",
       },
       {
-        tipo: "prever",
-        id: "quantidade",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta:
           "Qual tubo vai precisar de mais NaOH para chegar à equivalência?",
-        opcoes: ["Tubo A", "Tubo B", "Os dois, igual"],
-        gabarito: "Tubo B",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Goteje NaOH 0,1 mol/L nos dois tubos até o pH de cada um passar de 7. Selecione um tubo de cada vez. Use +1 mL se quiser ir mais rápido.",
         concluido: (ctx) =>
           ctx.tubo("Tubo A").r.pH > 6.99 && ctx.tubo("Tubo B").r.pH > 6.99,
-        progresso: (ctx) =>
-          `A: ${SIAB.format(ctx.tubo("Tubo A").r.added)} mL · B: ${SIAB.format(ctx.tubo("Tubo B").r.added)} mL`,
-        demo: () => {
-          SIAB.demo.gotas("Tubo A", 1);
-          SIAB.demo.gotas("Tubo B", 100);
-        },
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        conferir: "quantidade",
-        ver: "grafico",
+        tipo: "evidencia",
         texto:
           "O tubo B precisou de 100 vezes mais NaOH: 1,00 mL contra 0,01 mL. Ele tinha 100 vezes mais ácido, embora só cerca de 1,3 % estivesse ionizado no início.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Qual é a diferença entre um ácido forte e um ácido concentrado?",
-        modelo:
+        interpretacao:
           "Forte: quase todas as moléculas se ionizam. Concentrado: há muito ácido por litro. Um ácido fraco pode ser concentrado, e um forte pode estar diluído.",
       },
     ],
   },
   {
     id: "sais-cores",
-    trilha: 2,
     titulo: "Todo sal é neutro?",
     resumo: "Quatro sais, quatro cores de repolho roxo.",
     professor: {
@@ -14865,58 +14868,37 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Sais da neutralização",
+        tipo: "contexto",
         texto:
           "Sal é um produto da reação entre um ácido e uma base. Os quatro tubos têm sais dissolvidos (0,1 mol/L) com extrato de repolho roxo.",
       },
       {
-        tipo: "prever",
-        id: "sais",
-        porTubo: true,
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Classifique a solução de cada sal.",
-        opcoes: MEIOS,
-        gabarito: meioDosTubos,
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        conferir: "sais",
-        ver: "equacao",
+        tipo: "evidencia",
         texto:
           "NaCl: neutro (7,00). NH₄Cl: ácido (5,13). CH₃COONa: básico (8,87). Na₂CO₃: básico (11,65). No painel Equação, veja de que ácido e de que base cada sal vem.",
       },
       {
-        tipo: "quiz",
-        id: "nh4cl",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "O NH₄Cl vem do HCl (ácido forte) e da NH₃ (base fraca). Qual é o caráter da solução?",
-        opcoes: [
-          "Ácido: predomina o forte",
-          "Básico: predomina a base",
-          "Sempre neutro",
-        ],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "O íon NH₄⁺ doa H⁺ à água (NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺). O Cl⁻, que vem de um ácido forte, não reage.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Use a origem dos sais (ácido e base, fortes ou fracos) para explicar as cores.",
-        modelo:
+        interpretacao:
           "Sal de ácido forte e base forte dá solução neutra. De ácido forte e base fraca, ácida. De ácido fraco e base forte, básica: o ânion recebe H⁺ da água e libera OH⁻.",
       },
     ],
   },
   {
     id: "chuva-acida",
-    trilha: 2,
     titulo: "Chuva ácida e calagem",
     resumo: "Óxidos ácidos na chuva e a correção com cal.",
     professor: {
@@ -14958,73 +14940,44 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Óxidos ácidos",
+        tipo: "contexto",
         texto:
           "CO₂, SO₂ e NO₂ são óxidos ácidos: com a água, formam ácidos. CO₂ + H₂O ⇌ H₂CO₃. O SO₂ poluente vira SO₃ e depois H₂SO₄ (SO₃ + H₂O → H₂SO₄).",
       },
       {
-        tipo: "prever",
-        id: "limpa",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "A chuva sem poluição é neutra (pH 7)?",
-        opcoes: [
-          "Sim, é água pura",
-          "Não, é levemente ácida por causa do CO₂",
-          "Não, é básica",
-        ],
-        gabarito: "Não, é levemente ácida por causa do CO₂",
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        revelar: ["ph"],
-        conferir: "limpa",
+        tipo: "evidencia",
         texto:
           "A chuva limpa tem pH ≈ 5,6, pelo CO₂ dissolvido. Chama-se chuva ácida a que fica abaixo disso: aqui, pH ≈ 4,3.",
       },
       {
-        tipo: "quiz",
-        id: "vezes",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "Quantas vezes a [H₃O⁺] da chuva ácida (pH 4,3) é maior que a da chuva limpa (pH 5,6)?",
-        opcoes: [
-          "Cerca de 1,3 vez",
-          "Cerca de 20 vezes",
-          "Cerca de 1 000 vezes",
-        ],
-        correta: 1,
-        explicacao:
+        interpretacao:
           "Cada unidade de pH vale 10 vezes. A diferença de 1,3 unidade dá 10^1,3 ≈ 20 vezes mais H₃O⁺.",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "O lago recebeu chuva ácida. Selecione o tubo “Lago” e goteje água de cal, Ca(OH)₂, até o pH ficar entre 6 e 8. Cuidado para não passar do ponto.",
         concluido: (ctx) =>
           ctx.tubo("Lago").r.pH >= 6 && ctx.tubo("Lago").r.pH <= 8,
-        progresso: (ctx) =>
-          `Lago: pH ${SIAB.phFormat(ctx.tubo("Lago").r)} · ${ctx.tubo("Lago").r.drops} gotas`,
-        demo: () => SIAB.demo.gotas("Lago", 11),
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Por que a cal corrige a acidez? Escreva a equação da neutralização.",
-        modelo:
+        interpretacao:
           "A cal é uma base: Ca(OH)₂ + H₂SO₄ → CaSO₄ + 2 H₂O. O OH⁻ consome o H₃O⁺. Cal em excesso deixaria a água básica, o que também prejudica a vida no lago.",
       },
     ],
   },
-
-  /* ---------------- Trilha 3 · Quantidades e titulação ---------------- */
   {
     id: "diluicao",
-    trilha: 3,
     titulo: "Diluir muda o quê?",
     resumo: "Acrescente água e acompanhe o pH se aproximar de 7.",
     professor: {
@@ -15064,66 +15017,43 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Diluir",
+        tipo: "contexto",
         texto:
           "Diluir é acrescentar solvente. A quantidade de ácido continua a mesma, mas fica espalhada em mais água: a concentração diminui.",
       },
       {
-        tipo: "prever",
-        id: "vinagre",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Diluindo o vinagre 10 vezes (1 parte + 9 de água), o pH…",
-        opcoes: [
-          "diminui",
-          "aumenta, aproximando-se de 7",
-          "fica igual",
-          "passa de 7 e fica básico",
-        ],
-        gabarito: "aumenta, aproximando-se de 7",
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        conferir: "vinagre",
+        tipo: "evidencia",
         texto:
           "Vinagre puro: pH ≈ 2,5. Diluído 10 vezes: pH ≈ 3,0. Continua ácido, só que menos.",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Selecione “HCl + água” e goteje água até o volume chegar a pelo menos 4 mL. Observe o pH a cada etapa.",
         concluido: (ctx) => ctx.tubo("HCl + água").r.volume >= 4 - 1e-9,
-        progresso: (ctx) =>
-          `${SIAB.format(ctx.tubo("HCl + água").r.volume)} mL · pH ${SIAB.phFormat(ctx.tubo("HCl + água").r)}`,
-        demo: () => SIAB.demo.gotas("HCl + água", 30),
       },
       {
-        tipo: "quiz",
-        id: "limite",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "Se você continuasse diluindo o HCl sem parar, o pH chegaria a…",
-        opcoes: ["14", "7, sem passar dele", "0"],
-        correta: 1,
-        explicacao:
+        interpretacao:
           "Com muita água, o H₃O⁺ do ácido fica cada vez mais raro e o pH se aproxima do da água pura (7). Diluir nunca transforma um ácido em base.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "O pH mudou, mas a quantidade de ácido no tubo mudou? Explique.",
-        modelo:
+        interpretacao:
           "A quantidade (em mol) de ácido ficou a mesma; só o volume aumentou. A concentração de H₃O⁺ diminuiu, por isso o pH aumentou.",
       },
     ],
   },
   {
     id: "curva-titulacao",
-    trilha: 3,
     titulo: "A curva da titulação",
     resumo: "Desenhe as curvas de um ácido forte e de um fraco.",
     professor: {
@@ -15161,74 +15091,48 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Titular",
+        tipo: "contexto",
         texto:
           "Titular é adicionar, gota a gota, uma solução de concentração conhecida até reagir todo o ácido. O gráfico registra o pH a cada gota.",
       },
       {
-        tipo: "prever",
-        id: "eq7",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta:
           "No ponto de equivalência (ácido e base em quantidades iguais), o pH é sempre 7?",
-        opcoes: ["Sim, sempre", "Não, depende do ácido e da base"],
-        gabarito: "Não, depende do ácido e da base",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Titule o HCl até adicionar 1,5 mL de NaOH. Observe o salto no gráfico.",
         concluido: (ctx) => ctx.tubo("HCl").r.added >= 1.5 - 1e-9,
-        progresso: (ctx) =>
-          `HCl: ${SIAB.format(ctx.tubo("HCl").r.added)} mL de NaOH`,
-        demo: () => SIAB.demo.gotas("HCl", 30),
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto: "Agora selecione o ácido acético e titule até 1,5 mL.",
         concluido: (ctx) => ctx.tubo("Ácido acético").r.added >= 1.5 - 1e-9,
-        progresso: (ctx) =>
-          `Ácido acético: ${SIAB.format(ctx.tubo("Ácido acético").r.added)} mL de NaOH`,
-        demo: () => {
-          SIAB.demo.selecionar("Ácido acético", "grafico");
-          SIAB.demo.gotas("Ácido acético", 30);
-        },
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        ver: "grafico",
-        conferir: "eq7",
+        tipo: "evidencia",
         texto:
           "Com HCl, a equivalência (1,00 mL) tem pH 7,00. Com ácido acético, 8,22: o acetato formado é uma base. O ponto marcado “pH = pKa” (meia-equivalência) tem pH 4,75. No Histórico você pode baixar a tabela em CSV.",
       },
       {
-        tipo: "quiz",
-        id: "indicador",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "Para titular ácido acético com NaOH, qual indicador é mais adequado?",
-        opcoes: ["Alaranjado de metila (3,1–4,4)", "Fenolftaleína (8,2–10)"],
-        correta: 1,
-        explicacao:
+        interpretacao:
           "A viragem precisa acontecer no salto de pH, que aqui fica acima de 7. O alaranjado de metila mudaria de cor logo no início.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta: "Por que a equivalência do ácido acético tem pH maior que 7?",
-        modelo:
+        interpretacao:
           "Na equivalência sobra acetato de sódio. O íon CH₃COO⁻ recebe H⁺ da água (hidrólise) e libera OH⁻, deixando o meio básico.",
       },
     ],
   },
   {
     id: "estomago",
-    trilha: 3,
     titulo: "Estômago virtual",
     resumo: "Dose três antiácidos e compare.",
     professor: {
@@ -15273,88 +15177,52 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Suco gástrico",
+        tipo: "contexto",
         texto:
           "Cada tubo é um “estômago” com 1 mL de HCl 0,1 mol/L (pH 1). Antiácidos são bases que neutralizam parte desse ácido. Atividade didática: não é orientação de saúde.",
       },
       {
-        tipo: "prever",
-        id: "facil",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta:
           "Qual antiácido deve ser mais fácil de dosar sem passar do ponto (pH acima de 5)?",
-        opcoes: [
-          "Hidróxido de alumínio, Al(OH)₃",
-          "Hidróxido de magnésio, Mg(OH)₂",
-          "Bicarbonato de sódio",
-        ],
-        gabarito: "Hidróxido de alumínio, Al(OH)₃",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto: "No tubo “Com Al(OH)₃”, goteje até o pH ficar entre 3 e 5.",
         concluido: (ctx) =>
           ctx.tubo("Com Al(OH)₃").r.pH >= 3 &&
           ctx.tubo("Com Al(OH)₃").r.pH <= 5,
-        progresso: (ctx) =>
-          `Al(OH)₃: pH ${SIAB.phFormat(ctx.tubo("Com Al(OH)₃").r)}`,
-        demo: () => SIAB.demo.gotas("Com Al(OH)₃", 20),
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Agora tente o mesmo com Mg(OH)₂ e com bicarbonato: goteje pelo menos 0,5 mL de Mg(OH)₂ e 0,9 mL de bicarbonato.",
         concluido: (ctx) =>
           ctx.tubo("Com Mg(OH)₂").r.added >= 0.5 - 1e-9 &&
           ctx.tubo("Com bicarbonato").r.added >= 0.9 - 1e-9,
-        progresso: (ctx) =>
-          `Mg(OH)₂: ${SIAB.format(ctx.tubo("Com Mg(OH)₂").r.added)} mL · bicarbonato: ${SIAB.format(ctx.tubo("Com bicarbonato").r.added)} mL`,
-        demo: () => {
-          SIAB.demo.gotas("Com Mg(OH)₂", 26);
-          SIAB.demo.gotas("Com bicarbonato", 45);
-        },
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        ver: "particulas",
-        conferir: "facil",
+        tipo: "evidencia",
         texto:
           "O Al(OH)₃ é pouco solúvel: só dissolve enquanto há ácido para consumi-lo, e o pH para perto de 4. O Mg(OH)₂ passa de 9 logo após a equivalência. O bicarbonato forma H₂CO₃ (no estômago real, parte vira CO₂ e escapa; aqui o sistema é fechado).",
       },
       {
-        tipo: "quiz",
-        id: "trava",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta: "Por que o pH com Al(OH)₃ “trava” perto de 4?",
-        opcoes: [
-          "Porque ele é pouco solúvel e só dissolve enquanto há H₃O⁺ para consumi-lo",
-          "Porque ele é um ácido",
-          "Porque acabou o HCl e sobrou água pura",
-        ],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "Com Kps = 2 × 10⁻³², quase nada de Al(OH)₃ se dissolve quando o meio deixa de ser ácido. Na lupa, os quadrados mostram o sólido que sobrou.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Escreva a equação da neutralização do HCl pelo Mg(OH)₂ e diga por que é possível exagerar na dose.",
-        modelo:
+        interpretacao:
           "Mg(OH)₂ + 2 HCl → MgCl₂ + 2 H₂O. O Mg(OH)₂ é mais solúvel que o Al(OH)₃: depois de neutralizar todo o ácido, ainda dissolve e deixa o meio básico.",
       },
     ],
   },
-
-  /* ---------------- Trilha 4 · Equilíbrio, hidrólise e tampão ---------------- */
   {
     id: "grau-ionizacao",
-    trilha: 4,
     titulo: "Grau de ionização e diluição",
     resumo: "α do ácido acético em três concentrações (lei de Ostwald).",
     professor: {
@@ -15395,68 +15263,42 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Grau de ionização",
+        tipo: "contexto",
         texto:
           "Grau de ionização (α) é a fração das moléculas de ácido que se ionizam: α = moléculas ionizadas ÷ moléculas dissolvidas.",
       },
       {
-        tipo: "prever",
-        id: "alfa",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Diluindo o ácido acético, α…",
-        opcoes: ["aumenta", "diminui", "não muda"],
-        gabarito: "aumenta",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Veja na lupa as partículas dos três tubos: selecione um de cada vez.",
         concluido: (ctx) => ctx.tubos.every((x) => ctx.visitados.has(x.nome)),
-        progresso: (ctx) =>
-          `${ctx.tubos.filter((x) => ctx.visitados.has(x.nome)).length} de 3 tubos vistos`,
-        demo: () =>
-          ["0,1 mol/L", "0,01 mol/L", "0,001 mol/L"].forEach((nome) =>
-            SIAB.demo.selecionar(nome, "particulas"),
-          ),
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        ver: "equacao",
-        conferir: "alfa",
+        tipo: "evidencia",
         texto:
           "α = 1,3 % (0,1 mol/L), 4,2 % (0,01) e 12,5 % (0,001). É a lei da diluição de Ostwald: para ácidos fracos, α ≈ √(Ka/C).",
       },
       {
-        tipo: "quiz",
-        id: "ph",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "Se α aumenta com a diluição, por que o pH também aumenta (2,88 → 3,38 → 3,90)?",
-        opcoes: [
-          "Porque a [H₃O⁺] total diminui, mesmo com uma fração ionizada maior",
-          "Porque o ácido vira base",
-          "Porque o Ka diminui",
-        ],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "[H₃O⁺] ≈ α · C. Diluir 10 vezes aumenta α cerca de 3 vezes (√10), mas divide C por 10: o produto diminui.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta: "Explique com suas palavras a lei da diluição de Ostwald.",
-        modelo:
+        interpretacao:
           "Quanto mais diluído um ácido fraco, maior a fração das moléculas que se ionizam (α ≈ √(Ka/C)); a concentração de H₃O⁺, porém, diminui.",
       },
     ],
   },
   {
     id: "hidrolise",
-    trilha: 4,
     titulo: "Por que o sal muda o pH?",
     resumo: "Hidrólise salina com equações e partículas.",
     professor: {
@@ -15496,69 +15338,43 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Hidrólise salina",
+        tipo: "contexto",
         texto:
           "Na hidrólise, um íon do sal reage com a água e produz H₃O⁺ ou OH⁻. Íons vindos de ácido forte (Cl⁻) ou de base forte (Na⁺) não reagem.",
       },
       {
-        tipo: "prever",
-        id: "ions",
-        porTubo: true,
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Qual íon de cada sal reage com a água?",
-        opcoes: ["o cátion", "o ânion", "nenhum"],
-        gabarito: {
-          "NH₄Cl": "o cátion",
-          "CH₃COONa": "o ânion",
-          "Na₂CO₃": "o ânion",
-        },
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        ver: "equacao",
-        conferir: "ions",
+        tipo: "evidencia",
         texto:
           "NH₄⁺ + H₂O ⇌ NH₃ + H₃O⁺ (ácida). CH₃COO⁻ + H₂O ⇌ CH₃COOH + OH⁻ (básica). CO₃²⁻ + H₂O ⇌ HCO₃⁻ + OH⁻ (básica). Veja a equação de cada tubo.",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto: "Na lupa (Partículas), encontre o NH₃ formado no tubo de NH₄Cl.",
         concluido: (ctx) =>
           ctx.ativo === "NH₄Cl" && ctx.estado.verTab === "particulas",
-        demo: () => SIAB.demo.selecionar("NH₄Cl", "particulas"),
       },
       {
-        tipo: "quiz",
-        id: "carbonato",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta:
           "Por que Na₂CO₃ 0,1 mol/L (pH 11,65) é mais básico que CH₃COONa 0,1 mol/L (pH 8,87)?",
-        opcoes: [
-          "CO₃²⁻ é uma base mais forte que CH₃COO⁻, porque o HCO₃⁻ é um ácido muito mais fraco que o CH₃COOH",
-          "Porque tem dois íons Na⁺",
-          "Porque o carbonato é um ácido",
-        ],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "Quanto mais fraco o ácido conjugado (Ka do HCO₃⁻ = 4,7 × 10⁻¹¹; do CH₃COOH = 1,8 × 10⁻⁵), mais forte a base.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Explique a hidrólise do acetato de sódio usando pares conjugados.",
-        modelo:
+        interpretacao:
           "O CH₃COO⁻ é a base conjugada do ácido acético (fraco). Ele recebe H⁺ da água, formando CH₃COOH e OH⁻. O Na⁺ não reage. Sobra OH⁻: meio básico.",
       },
     ],
   },
   {
     id: "tampao",
-    trilha: 4,
     titulo: "Laboratório do tampão",
     resumo: "Água contra tampão: as mesmas gotas de ácido.",
     professor: {
@@ -15595,77 +15411,47 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Tampão",
+        tipo: "contexto",
         texto:
           "Uma solução-tampão tem um ácido fraco e sua base conjugada: aqui, ácido acético e acetato (0,01 mol/L de cada). As mesmas gotas de HCl 0,01 mol/L caem na água e no tampão.",
       },
       {
-        tipo: "prever",
-        id: "duas",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Depois de 2 gotas de HCl, o que acontece?",
-        opcoes: [
-          "Os dois mudam o mesmo tanto",
-          "A água muda muito; o tampão quase não muda",
-          "O tampão muda mais que a água",
-        ],
-        gabarito: "A água muda muito; o tampão quase não muda",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
           "Adicione 2 gotas de HCl (toque duas vezes no botão de gotejar).",
         concluido: (ctx) => ctx.tubo("Água").r.drops >= 2,
-        progresso: (ctx) => `${ctx.tubo("Água").r.drops} gotas`,
-        demo: () => SIAB.demo.gotas("Água", 2),
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        conferir: "duas",
-        ver: "equacao",
+        tipo: "evidencia",
         texto:
           "Água: 7,00 → 3,04. Tampão: 4,75 → 4,66. O acetato consome o H₃O⁺: CH₃COO⁻ + H₃O⁺ → CH₃COOH + H₂O.",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto: "Continue gotejando até o tampão “quebrar”: pH abaixo de 4.",
         concluido: (ctx) => ctx.tubo("Tampão acetato").r.pH < 4,
-        progresso: (ctx) =>
-          `Tampão: pH ${SIAB.phFormat(ctx.tubo("Tampão acetato").r)} · ${ctx.tubo("Tampão acetato").r.drops} gotas`,
-        demo: () => SIAB.demo.gotas("Água", 16),
       },
       {
-        tipo: "quiz",
-        id: "quebra",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta: "Por que o tampão deixou de funcionar?",
-        opcoes: [
-          "O CH₃COO⁻ que consumia o H₃O⁺ foi acabando",
-          "Acabou a água",
-          "O ácido acético evaporou",
-        ],
-        correta: 0,
-        explicacao:
+        interpretacao:
           "O tampão tem capacidade limitada. O sangue, por exemplo, fica entre pH 7,35 e 7,45 graças a tampões como H₂CO₃/HCO₃⁻, dentro de certos limites.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Como o tampão resiste à adição de ácido? E por que tem limite?",
-        modelo:
+        interpretacao:
           "A base conjugada (CH₃COO⁻) reage com o H₃O⁺ adicionado e forma ácido fraco. Quando a base conjugada se esgota, o H₃O⁺ sobra e o pH cai.",
       },
     ],
   },
   {
     id: "temperatura",
-    trilha: 4,
     titulo: "Neutro nem sempre é 7",
     resumo: "Aqueça a água e acompanhe Kw.",
     professor: {
@@ -15704,63 +15490,36 @@ SIAB.missoes = [
     },
     passos: [
       {
-        tipo: "ler",
-        titulo: "Neutro",
+        tipo: "contexto",
         texto:
           "Neutro significa [H₃O⁺] = [OH⁻]. A autoionização da água (2 H₂O ⇌ H₃O⁺ + OH⁻) é endotérmica: aumenta com a temperatura. A 25 °C, Kw = 1,0 × 10⁻¹⁴.",
       },
       {
-        tipo: "prever",
-        id: "quente",
-        titulo: "Prever",
+        tipo: "pergunta",
         pergunta: "Aquecendo água pura a 50 °C, o pH…",
-        opcoes: [
-          "continua 7",
-          "fica menor que 7, e a água continua neutra",
-          "fica menor que 7, e a água fica ácida",
-        ],
-        gabarito: "fica menor que 7, e a água continua neutra",
       },
       {
         tipo: "agir",
-        titulo: "Agir",
         texto:
-          "Use o controle de temperatura (neste cartão) para levar os tubos a 50 °C ou mais.",
+          "Use Ver → Medir → Temperatura para levar os tubos a 50 °C ou mais.",
         concluido: (ctx) => ctx.tubos.every((x) => x.tube.temperature >= 50),
-        progresso: (ctx) =>
-          `${SIAB.format(ctx.tubos[0].tube.temperature, 0)} °C · água pura: pH ${SIAB.phFormat(ctx.tubos[0].r)}`,
-        demo: () => {
-          SIAB.state.tubes.forEach((t) => {
-            t.temperature = 50;
-          });
-          SIAB.loja.avisar();
-        },
       },
       {
-        tipo: "observar",
-        titulo: "Observar",
-        conferir: "quente",
-        ver: "equacao",
+        tipo: "evidencia",
         texto:
           "A 50 °C, pKw = 13,26: a água pura tem pH 6,63 e continua neutra ([H₃O⁺] = [OH⁻]). O HCl quase não muda (pH 4,00); o NaOH cai de 10,00 para 9,26, porque pH = pKw − pOH.",
       },
       {
-        tipo: "quiz",
-        id: "corpo",
-        titulo: "Conferir",
+        tipo: "interpretacao",
         pergunta: "A 37 °C (temperatura do corpo), o pH neutro é…",
-        opcoes: ["7,00", "6,81", "7,40"],
-        correta: 1,
-        explicacao:
+        interpretacao:
           "A 37 °C, pKw ≈ 13,62, e o neutro é pKw/2 ≈ 6,81. O sangue (pH 7,35 a 7,45) é levemente básico.",
       },
       {
-        tipo: "explicar",
-        id: "porque",
-        titulo: "Explicar",
+        tipo: "interpretacao",
         pergunta:
           "Por que a água quente tem pH menor que 7 e mesmo assim é neutra?",
-        modelo:
+        interpretacao:
           "O aquecimento aumenta a autoionização: formam-se mais H₃O⁺ e OH⁻, sempre na mesma quantidade. O pH cai, mas [H₃O⁺] continua igual a [OH⁻].",
       },
     ],
@@ -15958,10 +15717,10 @@ novasMissoes.forEach((m) =>
           m.condition || (() => Boolean(SIAB.current()?.observacao?.ph)),
       },
       {
-        tipo: "explicar",
+        tipo: "interpretacao",
         id: "conclusao",
         pergunta: "Que evidências sustentam sua conclusão?",
-        modelo:
+        interpretacao:
           "Relacione as leituras instrumentais com a composição e o equilíbrio.",
       },
     ],
@@ -16297,6 +16056,48 @@ SIAB.montagens = [
   },
 ];
 
+// Catálogo operacional: inclusive a investigação antes escondida no cabeçalho.
+SIAB.montagens.push({
+  id: "arco-iris-ph",
+  titulo: "Arco-íris do pH",
+  nivel: "explorar",
+  ver: "ph",
+  visao: "overview",
+  objetivo:
+    "Investigar como o indicador universal muda entre meios ácidos, neutro e básicos.",
+  tubos: [
+    { solution: "hcl", concentration: 0.1 },
+    { solution: "hcl", concentration: 0.001 },
+    { solution: "nh4cl", concentration: 0.1 },
+    { solution: "water" },
+    { solution: "ch3coona", concentration: 0.1 },
+    { solution: "ammonia", concentration: 0.1 },
+    { solution: "naoh", concentration: 0.1 },
+  ].map((t, i) => ({
+    ...t,
+    name: `Cor ${i + 1}`,
+    indicator: "universal",
+    titrant: "water",
+  })),
+  instrumentos: ["Indicador universal", "Fita de pH", "pHmetro"],
+  recursos: ["Visão geral", "Tabela de medições", "Relatório"],
+  passos: [
+    "Compare as cores na visão geral.",
+    "Meça o pH e relacione a leitura com a faixa do indicador.",
+    "Registre no Caderno as descobertas que desejar guardar.",
+  ],
+});
+SIAB.montagens.forEach((m) => {
+  m.instrumentos ||=
+    m.nivel === "explorar"
+      ? ["Indicador", "Fita de pH"]
+      : ["Indicador", "pHmetro", "Termômetro"];
+  m.recursos ||=
+    m.nivel === "calcular"
+      ? ["Equação", "Distribuição", "Tabela", "Relatório"]
+      : ["Tabela de medições", "Gráfico pH × volume", "Relatório"];
+});
+
 </script>
     <script>
 "use strict";
@@ -16363,7 +16164,7 @@ SIAB.experimentos = (() => {
       "Como intervir sem ultrapassar a faixa de interesse?",
     ],
   };
-  const list = SIAB.montagens.map((m) => {
+  const list = SIAB.montagens.filter(m => stories[m.id]).map((m) => {
     const [titulo, subtitulo, problema, pergunta] = stories[m.id];
     return {
       id: m.id,
@@ -17646,11 +17447,13 @@ SIAB.manualContent = {
       steps: [
         "Abra Dados → Abrir relatório.",
         "Confira a identificação, a montagem e os resultados automáticos.",
-        "Preencha os campos de observação, interpretação e conclusão disponíveis.",
+        "Preencha observações, análise, interpretação, resposta à investigação e conclusão.",
+        "Escolha Relatório completo, Para preencher à mão ou Atividade de análise (Professor). Nos modos em papel, selecione 5, 10, 15, 20, 25 ou uma quantidade personalizada de 5 a 60 linhas por campo. O padrão é 10.",
+        "Na Atividade de análise, escolha as condições, dados, tabela, gráficos e cálculos incluídos, e quais campos autorais ficarão em branco. Use medições da bancada ou insira dados explicitamente hipotéticos.",
         "Após novas medições, use Atualizar dados da bancada. Imprima, baixe HTML ou registre no Caderno conforme os controles oferecidos.",
       ],
       example:
-        "Use a impressão preenchida para entregar a investigação, ou Em branco para escrever à mão.",
+        "Use a impressão preenchida para entregar a investigação, ou Para preencher à mão, preservando dados e deixando apenas campos autorais vazios.",
       related: ["roteiros", "tabela", "caderno"],
       keywords: [
         "relatório",
@@ -17663,7 +17466,7 @@ SIAB.manualContent = {
       details: [
         {
           title: "Dados e texto",
-          text: "Resultados automáticos vêm do experimento e são protegidos contra edição direta. Identificação e textos de interpretação são editáveis e salvos no navegador.",
+          text: "Condições iniciais, reagente, medições, tabelas, gráficos e estado final vêm do experimento. A tabela preserva técnicas e contextos, e a compactação não altera os dados brutos. O Histórico cronológico permanece em Dados → Histórico. Identificação e textos autorais são salvos no navegador.",
         },
         {
           title: "Imprimir ou salvar PDF",
@@ -17898,7 +17701,7 @@ SIAB.manualContent = {
       purpose:
         "Apresente o experimento com melhor leitura a distância, mantendo as ferramentas contextuais.",
       steps: [
-        "Ative Modo projetor pelo controle disponível no Menu ou na Área do Professor.",
+        "Ative Menu → Preferências → Apresentação · Modo projetor, ou use o controle da Área do Professor.",
         "Abra apenas Montagem, Ver ou Dados conforme a explicação.",
         "Desative o modo ao voltar ao uso individual.",
       ],
@@ -18104,6 +17907,83 @@ SIAB.manualContent = {
     equacoes: "equacao",
   },
 };
+SIAB.manualContent.topics.push({
+  "id": "referencias",
+  "title": "Referências e créditos",
+  "category": "calcular",
+  "summary": "Fontes do modelo químico e créditos das dependências do aplicativo.",
+  "purpose": "Consulte as fontes originais para aprofundar conceitos e constantes usados pelo SIAB.",
+  "steps": [
+    "Abra uma fonte de referência de acordo com o assunto investigado.",
+    "Confira as condições e as limitações descritas no modelo científico."
+  ],
+  "related": [
+    "limites",
+    "tabela-indicadores"
+  ],
+  "keywords": [
+    "referências",
+    "créditos",
+    "licença",
+    "bibliografia"
+  ],
+  "details": [
+    {
+      "title": "Licenças",
+      "text": "SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE."
+    }
+  ],
+  "references": [
+    {
+      "label": "OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)",
+      "url": "https://openstax.org/books/chemistry-2e/pages/14-introduction"
+    },
+    {
+      "label": "OpenStax — Apêndice H (Ka de ácidos fracos)",
+      "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids"
+    },
+    {
+      "label": "OpenStax — Apêndice I (Kb de bases fracas)",
+      "url": "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases"
+    },
+    {
+      "label": "OpenStax — Apêndice J (Kps)",
+      "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products"
+    },
+    {
+      "label": "D. C. Harris, Análise Química Quantitativa : constantes de dissociação e indicadores",
+      "url": null
+    },
+    {
+      "label": "CRC Handbook of Chemistry and Physics : pKa e condutividade iônica limite (λ°)",
+      "url": null
+    },
+    {
+      "label": "Nelson e Cox, Princípios de Bioquímica de Lehninger : pKa dos aminoácidos",
+      "url": null
+    },
+    {
+      "label": "Baes e Mesmer, The Hydrolysis of Cations : acidez dos cátions metálicos hidratados",
+      "url": null
+    },
+    {
+      "label": "OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)",
+      "url": "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations"
+    },
+    {
+      "label": "IUPAC — Ponto de equivalência",
+      "url": "https://goldbook.iupac.org/terms/view/09042"
+    },
+    {
+      "label": "PhET — Soluções ácido-base (lupa de partículas)",
+      "url": "https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions"
+    },
+    {
+      "label": "ACS — Indicador de repolho roxo",
+      "url": "https://www.acs.org/education/activities/red-cabbage-indicator.html"
+    }
+  ]
+});
 SIAB.manualRegistry = (() => {
   const { categories, topics, aliases } = SIAB.manualContent;
   const byId = new Map(topics.map((t) => [t.id, t]));
@@ -21298,10 +21178,8 @@ SIAB.prateleira = (() => {
       </details>`;
       })
       .join("");
-    // Frasco secreto (easter egg, ver js/ui/segredo.js).
-    const secreto = SIAB.segredo?.frascoSecreto(query) || "";
     box.innerHTML =
-      secreto + grupos ||
+      grupos ||
       '<p class="empty-choice">Nenhum frasco com esse nome. Tente outra busca.</p>';
   }
 
@@ -21733,6 +21611,8 @@ SIAB.instrumentos = (() => {
     const ctx = SIAB.ActivityContext.current;
     return {
       recipiente: t.id,
+      vidraria: t.vidraria || SIAB.state.vidraria,
+      incremento: t.dropVolume,
       solucao: t.solution,
       reagente: t.titrant,
       concentracao: t.concentration,
@@ -22272,7 +22152,7 @@ SIAB.render = (syncForm = false) => {
       s.level !== "calcular" || amostraGotas || t.titrant === "water";
     $("dilution-field").hidden = !amostraTubo;
     $("titrant-dilution-field").hidden = !amostraGotas;
-    $("compare-btn").disabled = s.tubes.length + 3 > SIAB.MAX_TUBES;
+    $("compare-btn").disabled = SIAB.ActivityContext.restricted();
     $("unlink-btn").hidden = !t.group;
     $("restart-btn").disabled = !t.additions.length;
     if (syncForm) SIAB.syncForm();
@@ -22812,6 +22692,7 @@ SIAB.selecionarVer = (id) => {
   );
   SIAB.state.verFamily = family.id;
   SIAB.state.verTab = id;
+  SIAB.state.reportViews = [...new Set([...(SIAB.state.reportViews || []), id])];
   (SIAB.state.verLastTabs ||= {})[family.id] = id;
   SIAB.renderVer();
   SIAB.workspace?.sync();
@@ -23016,6 +22897,7 @@ SIAB.gaveta = (() => {
 
   // secao: 'acessibilidade' abre direto no painel de acessibilidade.
   function abrir(secao) {
+    contexto();
     const gaveta = $("app-drawer");
     if (!gaveta.open) gaveta.showModal();
     $("menu-btn").setAttribute("aria-expanded", "true");
@@ -23032,9 +22914,53 @@ SIAB.gaveta = (() => {
     if ($("app-drawer").open) $("app-drawer").close();
   }
 
+  function contexto() {
+    const r = SIAB.rota,
+      c = SIAB.ActivityContext.current;
+    const title = SIAB.telas[r.nome]?.titulo?.(r.parametro) || "SIAB";
+    $("drawer-now-title").textContent = r.nome === "manual" ? "Manual" : title;
+    $("drawer-now-detail").textContent =
+      r.nome === "laboratorio"
+        ? `${SIAB.state.montagem?.titulo || (SIAB.state.experiencia ? "Roteiro Experimental" : "Bancada livre")} · ${SIAB.MODULOS[SIAB.state.level].nome}`
+        : r.nome === "manual"
+          ? (() => {
+              const t = SIAB.manualRegistry.resolve(r.parametro);
+              return t
+                ? `${SIAB.manualRegistry.category(t.category).title} › ${t.title}`
+                : "Guia de uso e consulta";
+            })()
+          : r.nome === "roteiro"
+            ? `Roteiro Experimental · ${SIAB.experimentos.find((x) => x.id === r.parametro)?.titulo || title}`
+            : "Seu contexto atual";
+    $("drawer-continue").textContent = ["laboratorio", "missao"].includes(
+      r.nome,
+    )
+      ? "Continuar na bancada"
+      : "Continuar nesta tela";
+    $("drawer-activity-context").textContent = c
+      ? `${c.activity.title} · ${SIAB.MODULOS[c.activity.module].nome}`
+      : "";
+  }
+
+  function projetor(on) {
+    if (SIAB.ActivityContext.restricted()) return false;
+    document.body.classList.toggle("projetor", on);
+    document.documentElement.dataset.projetor = on ? "on" : "off";
+    $("projetor-check").checked = $("drawer-projector").checked = on;
+    SIAB.persistencia.salvar("siab_projetor", on);
+    SIAB.workspace?.refresh();
+  }
+
   function ligar() {
     const gaveta = $("app-drawer");
     $("drawer-versao").textContent = SIAB.version;
+    expandir(
+      gaveta.querySelector('[aria-controls="drawer-navigation"]'),
+      matchMedia("(max-width: 900px)").matches,
+    );
+    $("drawer-continue").onclick = fechar;
+    $("drawer-projector").onchange = (e) => projetor(e.target.checked);
+    projetor(!!SIAB.persistencia.ler("siab_projetor", false));
 
     $("menu-btn").addEventListener("click", () => abrir());
     $("access-btn").addEventListener("click", () => abrir("acessibilidade"));
@@ -23083,7 +23009,7 @@ SIAB.gaveta = (() => {
     });
   }
 
-  return { ligar, abrir, fechar };
+  return { ligar, abrir, fechar, projetor };
 })();
 
 </script>
@@ -23137,14 +23063,7 @@ SIAB.workspace = (() => {
       modulo: ["nivel"],
       missao: ["missao"],
     };
-  const icons = {
-    montagem:
-      "M9 3h6M10 3v6L5 19a1.5 1.5 0 0 0 1.3 2h11.4a1.5 1.5 0 0 0 1.3-2L14 9V3",
-    ver: "M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12Zm7 0a3 3 0 1 0 6 0 3 3 0 0 0-6 0",
-    dados: "M4 4h16v16H4ZM4 9h16M4 14h16M10 4v16",
-  };
-  const icon = (name) =>
-    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${icons[name]}"/></svg>`;
+  const icon = S.icons.svg;
   const create = (tag, id, cls, html = "") => {
     const el = document.createElement(tag);
     if (id) el.id = id;
@@ -23309,6 +23228,7 @@ SIAB.workspace = (() => {
             ? "tools"
             : "families";
       if (
+        !S.state.initialView &&
         valid &&
         S.verDisponivel(preferences.tool) &&
         S.state.verTab !== preferences.tool
@@ -23319,6 +23239,7 @@ SIAB.workspace = (() => {
       if (document.body.classList.contains("projetor"))
         state.left = state.right = "collapsed";
     }
+    delete S.state.initialView;
     const selected = groups
       .flatMap((g) => g.items)
       .find((x) => x.id === S.state.verTab);
@@ -24148,82 +24069,13 @@ SIAB.tour = (() => {
 </script>
     <script>
 "use strict";
-SIAB.segredo = (() => {
-  const ARCO_IRIS = [
-    { solution: "hcl", concentration: 0.1 },
-    { solution: "hcl", concentration: 0.001 },
-    { solution: "nh4cl", concentration: 0.1 },
-    { solution: "water" },
-    { solution: "ch3coona", concentration: 0.1 },
-    { solution: "ammonia", concentration: 0.1 },
-    { solution: "naoh", concentration: 0.1 },
-  ];
-  const palavraSecreta = (q) =>
-    ["arcoiris", "rainbow"].includes(SIAB.normalizar(q).replace(/[^a-z]/g, ""));
-  function arcoIris() {
-    if (!SIAB.ActivityContext.guard("vessels.add")) return;
-    if (SIAB.atividades?.ativa) return;
-    SIAB.usarBancada("lab");
-    SIAB.alterar("arco-íris do pH", (s) => {
-      s.tubes = [];
-      delete s.experiencia;
-      ARCO_IRIS.forEach((t, i) =>
-        SIAB.newTube(
-          {
-            ...t,
-            name: `Cor ${i + 1}`,
-            indicator: "universal",
-            titrant: "water",
-          },
-          s,
-        ),
-      );
-      s.activeId = s.tubes[0].id;
-      s.view = "overview";
-    });
-    SIAB.irPara("#/laboratorio");
-    SIAB.notice(
-      "Descoberta: Arco-íris do pH. Compare as cores e investigue com instrumentos.",
-    );
-    SIAB.progresso.anotar({
-      tipo: "anotacao",
-      titulo: "Descoberta · Arco-íris do pH",
-      linhas: [
-        [
-          "Observação",
-          "Soluções diferentes formam uma sequência de cores com indicador universal.",
-        ],
-      ],
-    });
-  }
-  function ligar() {
-    let n = 0,
-      last = 0;
-    document.querySelector(".header-brand").addEventListener("click", (e) => {
-      const now = Date.now();
-      n = now - last < 1500 ? n + 1 : 1;
-      last = now;
-      if (n === 7) {
-        n = 0;
-        e.preventDefault();
-        arcoIris();
-      }
-    });
-    SIAB.$("shelf").addEventListener("click", (e) => {
-      if (e.target.closest("[data-segredo]")) arcoIris();
-    });
-  }
-  return {
-    ligar,
-    arcoIris,
-    ARCO_IRIS,
-    palavraSecreta,
-    frascoSecreto: (q) =>
-      palavraSecreta(q)
-        ? '<button class="bottle" data-segredo="arco-iris">Arco-íris do pH</button>'
-        : "",
-  };
-})();
+/* Compatibilidade de consumidores anteriores. A montagem tem agora um único
+   cadastro público e nunca cria notas automaticamente. */
+SIAB.segredo = {
+  ARCO_IRIS: SIAB.montagens.find((m) => m.id === "arco-iris-ph").tubos,
+  arcoIris: () => SIAB.montarMontagem("arco-iris-ph"),
+  ligar() {},
+};
 
 </script>
     <script>
@@ -24523,6 +24375,7 @@ SIAB.selecaoTubos = (() => {
           sair();
         },
         "Remover",
+        "danger",
       );
     };
     $("selecao-misturar-btn").onclick = () => {
@@ -24624,6 +24477,7 @@ SIAB.bancada = (() => {
     $("confirm-title").textContent = titulo;
     $("confirm-text").textContent = mensagem;
     $("confirm-yes").textContent = rotulo;
+    $("confirm-yes").className = intencao === "danger" ? "danger-btn" : "primary-btn";
     $("confirm-dialog").dataset.intent = intencao;
     confirmAction = acao;
     $("confirm-dialog").showModal();
@@ -25152,40 +25006,8 @@ SIAB.bancada = (() => {
   }
 
   function compararIndicadores() {
-    if (
-      !SIAB.ActivityContext.guard("vessels.add") ||
-      !SIAB.ActivityContext.guard("measurements.indicator")
-    )
-      return false;
-    const s = SIAB.state;
-    if (s.tubes.length + 3 > SIAB.MAX_TUBES) return;
-    const t = SIAB.current();
-    let primeiro;
-    SIAB.alterar("comparar indicadores", (estado) => {
-      const grupo = estado.nextGroup++;
-      ["btb", "phenol", "universal"].forEach((indicator, n) => {
-        const copia = SIAB.newTube({
-          name: `${t.name} · ${SIAB.indicators[indicator].short}`.slice(0, 40),
-          solution: t.solution,
-          concentration: t.concentration,
-          initialVolume: t.initialVolume,
-          titrant: t.titrant,
-          titrantConcentration: t.titrantConcentration,
-          dropVolume: t.dropVolume,
-          dilution: t.dilution,
-          titrantDilution: t.titrantDilution,
-          additions: t.additions,
-          temperature: t.temperature,
-          indicator,
-          group: grupo,
-        });
-        if (n === 0) primeiro = copia;
-      });
-    });
-    selecionarTubo(primeiro.id);
-    SIAB.notice(
-      "Comparação criada: três tubos vinculados. Cada gota cai nos três.",
-    );
+    if (SIAB.ActivityContext.restricted() || !SIAB.ActivityContext.guard("measurements.indicator")) return false;
+    return SIAB.montarMontagem("tres-indicadores");
   }
 
   // Vínculo manual: as gotas sempre; opcionalmente a substância do tubo e o
@@ -25571,9 +25393,6 @@ SIAB.bancada = (() => {
     $("unlink-btn").addEventListener("click", desvincular);
     $("restart-btn").addEventListener("click", recomecar);
     $("remove-btn").addEventListener("click", removerTubo);
-    $("guide-btn").addEventListener("click", () =>
-      $("guide-dialog").showModal(),
-    );
 
     // Chips do VER (celular e tablet): escolhem a aba e rolam até o painel.
     document.querySelector(".view-tabs").addEventListener("click", (evento) => {
@@ -25741,7 +25560,6 @@ SIAB.telas.laboratorio = {
     SIAB.usarBancada("lab");
     SIAB.bancada.configurar({ modo: "laboratorio" });
     SIAB.render(true);
-    SIAB.progresso.marcarUltima("#/laboratorio", "Laboratório livre");
     SIAB.$("boas-vindas").hidden =
       SIAB.ajuda.jaViu() ||
       Boolean(SIAB.state.experiencia || SIAB.atividades?.ativa);
@@ -25766,8 +25584,8 @@ SIAB.missaoTela = (() => {
       .map((p, i) => ({ p, i }))
       .filter((x) => x.p.tipo === "agir");
     $("painel-missao").innerHTML =
-      `<article class="missao-card"><p class="eyebrow">MISSÃO · ${a.concluida ? "Concluído" : "Não realizado"}</p><h2 data-foco tabindex="-1">${esc(m.titulo)}</h2><h3>O problema</h3><p>${esc(m.resumo)}</p><h3>Objetivo e regras</h3><p>Escolha sua estratégia. Registre evidências da bancada e uma conclusão que responda ao problema.</p><ul class="mission-objectives">${tasks.map(({ p, i }) => `<li data-objective="${i}">${esc(p.texto)} <strong>${a.evidencias[i] ? "Concluído" : ""}</strong></li>`).join("")}</ul>${tasks.length ? "" : "<p>Faça uma intervenção ou medição e use a evidência em sua conclusão.</p>"}${m.bancada.controles?.includes("temperatura") ? "<p>Ajuste a temperatura no VER → Medir → Temperatura.</p>" : ""}<details><summary>Perguntas para investigar</summary>${m.passos
-        .filter((p) => p.tipo === "prever" || p.tipo === "explicar")
+      `<article class="missao-card"><p class="eyebrow">MISSÃO · ${a.concluida ? "Concluído" : "Não realizado"}</p><h2 data-foco tabindex="-1">${esc(m.titulo)}</h2><h3>O problema</h3><p>${esc(m.resumo)}</p><h3>Objetivo e regras</h3><p>Escolha sua estratégia. Registre evidências da bancada e uma conclusão que responda ao problema.</p><ul class="mission-objectives">${tasks.map(({ p, i }) => `<li data-objective="${i}">${esc(p.texto)} <strong>${a.evidencias[i] ? "Concluído" : ""}</strong></li>`).join("")}</ul>${tasks.length ? "" : "<p>Faça uma intervenção ou medição e use a evidência em sua conclusão.</p>"}${m.bancada.controles?.includes("temperatura") ? "<p>Ajuste a temperatura no VER → Medir → Temperatura.</p>" : ""}<details><summary>Contexto e evidências</summary>${m.passos.filter(p => p.tipo === "contexto" || p.tipo === "evidencia").map(p => `<p>${esc(p.texto)}</p>`).join("")}</details><details><summary>Perguntas para investigar</summary>${m.passos
+        .filter((p) => p.tipo === "pergunta" || p.tipo === "interpretacao")
         .map(
           (p) => `<p>${esc(p.pergunta || "Que evidência você procura?")}</p>`,
         )
@@ -25876,7 +25694,7 @@ SIAB.telas.aprender = {
     SIAB.$("temas-lista").innerHTML = SIAB.temas
       .map(
         (t) =>
-          `<a class="content-row" href="#/tema/${t.id}"><span><strong>${SIAB.escape(t.titulo)}</strong><small>${SIAB.escape(t.conceito)}</small></span><span>${SIAB.progresso.dados.temas[t.id]?.concluida ? "Concluído" : "Não realizado"}</span></a>`,
+          `<a class="content-row" href="#/tema/${t.id}"><span><strong>${SIAB.escape(t.titulo)}</strong><small>${SIAB.escape(t.conceito)}</small></span><span>${SIAB.progresso.dados.temas[t.id]?.concluida ? "Revisado" : "Não revisado"}</span></a>`,
       )
       .join("");
   },
@@ -25901,7 +25719,7 @@ SIAB.telas.tema = {
       r.tubos.some((x) => x.solution === t.solution),
     );
     SIAB.$("tema-conteudo").innerHTML =
-      `<p class="eyebrow">APRENDER · TEMA</p><h1 data-foco tabindex="-1">${SIAB.escape(t.titulo)}</h1><p class="lead">${SIAB.escape(t.conceito)}</p><p>Investigue na bancada e use o VER para conectar observações, medidas e representações do modelo.</p><div class="actions"><button class="primary-btn" data-tema-bancada="${t.id}">Investigar na bancada</button>${missao ? `<a class="secondary-btn" href="#/missao/${missao.id}">Missão relacionada</a>` : ""}${roteiro ? `<a class="secondary-btn" href="#/roteiro/${roteiro.id}">Roteiro relacionado</a>` : ""}<button class="quiet-btn" data-tema-concluir="${t.id}">${SIAB.progresso.dados.temas[id]?.concluida ? "Concluído" : "Marcar como concluído"}</button></div>`;
+      `<p class="eyebrow">APRENDER · TEMA</p><h1 data-foco tabindex="-1">${SIAB.escape(t.titulo)}</h1><p class="lead">${SIAB.escape(t.conceito)}</p><p>Investigue na bancada e use o VER para conectar observações, medidas e representações do modelo.</p><div class="actions"><button class="primary-btn" data-tema-bancada="${t.id}">Investigar na bancada</button>${missao ? `<a class="secondary-btn" href="#/missao/${missao.id}">Missão relacionada</a>` : ""}${roteiro ? `<a class="secondary-btn" href="#/roteiro/${roteiro.id}">Roteiro relacionado</a>` : ""}<button class="quiet-btn" data-tema-concluir="${t.id}">${SIAB.progresso.dados.temas[id]?.concluida ? "Revisado" : "Marcar como revisado"}</button></div>`;
   },
 };
 SIAB.telas.missoes = {
@@ -25934,20 +25752,25 @@ SIAB.identificacaoHTML = (valores = {}) =>
     )
     .join("")}</fieldset>`;
 SIAB.montarExperimento = (r, identificacao = {}) => {
-  if (SIAB.ActivityContext?.restricted()) { SIAB.notice("Montagem definida pela atividade."); return false; }
+  if (SIAB.ActivityContext?.restricted()) {
+    SIAB.notice("Montagem definida pela atividade.");
+    return false;
+  }
   if (!r || r.tubos.length > SIAB.MAX_TUBES)
     throw new Error("Montagem inválida.");
   const bench = SIAB.criarBancada(),
     groups = {};
   bench.level = r.modulo;
-  bench.verTab = "ph";
+  bench.verTab = r.ver || "ph";
+  bench.initialView = bench.verTab;
   r.tubos.forEach((spec) => {
     const { grupo, ...x } = spec;
     if (grupo && !groups[grupo]) groups[grupo] = bench.nextGroup++;
     SIAB.newTube(
       {
         ...x,
-        temperature: SIAB.atividades?.ativa?.config.temperatura ?? 25,
+        temperature:
+          x.temperature ?? SIAB.atividades?.ativa?.config.temperatura ?? 25,
         group: grupo ? groups[grupo] : null,
         groupMode: "drops",
         groupShare: { contaGotas: true, substancia: false },
@@ -25994,7 +25817,7 @@ SIAB.telas.roteiro = {
     }
     const esc = SIAB.escape;
     SIAB.$("roteiro-conteudo").innerHTML =
-      `<h1 data-foco tabindex="-1">${esc(r.titulo)}</h1><p class="lead">${esc(r.subtitulo)}</p><p class="eyebrow">${SIAB.MODULOS[r.modulo].nome}</p><section><h2>O problema</h2><p>${esc(r.problema)}</p></section><section><h2>Pergunta central</h2><p>${esc(r.pergunta)}</p></section><section><h2>Objetivo</h2><p>${esc(r.objetivo)}</p></section><section><h2>O que você vai fazer</h2><ol>${r.tarefas.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section><section><h2>Na bancada</h2><ul>${r.tubos.map((t) => `<li>${esc(SIAB.solutions[t.solution].name)} · ${SIAB.format(t.initialVolume || 1)} mL · ${esc(SIAB.indicators[t.indicator || "btb"].name)}</li>`).join("")}</ul></section><section><h2>O que observar</h2><p>${esc(r.observar)}</p></section><form data-start-experiment="${r.id}">${SIAB.identificacaoHTML()}<button class="primary-btn">Montar na bancada</button></form>`;
+      `<h1 data-foco tabindex="-1">${esc(r.titulo)}</h1><p class="lead">${esc(r.subtitulo)}</p><p class="eyebrow">${SIAB.MODULOS[r.modulo].nome}</p><section><h2>O problema</h2><p>${esc(r.problema)}</p></section>${r.modulo === "explorar" ? `<section><h2>Pergunta central</h2><p>${esc(r.pergunta)}</p></section>` : ""}<section><h2>Objetivo</h2><p>${esc(r.objetivo)}</p></section><section><h2>O que você vai fazer</h2><ol>${r.tarefas.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section><section><h2>Na bancada</h2><ul>${r.tubos.map((t) => `<li>${esc(SIAB.solutions[t.solution].name)} · ${SIAB.format(t.initialVolume || 1)} mL · ${esc(SIAB.indicators[t.indicator || "btb"].name)}</li>`).join("")}</ul></section><section><h2>O que observar</h2><p>${esc(r.observar)}</p></section><form data-start-experiment="${r.id}">${SIAB.identificacaoHTML()}<button class="primary-btn">Montar na bancada</button></form>`;
   },
 };
 SIAB.telas.montagens = {
@@ -26004,7 +25827,7 @@ SIAB.telas.montagens = {
     SIAB.$("montagens-lista").innerHTML = SIAB.montagens
       .map(
         (r) =>
-          `<article class="setup-card"><h2>${SIAB.escape(r.titulo)}</h2><p>Configuração rápida para ${SIAB.escape(r.titulo.toLowerCase())}.</p><p>${r.tubos.map((t) => SIAB.escape(SIAB.solutions[t.solution].name)).join(" · ")}</p><h3>O que observar</h3><p>Compare cor, volume e leituras antes e depois da adição. Examine as espécies no VER.</p><button class="secondary-btn" data-montagem="${r.id}">Montar na bancada</button></article>`,
+          `<article class="setup-card"><h2>${SIAB.escape(r.titulo)}</h2><p>${SIAB.escape(r.objetivo)}</p><p class="eyebrow">${SIAB.MODULOS[r.nivel].nome} · ${r.tubos.length} recipientes</p><p>${r.tubos.map((t) => SIAB.escape(SIAB.solutions[t.solution].name)).join(" · ")}</p><p><strong>Instrumentos:</strong> ${r.instrumentos.map(SIAB.escape).join(" · ")}</p><p><strong>Visualização inicial:</strong> ${SIAB.escape(SIAB.VER_SECTIONS.flatMap((g) => g.items).find((x) => x.id === r.ver)?.label || r.ver)}</p><h3>Investigue</h3><ol>${r.passos.map((x) => `<li>${SIAB.escape(x)}</li>`).join("")}</ol><p><strong>Recursos recomendados:</strong> ${r.recursos.map(SIAB.escape).join(" · ")}</p><button class="secondary-btn" data-montagem="${r.id}">Montar na bancada</button></article>`,
       )
       .join("");
   },
@@ -26015,6 +25838,11 @@ SIAB.montarMontagem = (id) => {
   if (!m) return;
   SIAB.montarExperimento({ ...m, modulo: m.nivel });
   delete SIAB.state.experiencia;
+  SIAB.state.montagem = { id: m.id, titulo: m.titulo, objetivo: m.objetivo };
+  SIAB.state.reportViews = [m.ver];
+  if (m.visao) SIAB.state.view = m.visao;
+  SIAB.render(true);
+  SIAB.atividades?.salvarSessao();
   SIAB.notice(
     "Montagem pronta. Escolha um instrumento para iniciar as medidas.",
   );
@@ -26026,14 +25854,21 @@ SIAB.montarMontagem = (id) => {
 SIAB.relatorios = (() => {
   const esc = SIAB.escape;
   let atual = null,
-    emBranco = false;
+    rendering = false;
   const campos = [
     ["observacoes", "Observações"],
+    ["analise", "Análise"],
     ["interpretacao", "Interpretação"],
-    ["resposta", "Resposta à Pergunta central"],
+    ["resposta", "Resposta à investigação"],
     ["conclusao", "Conclusão"],
   ];
   const lerTodos = () => SIAB.persistencia.ler("siab_relatorios_v1", {});
+  const concentrationLabel = (id, concentration, dilution = 1) =>
+    id === "water"
+      ? "Solvente"
+      : SIAB.isEveryday(id)
+        ? `Composição representativa · diluição ${SIAB.format(dilution, 0)}×`
+        : `${SIAB.format(concentration, 4)} mol/L`;
   function capturar() {
     const ctx = SIAB.ActivityContext.current;
     if (ctx && ctx.stage === "apresentacao") return null;
@@ -26046,8 +25881,59 @@ SIAB.relatorios = (() => {
     const rows = b.tubes.map((t) => {
       const c = SIAB.chem.solve(t),
         m = SIAB.instrumentos.leitura(t);
+      const raw = SIAB.instrumentos.raw(t),
+        first = raw[0],
+        initial = first?.context;
+      const concentration = initial?.concentracao ?? t.concentration;
+      const components =
+        initial?.componentes || (!initial ? t.componentes : null);
       return {
         nome: t.name,
+        inicial: {
+          solucao: components?.length
+            ? components
+                .map((x) => SIAB.solutions[x.id]?.name || x.id)
+                .join(" + ")
+            : SIAB.solutions[initial?.solucao || t.solution]?.name,
+          vidraria:
+            SIAB.VIDRARIAS[initial?.vidraria || t.vidraria || b.vidraria]
+              ?.nome || "Recipiente",
+          concentracao: components?.length
+            ? components
+                .map(
+                  (x) =>
+                    `${SIAB.solutions[x.id].name}: ${concentrationLabel(x.id, x.concentration, x.dilution)} em ${SIAB.format(x.volume)} mL`,
+                )
+                .join("; ")
+            : concentrationLabel(
+                initial?.solucao || t.solution,
+                concentration,
+                initial?.diluicao || t.dilution,
+              ),
+          volume: components?.length
+            ? components.reduce((v, x) => v + x.volume, 0)
+            : (initial?.volumeInicial ?? t.initialVolume),
+          temperatura: first?.temperatura ?? t.temperature,
+          indicador: SIAB.ActivityContext.allows("measurements.indicator")
+            ? SIAB.indicators[initial?.indicador || t.indicator]?.name ||
+              "Sem indicador"
+            : "Sem indicador",
+          origem: first
+            ? "Preparo associado ao primeiro registro"
+            : "Preparo atual; sem registro anterior",
+        },
+        reagente: {
+          nome: SIAB.solutions[t.titrant]?.name,
+          concentracao: t.titrantConcentration,
+          descricao: concentrationLabel(
+            t.titrant,
+            t.titrantConcentration,
+            t.titrantDilution,
+          ),
+          incremento: t.dropVolume,
+          tecnica: "Conta-gotas simulado",
+        },
+        estado: c.phase,
         conteudo: SIAB.resumoConteudo(t),
         vidraria: SIAB.VIDRARIAS[t.vidraria || b.vidraria].nome,
         volume: c.volume,
@@ -26084,9 +25970,20 @@ SIAB.relatorios = (() => {
             .filter((m) => ["fita", "phmetro"].includes(m.tecnica)).length >= 2
             ? SIAB.graficoMedido(t)
             : "",
-        historico: SIAB.ActivityContext.allows("analysis.history")
-          ? SIAB.historicoHTML(t)
-          : "",
+        derivada:
+          b.reportViews?.includes("derivada") && SIAB.verDisponivel("derivada")
+            ? SIAB.graficoMedido(t, true)
+            : "",
+        distribuicao:
+          b.reportViews?.includes("distribuicao") &&
+          SIAB.verDisponivel("distribuicao")
+            ? SIAB.grafico.distribuicao(t, c) || ""
+            : "",
+        graficoCondutividade:
+          b.reportViews?.includes("condutividade") &&
+          SIAB.ActivityContext.allows("measurements.conductivity")
+            ? conductivityChart(raw)
+            : "",
         calculos:
           b.level === "calcular" &&
           (SIAB.ActivityContext.allows("representations.equations") ||
@@ -26117,6 +26014,14 @@ SIAB.relatorios = (() => {
         .filter(([k]) => SIAB.ActivityContext.allows("measurements." + k))
         .map(([, v]) => v.id),
       origem: r ? "roteiro" : "livre",
+      montagem: b.montagem || null,
+      missao:
+        SIAB.activeBench === "mission" && SIAB.motor.ativa
+          ? {
+              titulo: SIAB.motor.ativa.def.titulo,
+              objetivo: SIAB.motor.ativa.def.resumo,
+            }
+          : null,
       roteiro: r
         ? {
             id: r.id,
@@ -26134,6 +26039,7 @@ SIAB.relatorios = (() => {
         SIAB.atividades?.ativa?.identificacao ||
         {},
       aluno: old?.aluno || {},
+      configuracao: old?.configuracao || defaults(),
       recipientes: rows,
       atualizado: new Date().toISOString(),
     };
@@ -26160,47 +26066,357 @@ SIAB.relatorios = (() => {
     ];
     return `<h4>Cálculos do modelo</h4><p>Preparo inicial, antes das adições registradas nesta etapa:</p>${partes.map((x) => `<p>${esc(x.nome)}: ${x.agua ? "solvente" : x.amostra ? "composição representativa parcial; não se atribui um único número de mols à amostra" : `n = C·V = ${SIAB.format(x.concentracao, 4)} mol/L × ${SIAB.format(x.volume / 1000, 5)} L = ${SIAB.cientifico(x.mmol / 1000)} mol`}.</p>`).join("")}<p>pKw(T) = ${SIAB.format(c.pKw)}. Volumes de equivalência previstos: ${c.equivalencias.length ? c.equivalencias.map((v) => SIAB.format(v) + " mL").join(", ") : "não se aplica"}.</p>`;
   }
-  function html({ editar = false, branco = false } = {}) {
+  const inclusoes = {
+    iniciais: "Condições iniciais",
+    dados: "Dados experimentais",
+    tabela: "Tabela",
+    grafico: "Gráficos",
+    finais: "Estado final",
+    calculos: "Cálculos",
+  };
+  function defaults() {
+    return {
+      modo: "completo",
+      linhas: 10,
+      porCampo: {},
+      incluir: Object.fromEntries(Object.keys(inclusoes).map((k) => [k, true])),
+      vazios: Object.fromEntries(campos.map(([k]) => [k, true])),
+      fonte: "bancada",
+      hipoteticos: [],
+      proposta: "",
+      pergunta: "",
+    };
+  }
+  function config() {
+    atual.configuracao = { ...defaults(), ...atual.configuracao };
+    return atual.configuracao;
+  }
+  const limitLines = (v) =>
+    Math.max(5, Math.min(60, Math.round(Number(v) || 10)));
+  const teacher = () => !SIAB.ActivityContext.current;
+  function configure(patch) {
+    if (!atual || !SIAB.ActivityContext.allows("report.edit")) return false;
+    if (
+      !teacher() &&
+      (patch.modo === "analise" || patch.fonte === "hipoteticos")
+    )
+      return false;
+    const c = config();
+    if (patch.linhas !== undefined) patch.linhas = limitLines(patch.linhas);
+    if (patch.porCampo)
+      patch.porCampo = Object.fromEntries(
+        Object.entries(patch.porCampo).map(([k, v]) => [k, limitLines(v)]),
+      );
+    Object.assign(c, patch);
+    salvar();
+    return c;
+  }
+  function conductivityChart(raw) {
+    const points = raw.filter((m) => m.tecnica === "condutividade");
+    if (points.length < 2) return "";
+    // Pontos independentes: preparos e técnicas diferentes nunca são ligados.
+    const maxX = Math.max(0.05, ...points.map((m) => m.adicionado)),
+      maxY = Math.max(1, ...points.map((m) => m.valor));
+    return `<figure><figcaption>Condutividade registrada × volume adicionado (pontos independentes)</figcaption><svg class="grafico-medido" viewBox="0 0 360 215" role="img" aria-label="Condutividade registrada em µS/cm por volume adicionado em mL"><path d="M55 20v150h280" fill="none" stroke="currentColor"/>${points.map((m) => `<circle cx="${55 + (m.adicionado / maxX) * 270}" cy="${170 - (m.valor / maxY) * 140}" r="3" fill="currentColor"><title>${SIAB.format(m.adicionado)} mL · ${SIAB.format(m.valor)} µS/cm</title></circle>`).join("")}<text x="55" y="190">0</text><text x="280" y="190">${SIAB.format(maxX)} mL</text><text x="8" y="20">${SIAB.format(maxY)}</text><text x="8" y="205">µS/cm · dados instrumentais simulados</text></svg></figure>`;
+  }
+  function table(headers, rows, label) {
+    return `<div class="table-scroll report-table" tabindex="0" role="region" aria-label="${esc(label)}"><table><caption>${esc(label)}</caption><thead><tr>${headers.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((v) => `<td>${esc(v ?? "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }
+  function hypotheses(text) {
+    if (!teacher()) throw new Error("Disponível na preparação do professor.");
+    const lines = String(text).trim().split(/\r?\n/).filter(Boolean);
+    if (!lines.length || lines.length > 200)
+      throw new Error("Informe entre 1 e 200 linhas de dados.");
+    return lines.map((line, i) => {
+      const values = line.split(";").map((v) => v.trim().replace(",", "."));
+      if (
+        values.length !== 4 ||
+        values.some((v) => !v.length || !Number.isFinite(Number(v)))
+      )
+        throw new Error(
+          `Linha ${i + 1}: informe quatro números separados por ponto e vírgula.`,
+        );
+      const [adicionado, ph, temperatura, condutividade] = values.map(Number);
+      if (
+        adicionado < 0 ||
+        adicionado > 10000 ||
+        ph < 0 ||
+        ph > 14 ||
+        temperatura < 0 ||
+        temperatura > 100 ||
+        condutividade < 0 ||
+        condutividade > 1e7
+      )
+        throw new Error(`Linha ${i + 1}: valor fora dos limites indicados.`);
+      return { adicionado, ph, temperatura, condutividade };
+    });
+  }
+  function rowsFor(mode) {
+    const c = config();
+    if (mode !== "analise" || c.fonte !== "hipoteticos" || !teacher())
+      return atual.recipientes;
+    const initial = atual.recipientes[0]?.inicial || {
+      solucao: "Situação definida pelo professor",
+      vidraria: "Recipiente",
+      concentracao: "Não informada",
+      volume: 0,
+      temperatura: 25,
+      indicador: "Não informado",
+      origem: "Condições da situação hipotética",
+    };
+    const data = c.hipoteticos,
+      last = data.at(-1);
+    const raw = data.flatMap((m, i) => [
+      {
+        tecnica: "phmetro",
+        valor: m.ph,
+        unidade: "pH",
+        adicionado: m.adicionado,
+        temperatura: m.temperatura,
+        volume: initial.volume + m.adicionado,
+        context: { hipotetico: true },
+        id: `h-${i}`,
+      },
+      {
+        tecnica: "condutividade",
+        valor: m.condutividade,
+        unidade: "µS/cm",
+        adicionado: m.adicionado,
+        temperatura: m.temperatura,
+        volume: initial.volume + m.adicionado,
+        context: { hipotetico: true },
+        id: `c-${i}`,
+      },
+    ]);
+    return [
+      {
+        nome: "Situação hipotética",
+        inicial: initial,
+        reagente: atual.recipientes[0]?.reagente,
+        volume: last ? initial.volume + last.adicionado : initial.volume,
+        temperatura: last?.temperatura ?? initial.temperatura,
+        ph: last?.ph ?? "—",
+        instrumento: "Dados hipotéticos fornecidos pelo professor",
+        cor: "Não informada",
+        estado: "Hipótese didática",
+        usedInstruments: [],
+        rawMeasurements: raw,
+        hipoteticos: data,
+        graficoCondutividade: conductivityChart(raw),
+      },
+    ];
+  }
+  function hypotheticalGraph(rows) {
+    if (rows.length < 2) return "";
+    const max = Math.max(0.05, ...rows.map((r) => r.adicionado));
+    return `<figure><figcaption>pH × volume · dados hipotéticos</figcaption><svg class="grafico-medido" viewBox="0 0 360 215" role="img" aria-label="pH por volume adicionado, dados hipotéticos"><path d="M40 20v150h285" fill="none" stroke="currentColor"/><text x="5" y="22">pH 14</text><text x="15" y="175">0</text><text x="40" y="195">0</text><text x="265" y="195">${SIAB.format(max)} mL</text>${rows.map((r) => `<circle cx="${40 + (r.adicionado / max) * 280}" cy="${170 - (r.ph / 14) * 145}" r="3" fill="currentColor"><title>${SIAB.format(r.adicionado)} mL · pH ${SIAB.format(r.ph)}</title></circle>`).join("")}</svg></figure>`;
+  }
+  function writing(k, label) {
+    const n = limitLines(config().porCampo[k] ?? config().linhas);
+    return `<div class="writing-space" data-writing-field="${k}" data-lines="${n}" aria-label="${esc(label)}: ${n} linhas">${Array.from({ length: n }, (_, i) => `<div class="response-line" data-line="${i + 1}"><span class="sr-only">Linha ${i + 1}</span></div>`).join("")}</div>`;
+  }
+  function html({ editar = false, branco = false, modo } = {}) {
     if (!atual) return "<p>Nenhum relatório disponível.</p>";
     const r = atual,
-      ex = r.roteiro;
-    const ident = editar
-      ? SIAB.identificacaoHTML(r.identificacao)
-      : `<dl class="report-ident">${[
-          ["nome", "Nome"],
-          ["turma", "Turma"],
-          ["data", "Data"],
-          ["professor", "Professor"],
-          ["grupo", "Grupo"],
-        ]
+      c = config(),
+      mode = branco ? "mao" : modo || c.modo;
+    const effectiveMode = mode === "analise" && !teacher() ? "completo" : mode;
+    const included = (key) =>
+      effectiveMode !== "analise" || c.incluir[key] !== false;
+    const blank = (key) =>
+      effectiveMode === "mao" ||
+      (effectiveMode === "analise" && c.vazios[key] !== false);
+    const rows = rowsFor(effectiveMode),
+      source = r.roteiro || r.montagem || r.missao;
+    const ident =
+      editar && effectiveMode === "completo"
+        ? SIAB.identificacaoHTML(r.identificacao)
+        : `<dl class="report-ident">${[
+            ["nome", "Nome"],
+            ["turma", "Turma"],
+            ["data", "Data"],
+            ["professor", "Professor"],
+            ["grupo", "Grupo"],
+          ]
+            .map(
+              ([k, l]) =>
+                `<div><dt>${l}</dt><dd>${esc(r.identificacao[k] || "________________________________")}</dd></div>`,
+            )
+            .join("")}</dl>`;
+    let content = `<article class="digital-report" data-report-mode="${effectiveMode}"><header><div class="report-brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHJvbGU9ImltZyIgYXJpYS1sYWJlbGxlZGJ5PSJzaWFiLWljb24tdGl0bGUgc2lhYi1pY29uLWRlc2MiPgogIDx0aXRsZSBpZD0ic2lhYi1pY29uLXRpdGxlIj5TSUFCIOKAlCBBIHF1w61taWNhIGRhcyBjb3JlczwvdGl0bGU+CiAgPGRlc2MgaWQ9InNpYWItaWNvbi1kZXNjIj5VbWEgZ290YSBzb2JyZSB1bSB0dWJvIGRlIGVuc2FpbyBjb20gbMOtcXVpZG8gZW0gZGVncmFkw6ogZG8gdmVybWVsaG8gYW8gcm94by48L2Rlc2M+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItb3V0bGluZSIgeDE9IjkiIHkxPSIxMCIgeDI9IjIzIiB5Mj0iMjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4zNCIgc3RvcC1jb2xvcj0iI0RCMjc3NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii42NSIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItbGlxdWlkIiB4MT0iMTIiIHkxPSIxOCIgeDI9IjIwIiB5Mj0iMjYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii40OCIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItZHJvcCIgeDE9IjEzLjMiIHkxPSIyIiB4Mj0iMTguNyIgeTI9IjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQjI3NzciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGQ9Ik0xNiAyQzE1LjIgMy41IDEzLjMgNS42IDEzLjMgN2EyLjcgMi43IDAgMCAwIDUuNCAwYzAtMS40LTEuOS0zLjUtMi43LTVaIiBmaWxsPSJ1cmwoI3NpYWItZHJvcCkiLz4KICA8cGF0aCBkPSJNMTAgMTF2MTJhNiA2IDAgMCAwIDEyIDBWMTFNOC41IDExaDE1IiBzdHJva2U9InVybCgjc2lhYi1vdXRsaW5lKSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xMiAxOGMyLjUtMS41IDUuNSAxLjUgOCAwdjVhNCA0IDAgMCAxLTggMFoiIGZpbGw9InVybCgjc2lhYi1saXF1aWQpIi8+Cjwvc3ZnPgo=" width="40" height="40" alt=""><strong>SIAB</strong></div><p class="eyebrow">${{ completo: "Relatório completo", mao: "Para preencher à mão", analise: "Atividade de análise" }[effectiveMode]}</p><h1 data-foco tabindex="-1">${r.roteiro ? "Relatório da Experiência" : "Relatório da Bancada"}</h1>${source ? `<p class="lead">${esc(source.titulo)}</p>` : ""}<p>Módulo ${SIAB.MODULOS[r.modulo].nome} · ${SIAB.version}</p><h2>1. Identificação</h2>${ident}</header>`;
+    content += `<section data-report-section="proposta"><h2>2. Proposta experimental</h2>${effectiveMode === "analise" && c.proposta ? `<p>${esc(c.proposta)}</p>` : source ? `<p>${esc(source.objetivo || source.problema || "")}</p>${r.roteiro?.modulo === "explorar" || (r.modulo === "explorar" && r.roteiro) ? `<h3>Pergunta central</h3><p>${esc(r.roteiro.pergunta)}</p>` : ""}` : "<p>Investigação livre: descreva a questão investigada na resposta à investigação.</p>"}${effectiveMode === "analise" && c.pergunta ? `<h3>Questão para investigar</h3><p>${esc(c.pergunta)}</p>` : ""}${effectiveMode === "analise" && c.fonte === "hipoteticos" ? '<p class="report-source">Dados hipotéticos fornecidos pelo professor; não são medições da bancada. Condições de referência: primeiro recipiente preparado.</p>' : '<p class="report-source">Dados da bancada virtual. Leituras instrumentais simuladas e previsões do modelo são identificadas separadamente.</p>'}</section>`;
+    if (included("iniciais"))
+      content += `<section data-report-section="iniciais"><h2>3. Condições iniciais</h2>${table(
+        [
+          "Recipiente",
+          "Vidraria",
+          "Solução",
+          "Concentração",
+          "Volume inicial",
+          "Indicador",
+          "Temperatura",
+        ],
+        rows.map((t) => {
+          const i = t.inicial || {};
+          return [
+            t.nome,
+            i.vidraria || t.vidraria,
+            i.solucao || t.conteudo,
+            i.concentracao || "Não registrada",
+            `${SIAB.format(i.volume ?? t.volume)} mL`,
+            i.indicador || t.indicador,
+            `${SIAB.format(i.temperatura ?? t.temperatura, 1)} °C`,
+          ];
+        }),
+        "Preparo inicial",
+      )}${rows.map((t) => `<p class="field-hint">${esc(t.nome)}: ${esc(t.inicial?.origem || "Condições preservadas em relatório anterior")}</p>`).join("")}${table(
+        [
+          "Recipiente",
+          "Substância adicionada",
+          "Concentração",
+          "Incremento",
+          "Técnica",
+        ],
+        rows
+          .filter((t) => t.reagente)
+          .map((t) => [
+            t.nome,
+            t.reagente.nome,
+            t.reagente.descricao ||
+              `${SIAB.format(t.reagente.concentracao, 4)} mol/L`,
+            `${SIAB.format(t.reagente.incremento)} mL`,
+            t.reagente.tecnica,
+          ]),
+        "Reagente e adição",
+      )}</section>`;
+    if (included("dados") || included("tabela")) {
+      content +=
+        '<section data-report-section="dados"><h2>4. Dados experimentais</h2>';
+      if (included("dados")) content += tabela(rows);
+      if (included("tabela"))
+        content += rows
           .map(
-            ([k, l]) =>
-              `<div><dt>${l}</dt><dd>${branco ? "________________________________" : esc(r.identificacao[k] || "________________________________")}</dd></div>`,
+            (t) =>
+              `<section class="report-result"><h3>${esc(t.nome)} · Tabela experimental</h3><p>Técnicas efetivamente registradas: ${t.hipoteticos ? "não se aplica aos dados hipotéticos" : t.usedInstruments?.length ? t.usedInstruments.map((id) => esc(SIAB.medicoes.resolution[id]?.nome || id)).join(", ") : "Nenhuma medição registrada"}.</p>${
+                t.hipoteticos
+                  ? table(
+                      [
+                        "V adicionado (mL)",
+                        "pH",
+                        "T (°C)",
+                        "Condutividade (µS/cm)",
+                      ],
+                      t.hipoteticos.map((m) => [
+                        SIAB.format(m.adicionado),
+                        SIAB.format(m.ph),
+                        SIAB.format(m.temperatura, 1),
+                        SIAB.format(m.condutividade),
+                      ]),
+                      "Dados hipotéticos",
+                    )
+                  : t.tabelaCompacta ||
+                    (t.tabela
+                      ? SIAB.medicoes.markup(t.tabela)
+                      : "<p>Nenhuma tabela disponível neste contexto.</p>")
+              }${t.condutividade ? `<p>Condutividade registrada: ${SIAB.format(t.condutividade.valor)} µS/cm.</p>` : ""}</section>`,
           )
-          .join("")}</dl>`;
-    let content = `<article class="digital-report"><header><div class="report-brand"><img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHJvbGU9ImltZyIgYXJpYS1sYWJlbGxlZGJ5PSJzaWFiLWljb24tdGl0bGUgc2lhYi1pY29uLWRlc2MiPgogIDx0aXRsZSBpZD0ic2lhYi1pY29uLXRpdGxlIj5TSUFCIOKAlCBBIHF1w61taWNhIGRhcyBjb3JlczwvdGl0bGU+CiAgPGRlc2MgaWQ9InNpYWItaWNvbi1kZXNjIj5VbWEgZ290YSBzb2JyZSB1bSB0dWJvIGRlIGVuc2FpbyBjb20gbMOtcXVpZG8gZW0gZGVncmFkw6ogZG8gdmVybWVsaG8gYW8gcm94by48L2Rlc2M+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItb3V0bGluZSIgeDE9IjkiIHkxPSIxMCIgeDI9IjIzIiB5Mj0iMjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4zNCIgc3RvcC1jb2xvcj0iI0RCMjc3NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii42NSIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItbGlxdWlkIiB4MT0iMTIiIHkxPSIxOCIgeDI9IjIwIiB5Mj0iMjYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii40OCIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItZHJvcCIgeDE9IjEzLjMiIHkxPSIyIiB4Mj0iMTguNyIgeTI9IjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQjI3NzciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGQ9Ik0xNiAyQzE1LjIgMy41IDEzLjMgNS42IDEzLjMgN2EyLjcgMi43IDAgMCAwIDUuNCAwYzAtMS40LTEuOS0zLjUtMi43LTVaIiBmaWxsPSJ1cmwoI3NpYWItZHJvcCkiLz4KICA8cGF0aCBkPSJNMTAgMTF2MTJhNiA2IDAgMCAwIDEyIDBWMTFNOC41IDExaDE1IiBzdHJva2U9InVybCgjc2lhYi1vdXRsaW5lKSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xMiAxOGMyLjUtMS41IDUuNSAxLjUgOCAwdjVhNCA0IDAgMCAxLTggMFoiIGZpbGw9InVybCgjc2lhYi1saXF1aWQpIi8+Cjwvc3ZnPgo=" width="40" height="40" alt=""><strong>SIAB</strong></div><h1 data-foco tabindex="-1">${ex ? "Relatório da Experiência" : "Relatório da Bancada"}</h1>${ex ? `<h2>${esc(ex.titulo)}</h2><p>${esc(ex.subtitulo)}</p>` : ""}<p>Módulo ${SIAB.MODULOS[r.modulo].nome}</p>${ident}</header>`;
-    if (ex)
-      content += `<section><h2>1. Proposta</h2><h3>O problema</h3><p>${esc(ex.problema)}</p><h3>Pergunta central</h3><p>${esc(ex.pergunta)}</p><h3>Objetivo</h3><p>${esc(ex.objetivo)}</p></section>`;
-    content += `<section><h2>${ex ? "2. " : ""}Montagem experimental</h2><ul>${r.recipientes.map((t) => `<li>${esc(t.nome)} · ${esc(t.vidraria)} · ${esc(t.conteudo)} · ${esc(t.indicador)}</li>`).join("")}</ul></section><section><h2>${ex ? "3. " : ""}Resultados experimentais</h2>${branco ? '<div class="writing-space"></div>' : tabela(r.recipientes)}`;
-    if (!branco)
-      content += r.recipientes
-        .map(
-          (t) =>
-            `<section class="report-result"><h3>${esc(t.nome)}</h3><p>Técnicas efetivamente registradas: ${t.usedInstruments?.length ? t.usedInstruments.map((id) => esc(SIAB.medicoes.resolution[id]?.nome || id)).join(", ") : "Nenhuma medição registrada"}.</p>${t.grafico || ""}${t.tabelaCompacta || (t.tabela ? SIAB.medicoes.markup(t.tabela) : "")}${t.historico || ""}${t.condutividade ? `<p>Condutividade registrada: ${SIAB.format(t.condutividade.valor)} µS/cm · mobilidades de referência a 25 °C.</p>` : ""}${t.calculos ? calculosHTML(t.calculos) : ""}</section>`,
-        )
-        .join("");
-    content +=
-      '</section><p class="report-student-label">As seções seguintes são preenchidas pelo estudante.</p>';
-    campos
-      .filter(([k]) => ex || k !== "resposta")
-      .forEach(([k, label], i) => {
-        content += `<section><h2>${ex ? `${i + 4}. ` : ""}${label}</h2>${editar ? `<label class="sr-only" for="rel-${k}">${label}</label><textarea id="rel-${k}" data-report-field="${k}" rows="5" maxlength="16000">${esc(r.aluno[k] || "")}</textarea>` : branco ? '<div class="writing-space"></div>' : `<p class="student-text">${esc(r.aluno[k] || "Não preenchido.")}</p>`}</section>`;
+          .join("");
+      content += "</section>";
+    }
+    if (included("grafico") || included("calculos")) {
+      content +=
+        '<section data-report-section="representacoes"><h2>5. Representações</h2>';
+      rows.forEach((t) => {
+        const chart = (label, content) =>
+          content
+            ? `<figure class="report-chart"><figcaption>${esc(label)}</figcaption>${content}</figure>`
+            : "";
+        const graphs = included("grafico")
+          ? [
+              t.hipoteticos
+                ? hypotheticalGraph(t.hipoteticos)
+                : chart(
+                    "pH × volume adicionado · leituras instrumentais",
+                    t.grafico,
+                  ),
+              chart(
+                "ΔpH/ΔV × volume adicionado · análise das leituras",
+                t.derivada?.replace(/<details>[\s\S]*?<\/details>/g, ""),
+              ),
+              chart(
+                "Distribuição de espécies · previsão do modelo",
+                t.distribuicao?.replace(/<button[^>]*>(.*?)<\/button>/g, "$1"),
+              ),
+              t.graficoCondutividade,
+            ]
+              .filter(Boolean)
+              .join("")
+          : "";
+        content += `<section class="report-result"><h3>${esc(t.nome)}</h3>${graphs || (included("grafico") ? "<p>Nenhum gráfico produzido com os recursos disponíveis.</p>" : "")}${included("calculos") && t.calculos ? calculosHTML(t.calculos) : ""}</section>`;
       });
-    content += `<section><h2>${ex ? "8. " : ""}Nota sobre o modelo</h2><p>Equilíbrio aquoso ideal. pKw varia com a temperatura; demais constantes e mobilidades usam referências a 25 °C. Amostras representativas têm composição parcial. CO₂ usa sistema fechado simplificado; bolhas são ilustrativas. Solubilidade modelada apenas quando há dados. Leituras instrumentais e cálculos estão identificados separadamente.</p></section></article>`;
+      content += "</section>";
+    }
+    if (included("finais"))
+      content += `<section data-report-section="finais"><h2>6. Condições finais</h2>${table(
+        [
+          "Recipiente",
+          "Volume final",
+          "pH (leitura)",
+          "Temperatura",
+          "Cor",
+          "Estado",
+        ],
+        rows.map((t) => [
+          t.nome,
+          `${SIAB.format(t.volume)} mL`,
+          t.ph,
+          `${SIAB.format(t.temperatura, 1)} °C`,
+          t.cor,
+          `${t.estado || "Estado registrado"}${t.qualidade ? " · " + t.qualidade : ""}`,
+        ]),
+        "Estado final",
+      )}</section>`;
+    function field(k, label) {
+      return `<div class="report-author-field" data-author-field="${k}"><h3>${esc(label)}</h3>${blank(k) ? writing(k, label) : editar && effectiveMode === "completo" ? `<label class="sr-only" for="rel-${k}">${esc(label)}</label><textarea id="rel-${k}" data-report-field="${k}" rows="5" maxlength="16000">${esc(r.aluno[k] || "")}</textarea>` : `<p class="student-text">${esc(r.aluno[k] || "Não preenchido.")}</p>`}</div>`;
+    }
+    content += `<p class="report-student-label">As seções seguintes são autorais.</p><section><h2>7. Observações</h2>${field("observacoes", "Observações")}</section><section><h2>8. Análise / interpretação</h2>${field("analise", "Análise")}${field("interpretacao", "Interpretação")}</section><section><h2>9. Resposta à investigação</h2>${field("resposta", "Resposta")}</section><section><h2>10. Conclusão</h2>${field("conclusao", "Conclusão")}</section><footer class="report-model-note"><h2>Nota sobre o modelo</h2><p>Equilíbrio aquoso ideal. pKw varia com a temperatura; demais constantes e mobilidades usam referências a 25 °C. Amostras representativas têm composição parcial. CO₂ usa sistema fechado simplificado; bolhas são ilustrativas. Solubilidade modelada apenas quando há dados. Leituras instrumentais e cálculos estão identificados separadamente.</p></footer></article>`;
     return content;
   }
+  function settingsHTML() {
+    const c = config(),
+      manual = c.modo !== "completo",
+      custom = ![5, 10, 15, 20, 25].includes(c.linhas);
+    return `<section class="report-settings" aria-labelledby="report-settings-title"><h2 id="report-settings-title">Preparar relatório</h2><div class="report-setting-grid"><label class="field">Modo<select id="report-mode"><option value="completo" ${c.modo === "completo" ? "selected" : ""}>Relatório completo</option><option value="mao" ${c.modo === "mao" ? "selected" : ""}>Para preencher à mão</option>${teacher() ? `<option value="analise" ${c.modo === "analise" ? "selected" : ""}>Atividade de análise · Professor</option>` : ""}</select></label>${manual ? `<label class="field">Linhas por campo<select id="report-lines">${[5, 10, 15, 20, 25].map((n) => `<option value="${n}" ${c.linhas === n ? "selected" : ""}>${n}</option>`).join("")}<option value="custom" ${custom ? "selected" : ""}>Personalizado</option></select></label><label class="field" id="report-custom-label" ${custom ? "" : "hidden"}>Quantidade (5 a 60)<input id="report-custom-lines" type="number" min="5" max="60" step="1" value="${c.linhas}"></label>` : ""}</div>${manual ? `<details><summary>Linhas por campo (opcional)</summary><div class="report-setting-grid">${campos.map(([k, l]) => `<label class="field">${l}<input type="number" min="5" max="60" step="1" data-lines-field="${k}" placeholder="${c.linhas}" value="${c.porCampo[k] || ""}"></label>`).join("")}</div></details>` : ""}${
+      c.modo === "analise" && teacher()
+        ? `<p>Prepare a bancada e selecione os dados que a turma deverá interpretar.</p><div class="report-setting-grid"><fieldset><legend>Incluir dados</legend>${Object.entries(
+            inclusoes,
+          )
+            .map(
+              ([k, l]) =>
+                `<label class="check-row"><input type="checkbox" data-report-include="${k}" ${c.incluir[k] !== false ? "checked" : ""}>${l}</label>`,
+            )
+            .join(
+              "",
+            )}</fieldset><fieldset><legend>Deixar em branco</legend>${campos.map(([k, l]) => `<label class="check-row"><input type="checkbox" data-report-blank="${k}" ${c.vazios[k] !== false ? "checked" : ""}>${l}</label>`).join("")}</fieldset></div><label class="field">Proposta para a turma<textarea data-report-setting="proposta" rows="2" maxlength="2000">${esc(c.proposta)}</textarea></label><label class="field">Questão para investigar<textarea data-report-setting="pergunta" rows="2" maxlength="2000">${esc(c.pergunta)}</textarea></label><label class="field">Origem dos dados<select id="report-source"><option value="bancada" ${c.fonte === "bancada" ? "selected" : ""}>Bancada virtual</option><option value="hipoteticos" ${c.fonte === "hipoteticos" ? "selected" : ""}>Dados hipotéticos do professor</option></select></label>${c.fonte === "hipoteticos" ? `<label class="field">Uma linha por situação: volume adicionado; pH; temperatura; condutividade<textarea id="report-hypotheses" rows="5" placeholder="0;2;25;1200&#10;0,5;3;25;900">${esc(c.hipoteticos.map((m) => [m.adicionado, m.ph, m.temperatura, m.condutividade].join(";")).join("\n"))}</textarea></label><p class="field-hint">Unidades: mL (0–10.000); pH (0–14); °C (0–100); µS/cm (0–10.000.000). Até 200 linhas. O preparo do primeiro recipiente fornece as condições iniciais. Estes valores serão identificados como hipotéticos.</p><button class="secondary-btn" id="report-use-hypotheses">Aplicar dados hipotéticos</button><p id="report-hypotheses-error" role="alert"></p>` : ""}`
+        : ""
+    }<p class="field-hint">${c.modo === "completo" ? "Os dados da bancada são automáticos. Identificação e textos são salvos enquanto você escreve." : "Os dados científicos permanecem na folha. As linhas são distribuídas entre páginas quando necessário."}</p></section>`;
+  }
   function render() {
-    SIAB.$("relatorio-conteudo").innerHTML = html({ editar: true });
+    if (rendering) return;
+    rendering = true;
+    try {
+      if (!atual) {
+        SIAB.$("relatorio-conteudo").innerHTML = html();
+        return;
+      }
+      if (!teacher() && config().modo === "analise") config().modo = "completo";
+      SIAB.$("relatorio-config").innerHTML = settingsHTML();
+      SIAB.$("relatorio-conteudo").innerHTML = html({ editar: true });
+      SIAB.refreshSelects?.();
+      SIAB.activityUI?.render?.();
+    } finally {
+      rendering = false;
+    }
   }
   function abrir(id) {
     if (!SIAB.ActivityContext.guard("report.view")) return false;
@@ -26216,7 +26432,6 @@ SIAB.relatorios = (() => {
       atual = lerTodos()[id] || null;
       if (!atual) SIAB.notice("Relatório não encontrado neste navegador.");
     } else capturar();
-    emBranco = false;
     SIAB.$("relatorio-atualizar").hidden = Boolean(
       id && id !== SIAB.state.reportId,
     );
@@ -26224,17 +26439,21 @@ SIAB.relatorios = (() => {
   }
   function preparar() {
     if (!atual) capturar();
-    SIAB.$("folha-impressao").innerHTML = html({ branco: emBranco });
+    SIAB.$("folha-impressao").innerHTML = html();
     document.body.classList.add("imprimindo", "imprimindo-folha");
   }
   function imprimir(branco = false) {
     if (!SIAB.ActivityContext.guard("report.print")) return false;
-    emBranco = branco;
+    if (branco) {
+      configure({ modo: "mao" });
+      render();
+    }
     preparar();
     window.print();
   }
   function ligar() {
-    const box = SIAB.$("relatorio-conteudo");
+    const box = SIAB.$("relatorio-conteudo"),
+      settings = SIAB.$("relatorio-config");
     box.addEventListener("input", (e) => {
       if (!atual || !SIAB.ActivityContext.allows("report.edit")) return;
       if (e.target.dataset.reportField)
@@ -26242,6 +26461,52 @@ SIAB.relatorios = (() => {
       else if (e.target.name)
         atual.identificacao[e.target.name] = e.target.value;
       salvar();
+    });
+    settings.addEventListener("change", (e) => {
+      if (rendering) return;
+      const el = e.target,
+        c = config();
+      if (el.id === "report-mode") configure({ modo: el.value });
+      else if (el.id === "report-lines") {
+        if (el.value === "custom") {
+          SIAB.$("report-custom-label").hidden = false;
+          SIAB.$("report-custom-lines").focus();
+          return;
+        }
+        configure({ linhas: el.value });
+      } else if (el.id === "report-custom-lines")
+        configure({ linhas: el.value });
+      else if (el.dataset.linesField) {
+        const fields = { ...c.porCampo };
+        if (el.value) fields[el.dataset.linesField] = limitLines(el.value);
+        else delete fields[el.dataset.linesField];
+        configure({ porCampo: fields });
+      } else if (el.dataset.reportInclude)
+        configure({
+          incluir: { ...c.incluir, [el.dataset.reportInclude]: el.checked },
+        });
+      else if (el.dataset.reportBlank)
+        configure({
+          vazios: { ...c.vazios, [el.dataset.reportBlank]: el.checked },
+        });
+      else if (el.dataset.reportSetting)
+        configure({ [el.dataset.reportSetting]: el.value });
+      else if (el.id === "report-source") configure({ fonte: el.value });
+      else return;
+      const focusId = el.id;
+      render();
+      if (focusId) SIAB.$(focusId)?.focus();
+    });
+    settings.addEventListener("click", (e) => {
+      if (!e.target.closest("#report-use-hypotheses")) return;
+      try {
+        configure({
+          hipoteticos: hypotheses(SIAB.$("report-hypotheses").value),
+        });
+        render();
+      } catch (error) {
+        SIAB.$("report-hypotheses-error").textContent = error.message;
+      }
     });
     SIAB.$("relatorio-print").onclick = () => imprimir();
     SIAB.$("relatorio-blank").onclick = () => imprimir(true);
@@ -26251,26 +26516,26 @@ SIAB.relatorios = (() => {
       SIAB.notice("Dados experimentais atualizados.");
     };
     SIAB.$("relatorio-registrar").onclick = () => {
-      if (!SIAB.ActivityContext.guard("files.notebook")) return;
+      if (!SIAB.ActivityContext.guard("files.notebook") || !atual) return;
       salvar();
-      const existe = SIAB.progresso.dados.caderno.find(
-        (n) => n.relatorioId === atual.id,
-      );
-      if (!existe)
+      if (!SIAB.progresso.dados.caderno.some((n) => n.relatorioId === atual.id))
         SIAB.progresso.anotar({
           tipo: "experiencia",
-          titulo: atual.roteiro?.titulo || "Experiência na bancada",
+          titulo:
+            atual.roteiro?.titulo ||
+            atual.montagem?.titulo ||
+            "Experiência na bancada",
           relatorioId: atual.id,
           linhas: [["Relatório", "Disponível para reabrir"]],
         });
       SIAB.notice("Referência ao relatório registrada no Caderno.");
     };
     SIAB.$("relatorio-baixar").onclick = () => {
-      if (!SIAB.ActivityContext.guard("files.html")) return;
+      if (!SIAB.ActivityContext.guard("files.html") || !atual) return;
       salvar();
       SIAB.baixarArquivo(
         "SIAB-relatorio.html",
-        `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><title>Relatório SIAB</title><style>body{font:16px Georgia;max-width:900px;margin:35px auto;padding:20px}table{border-collapse:collapse;width:100%}td,th{border:1px solid #bbb;padding:7px}svg{max-width:500px}img{display:none}.student-text{white-space:pre-wrap}@media print{button{display:none}section{break-inside:avoid}}</style>${html()}`,
+        `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório SIAB</title><style>body{font:16px Georgia;max-width:900px;margin:35px auto;padding:20px;color:#111;background:#fff}table{border-collapse:collapse;width:100%;font-size:10pt}td,th{border:1px solid #bbb;padding:5px;overflow-wrap:anywhere}svg{width:100%;max-width:550px;color:#111}img{display:none}.table-scroll{overflow:auto}.student-text{white-space:pre-wrap}.writing-space{break-inside:auto}.response-line{height:7mm;border-bottom:1px solid #aaa;break-inside:avoid}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.grafico-grade{stroke:#ddd}.grafico-especie{fill:none;stroke-width:2}.grafico-rotulo,.grafico-eixo{fill:#111;font:12px sans-serif}h2,h3{break-after:avoid}thead{display:table-header-group}tr{break-inside:avoid}@media print{body{margin:0;padding:0}.table-scroll{overflow:visible}button{display:none}section{break-inside:auto}}@page{size:A4;margin:16mm}</style>${html()}</html>`,
         "text/html;charset=utf-8",
       );
     };
@@ -26284,6 +26549,8 @@ SIAB.relatorios = (() => {
     imprimir,
     preparar,
     ligar,
+    configure,
+    hypotheses,
     get atual() {
       return atual;
     },
@@ -26654,8 +26921,21 @@ SIAB.professor = (() => {
   const $ = SIAB.$,
     esc = SIAB.escape;
   let tokenAtual = null,
-    configAtual = null;
-  const recentes = () => SIAB.persistencia.ler("siab_atividades_criadas", []);
+    configAtual = null,
+    editando = null;
+  const uuid = () => crypto.randomUUID();
+  function recentes() {
+    const list = SIAB.persistencia.ler("siab_atividades_criadas", []);
+    let migrated = false;
+    list.forEach((r) => {
+      if (!r.id) {
+        r.id = uuid();
+        migrated = true;
+      }
+    });
+    if (migrated) SIAB.persistencia.salvar("siab_atividades_criadas", list);
+    return list;
+  }
   function catalogo(tipo) {
     return tipo === "roteiro"
       ? SIAB.experimentos
@@ -26698,9 +26978,7 @@ SIAB.professor = (() => {
     const objetivos = p.objetivo || r.resumo || r.objetivo;
     const respostas =
       tipo === "missao"
-        ? r.passos
-            .filter((x) => x.modelo || x.explicacao)
-            .map((x) => x.modelo || x.explicacao)
+        ? r.passos.filter((x) => x.interpretacao).map((x) => x.interpretacao)
         : [
             "Interprete os resultados produzidos pelo motor nas condições configuradas; não use valores fixos fora dessas condições.",
           ];
@@ -26738,8 +27016,8 @@ SIAB.professor = (() => {
     $("atividades-recentes").innerHTML =
       recentes()
         .map(
-          (r, i) =>
-            `<article class="recent-activity"><strong>${esc(r.config.titulo)}</strong><div class="actions"><a class="secondary-btn" href="${esc(SIAB.atividades.link(r.token))}">Abrir</a><button class="quiet-btn" data-copy-activity="${i}">Copiar link</button><button class="quiet-btn" data-duplicate-activity="${i}">Duplicar</button></div></article>`,
+          (r) =>
+            `<article class="recent-activity" data-activity-id="${esc(r.id)}"><strong>${esc(r.config.titulo)}</strong><div class="actions"><a class="secondary-btn" href="${esc(SIAB.atividades.link(r.token))}">Abrir</a><button class="quiet-btn" data-copy-activity="${esc(r.id)}">Copiar link</button><button class="quiet-btn" data-edit-activity="${esc(r.id)}">Editar</button><button class="quiet-btn" data-duplicate-activity="${esc(r.id)}">Duplicar</button><button class="danger-btn" data-delete-activity="${esc(r.id)}">Excluir</button></div></article>`,
         )
         .join("") || "<p>Nenhuma atividade criada neste navegador.</p>";
   }
@@ -26771,12 +27049,21 @@ SIAB.professor = (() => {
       `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
     $("prof-abrir").href = SIAB.atividades.link(token);
   }
-  async function criar(c) {
+  async function criar(c, id = null) {
     if (SIAB.ActivityContext.restricted())
       throw new Error("Encerre a atividade antes de criar outra.");
+    c = { ...c, id: id || uuid() };
     const token = await SIAB.atividades.codificar(c);
     const list = recentes();
-    list.unshift({ token, config: c, criada: new Date().toISOString() });
+    const record = {
+      id: c.id,
+      token,
+      config: c,
+      criada: new Date().toISOString(),
+    };
+    const i = id ? list.findIndex((x) => x.id === id) : -1;
+    if (i >= 0) list[i] = { ...record, criada: list[i].criada };
+    else list.unshift(record);
     SIAB.persistencia.salvar("siab_atividades_criadas", list);
     resumo(SIAB.atividades.validar(c), token);
     renderRecentes();
@@ -26829,35 +27116,108 @@ SIAB.professor = (() => {
             ]),
           ),
         };
-        await criar(c);
+        await criar(c, editando);
+        editando = null;
+        $("prof-form").querySelector('[type="submit"]').textContent =
+          "Gerar link da atividade";
+        $("prof-cancel-edit").hidden = true;
       } catch (err) {
         $("prof-erro").textContent = err.message;
       }
     };
-    $("projetor-check").onchange = (e) => {
-      document.body.classList.toggle("projetor", e.target.checked);
-      document.documentElement.dataset.projetor = e.target.checked
-        ? "on"
-        : "off";
-    };
+    $("projetor-check").onchange = (e) =>
+      SIAB.gaveta.projetor(e.target.checked);
+    $("prof-cancel-edit").onclick = cancelarEdicao;
     $("atividades-recentes").onclick = async (e) => {
       const b = e.target.closest("button");
       if (!b) return;
+      if (SIAB.ActivityContext.restricted()) return;
       const copy = b.dataset.copyActivity,
-        dup = b.dataset.duplicateActivity;
-      const old = recentes()[Number(copy ?? dup)];
+        dup = b.dataset.duplicateActivity,
+        del = b.dataset.deleteActivity,
+        edit = b.dataset.editActivity;
+      const old = recentes().find((x) => x.id === (copy ?? dup ?? del ?? edit));
       if (!old) return;
       if (copy !== undefined) await copiar(old.token);
+      else if (del !== undefined)
+        SIAB.confirmar(
+          "Excluir atividade?",
+          `“${old.config.titulo}” será removida da Área do Professor. Esta ação não pode ser desfeita. Links de aluno já enviados continuam funcionando.`,
+          () => {
+            SIAB.persistencia.salvar(
+              "siab_atividades_criadas",
+              recentes().filter((x) => x.id !== old.id),
+            );
+            if (editando === old.id) cancelarEdicao();
+            if (tokenAtual === old.token) {
+              tokenAtual = configAtual = null;
+              $("prof-resultado").hidden = true;
+            }
+            renderRecentes();
+            SIAB.notice("Atividade excluída deste navegador.");
+          },
+          "Excluir atividade",
+          "danger",
+        );
+      else if (edit !== undefined) editar(old);
       else
         try {
           await criar({
             ...old.config,
-            titulo: old.config.titulo + " (cópia)",
+            titulo: "Cópia de " + old.config.titulo,
           });
         } catch (err) {
           $("prof-erro").textContent = err.message;
         }
     };
+  }
+  function cancelarEdicao() {
+    editando = null;
+    $("prof-form").reset();
+    $("prof-form").querySelector('[type="submit"]').textContent =
+      "Gerar link da atividade";
+    $("prof-cancel-edit").hidden = true;
+    opcoes();
+    SIAB.refreshSelects?.();
+  }
+  function editar(record) {
+    const c = record.config,
+      f = $("prof-form"),
+      p = SIAB.ActivityContext.permissions(c);
+    editando = record.id;
+    $("prof-tipo").value = c.tipo;
+    opcoes();
+    $("prof-item").value = c.item;
+    for (const [key, value] of Object.entries({
+      titulo: c.titulo,
+      temperatura: c.temperatura,
+      temperaturaModo: c.temperaturaModo || "referencia",
+      navegacao: c.navegacao,
+      relatorio: c.relatorio,
+      initialView: c.initialView || "",
+      ...c.identificacao,
+    })) {
+      if (f.elements[key]) f.elements[key].value = value;
+    }
+    for (const input of f.querySelectorAll('input[type="checkbox"]')) {
+      if (input.name === "instrumentos")
+        input.checked = c.instrumentos.includes(input.value);
+      else if (["representations", "analysis"].includes(input.name))
+        input.checked = !!p[input.name][input.value];
+      else if (input.name.includes(".")) {
+        const [g, k] = input.name.split(".");
+        input.checked = !!p[g]?.[k];
+      }
+    }
+    guia();
+    f.querySelector('[type="submit"]').textContent = "Salvar alterações";
+    $("prof-cancel-edit").hidden = false;
+    f.dispatchEvent(new Event("change"));
+    SIAB.refreshSelects?.();
+    f.elements.titulo.focus();
+    SIAB.notice(
+      "Editando uma cópia independente. Links já enviados preservam sua configuração original.",
+    );
   }
   const ajustes = {
     bench: {
@@ -27054,7 +27414,7 @@ SIAB.telas.caderno = {
       ? notas
           .map(
             (n) =>
-              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="quiet-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
+              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="danger-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
           )
           .join("")
       : "<p>Nenhum registro neste filtro. Registre uma exploração na bancada ou escreva uma anotação.</p>";
@@ -27086,13 +27446,26 @@ SIAB.telas.caderno = {
           SIAB.progresso.limparCaderno();
           SIAB.telas.caderno.entrar();
         },
-        "Apagar",
+        "Apagar Caderno",
+        "danger",
       );
     SIAB.$("caderno-lista").onclick = (e) => {
       const b = e.target.closest("[data-apagar-nota]");
       if (b) {
-        SIAB.progresso.removerNota(b.dataset.apagarNota);
-        SIAB.telas.caderno.entrar();
+        const nota = SIAB.progresso.dados.caderno.find(
+          (n) => n.id === b.dataset.apagarNota,
+        );
+        if (!nota) return;
+        SIAB.confirmar(
+          "Apagar nota?",
+          `“${nota.titulo}” será removida. Esta ação não pode ser desfeita.`,
+          () => {
+            SIAB.progresso.removerNota(nota.id);
+            SIAB.telas.caderno.entrar();
+          },
+          "Apagar nota",
+          "danger",
+        );
       }
       const t = e.target.closest("[data-baixar-tabela]");
       if (t) {
@@ -27117,27 +27490,7 @@ SIAB.manualTela = (() => {
     R = S.manualRegistry;
   let current = "",
     bound = false;
-  const paths = {
-    book: "M4 4h7l1 2 1-2h7v16h-7l-1 1-1-1H4ZM12 6v15M7 8h2M15 8h2M7 12h2M15 12h2",
-    tube: "M8 3h8M9 3v14a3 3 0 0 0 6 0V3M9 11h6",
-    eye: "M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12ZM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0",
-    ruler: "M4 17 17 4l3 3L7 20H4ZM8 13l2 2M11 10l2 2M14 7l2 2",
-    chart: "M4 3v17h17M7 16l4-5 4 2 5-8",
-    meter:
-      "M3 4h12v15H3ZM6 7h6v5H6ZM15 7h3a3 3 0 0 1 3 3v4M19 14h3v7h-3ZM6 15h2M11 15h1",
-    flask: "M9 3h6M10 3v6L4 19q-1 2 2 2h12q3 0 2-2L14 9V3M7 15h10",
-    list: "M6 4h14v17H4V4h2M8 2h8v4H8ZM8 10h8M8 14h8M8 18h5",
-    report: "M5 3h10l4 4v14H5ZM15 3v5h4M8 12h8M8 16h8",
-    access:
-      "M14 4a2 2 0 1 1-4 0 2 2 0 0 1 4 0M4 8l8 2 8-2M12 10v5M7 22l5-7 5 7",
-    help: "M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0M9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3M12 17h.01",
-    teacher: "M3 4h18v12H3ZM8 21l4-5 4 5M7 8h10M7 12h6",
-    arrow: "M5 12h14M13 6l6 6-6 6",
-    back: "M19 12H5M11 6l-6 6 6 6",
-    search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
-  };
-  const icon = (name) =>
-    `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="${paths[name] || paths.book}"/></svg>`;
+  const icon = S.icons.svg;
   const href = (id) => "#/manual/" + encodeURIComponent(id);
   function rich(text) {
     return String(text || "")
@@ -27274,7 +27627,7 @@ SIAB.manualTela = (() => {
             })
             .join("")}</div></nav>`
         : ""
-    }</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
+    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map(ref => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
   }
   function home() {
     return `<header class="manual-hero"><div><p class="eyebrow">MANUAL DO USUÁRIO</p><h1 id="manual-titulo" data-foco tabindex="-1">Encontre seu próximo passo.</h1><p>Uma dúvida na bancada? Consulte uma ferramenta, entenda uma leitura ou descubra por onde começar.</p><div class="manual-hero-actions"><a class="primary-btn" href="${href("comecar")}">Começar a usar ${icon("arrow")}</a><button class="quiet-btn" type="button" data-manual-command="tour">Iniciar tour da bancada</button></div></div>${diagram("workspace")}</header><nav class="manual-shortcuts" aria-label="Consultas rápidas"><span>QUERO SABER</span>${[
@@ -27902,6 +28255,7 @@ SIAB.activityUI = (() => {
         visibility(el, closed && !el.querySelector("#a11y-toggle"));
       });
     $("activity-menu").hidden = !closed;
+    document.querySelectorAll("[data-unrestricted-menu]").forEach(el => visibility(el, closed));
     $("drawer-title").textContent = closed ? "Menu da atividade" : "Menu";
     $("activity-montagem").hidden = !ctx;
     if (closed) {

@@ -14,6 +14,7 @@ SIAB.gaveta = (() => {
 
   // secao: 'acessibilidade' abre direto no painel de acessibilidade.
   function abrir(secao) {
+    contexto();
     const gaveta = $("app-drawer");
     if (!gaveta.open) gaveta.showModal();
     $("menu-btn").setAttribute("aria-expanded", "true");
@@ -30,9 +31,53 @@ SIAB.gaveta = (() => {
     if ($("app-drawer").open) $("app-drawer").close();
   }
 
+  function contexto() {
+    const r = SIAB.rota,
+      c = SIAB.ActivityContext.current;
+    const title = SIAB.telas[r.nome]?.titulo?.(r.parametro) || "SIAB";
+    $("drawer-now-title").textContent = r.nome === "manual" ? "Manual" : title;
+    $("drawer-now-detail").textContent =
+      r.nome === "laboratorio"
+        ? `${SIAB.state.montagem?.titulo || (SIAB.state.experiencia ? "Roteiro Experimental" : "Bancada livre")} · ${SIAB.MODULOS[SIAB.state.level].nome}`
+        : r.nome === "manual"
+          ? (() => {
+              const t = SIAB.manualRegistry.resolve(r.parametro);
+              return t
+                ? `${SIAB.manualRegistry.category(t.category).title} › ${t.title}`
+                : "Guia de uso e consulta";
+            })()
+          : r.nome === "roteiro"
+            ? `Roteiro Experimental · ${SIAB.experimentos.find((x) => x.id === r.parametro)?.titulo || title}`
+            : "Seu contexto atual";
+    $("drawer-continue").textContent = ["laboratorio", "missao"].includes(
+      r.nome,
+    )
+      ? "Continuar na bancada"
+      : "Continuar nesta tela";
+    $("drawer-activity-context").textContent = c
+      ? `${c.activity.title} · ${SIAB.MODULOS[c.activity.module].nome}`
+      : "";
+  }
+
+  function projetor(on) {
+    if (SIAB.ActivityContext.restricted()) return false;
+    document.body.classList.toggle("projetor", on);
+    document.documentElement.dataset.projetor = on ? "on" : "off";
+    $("projetor-check").checked = $("drawer-projector").checked = on;
+    SIAB.persistencia.salvar("siab_projetor", on);
+    SIAB.workspace?.refresh();
+  }
+
   function ligar() {
     const gaveta = $("app-drawer");
     $("drawer-versao").textContent = SIAB.version;
+    expandir(
+      gaveta.querySelector('[aria-controls="drawer-navigation"]'),
+      matchMedia("(max-width: 900px)").matches,
+    );
+    $("drawer-continue").onclick = fechar;
+    $("drawer-projector").onchange = (e) => projetor(e.target.checked);
+    projetor(!!SIAB.persistencia.ler("siab_projetor", false));
 
     $("menu-btn").addEventListener("click", () => abrir());
     $("access-btn").addEventListener("click", () => abrir("acessibilidade"));
@@ -81,5 +126,5 @@ SIAB.gaveta = (() => {
     });
   }
 
-  return { ligar, abrir, fechar };
+  return { ligar, abrir, fechar, projetor };
 })();

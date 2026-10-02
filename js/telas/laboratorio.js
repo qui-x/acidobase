@@ -8,7 +8,6 @@ SIAB.telas.laboratorio = {
     SIAB.usarBancada("lab");
     SIAB.bancada.configurar({ modo: "laboratorio" });
     SIAB.render(true);
-    SIAB.progresso.marcarUltima("#/laboratorio", "Laboratório livre");
     SIAB.$("boas-vindas").hidden =
       SIAB.ajuda.jaViu() ||
       Boolean(SIAB.state.experiencia || SIAB.atividades?.ativa);

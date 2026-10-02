@@ -121,10 +121,8 @@ SIAB.prateleira = (() => {
       </details>`;
       })
       .join("");
-    // Frasco secreto (easter egg, ver js/ui/segredo.js).
-    const secreto = SIAB.segredo?.frascoSecreto(query) || "";
     box.innerHTML =
-      secreto + grupos ||
+      grupos ||
       '<p class="empty-choice">Nenhum frasco com esse nome. Tente outra busca.</p>';
   }
 

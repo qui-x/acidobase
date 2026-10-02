@@ -187,10 +187,10 @@ novasMissoes.forEach((m) =>
           m.condition || (() => Boolean(SIAB.current()?.observacao?.ph)),
       },
       {
-        tipo: "explicar",
+        tipo: "interpretacao",
         id: "conclusao",
         pergunta: "Que evidências sustentam sua conclusão?",
-        modelo:
+        interpretacao:
           "Relacione as leituras instrumentais com a composição e o equilíbrio.",
       },
     ],

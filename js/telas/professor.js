@@ -3,8 +3,21 @@ SIAB.professor = (() => {
   const $ = SIAB.$,
     esc = SIAB.escape;
   let tokenAtual = null,
-    configAtual = null;
-  const recentes = () => SIAB.persistencia.ler("siab_atividades_criadas", []);
+    configAtual = null,
+    editando = null;
+  const uuid = () => crypto.randomUUID();
+  function recentes() {
+    const list = SIAB.persistencia.ler("siab_atividades_criadas", []);
+    let migrated = false;
+    list.forEach((r) => {
+      if (!r.id) {
+        r.id = uuid();
+        migrated = true;
+      }
+    });
+    if (migrated) SIAB.persistencia.salvar("siab_atividades_criadas", list);
+    return list;
+  }
   function catalogo(tipo) {
     return tipo === "roteiro"
       ? SIAB.experimentos
@@ -47,9 +60,7 @@ SIAB.professor = (() => {
     const objetivos = p.objetivo || r.resumo || r.objetivo;
     const respostas =
       tipo === "missao"
-        ? r.passos
-            .filter((x) => x.modelo || x.explicacao)
-            .map((x) => x.modelo || x.explicacao)
+        ? r.passos.filter((x) => x.interpretacao).map((x) => x.interpretacao)
         : [
             "Interprete os resultados produzidos pelo motor nas condições configuradas; não use valores fixos fora dessas condições.",
           ];
@@ -87,8 +98,8 @@ SIAB.professor = (() => {
     $("atividades-recentes").innerHTML =
       recentes()
         .map(
-          (r, i) =>
-            `<article class="recent-activity"><strong>${esc(r.config.titulo)}</strong><div class="actions"><a class="secondary-btn" href="${esc(SIAB.atividades.link(r.token))}">Abrir</a><button class="quiet-btn" data-copy-activity="${i}">Copiar link</button><button class="quiet-btn" data-duplicate-activity="${i}">Duplicar</button></div></article>`,
+          (r) =>
+            `<article class="recent-activity" data-activity-id="${esc(r.id)}"><strong>${esc(r.config.titulo)}</strong><div class="actions"><a class="secondary-btn" href="${esc(SIAB.atividades.link(r.token))}">Abrir</a><button class="quiet-btn" data-copy-activity="${esc(r.id)}">Copiar link</button><button class="quiet-btn" data-edit-activity="${esc(r.id)}">Editar</button><button class="quiet-btn" data-duplicate-activity="${esc(r.id)}">Duplicar</button><button class="danger-btn" data-delete-activity="${esc(r.id)}">Excluir</button></div></article>`,
         )
         .join("") || "<p>Nenhuma atividade criada neste navegador.</p>";
   }
@@ -120,12 +131,21 @@ SIAB.professor = (() => {
       `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
     $("prof-abrir").href = SIAB.atividades.link(token);
   }
-  async function criar(c) {
+  async function criar(c, id = null) {
     if (SIAB.ActivityContext.restricted())
       throw new Error("Encerre a atividade antes de criar outra.");
+    c = { ...c, id: id || uuid() };
     const token = await SIAB.atividades.codificar(c);
     const list = recentes();
-    list.unshift({ token, config: c, criada: new Date().toISOString() });
+    const record = {
+      id: c.id,
+      token,
+      config: c,
+      criada: new Date().toISOString(),
+    };
+    const i = id ? list.findIndex((x) => x.id === id) : -1;
+    if (i >= 0) list[i] = { ...record, criada: list[i].criada };
+    else list.unshift(record);
     SIAB.persistencia.salvar("siab_atividades_criadas", list);
     resumo(SIAB.atividades.validar(c), token);
     renderRecentes();
@@ -178,35 +198,108 @@ SIAB.professor = (() => {
             ]),
           ),
         };
-        await criar(c);
+        await criar(c, editando);
+        editando = null;
+        $("prof-form").querySelector('[type="submit"]').textContent =
+          "Gerar link da atividade";
+        $("prof-cancel-edit").hidden = true;
       } catch (err) {
         $("prof-erro").textContent = err.message;
       }
     };
-    $("projetor-check").onchange = (e) => {
-      document.body.classList.toggle("projetor", e.target.checked);
-      document.documentElement.dataset.projetor = e.target.checked
-        ? "on"
-        : "off";
-    };
+    $("projetor-check").onchange = (e) =>
+      SIAB.gaveta.projetor(e.target.checked);
+    $("prof-cancel-edit").onclick = cancelarEdicao;
     $("atividades-recentes").onclick = async (e) => {
       const b = e.target.closest("button");
       if (!b) return;
+      if (SIAB.ActivityContext.restricted()) return;
       const copy = b.dataset.copyActivity,
-        dup = b.dataset.duplicateActivity;
-      const old = recentes()[Number(copy ?? dup)];
+        dup = b.dataset.duplicateActivity,
+        del = b.dataset.deleteActivity,
+        edit = b.dataset.editActivity;
+      const old = recentes().find((x) => x.id === (copy ?? dup ?? del ?? edit));
       if (!old) return;
       if (copy !== undefined) await copiar(old.token);
+      else if (del !== undefined)
+        SIAB.confirmar(
+          "Excluir atividade?",
+          `“${old.config.titulo}” será removida da Área do Professor. Esta ação não pode ser desfeita. Links de aluno já enviados continuam funcionando.`,
+          () => {
+            SIAB.persistencia.salvar(
+              "siab_atividades_criadas",
+              recentes().filter((x) => x.id !== old.id),
+            );
+            if (editando === old.id) cancelarEdicao();
+            if (tokenAtual === old.token) {
+              tokenAtual = configAtual = null;
+              $("prof-resultado").hidden = true;
+            }
+            renderRecentes();
+            SIAB.notice("Atividade excluída deste navegador.");
+          },
+          "Excluir atividade",
+          "danger",
+        );
+      else if (edit !== undefined) editar(old);
       else
         try {
           await criar({
             ...old.config,
-            titulo: old.config.titulo + " (cópia)",
+            titulo: "Cópia de " + old.config.titulo,
           });
         } catch (err) {
           $("prof-erro").textContent = err.message;
         }
     };
+  }
+  function cancelarEdicao() {
+    editando = null;
+    $("prof-form").reset();
+    $("prof-form").querySelector('[type="submit"]').textContent =
+      "Gerar link da atividade";
+    $("prof-cancel-edit").hidden = true;
+    opcoes();
+    SIAB.refreshSelects?.();
+  }
+  function editar(record) {
+    const c = record.config,
+      f = $("prof-form"),
+      p = SIAB.ActivityContext.permissions(c);
+    editando = record.id;
+    $("prof-tipo").value = c.tipo;
+    opcoes();
+    $("prof-item").value = c.item;
+    for (const [key, value] of Object.entries({
+      titulo: c.titulo,
+      temperatura: c.temperatura,
+      temperaturaModo: c.temperaturaModo || "referencia",
+      navegacao: c.navegacao,
+      relatorio: c.relatorio,
+      initialView: c.initialView || "",
+      ...c.identificacao,
+    })) {
+      if (f.elements[key]) f.elements[key].value = value;
+    }
+    for (const input of f.querySelectorAll('input[type="checkbox"]')) {
+      if (input.name === "instrumentos")
+        input.checked = c.instrumentos.includes(input.value);
+      else if (["representations", "analysis"].includes(input.name))
+        input.checked = !!p[input.name][input.value];
+      else if (input.name.includes(".")) {
+        const [g, k] = input.name.split(".");
+        input.checked = !!p[g]?.[k];
+      }
+    }
+    guia();
+    f.querySelector('[type="submit"]').textContent = "Salvar alterações";
+    $("prof-cancel-edit").hidden = false;
+    f.dispatchEvent(new Event("change"));
+    SIAB.refreshSelects?.();
+    f.elements.titulo.focus();
+    SIAB.notice(
+      "Editando uma cópia independente. Links já enviados preservam sua configuração original.",
+    );
   }
   const ajustes = {
     bench: {

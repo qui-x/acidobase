@@ -13,20 +13,25 @@ SIAB.identificacaoHTML = (valores = {}) =>
     )
     .join("")}</fieldset>`;
 SIAB.montarExperimento = (r, identificacao = {}) => {
-  if (SIAB.ActivityContext?.restricted()) { SIAB.notice("Montagem definida pela atividade."); return false; }
+  if (SIAB.ActivityContext?.restricted()) {
+    SIAB.notice("Montagem definida pela atividade.");
+    return false;
+  }
   if (!r || r.tubos.length > SIAB.MAX_TUBES)
     throw new Error("Montagem inválida.");
   const bench = SIAB.criarBancada(),
     groups = {};
   bench.level = r.modulo;
-  bench.verTab = "ph";
+  bench.verTab = r.ver || "ph";
+  bench.initialView = bench.verTab;
   r.tubos.forEach((spec) => {
     const { grupo, ...x } = spec;
     if (grupo && !groups[grupo]) groups[grupo] = bench.nextGroup++;
     SIAB.newTube(
       {
         ...x,
-        temperature: SIAB.atividades?.ativa?.config.temperatura ?? 25,
+        temperature:
+          x.temperature ?? SIAB.atividades?.ativa?.config.temperatura ?? 25,
         group: grupo ? groups[grupo] : null,
         groupMode: "drops",
         groupShare: { contaGotas: true, substancia: false },
@@ -73,7 +78,7 @@ SIAB.telas.roteiro = {
     }
     const esc = SIAB.escape;
     SIAB.$("roteiro-conteudo").innerHTML =
-      `<h1 data-foco tabindex="-1">${esc(r.titulo)}</h1><p class="lead">${esc(r.subtitulo)}</p><p class="eyebrow">${SIAB.MODULOS[r.modulo].nome}</p><section><h2>O problema</h2><p>${esc(r.problema)}</p></section><section><h2>Pergunta central</h2><p>${esc(r.pergunta)}</p></section><section><h2>Objetivo</h2><p>${esc(r.objetivo)}</p></section><section><h2>O que você vai fazer</h2><ol>${r.tarefas.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section><section><h2>Na bancada</h2><ul>${r.tubos.map((t) => `<li>${esc(SIAB.solutions[t.solution].name)} · ${SIAB.format(t.initialVolume || 1)} mL · ${esc(SIAB.indicators[t.indicator || "btb"].name)}</li>`).join("")}</ul></section><section><h2>O que observar</h2><p>${esc(r.observar)}</p></section><form data-start-experiment="${r.id}">${SIAB.identificacaoHTML()}<button class="primary-btn">Montar na bancada</button></form>`;
+      `<h1 data-foco tabindex="-1">${esc(r.titulo)}</h1><p class="lead">${esc(r.subtitulo)}</p><p class="eyebrow">${SIAB.MODULOS[r.modulo].nome}</p><section><h2>O problema</h2><p>${esc(r.problema)}</p></section>${r.modulo === "explorar" ? `<section><h2>Pergunta central</h2><p>${esc(r.pergunta)}</p></section>` : ""}<section><h2>Objetivo</h2><p>${esc(r.objetivo)}</p></section><section><h2>O que você vai fazer</h2><ol>${r.tarefas.map((x) => `<li>${esc(x)}</li>`).join("")}</ol></section><section><h2>Na bancada</h2><ul>${r.tubos.map((t) => `<li>${esc(SIAB.solutions[t.solution].name)} · ${SIAB.format(t.initialVolume || 1)} mL · ${esc(SIAB.indicators[t.indicator || "btb"].name)}</li>`).join("")}</ul></section><section><h2>O que observar</h2><p>${esc(r.observar)}</p></section><form data-start-experiment="${r.id}">${SIAB.identificacaoHTML()}<button class="primary-btn">Montar na bancada</button></form>`;
   },
 };
 SIAB.telas.montagens = {
@@ -83,7 +88,7 @@ SIAB.telas.montagens = {
     SIAB.$("montagens-lista").innerHTML = SIAB.montagens
       .map(
         (r) =>
-          `<article class="setup-card"><h2>${SIAB.escape(r.titulo)}</h2><p>Configuração rápida para ${SIAB.escape(r.titulo.toLowerCase())}.</p><p>${r.tubos.map((t) => SIAB.escape(SIAB.solutions[t.solution].name)).join(" · ")}</p><h3>O que observar</h3><p>Compare cor, volume e leituras antes e depois da adição. Examine as espécies no VER.</p><button class="secondary-btn" data-montagem="${r.id}">Montar na bancada</button></article>`,
+          `<article class="setup-card"><h2>${SIAB.escape(r.titulo)}</h2><p>${SIAB.escape(r.objetivo)}</p><p class="eyebrow">${SIAB.MODULOS[r.nivel].nome} · ${r.tubos.length} recipientes</p><p>${r.tubos.map((t) => SIAB.escape(SIAB.solutions[t.solution].name)).join(" · ")}</p><p><strong>Instrumentos:</strong> ${r.instrumentos.map(SIAB.escape).join(" · ")}</p><p><strong>Visualização inicial:</strong> ${SIAB.escape(SIAB.VER_SECTIONS.flatMap((g) => g.items).find((x) => x.id === r.ver)?.label || r.ver)}</p><h3>Investigue</h3><ol>${r.passos.map((x) => `<li>${SIAB.escape(x)}</li>`).join("")}</ol><p><strong>Recursos recomendados:</strong> ${r.recursos.map(SIAB.escape).join(" · ")}</p><button class="secondary-btn" data-montagem="${r.id}">Montar na bancada</button></article>`,
       )
       .join("");
   },
@@ -94,6 +99,11 @@ SIAB.montarMontagem = (id) => {
   if (!m) return;
   SIAB.montarExperimento({ ...m, modulo: m.nivel });
   delete SIAB.state.experiencia;
+  SIAB.state.montagem = { id: m.id, titulo: m.titulo, objetivo: m.objetivo };
+  SIAB.state.reportViews = [m.ver];
+  if (m.visao) SIAB.state.view = m.visao;
+  SIAB.render(true);
+  SIAB.atividades?.salvarSessao();
   SIAB.notice(
     "Montagem pronta. Escolha um instrumento para iniciar as medidas.",
   );
