@@ -33,17 +33,17 @@ SIAB.manualTela = (() => {
   }
   function topicLink(t, compact = false) {
     const cat = R.category(t.category);
-    return `<a class="manual-topic-link${compact ? " compact" : ""}" href="${href(t.id)}"><span class="manual-symbol">${icon(cat.icon)}</span><span><strong>${esc(t.title)}</strong><span>${esc(t.summary)}</span></span>${icon("arrow")}</a>`;
+    return `<a class="manual-topic-link${compact ? " compact" : ""}" href="${href(t.id)}"><span class="manual-symbol">${icon({ historico: "history", tabela: "table", aprender: "learn", projetor: "projector", preparo: "prepare" }[t.id] || cat.icon)}</span><span><strong>${esc(t.title)}</strong><span>${esc(t.summary)}</span></span>${icon("arrow")}</a>`;
   }
   function diagram(kind) {
     if (kind === "workspace")
-      return `<figure class="manual-diagram manual-workspace-map"><div class="manual-map-actions"><a href="${href("bancada")}">${icon("flask")}Montagem</a><a href="${href("painel-medir")}">${icon("eye")}Ver</a><a href="${href("tabela")}">${icon("report")}Dados</a></div><div class="manual-map-scene"><svg viewBox="0 0 180 160" role="img" aria-label="Recipiente ao centro, com espaço livre para observar o experimento"><path class="glass" d="M62 12h56M68 12v112a22 22 0 0 0 44 0V12"/><path class="liquid" d="M70 91h40v33a20 20 0 0 1-40 0Z"/><path class="ticks" d="M102 35h10M105 51h7M102 67h10"/><circle cx="77" cy="111" r="3" class="bubble"/><circle cx="96" cy="123" r="2" class="bubble"/></svg><div><strong>Seu experimento em foco</strong><span>Gotejar · Agitar · Medir</span></div></div><figcaption>Abra uma ferramenta quando precisar. Fechar o painel devolve espaço à bancada.</figcaption></figure>`;
+      return `<figure class="manual-diagram manual-workspace-map"><div class="manual-map-actions"><a href="${href("bancada")}">${icon("setup")}Montagem</a><a href="${href("painel-medir")}">${icon("eye")}Ver</a><a href="${href("tabela")}">${icon("data")}Dados</a></div><div class="manual-map-scene"><svg viewBox="0 0 180 160" role="img" aria-label="Recipiente ao centro, com espaço livre para observar o experimento"><path class="glass" d="M62 12h56M68 12v112a22 22 0 0 0 44 0V12"/><path class="liquid" d="M70 91h40v33a20 20 0 0 1-40 0Z"/><path class="ticks" d="M102 35h10M105 51h7M102 67h10"/><circle cx="77" cy="111" r="3" class="bubble"/><circle cx="96" cy="123" r="2" class="bubble"/></svg><div><strong>Seu experimento em foco</strong><span>Gotejar · Agitar · Medir</span></div></div><figcaption>Abra uma ferramenta quando precisar. Fechar o painel devolve espaço à bancada.</figcaption></figure>`;
     if (kind === "meter")
       return `<figure class="manual-diagram"><svg class="manual-instrument" viewBox="0 0 520 210" role="img" aria-label="Esquema do pHmetro: visor ligado por um cabo ao eletrodo mergulhado na solução. Aguarde estabilizar antes de interpretar a leitura."><rect x="25" y="30" width="218" height="150" rx="16" class="device"/><rect x="45" y="52" width="177" height="64" rx="6" class="screen"/><text x="63" y="91" class="readout">— —</text><text x="165" y="94">pH</text><text x="46" y="150">Visor</text><path d="M242 65C310 0 395 20 395 64" class="glass"/><path d="M348 95v76q0 22 46 22t46-22V95" class="glass"/><path d="M351 140h86v30q0 20-43 20t-43-20Z" class="liquid"/><rect x="389" y="62" width="13" height="98" rx="5" class="probe"/><text x="312" y="47">Eletrodo</text></svg><figcaption>Esquema do instrumento. O visor só apresenta uma leitura depois da medição.</figcaption></figure>`;
     if (kind === "strip")
       return `<figure class="manual-diagram"><div class="manual-strip"><span aria-hidden="true"></span><div><strong>Uma estimativa por faixa</strong><p>Compare a cor com a escala de 0 a 14. A leitura é apresentada em passos de 1 unidade de pH.</p></div></div><figcaption>A descrição e o número acompanham a cor; não é necessário distinguir apenas o tom.</figcaption></figure>`;
     if (kind === "compaction")
-      return `<figure class="manual-diagram"><div class="manual-comparison"><div><strong>Compacta</strong><p>Um grupo de leituras compatíveis</p><span>Contagem + faixa + Ver medições</span></div><span aria-hidden="true">↔</span><div><strong>Completa</strong><p>Cada leitura individual</p><span>Técnica + valor + contexto</span></div></div><figcaption>São duas apresentações dos mesmos dados. O agrupamento não remove registros.</figcaption></figure>`;
+      return `<figure class="manual-diagram"><div class="manual-comparison"><div><strong>Compacta</strong><p>Um grupo de leituras compatíveis</p><span>Contagem + faixa + Ver medições</span></div>${icon("exchange")}<div><strong>Completa</strong><p>Cada leitura individual</p><span>Técnica + valor + contexto</span></div></div><figcaption>São duas apresentações dos mesmos dados. O agrupamento não remove registros.</figcaption></figure>`;
     if (kind === "instruments")
       return `<div class="manual-reference-table" role="region" aria-label="Comparação dos instrumentos" tabindex="0"><table><caption>Qual evidência você precisa?</caption><thead><tr><th scope="col">Técnica</th><th scope="col">Evidência</th><th scope="col">Limite principal</th></tr></thead><tbody><tr><th scope="row"><a href="${href("indicadores")}">Indicador</a></th><td>Cor e faixa de viragem</td><td>Não dá pH exato</td></tr><tr><th scope="row"><a href="${href("fita")}">Fita de pH</a></th><td>Estimativa de pH</td><td>Resolução de 1 unidade</td></tr><tr><th scope="row"><a href="${href("phmetro")}">pHmetro</a></th><td>Leitura numérica</td><td>Resolução simulada de 0,01</td></tr><tr><th scope="row"><a href="${href("condutividade")}">Condutivímetro</a></th><td>Condução em µS/cm</td><td>Estimativa ideal</td></tr><tr><th scope="row"><a href="${href("temperatura")}">Termômetro</a></th><td>Temperatura da solução</td><td>Condição do modelo</td></tr></tbody></table></div>`;
     const flow = {
@@ -60,7 +60,7 @@ SIAB.manualTela = (() => {
       report: [
         ["Investigar", "Obter evidências"],
         ["Interpretar", "Escrever suas conclusões"],
-        ["Compartilhar", "Imprimir ou exportar"],
+        ["Compartilhar", "Imprimir / Salvar como PDF"],
       ],
       modules: [
         ["Explorar", "Observar e manipular"],
@@ -74,7 +74,7 @@ SIAB.manualTela = (() => {
       ],
     }[kind];
     return flow
-      ? `<figure class="manual-diagram"><ol class="manual-flow${kind === "modules" ? " independent" : ""}">${flow.map(([title, detail]) => `<li><strong>${esc(title)}</strong><span>${esc(detail)}</span></li>`).join("")}</ol><figcaption>${kind === "modules" ? "Módulos independentes: escolha pelo objetivo, sem ordem obrigatória." : kind === "representations" ? "Três formas de interpretar o mesmo sistema." : "Uma sequência de consulta para orientar sua investigação."}</figcaption></figure>`
+      ? `<figure class="manual-diagram"><ol class="manual-flow${kind === "modules" ? " independent" : ""}">${flow.map(([title, detail], i) => `<li><strong>${esc(title)}</strong><span>${esc(detail)}</span>${kind !== "modules" && i < flow.length - 1 ? icon("flow", "manual-flow-arrow") : ""}</li>`).join("")}</ol><figcaption>${kind === "modules" ? "Módulos independentes: escolha pelo objetivo, sem ordem obrigatória." : kind === "representations" ? "Três formas de interpretar o mesmo sistema." : "Uma sequência de consulta para orientar sua investigação."}</figcaption></figure>`
       : "";
   }
   function generated(kind) {
@@ -125,7 +125,7 @@ SIAB.manualTela = (() => {
       .map((d, i) =>
         print
           ? `<section class="manual-print-detail"><h3>${esc(d.title)}</h3><p>${rich(d.text)}</p></section>`
-          : `<section class="manual-accordion"><h3><button type="button" class="secondary-btn" aria-expanded="false" aria-controls="manual-detail-${t.id}-${i}" id="manual-toggle-${t.id}-${i}" data-manual-expand>${esc(d.title)}<span aria-hidden="true">+</span></button></h3><div id="manual-detail-${t.id}-${i}" aria-labelledby="manual-toggle-${t.id}-${i}" hidden><p>${rich(d.text)}</p></div></section>`,
+          : `<section class="manual-accordion"><h3><button type="button" class="secondary-btn" aria-expanded="false" aria-controls="manual-detail-${t.id}-${i}" id="manual-toggle-${t.id}-${i}" data-manual-expand>${esc(d.title)}${icon("dropdown", "disclosure-icon")}</button></h3><div id="manual-detail-${t.id}-${i}" aria-labelledby="manual-toggle-${t.id}-${i}" hidden><p>${rich(d.text)}</p></div></section>`,
       )
       .join("");
   }
@@ -144,7 +144,7 @@ SIAB.manualTela = (() => {
             })
             .join("")}</div></nav>`
         : ""
-    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map(ref => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
+    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map((ref) => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
   }
   function home() {
     return `<header class="manual-hero"><div><p class="eyebrow">MANUAL DO USUÁRIO</p><h1 id="manual-titulo" data-foco tabindex="-1">Encontre seu próximo passo.</h1><p>Uma dúvida na bancada? Consulte uma ferramenta, entenda uma leitura ou descubra por onde começar.</p><div class="manual-hero-actions"><a class="primary-btn" href="${href("comecar")}">Começar a usar ${icon("arrow")}</a><button class="quiet-btn" type="button" data-manual-command="tour">Iniciar tour da bancada</button></div></div>${diagram("workspace")}</header><nav class="manual-shortcuts" aria-label="Consultas rápidas"><span>QUERO SABER</span>${[
@@ -289,7 +289,6 @@ SIAB.manualTela = (() => {
         const open = expand.getAttribute("aria-expanded") !== "true";
         expand.setAttribute("aria-expanded", String(open));
         $(expand.getAttribute("aria-controls")).hidden = !open;
-        expand.querySelector("span").textContent = open ? "−" : "+";
       }
       const command = e.target.closest("[data-manual-command]")?.dataset
         .manualCommand;

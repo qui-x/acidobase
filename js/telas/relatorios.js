@@ -2,6 +2,7 @@
 SIAB.relatorios = (() => {
   const esc = SIAB.escape;
   let atual = null,
+    arquivoAberto = false,
     rendering = false;
   const campos = [
     ["observacoes", "Observações"],
@@ -186,7 +187,18 @@ SIAB.relatorios = (() => {
         exp?.identificacao ||
         SIAB.atividades?.ativa?.identificacao ||
         {},
-      aluno: old?.aluno || {},
+      aluno: {
+        ...(SIAB.activeBench === "mission" &&
+        SIAB.motor.ativa?.respostas.conclusao
+          ? { conclusao: SIAB.motor.ativa.respostas.conclusao }
+          : {}),
+        ...old?.aluno,
+      },
+      respostasMissao:
+        SIAB.activeBench === "mission"
+          ? JSON.parse(JSON.stringify(SIAB.motor.ativa?.respostas || {}))
+          : {},
+      sessaoId: SIAB.atividades?.ativa?.sessionId || b.reportId,
       configuracao: old?.configuracao || defaults(),
       recipientes: rows,
       atualizado: new Date().toISOString(),
@@ -269,6 +281,33 @@ SIAB.relatorios = (() => {
   }
   function table(headers, rows, label) {
     return `<div class="table-scroll report-table" tabindex="0" role="region" aria-label="${esc(label)}"><table><caption>${esc(label)}</caption><thead><tr>${headers.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((v) => `<td>${esc(v ?? "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }
+  function dadosHTML(id) {
+    const r = lerTodos()[id];
+    if (!r)
+      return "<p>Os dados desta prática não estão disponíveis neste navegador.</p>";
+    return r.recipientes
+      .map(
+        (t) =>
+          `<section class="practice-vessel"><h3>${esc(t.nome)}</h3>${table(["Solução inicial", "Vidraria", "Concentração", "Volume", "Indicador", "Temperatura"], [[t.inicial?.solucao || t.conteudo, t.inicial?.vidraria || t.vidraria, t.inicial?.concentracao || "Não registrada", `${SIAB.format(t.inicial?.volume ?? t.volume)} mL`, t.inicial?.indicador || t.indicador, `${SIAB.format(t.inicial?.temperatura ?? t.temperatura, 1)} °C`]], "Condições iniciais")}${t.reagente ? `<p>Reagente: ${esc(t.reagente.nome)} · ${esc(t.reagente.descricao || "")} · incremento ${SIAB.format(t.reagente.incremento)} mL.</p>` : ""}${table(
+            [
+              "Volume adicionado (mL)",
+              "Leitura",
+              "Unidade",
+              "Temperatura (°C)",
+              "Instrumento",
+            ],
+            (t.rawMeasurements || []).map((m) => [
+              SIAB.format(m.adicionado),
+              typeof m.valor === "number" ? SIAB.format(m.valor) : m.valor,
+              m.unidade,
+              SIAB.format(m.temperatura, 1),
+              SIAB.medicoes.resolution[m.tecnica]?.nome || m.tecnica,
+            ]),
+            "Medições registradas — dados completos",
+          )}${table(["Volume final", "pH (leitura)", "Temperatura", "Cor", "Estado"], [[`${SIAB.format(t.volume)} mL`, t.ph, `${SIAB.format(t.temperatura, 1)} °C`, t.cor, t.estado]], "Condições finais")}</section>`,
+      )
+      .join("");
   }
   function hypotheses(text) {
     if (!teacher()) throw new Error("Disponível na preparação do professor.");
@@ -560,6 +599,13 @@ SIAB.relatorios = (() => {
       if (!teacher() && config().modo === "analise") config().modo = "completo";
       SIAB.$("relatorio-config").innerHTML = settingsHTML();
       SIAB.$("relatorio-conteudo").innerHTML = html({ editar: true });
+      SIAB.$("relatorio-encerrar").hidden = !SIAB.atividades?.ativa;
+      SIAB.$("relatorio-voltar").textContent =
+        SIAB.atividades?.ativa?.etapa === "finalizada"
+          ? "Ver atividade"
+          : arquivoAberto
+            ? "Voltar ao Caderno"
+            : "Voltar à bancada";
       SIAB.refreshSelects?.();
       SIAB.activityUI?.render?.();
     } finally {
@@ -576,6 +622,9 @@ SIAB.relatorios = (() => {
       SIAB.notice("Relatório indisponível neste contexto.");
       return false;
     }
+    if (!id && SIAB.atividades?.ativa?.etapa === "finalizada")
+      id = SIAB.state.reportId;
+    arquivoAberto = !!id && id !== SIAB.state.reportId;
     if (id) {
       atual = lerTodos()[id] || null;
       if (!atual) SIAB.notice("Relatório não encontrado neste navegador.");
@@ -666,6 +715,15 @@ SIAB.relatorios = (() => {
     SIAB.$("relatorio-registrar").onclick = () => {
       if (!SIAB.ActivityContext.guard("files.notebook") || !atual) return;
       salvar();
+      if (SIAB.atividades?.ativa) {
+        const id = SIAB.atividades.registrarPratica();
+        SIAB.notice(
+          id
+            ? "Prática registrada no Caderno."
+            : "A prática ainda não tem dados experimentais ou respostas.",
+        );
+        return;
+      }
       if (!SIAB.progresso.dados.caderno.some((n) => n.relatorioId === atual.id))
         SIAB.progresso.anotar({
           tipo: "experiencia",
@@ -678,16 +736,12 @@ SIAB.relatorios = (() => {
         });
       SIAB.notice("Referência ao relatório registrada no Caderno.");
     };
-    SIAB.$("relatorio-baixar").onclick = () => {
-      if (!SIAB.ActivityContext.guard("files.html") || !atual) return;
-      salvar();
-      SIAB.baixarArquivo(
-        "SIAB-relatorio.html",
-        `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório SIAB</title><style>body{font:16px Georgia;max-width:900px;margin:35px auto;padding:20px;color:#111;background:#fff}table{border-collapse:collapse;width:100%;font-size:10pt}td,th{border:1px solid #bbb;padding:5px;overflow-wrap:anywhere}svg{width:100%;max-width:550px;color:#111}img{display:none}.table-scroll{overflow:auto}.student-text{white-space:pre-wrap}.writing-space{break-inside:auto}.response-line{height:7mm;border-bottom:1px solid #aaa;break-inside:avoid}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.grafico-grade{stroke:#ddd}.grafico-especie{fill:none;stroke-width:2}.grafico-rotulo,.grafico-eixo{fill:#111;font:12px sans-serif}h2,h3{break-after:avoid}thead{display:table-header-group}tr{break-inside:avoid}@media print{body{margin:0;padding:0}.table-scroll{overflow:visible}button{display:none}section{break-inside:auto}}@page{size:A4;margin:16mm}</style>${html()}</html>`,
-        "text/html;charset=utf-8",
-      );
+    SIAB.$("relatorio-voltar").onclick = () => {
+      if (SIAB.atividades?.ativa) SIAB.atividades.retomar();
+      else SIAB.irPara(arquivoAberto ? "#/caderno" : "#/laboratorio");
     };
   }
+
   return {
     capturar,
     salvar,
@@ -699,6 +753,8 @@ SIAB.relatorios = (() => {
     ligar,
     configure,
     hypotheses,
+    dadosHTML,
+    obter: (id) => lerTodos()[id] || null,
     get atual() {
       return atual;
     },

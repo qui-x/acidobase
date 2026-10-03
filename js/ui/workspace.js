@@ -174,7 +174,7 @@ SIAB.workspace = (() => {
       "dock-section-hidden",
       state.left !== "compact",
     );
-    $("controls-title").textContent =
+    const heading =
       state.left === "compact"
         ? "Montagem"
         : {
@@ -183,6 +183,16 @@ SIAB.workspace = (() => {
             modulo: "Módulo",
             missao: "Missão",
           }[state.leftGroup];
+    const symbol =
+      state.left === "compact"
+        ? "setup"
+        : {
+            preparo: "prepare",
+            objetos: "lab",
+            modulo: "explore",
+            missao: "mission",
+          }[state.leftGroup];
+    $("controls-title").innerHTML = icon(symbol) + `<span>${heading}</span>`;
   }
   function sync() {
     if (!ready || syncing) return;
@@ -339,12 +349,13 @@ SIAB.workspace = (() => {
       ? false
       : state.source === "dados" ||
         (mobile.matches && state.level !== "families"));
-    nodes.back.textContent =
-      state.source === "dados"
-        ? "‹ Dados"
+    nodes.back.innerHTML =
+      icon("back") +
+      (state.source === "dados"
+        ? "Dados"
         : state.level === "tool"
-          ? `‹ ${family?.label || "Ver"}`
-          : "‹ Ver";
+          ? `${family?.label || "Ver"}`
+          : "Ver");
     const single =
       S.verFamiliasDisponiveis().flatMap((g) => g.items).length === 1;
     if (
@@ -354,8 +365,10 @@ SIAB.workspace = (() => {
     )
       nodes.back.hidden = true;
     nodes.expand.hidden = mobile.matches || state.level === "data";
-    nodes.expand.textContent =
-      state.presentation === "fullscreen" ? "Restaurar" : "Expandir";
+    nodes.expand.innerHTML =
+      state.presentation === "fullscreen"
+        ? icon("collapse") + "Restaurar"
+        : icon("expand") + "Expandir";
     nodes.expand.setAttribute(
       "aria-expanded",
       String(state.presentation === "fullscreen"),
@@ -556,7 +569,7 @@ SIAB.workspace = (() => {
       "button",
       "dock-back",
       "quiet-btn dock-button",
-      "‹ Ver",
+      icon("back") + "Ver",
     );
     nodes.back.type = "button";
     header.prepend(nodes.back);
@@ -602,8 +615,12 @@ SIAB.workspace = (() => {
     nodes.data = create("div", "dock-data-menu", "dock-data-menu");
     nodes.data.innerHTML =
       '<p class="field-hint">Consulte os registros e organize suas conclusões.</p>' +
-      button("dock-history", "Histórico", 'data-dock-tool="historico"') +
-      button("dock-table", "Tabela", 'data-dock-tool="tabela"');
+      button(
+        "dock-history",
+        icon("history") + "Histórico",
+        'data-dock-tool="historico"',
+      ) +
+      button("dock-table", icon("table") + "Tabela", 'data-dock-tool="tabela"');
     nodes.data.append(nodes.report);
     $("dock-right-content").prepend(nodes.data);
     nodes.launchers = create(

@@ -50,14 +50,20 @@ SIAB.bancada = (() => {
     acao,
     rotulo = "Confirmar",
     intencao = "default",
+    opcoes = {},
   ) => {
     $("confirm-title").textContent = titulo;
     $("confirm-text").textContent = mensagem;
     $("confirm-yes").textContent = rotulo;
     $("confirm-yes").className = intencao === "danger" ? "danger-btn" : "primary-btn";
     $("confirm-dialog").dataset.intent = intencao;
+    $("confirm-cancel").textContent = opcoes.cancelar || "Cancelar";
+    $("confirm-extra").hidden = !opcoes.extra;
+    $("confirm-extra").textContent = opcoes.extra?.rotulo || "";
+    $("confirm-extra").onclick = () => {$("confirm-dialog").close();opcoes.extra?.acao();};
     confirmAction = acao;
     $("confirm-dialog").showModal();
+    $("confirm-cancel").focus();
   };
 
   // A mesma apresentação gerencia docas e bottom sheets; os conteúdos e

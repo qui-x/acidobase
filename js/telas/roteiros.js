@@ -59,7 +59,7 @@ SIAB.telas.roteiros = {
     SIAB.$("roteiros-lista").innerHTML = SIAB.experimentos
       .map(
         (r) =>
-          `<a class="content-row" href="#/roteiro/${r.id}"><span><strong>${SIAB.escape(r.titulo)}</strong><small>${SIAB.escape(r.subtitulo)}</small></span><span>${SIAB.MODULOS[r.modulo].nome} <span aria-hidden="true">›</span></span></a>`,
+          `<a class="content-row" href="#/roteiro/${r.id}"><span><strong>${SIAB.escape(r.titulo)}</strong><small>${SIAB.escape(r.subtitulo)}</small></span><span>${SIAB.MODULOS[r.modulo].nome} ${SIAB.icons.svg("next")}</span></a>`,
       )
       .join("");
   },

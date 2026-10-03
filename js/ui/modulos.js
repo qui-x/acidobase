@@ -17,7 +17,7 @@ SIAB.MODULOS = {
   explorar: {
     numero: 1,
     nome: "Explorar",
-    icone: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM16 16l4.5 4.5M8 11h6M11 8v6",
+    icone: "explore",
     define:
       "Observar antes de medir: escolha frascos e indicadores e veja a cor mudar gota a gota. Use um instrumento para obter uma leitura de pH.",
     fatos: [
@@ -31,7 +31,7 @@ SIAB.MODULOS = {
   medir: {
     numero: 2,
     nome: "Medir",
-    icone: "M4 17 17 4l3 3L7 20H4v-3ZM8 13l1.5 1.5M11 10l1.5 1.5M14 7l1.5 1.5",
+    icone: "ruler",
     define:
       "Controlar as quantidades: diluição, volume inicial e tamanho da gota. Registre leituras para acompanhar a variação de pH no gráfico.",
     fatos: [
@@ -45,8 +45,7 @@ SIAB.MODULOS = {
   calcular: {
     numero: 3,
     nome: "Calcular",
-    icone:
-      "M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01",
+    icone: "calculator",
     define:
       "Quantificar: concentrações em mol/L, [H₃O⁺] e [OH⁻], constantes de equilíbrio e quantidade de matéria.",
     fatos: [
@@ -70,8 +69,7 @@ SIAB.modulos = (() => {
   const $ = SIAB.$;
   let aberto = null; // módulo com o cartão aberto
 
-  const svg = (d) =>
-    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+  const svg = SIAB.icons.svg;
 
   function montar() {
     const box = $("modulos");
@@ -85,7 +83,7 @@ SIAB.modulos = (() => {
           <span class="modulo-nome">${m.nome}</span>
           <span class="modulo-selo"><span class="sr-only">, módulo </span>${m.numero}</span>
           <span class="modulo-ativo" hidden><span class="sr-only">, </span>Ativo</span>
-          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          ${SIAB.icons.svg("dropdown", "chevron")}
         </button>
         <div class="modulo-corpo" id="modulo-corpo-${id}" role="region" aria-labelledby="modulo-cab-${id}" hidden>
           <button type="button" class="modulo-ativar" data-nivel="${id}" aria-pressed="false" aria-describedby="modulo-def-${id}"><span class="modulo-ponto" aria-hidden="true"></span><span class="modulo-ativar-texto">Ativar módulo ${m.nome}</span></button>

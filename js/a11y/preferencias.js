@@ -146,21 +146,22 @@ SIAB.initPreferences = () => {
     const script = document.createElement("script");
     script.id = "vlibras-script";
     script.src = "https://vlibras.gov.br/app/vlibras-plugin.js";
-    script.onload = () => {
-      try {
-        new window.VLibras.Widget("https://vlibras.gov.br/app");
-        window.onload?.();
-      } catch (erro) {
-        /* segue sem o tradutor */
-      }
-    };
-    script.onerror = () => {
+    const falha = () => {
       script.remove();
       widget.remove();
       SIAB.notice(
         "O VLibras não pôde ser carregado agora. Verifique a conexão ou tente mais tarde.",
       );
     };
+    script.onload = () => {
+      try {
+        new window.VLibras.Widget("https://vlibras.gov.br/app");
+        window.onload?.();
+      } catch (erro) {
+        falha();
+      }
+    };
+    script.onerror = falha;
     document.body.append(script);
   }
 

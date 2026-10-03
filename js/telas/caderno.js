@@ -45,23 +45,34 @@ let filtroCaderno = "todos";
 SIAB.telas.caderno = {
   secao: "caderno",
   titulo: () => "Caderno",
-  entrar() {
+  entrar(id) {
     const all = SIAB.progresso.dados.caderno,
       notas = all.filter(
         (n) => filtroCaderno === "todos" || n.tipo === filtroCaderno,
       ),
       esc = SIAB.escape;
     const tipos = {
+      pratica: "Prática realizada",
       experiencia: "Experiência",
       missao: "Missão",
       exploracao: "Exploração livre",
-      anotacao: "Anotação",
+      anotacao: "Nota pessoal",
     };
+    const pratica =
+      id &&
+      SIAB.progresso.dados.caderno.find(
+        (n) => n.id === id && n.tipo === "pratica",
+      );
+    if (pratica) {
+      SIAB.$("caderno-lista").innerHTML =
+        `<article class="nota practice-record"><p class="eyebrow">PRÁTICA REALIZADA · ${esc(pratica.estadoPratica || "")}</p><h2 data-foco tabindex="-1">${esc(pratica.titulo)}</h2><div class="actions"><a class="quiet-btn" href="#/caderno">${SIAB.icons.svg("back")}Voltar aos registros</a><a class="secondary-btn" href="#/relatorio/${encodeURIComponent(pratica.relatorioId)}">${SIAB.icons.svg("report")}Abrir relatório</a></div>${SIAB.relatorios.dadosHTML(pratica.relatorioId)}</article>`;
+      return;
+    }
     SIAB.$("caderno-lista").innerHTML = notas.length
       ? notas
           .map(
             (n) =>
-              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="danger-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
+              `<article class="nota timeline-entry ${n.tipo === "pratica" ? "practice-record" : ""}"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2>${n.tipo === "pratica" ? `<p>${esc(n.estadoPratica || "")}</p>` : ""}</header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl><div class="actions">${n.tipo === "pratica" ? `<a class="secondary-btn" data-practice-data="${esc(n.id)}" href="#/caderno/${encodeURIComponent(n.id)}">${SIAB.icons.svg("data")}Abrir dados</a>` : ""}${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">${SIAB.icons.svg("report")}Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="danger-btn" data-apagar-nota="${esc(n.id)}">${n.tipo === "pratica" ? "Apagar registro" : "Apagar nota"}</button></div></article>`,
           )
           .join("")
       : "<p>Nenhum registro neste filtro. Registre uma exploração na bancada ou escreva uma anotação.</p>";
@@ -104,13 +115,15 @@ SIAB.telas.caderno = {
         );
         if (!nota) return;
         SIAB.confirmar(
-          "Apagar nota?",
+          nota.tipo === "pratica"
+            ? "Apagar registro da prática?"
+            : "Apagar nota?",
           `“${nota.titulo}” será removida. Esta ação não pode ser desfeita.`,
           () => {
             SIAB.progresso.removerNota(nota.id);
             SIAB.telas.caderno.entrar();
           },
-          "Apagar nota",
+          nota.tipo === "pratica" ? "Apagar registro" : "Apagar nota",
           "danger",
         );
       }

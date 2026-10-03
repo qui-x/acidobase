@@ -34,7 +34,6 @@ SIAB.activityUI = (() => {
     ["#indicator-chips,#indicator-only", "bench.changeIndicator"],
     ["#selecao-misturar-btn", "vessels.changeContent"],
     ["#compare-btn", "vessels.add"],
-    ["#relatorio-baixar", "files.html"],
     ["#relatorio-registrar,#selecao-registrar-btn", "files.notebook"],
     ["#relatorio-print,#relatorio-blank", "report.print"],
   ];

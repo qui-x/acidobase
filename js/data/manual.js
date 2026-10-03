@@ -6,7 +6,7 @@ SIAB.manualContent = {
       id: "comecar",
       title: "Comece por aqui",
       summary: "Primeiros passos, navegação e uso offline.",
-      icon: "book",
+      icon: "home",
       group: "Orientação",
     },
     {
@@ -48,7 +48,7 @@ SIAB.manualContent = {
       id: "montagens",
       title: "Montagens prontas",
       summary: "Conheça as bancadas pré-configuradas.",
-      icon: "flask",
+      icon: "mount",
       group: "Prepare e registre",
     },
     {
@@ -69,7 +69,7 @@ SIAB.manualContent = {
       id: "caderno",
       title: "Caderno",
       summary: "Guarde notas e investigações escolhidas por você.",
-      icon: "book",
+      icon: "notebook",
       group: "Prepare e registre",
     },
     {
@@ -176,7 +176,7 @@ SIAB.manualContent = {
         "Use Aprender para conceitos, Missões para desafios de investigação, Roteiros Experimentais para atividades estruturadas, Laboratório para exploração e Caderno para registros.",
       steps: [
         "Escolha um caminho na Página inicial ou abra o Menu.",
-        "No Menu, entre em Configurações → Inicialização para escolher a tela de entrada.",
+        "No Menu, entre em Preferências → Inicialização para escolher a tela de entrada.",
         "Use Manual para consulta e Área do Professor para preparar atividades.",
       ],
       example: "",
@@ -1132,19 +1132,12 @@ SIAB.manualContent = {
         "Preencha observações, análise, interpretação, resposta à investigação e conclusão.",
         "Escolha Relatório completo, Para preencher à mão ou Atividade de análise (Professor). Nos modos em papel, selecione 5, 10, 15, 20, 25 ou uma quantidade personalizada de 5 a 60 linhas por campo. O padrão é 10.",
         "Na Atividade de análise, escolha as condições, dados, tabela, gráficos e cálculos incluídos, e quais campos autorais ficarão em branco. Use medições da bancada ou insira dados explicitamente hipotéticos.",
-        "Após novas medições, use Atualizar dados da bancada. Imprima, baixe HTML ou registre no Caderno conforme os controles oferecidos.",
+        "Após novas medições, use Atualizar dados da bancada. Use Imprimir / Salvar como PDF ou registre no Caderno.",
       ],
       example:
         "Use a impressão preenchida para entregar a investigação, ou Para preencher à mão, preservando dados e deixando apenas campos autorais vazios.",
       related: ["roteiros", "tabela", "caderno"],
-      keywords: [
-        "relatório",
-        "imprimir",
-        "exportar",
-        "PDF",
-        "conclusão",
-        "HTML",
-      ],
+      keywords: ["relatório", "imprimir", "exportar", "PDF", "conclusão"],
       details: [
         {
           title: "Dados e texto",
@@ -1168,9 +1161,9 @@ SIAB.manualContent = {
       title: "Caderno de investigação",
       category: "caderno",
       summary:
-        "O Caderno reúne experiências, missões, explorações e anotações guardadas no navegador.",
+        "Registros pessoais de investigações, hipóteses, descobertas e práticas.",
       purpose:
-        "Guarde hipóteses e descobertas escolhidas por você, além das referências a relatórios.",
+        "Guarde notas pessoais. Ao encerrar uma atividade com dados, a Prática realizada fica registrada automaticamente, com Abrir dados e Abrir relatório.",
       steps: [
         "Abra Caderno pela navegação.",
         "Escreva uma anotação ou consulte os registros existentes.",
@@ -1183,8 +1176,8 @@ SIAB.manualContent = {
       keywords: ["caderno", "anotação", "notas", "salvar"],
       details: [
         {
-          title: "Três registros diferentes",
-          text: "Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda registros e referências escolhidos.",
+          title: "Quatro recursos diferentes",
+          text: "Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda notas pessoais e práticas realizadas, sem copiar o relatório inteiro como texto.",
         },
       ],
       actions: [
@@ -1316,7 +1309,7 @@ SIAB.manualContent = {
         "Abra o link recebido e leia a apresentação.",
         "Inicie a atividade e consulte a montagem preparada.",
         "Use os botões de ajuda para dúvidas curtas, sem abandonar o experimento.",
-        "Preencha o relatório e finalize. Encerrar atividade é a ação específica para sair desse contexto.",
+        "Use Finalizar para concluir a prática e abrir seu relatório. Encerrar atividade sai do contexto e volta ao Início, preservando os dados no Caderno.",
       ],
       example: "",
       related: ["problemas", "roteiros", "relatorios"],
@@ -1329,6 +1322,14 @@ SIAB.manualContent = {
         "bloqueado",
       ],
       details: [
+        {
+          title: "Retomar ou iniciar outra tentativa",
+          text: "Ao reabrir o mesmo link, escolha Continuar sessão ou Iniciar nova sessão. Se já finalizou, escolha Ver relatório anterior ou Iniciar nova tentativa. A nova tentativa recebe uma identidade própria; os dados e relatórios anteriores continuam separados.",
+        },
+        {
+          title: "Encerrar com ou sem dados",
+          text: "Com dados, você pode continuar, abrir o relatório antes de sair ou encerrar. Encerrar atualiza a mesma Prática realizada no Caderno, sem duplicá-la. Sem dados, a confirmação é simples e nenhum registro vazio é criado. A preferência de inicialização permanece igual.",
+        },
         {
           title: "Ajuda durante a atividade",
           text: "Em modo restrito, a ajuda contextual continua disponível, mas não oferece acesso ao Manual completo nem a outras áreas. As opções só reaparecem quando você sai da atividade pela ação própria.",
@@ -1590,81 +1591,79 @@ SIAB.manualContent = {
   },
 };
 SIAB.manualContent.topics.push({
-  "id": "referencias",
-  "title": "Referências e créditos",
-  "category": "calcular",
-  "summary": "Fontes do modelo químico e créditos das dependências do aplicativo.",
-  "purpose": "Consulte as fontes originais para aprofundar conceitos e constantes usados pelo SIAB.",
-  "steps": [
+  id: "referencias",
+  title: "Referências e créditos",
+  category: "calcular",
+  summary:
+    "Fontes do modelo químico e créditos das dependências do aplicativo.",
+  purpose:
+    "Consulte as fontes originais para aprofundar conceitos e constantes usados pelo SIAB.",
+  steps: [
     "Abra uma fonte de referência de acordo com o assunto investigado.",
-    "Confira as condições e as limitações descritas no modelo científico."
+    "Confira as condições e as limitações descritas no modelo científico.",
   ],
-  "related": [
-    "limites",
-    "tabela-indicadores"
+  related: ["limites", "tabela-indicadores"],
+  keywords: ["referências", "créditos", "licença", "bibliografia"],
+  details: [
+    {
+      title: "Licenças",
+      text: "SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE.",
+    },
   ],
-  "keywords": [
-    "referências",
-    "créditos",
-    "licença",
-    "bibliografia"
+  references: [
+    {
+      label: "OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)",
+      url: "https://openstax.org/books/chemistry-2e/pages/14-introduction",
+    },
+    {
+      label: "OpenStax — Apêndice H (Ka de ácidos fracos)",
+      url: "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    },
+    {
+      label: "OpenStax — Apêndice I (Kb de bases fracas)",
+      url: "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases",
+    },
+    {
+      label: "OpenStax — Apêndice J (Kps)",
+      url: "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    },
+    {
+      label:
+        "D. C. Harris, Análise Química Quantitativa : constantes de dissociação e indicadores",
+      url: null,
+    },
+    {
+      label:
+        "CRC Handbook of Chemistry and Physics : pKa e condutividade iônica limite (λ°)",
+      url: null,
+    },
+    {
+      label:
+        "Nelson e Cox, Princípios de Bioquímica de Lehninger : pKa dos aminoácidos",
+      url: null,
+    },
+    {
+      label:
+        "Baes e Mesmer, The Hydrolysis of Cations : acidez dos cátions metálicos hidratados",
+      url: null,
+    },
+    {
+      label: "OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)",
+      url: "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations",
+    },
+    {
+      label: "IUPAC — Ponto de equivalência",
+      url: "https://goldbook.iupac.org/terms/view/09042",
+    },
+    {
+      label: "PhET — Soluções ácido-base (lupa de partículas)",
+      url: "https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions",
+    },
+    {
+      label: "ACS — Indicador de repolho roxo",
+      url: "https://www.acs.org/education/activities/red-cabbage-indicator.html",
+    },
   ],
-  "details": [
-    {
-      "title": "Licenças",
-      "text": "SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE."
-    }
-  ],
-  "references": [
-    {
-      "label": "OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/14-introduction"
-    },
-    {
-      "label": "OpenStax — Apêndice H (Ka de ácidos fracos)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids"
-    },
-    {
-      "label": "OpenStax — Apêndice I (Kb de bases fracas)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases"
-    },
-    {
-      "label": "OpenStax — Apêndice J (Kps)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products"
-    },
-    {
-      "label": "D. C. Harris, Análise Química Quantitativa : constantes de dissociação e indicadores",
-      "url": null
-    },
-    {
-      "label": "CRC Handbook of Chemistry and Physics : pKa e condutividade iônica limite (λ°)",
-      "url": null
-    },
-    {
-      "label": "Nelson e Cox, Princípios de Bioquímica de Lehninger : pKa dos aminoácidos",
-      "url": null
-    },
-    {
-      "label": "Baes e Mesmer, The Hydrolysis of Cations : acidez dos cátions metálicos hidratados",
-      "url": null
-    },
-    {
-      "label": "OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations"
-    },
-    {
-      "label": "IUPAC — Ponto de equivalência",
-      "url": "https://goldbook.iupac.org/terms/view/09042"
-    },
-    {
-      "label": "PhET — Soluções ácido-base (lupa de partículas)",
-      "url": "https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions"
-    },
-    {
-      "label": "ACS — Indicador de repolho roxo",
-      "url": "https://www.acs.org/education/activities/red-cabbage-indicator.html"
-    }
-  ]
 });
 SIAB.manualRegistry = (() => {
   const { categories, topics, aliases } = SIAB.manualContent;

@@ -95,7 +95,7 @@ SIAB.initSelects = () => {
     button.setAttribute("aria-controls", "choice-dialog");
     button.setAttribute("aria-expanded", "false");
     button.innerHTML =
-      '<span></span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>';
+      '<span></span>' + SIAB.icons.svg("dropdown");
     select.hidden = true;
     select.after(button);
     const record = { select, button };

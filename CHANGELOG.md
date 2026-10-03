@@ -1,5 +1,16 @@
 # Registro de integração — SIAB
 
+## 1.0.0-rc.5 — 03/10/2026
+
+- Ciclo de atividade: Finalizar consolida/marca/abre relatório; Encerrar oferece relatório antes da saída, preserva registros e sempre retorna ao Início sem alterar a preferência de inicialização.
+- Sessões têm identidade estável; reabrir link apresenta continuar/nova sessão ou relatório anterior/nova tentativa. Cancelamento preserva a tentativa existente; novas tentativas não sobrescrevem os relatórios anteriores.
+- Caderno recebe práticas estruturadas por sessão, sem duplicatas, com Abrir dados/Abrir relatório. Sessão sem dados relevantes não gera prática vazia.
+- Removidas a escolha digital/impresso do Professor e a exportação HTML do relatório na interface. Links antigos continuam aceitos; impressão/PDF permanece no navegador.
+- Iconografia compartilhada revista: 22 identidades de área e nova família de setas, com inventário visual para aprovação. Manual, tour, menus, cabeçalhos e Sobre atualizados.
+- Tratada também a falha do construtor VLibras; removidos seletores legados sem consumidores e escrita morta de última localização, preservando migrações/aliases.
+- Acrescentados 25 cenários RC.5 e cinco de atualização/offline por motor. Reexecutadas as regressões, incluindo o contrato mobile da base. Ciência, catálogo, ActivityContext, marca e abertura preservados por comparação de arquivos.
+- Standalone, cache e metadados atualizados; inventários, evidências, auditorias, matriz de 145 seções e hashes entregues. Mantida RC.5, sem promover estável ou criar RC.6 automaticamente.
+
 ## 1.0.0-rc.4.5 — 02/10/2026
 
 - `quiet-btn` passa a ter superfície, borda, altura e estados próprios de botão; famílias primary, secondary, quiet e danger compartilham o contrato visual. Ações destrutivas, inclusive notas e seleção de recipientes, usam danger e confirmação.

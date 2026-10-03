@@ -123,7 +123,6 @@ SIAB.progresso = (() => {
       dados.missoes = {};
       dados.temas = {};
       dados.caderno = [];
-      dados.ultima = null;
       salvar();
     },
   };

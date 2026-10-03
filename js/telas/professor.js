@@ -128,7 +128,7 @@ SIAB.professor = (() => {
           .map(([, value]) => value.label),
     );
     $("prof-resumo").textContent =
-      `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
+      `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
     $("prof-abrir").href = SIAB.atividades.link(token);
   }
   async function criar(c, id = null) {
@@ -190,7 +190,6 @@ SIAB.professor = (() => {
           permissions: lerPermissoes(f),
           initialView: f.get("initialView") || null,
           navegacao: f.get("navegacao"),
-          relatorio: f.get("relatorio"),
           identificacao: Object.fromEntries(
             ["nome", "turma", "data", "professor", "grupo"].map((k) => [
               k,
@@ -275,7 +274,6 @@ SIAB.professor = (() => {
       temperatura: c.temperatura,
       temperaturaModo: c.temperaturaModo || "referencia",
       navegacao: c.navegacao,
-      relatorio: c.relatorio,
       initialView: c.initialView || "",
       ...c.identificacao,
     })) {
@@ -298,7 +296,7 @@ SIAB.professor = (() => {
     SIAB.refreshSelects?.();
     f.elements.titulo.focus();
     SIAB.notice(
-      "Editando uma cópia independente. Links já enviados preservam sua configuração original.",
+      "Editando a atividade selecionada. Links já enviados preservam sua configuração original.",
     );
   }
   const ajustes = {

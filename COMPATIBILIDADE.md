@@ -1,15 +1,18 @@
-# Compatibilidade — SIAB 1.0.0-rc.4.5
+# Compatibilidade — SIAB 1.0.0-rc.5
 
-| Ambiente verificado | Resultado | Limite da evidência |
+Execução em Linux, 03/10/2026, com binários efetivamente instalados e Playwright 1.56.1.
+
+| Ambiente | Evidência | Limite |
 |---|---|---|
-| Chromium Headless Shell 141.0.7390.37 / Linux / Playwright 1.56.1 | 197 cenários, sem falhas | Não homologa Chrome/Edge comerciais por plataforma |
-| Firefox/Gecko 142.0.1 / Linux | 197 cenários, sem falhas | Não substitui aparelhos e versões comerciais |
-| WebKit MiniBrowser 26.0 / Linux | 197 cenários, sem falhas | Não é Safari de macOS/iOS |
-| Dez viewports 320–1920 px para Manual/workspace | Sem overflow global; foco e limites verificados | Toque, teclado e viewport de teste são simulados |
-| Quatro larguras 320/360/390/414 px para controles | Altura mínima, irmãos, proporção e capturas verificados nos três motores | Requer avaliação em aparelhos reais para ergonomia final |
-| HTTP, HTTPS local, PWA e cache offline | Inicialização, links, cache e atualização exercitados | Certificado e atualização apenas no ambiente de teste |
-| Standalone e entrada modular por file:// | Manual e fluxos funcionais | PWA requer localhost/HTTPS; link file:// não distribui |
-| Impressão | Conteúdo nos três motores; PDFs Chromium inspecionados | Papel e impressoras pendentes |
-| Teclado, axe, tema, contraste e cores forçadas | Manual e workspace validados | Leitores de tela reais pendentes |
+| Chromium Headless Shell 141.0.7390.37 | 227 cenários aprovados | Não homologa automaticamente Chrome/Edge comerciais |
+| Firefox/Gecko 142.0.1 | 227 cenários aprovados | Não substitui sistemas/aparelhos físicos |
+| WebKit MiniBrowser 26.0 | 227 cenários aprovados | Não é Safari macOS/iOS |
+| Mobile 320×568, 360×800, 390×844, 414×896 | Irmãos, dimensões, painéis e overflow verificados | Toque e viewport simulados |
+| Tablet 768×1024 e 1024×768 | Docas, navegação e resize verificados | Orientação física pendente |
+| Desktop 1280×720, 1366×768, 1440×900, 1920×1080 | Geometria e expansão verificados | Não é uma matriz de todos os sistemas comerciais |
+| PWA/Service Worker | Atualização RC.4.5 → RC.5 e reabertura offline nos três motores | Instalação pelo sistema pendente |
+| Standalone por file:// | Fluxos, versão, permissões, Manual e atividade nos três motores | PWA requer localhost/HTTPS |
+| Impressão/PDF | Conteúdo nos três motores e três PDFs Chromium | Impressão física pendente |
+| Teclado, ARIA e axe | Sem violações detectadas nas telas exercitadas | Não certifica WCAG integral nem leitores de tela reais |
 
-O Chromium foi instalado para executar a validação. Bibliotecas de teste não fazem parte do aplicativo e não são necessárias para abrir o HTML único. Consulte [VALIDACAO.md](VALIDACAO.md) para matriz/capturas e [docs/LIMITACOES.md](docs/LIMITACOES.md) para verificações físicas pendentes. Esta entrega permanece candidata RC.4.5.
+As dependências e os navegadores de teste não são necessários para usar o HTML único. Veja [VALIDACAO.md](VALIDACAO.md) para contagens e [docs/LIMITACOES.md](docs/LIMITACOES.md) para pendências. A conclusão é **APTO PARA HOMOLOGAÇÃO FINAL**, permanecendo RC.5.

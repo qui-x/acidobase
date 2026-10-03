@@ -407,39 +407,6 @@ dialog.tour::backdrop { background: transparent; backdrop-filter: none; }
 .cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
 button.cartao { font: inherit; cursor: pointer; }
 
-.trilhas { display: grid; gap: 22px; }
-.trilha { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px; }
-.trilha-cabecalho h2 { font-size: 1.25rem; margin: 4px 0 6px; }
-.trilha-cabecalho p:not(.eyebrow) { color: var(--secondary); font-size: .9rem; }
-.barra { height: 6px; border-radius: 3px; background: var(--panel2); margin: 12px 0 14px; overflow: hidden; }
-.barra span, .missao-progresso span { display: block; height: 100%; background: var(--brand); border-radius: 3px; }
-.trilha-itens, .aula-sequencia { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.item-trilha {
-  display: grid; grid-template-columns: 38px 1fr auto; gap: 12px; align-items: center; padding: 12px;
-  border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); text-decoration: none;
-}
-.item-trilha:hover { border-color: var(--accent); }
-.item-numero { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--panel2); border: 1px solid var(--border); font-weight: 700; }
-.item-trilha.feito .item-numero { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.item-texto { display: flex; flex-direction: column; min-width: 0; }
-.item-texto > span:last-child { color: var(--secondary); font-size: .8rem; }
-.item-tipo { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
-.item-status { font-size: .75rem; color: var(--muted); text-align: right; }
-
-.professor-ferramentas { margin: 10px 0 18px; }
-.aula-form { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 8px 18px 18px; }
-.aula-trilha legend { font-size: .85rem; }
-.aula-trilha .check-row { margin: 8px 0; }
-.aula-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
-.aula-link { margin-top: 14px; padding: 14px 18px; border: 1px solid var(--accent); border-radius: 12px; background: var(--panel2); }
-.gabaritos { display: grid; gap: 8px; }
-.gabarito { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); padding: 10px 14px; margin: 0; }
-.gabarito summary { color: var(--text); font-size: .9rem; }
-.gabarito p { font-size: .85rem; margin-top: 8px; color: var(--secondary); }
-.gabarito-passos { font-size: .82rem; color: var(--secondary); padding-left: 20px; }
-.gabarito-passos li { margin: 6px 0; }
-.gabarito .secondary-btn { margin-top: 8px; }
-
 .caderno-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; align-items: center; }
 .caderno-lista { display: grid; gap: 12px; }
 .nota { border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius); background: var(--panel); padding: 14px 16px; }
@@ -947,7 +914,6 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .missao-card { display: flex; flex-direction: column; gap: 10px; }
 .missao-card > .eyebrow { color: var(--accent); }
 .missao-card h2 { font-size: 1.15rem; }
-.missao-progresso { height: 6px; border-radius: 3px; background: var(--panel2); overflow: hidden; }
 .passo { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; }
 .passo-tipo { font-size: .68rem; letter-spacing: .1em; font-weight: 700; color: var(--accent); }
 .passo h3 { margin: 6px 0 10px; font-size: 1rem; line-height: 1.4; }
@@ -1231,8 +1197,6 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .memoria-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tela { padding: 20px 16px 32px; }
   .manual-secao { padding: 16px 14px; }
-  .item-trilha { grid-template-columns: 34px 1fr; }
-  .item-status { grid-column: 2; text-align: left; }
 }
 @media (max-width: 760px) {
 }
@@ -1443,7 +1407,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .tela-cabecalho { display: none; }
   main :is(p, dt, dd, li, h1, h2, h3, caption, caption span, th, td, .eyebrow, .small) { color: #111 !important; }
   /* Caderno */
-  .nota, .trilha, .jogo-painel, .gabarito { break-inside: avoid; border: 0; border-top: .6pt solid #999; border-radius: 0; background: #fff; padding: 3mm 0; }
+  .nota{ break-inside: avoid; border: 0; border-top: .6pt solid #999; border-radius: 0; background: #fff; padding: 3mm 0; }
   .nota { border-left: 0 !important; }
   .nota h3 { font-size: 11pt; margin: 0 0 1.5mm; }
   .nota dl { font-size: 9pt; }

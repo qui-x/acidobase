@@ -501,39 +501,6 @@ dialog.tour::backdrop { background: transparent; backdrop-filter: none; }
 .cartoes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 14px; }
 button.cartao { font: inherit; cursor: pointer; }
 
-.trilhas { display: grid; gap: 22px; }
-.trilha { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 18px; }
-.trilha-cabecalho h2 { font-size: 1.25rem; margin: 4px 0 6px; }
-.trilha-cabecalho p:not(.eyebrow) { color: var(--secondary); font-size: .9rem; }
-.barra { height: 6px; border-radius: 3px; background: var(--panel2); margin: 12px 0 14px; overflow: hidden; }
-.barra span, .missao-progresso span { display: block; height: 100%; background: var(--brand); border-radius: 3px; }
-.trilha-itens, .aula-sequencia { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
-.item-trilha {
-  display: grid; grid-template-columns: 38px 1fr auto; gap: 12px; align-items: center; padding: 12px;
-  border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg); color: var(--text); text-decoration: none;
-}
-.item-trilha:hover { border-color: var(--accent); }
-.item-numero { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--panel2); border: 1px solid var(--border); font-weight: 700; }
-.item-trilha.feito .item-numero { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-.item-texto { display: flex; flex-direction: column; min-width: 0; }
-.item-texto > span:last-child { color: var(--secondary); font-size: .8rem; }
-.item-tipo { font-size: .68rem; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); font-weight: 700; }
-.item-status { font-size: .75rem; color: var(--muted); text-align: right; }
-
-.professor-ferramentas { margin: 10px 0 18px; }
-.aula-form { border: 1px solid var(--border); border-radius: 12px; background: var(--panel); padding: 8px 18px 18px; }
-.aula-trilha legend { font-size: .85rem; }
-.aula-trilha .check-row { margin: 8px 0; }
-.aula-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; align-items: center; }
-.aula-link { margin-top: 14px; padding: 14px 18px; border: 1px solid var(--accent); border-radius: 12px; background: var(--panel2); }
-.gabaritos { display: grid; gap: 8px; }
-.gabarito { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); padding: 10px 14px; margin: 0; }
-.gabarito summary { color: var(--text); font-size: .9rem; }
-.gabarito p { font-size: .85rem; margin-top: 8px; color: var(--secondary); }
-.gabarito-passos { font-size: .82rem; color: var(--secondary); padding-left: 20px; }
-.gabarito-passos li { margin: 6px 0; }
-.gabarito .secondary-btn { margin-top: 8px; }
-
 .caderno-acoes { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; align-items: center; }
 .caderno-lista { display: grid; gap: 12px; }
 .nota { border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: var(--radius); background: var(--panel); padding: 14px 16px; }
@@ -1041,7 +1008,6 @@ details.shelf-group .shelf-bottles { padding-bottom: 8px; }
 .missao-card { display: flex; flex-direction: column; gap: 10px; }
 .missao-card > .eyebrow { color: var(--accent); }
 .missao-card h2 { font-size: 1.15rem; }
-.missao-progresso { height: 6px; border-radius: 3px; background: var(--panel2); overflow: hidden; }
 .passo { border: 1px solid var(--border); border-radius: 10px; background: var(--bg); padding: 14px; }
 .passo-tipo { font-size: .68rem; letter-spacing: .1em; font-weight: 700; color: var(--accent); }
 .passo h3 { margin: 6px 0 10px; font-size: 1rem; line-height: 1.4; }
@@ -1325,8 +1291,6 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .memoria-grade { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .tela { padding: 20px 16px 32px; }
   .manual-secao { padding: 16px 14px; }
-  .item-trilha { grid-template-columns: 34px 1fr; }
-  .item-status { grid-column: 2; text-align: left; }
 }
 @media (max-width: 760px) {
 }
@@ -1537,7 +1501,7 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .tela-cabecalho { display: none; }
   main :is(p, dt, dd, li, h1, h2, h3, caption, caption span, th, td, .eyebrow, .small) { color: #111 !important; }
   /* Caderno */
-  .nota, .trilha, .jogo-painel, .gabarito { break-inside: avoid; border: 0; border-top: .6pt solid #999; border-radius: 0; background: #fff; padding: 3mm 0; }
+  .nota{ break-inside: avoid; border: 0; border-top: .6pt solid #999; border-radius: 0; background: #fff; padding: 3mm 0; }
   .nota { border-left: 0 !important; }
   .nota h3 { font-size: 11pt; margin: 0 0 1.5mm; }
   .nota dl { font-size: 9pt; }
@@ -1704,12 +1668,6 @@ dialog.tour + .backdrop { background: transparent; }
   :root[data-mobile-study=on] .caderno-acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
   :root[data-mobile-study=on] .caderno-acoes button { min-height: 44px; padding: 6px; font-size: .77rem; }
   :root[data-mobile-study=on] #caderno-limpar { grid-column: 1 / -1; }
-  :root[data-mobile-study=on] .aula-form > .aula-acoes { position: sticky; bottom: var(--bottom-h); z-index: 2; padding: 8px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px; }
-  :root[data-mobile-study=on] .aula-acoes { display: flex; gap: 6px; flex-wrap: wrap; }
-  :root[data-mobile-study=on] .aula-acoes > * { flex: 1 1 120px; min-height: 44px; font-size: .77rem; padding: 6px; }
-  :root[data-mobile-study=on] .jogo-painel { padding: 14px 12px; }
-  :root[data-mobile-study=on] .jogo-painel h2 { font-size: 1.08rem; }
-  :root[data-mobile-study=on] .jogo-painel .field input[type=range] { min-height: 44px; }
   :root[data-mobile-study=on] .detetive-grade { grid-template-columns: 88px minmax(0,1fr); gap: 10px; }
   :root[data-mobile-study=on] .detetive-tubo .tube-svg { height: 155px; width: 100%; }
   :root[data-mobile-study=on] .detetive-botoes button { min-height: 44px; padding: 7px; }
@@ -1718,8 +1676,6 @@ dialog.tour + .backdrop { background: transparent; }
   :root[data-mobile-study=on] .carta { padding: 10px; width: 100%; min-width: 0; overflow-wrap: anywhere; }
   :root[data-mobile-study=on] .carta-formula { font-size: 1.4rem; }
   :root[data-mobile-study=on] .carta dl > div { flex-wrap: wrap; padding: 3px 0; }
-  :root[data-mobile-study=on] .jogo-acoes { gap: 6px; }
-  :root[data-mobile-study=on] .jogo-acoes > button { min-height: 44px; }
   :root[data-mobile-study=on] .siab-dialog { max-height: calc(var(--mobile-visible-height, 100dvh) - 20px); }
   :root[data-mobile-study=on] .dialog-actions { flex-wrap: wrap; gap: 8px; }
   :root[data-mobile-study=on] .dialog-actions > button { min-height: 44px; }
@@ -5510,7 +5466,7 @@ button:disabled {
   align-content: start;
 }
 .manual-flow li:not(:last-child):after {
-  content: "→";
+  content: none;
   position: absolute;
   right: -18px;
   top: -2px;
@@ -5890,7 +5846,7 @@ button:disabled {
     gap: 22px;
   }
   .manual-flow li:not(:last-child):after {
-    content: "↓";
+    content: none;
     right: 0;
     top: 10px;
   }
@@ -6559,6 +6515,93 @@ button:disabled {
     border-color: #888;
   }
 }
+/* RC.5: mesma família de ícones e controles; arquitetura preservada. */
+summary.with-disclosure::after {
+  content: none;
+}
+summary.with-disclosure {
+  list-style: none;
+}
+.disclosure-icon {
+  margin-left: auto;
+  color: var(--accent);
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+details[open] > summary > .disclosure-icon,
+[aria-expanded="true"] > .disclosure-icon {
+  transform: rotate(180deg);
+}
+.manual-flow li::after {
+  content: none !important;
+}
+.manual-flow-arrow {
+  position: absolute;
+  right: -22px;
+  top: 0;
+  color: var(--accent);
+  width: 20px;
+  height: 20px;
+}
+.dock-button,
+.dock-data-menu > button,
+.ver-family-tabs button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.ver-family-tabs .siab-icon {
+  width: 18px;
+  height: 18px;
+}
+.about-links .quiet-btn {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  min-height: 44px;
+  padding: 10px 15px;
+}
+.about-links .quiet-btn:hover {
+  border-color: var(--accent);
+  background: var(--hover);
+}
+.practice-record {
+  background: var(--panel2);
+  border-left-color: var(--brand);
+}
+.practice-record .actions {
+  margin-top: 12px;
+}
+.practice-vessel {
+  border-top: 1px solid var(--border);
+  padding-block: 18px;
+}
+.practice-vessel .report-table {
+  overflow: auto;
+  max-width: 100%;
+}
+.session-choice {
+  display: grid;
+  gap: 16px;
+}
+#controls-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .manual-flow-arrow {
+    right: 0;
+    top: 10px;
+    transform: rotate(90deg);
+  }
+}
+@media print {
+  .disclosure-icon {
+    display: none;
+  }
+}
 
 </style>
   </head>
@@ -6625,9 +6668,7 @@ button:disabled {
         aria-label="Abrir menu"
         title="Menu"
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+        <span data-app-icon="menu"></span>
       </button>
       <a
         class="header-brand"
@@ -6661,9 +6702,7 @@ button:disabled {
           aria-expanded="false"
           title="Prateleira e ajustes"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h9M17 7h3M4 17h3M11 17h9M13 4v6M7 14v6" /></svg
-          ><span class="header-btn-texto">Prateleira</span>
+          <span data-app-icon="setup"></span><span class="header-btn-texto">Prateleira</span>
         </button>
         <button
           id="access-btn"
@@ -6673,12 +6712,7 @@ button:disabled {
           aria-controls="app-drawer"
           title="Acessibilidade"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="4.5" r="1.8" />
-            <path
-              d="M5 8.5c2.3.7 4.6 1 7 1s4.7-.3 7-1M12 9.5V14m0 0-3 6.5M12 14l3 6.5"
-            /></svg
-          ><span class="header-btn-texto">Acessibilidade</span>
+          <span data-app-icon="accessibility"></span><span class="header-btn-texto">Acessibilidade</span>
         </button>
       </div>
     </header>
@@ -6729,21 +6763,13 @@ button:disabled {
             ></span>
             <span class="inicio-card-acao"
               >Entrar no laboratório
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              <span data-app-icon="arrow"></span></span>
           </a>
           <a class="caminho caminho-aprender" href="#/aprender">
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="learn"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Aprender</strong>
             <span>Entenda a química por trás de cada transformação.</span>
             <span class="caminho-meta" id="inicio-temas-meta"
@@ -6754,13 +6780,7 @@ button:disabled {
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="mission"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Missões</strong>
             <span>Teste suas hipóteses e resolva desafios.</span>
             <span class="caminho-meta" id="inicio-missoes-meta"
@@ -6771,13 +6791,7 @@ button:disabled {
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="protocol"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Roteiros Experimentais</strong>
             <span>Investigue com uma sequência de etapas.</span>
             <span class="caminho-meta" id="inicio-roteiros-meta"
@@ -6788,13 +6802,7 @@ button:disabled {
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="notebook"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Caderno</strong>
             <span>Reúna registros e reveja suas descobertas.</span>
             <span class="caminho-meta" id="inicio-caderno-meta"
@@ -6808,9 +6816,7 @@ button:disabled {
             <a href="#/professor">Área do Professor</a>
           </nav>
           <button class="quiet-btn" data-startup-settings>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7h9m4 0h3M4 17h3m4 0h9M13 4v6M7 14v6" /></svg
-            >Configurações de inicialização
+            <span data-app-icon="professor"></span>Configurações de inicialização
           </button>
         </footer>
       </section>
@@ -6932,11 +6938,6 @@ button:disabled {
               <option value="restrita">Restrita à atividade</option>
               <option value="livre">Livre</option>
             </select></label
-          ><label class="field"
-            >Relatório<select name="relatorio">
-              <option value="digital">Digital</option>
-              <option value="impresso">Impresso</option>
-            </select></label
           >
           <p id="prof-erro" role="alert"></p>
           <button type="button" id="prof-cancel-edit" class="quiet-btn" hidden>
@@ -6999,15 +7000,14 @@ button:disabled {
             Atualizar dados da bancada</button
           ><button id="relatorio-registrar" class="secondary-btn">
             Registrar no Caderno</button
-          ><button id="relatorio-baixar" class="secondary-btn">
-            Baixar relatório</button
           ><button id="relatorio-print" class="secondary-btn">
-            Imprimir relatório</button
+            Imprimir / Salvar como PDF</button
           ><button id="relatorio-blank" class="secondary-btn">
             Imprimir para preencher à mão</button
-          ><button class="quiet-btn" data-activity-resume>
+          ><button id="relatorio-voltar" class="quiet-btn">
             Voltar à bancada
           </button>
+          <button id="relatorio-encerrar" class="secondary-btn" data-activity-close hidden>Encerrar atividade</button>
         </div>
         <div id="relatorio-config"></div>
         <div id="relatorio-conteudo"></div>
@@ -7022,7 +7022,7 @@ button:disabled {
         <header class="tela-cabecalho">
           <p class="eyebrow">CADERNO DE LABORATÓRIO</p>
           <h1 id="caderno-titulo" data-foco tabindex="-1">Seu caderno</h1>
-          <p>Registros pessoais de investigações, hipóteses e descobertas.</p>
+          <p>Registros pessoais de investigações, hipóteses, descobertas e práticas.</p>
         </header>
         <div class="caderno-acoes">
           <button type="button" id="caderno-csv" class="secondary-btn">
@@ -7038,7 +7038,7 @@ button:disabled {
         <label class="field"
           >Filtrar registros<select id="caderno-filtro">
             <option value="todos">Todos</option>
-            <option value="experiencia">Experiências</option>
+            <option value="pratica">Práticas realizadas</option><option value="experiencia">Experiências</option>
             <option value="missao">Missões</option>
             <option value="exploracao">Explorações</option>
             <option value="anotacao">Anotações</option>
@@ -7165,9 +7165,7 @@ button:disabled {
                 aria-label="Recolher prateleira"
                 title="Recolher prateleira"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m14 6-6 6 6 6M19 6v12" />
-                </svg>
+                <span data-app-icon="back"></span>
               </button>
               <button
                 type="button"
@@ -7175,9 +7173,7 @@ button:disabled {
                 aria-label="Fechar cartão"
                 title="Fechar (Esc)"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6 6 18" />
-                </svg>
+                <span data-app-icon="close"></span>
               </button>
               <button
                 id="close-controls"
@@ -7297,9 +7293,7 @@ button:disabled {
                       ><strong class="menu-frasco-atual"></strong
                     ></span>
                     <span class="menu-frasco-cor" aria-hidden="true"></span>
-                    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                    <span data-app-icon="dropdown" class="chevron"></span>
                   </button>
                   <div
                     id="menu-frasco-corpo"
@@ -7343,9 +7337,7 @@ button:disabled {
                       ><strong class="menu-frasco-atual"></strong
                     ></span>
                     <span class="menu-frasco-cor" aria-hidden="true"></span>
-                    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                    <span data-app-icon="dropdown" class="chevron"></span>
                   </button>
                 </div>
               </div>
@@ -8005,9 +7997,7 @@ button:disabled {
                 aria-label="Recolher painel VER"
                 title="Recolher painel VER"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m10 6 6 6-6 6M5 6v12" />
-                </svg>
+                <span data-app-icon="arrow"></span>
               </button>
               <h2 id="ver-title" class="eyebrow">VER</h2>
               <a
@@ -8022,9 +8012,7 @@ button:disabled {
                 aria-label="Fechar cartão"
                 title="Fechar (Esc)"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6 6 18" />
-                </svg>
+                <span data-app-icon="close"></span>
               </button>
             </div>
             <!-- Escala de pH (saiu do centro da bancada): marcador no pH e faixa de viragem do indicador. -->
@@ -8120,9 +8108,9 @@ button:disabled {
       </div>
       <p id="confirm-text"></p>
       <div class="dialog-actions">
-        <button type="button" class="secondary-btn" data-close="confirm-dialog">
+        <button type="button" id="confirm-cancel" class="secondary-btn" data-close="confirm-dialog">
           Cancelar</button
-        ><button type="button" id="confirm-yes" class="primary-btn">
+        ><button type="button" id="confirm-extra" class="secondary-btn" hidden></button><button type="button" id="confirm-yes" class="primary-btn">
           Confirmar
         </button>
       </div>
@@ -8295,9 +8283,7 @@ button:disabled {
           >
             <span data-app-icon="accessibility"></span
             ><span>Acessibilidade</span
-            ><svg viewBox="0 0 24 24" aria-hidden="true" class="drawer-chevron">
-              <path d="m9 6 6 6-6 6" />
-            </svg>
+            ><span data-app-icon="next" class="drawer-chevron"></span>
           </button>
           <div
             id="a11y-panel"
@@ -8580,10 +8566,10 @@ button:disabled {
         BSD-3-Clause.
       </p>
       <nav class="about-links" aria-label="Documentação">
-        <a href="#/manual" data-close="about-dialog">Manual de uso</a
-        ><a href="#/manual/limites" data-close="about-dialog"
+        <a class="quiet-btn" href="#/manual" data-close="about-dialog">Manual de uso</a
+        ><a class="quiet-btn" href="#/manual/limites" data-close="about-dialog"
           >Modelo científico</a
-        ><a href="#/manual/referencias" data-close="about-dialog"
+        ><a class="quiet-btn" href="#/manual/referencias" data-close="about-dialog"
           >Referências e créditos</a
         >
       </nav>
@@ -8763,9 +8749,7 @@ button:disabled {
             data-close="startup-dialog"
             aria-label="Fechar configurações de inicialização"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m6 6 12 12M6 18 18 6" />
-            </svg>
+            <span data-app-icon="close"></span>
           </button>
         </div>
         <h2 id="startup-title" tabindex="-1" autofocus>Como deseja iniciar?</h2>
@@ -9797,7 +9781,7 @@ button:disabled {
 </script>
     <script>
 "use strict";
-window.SIAB = { version: "1.0.0-rc.4.5", MAX_TUBES: 10, CAPACITY_ML: 5 };
+window.SIAB = { version: "1.0.0-rc.5", MAX_TUBES: 10, CAPACITY_ML: 5 };
 
 </script>
     <script>
@@ -9805,9 +9789,24 @@ window.SIAB = { version: "1.0.0-rc.4.5", MAX_TUBES: 10, CAPACITY_ML: 5 };
 /* Única fonte para ícones semânticos. Diagramas e instrumentos conservam seus SVGs próprios. */
 SIAB.icons = (() => {
   const paths = Object.freeze({
+    close: "M6 6l12 12M18 6 6 18",
+    menu: "M4 6h16M4 12h16M4 18h16",
+    exchange: "M3 7h17M16 3l4 4-4 4M21 17H4M8 13l-4 4 4 4",
+    flow: "M3 5h5a4 4 0 0 1 4 4v5a4 4 0 0 0 4 4h5M17 14l4 4-4 4",
+    collapse: "M9 4v5H4M9 9 3 3M15 20v-5h5M15 15l6 6M14 3h7v7M3 14v7h7",
+    expand: "M8 3H3v5M3 3l6 6M16 21h5v-5M21 21l-6-6M14 3h7v7M3 14v7h7",
+    dropdown: "M6 9.5 12 15.5l6-6M12 4v5",
+    next: "M6 12h11M11.5 5.5 18 12l-6.5 6.5",
+    previous: "M18 12H7M12.5 5.5 6 12l6.5 6.5",
+    history: "M4 8a9 9 0 1 1-1 7M3 3v6h6M12 7v6l4 2",
+    table: "M4 4h16v16H4ZM4 9h16M4 14h16M10 4v16",
+    prepare:
+      "M4 3h7M5 3v5l-3 7a3 3 0 0 0 3 4h5a3 3 0 0 0 3-4l-3-7V3M4 13h7M19 9c-1 2-3 4-3 6a3 3 0 0 0 6 0c0-2-2-4-3-6Z",
+    setup:
+      "M3 20h18M7 20V4h10M5 4h4M13 7h6M14 7v7a2 2 0 0 0 4 0V7M7 11h7M5 15h4",
     home: "M3 10 12 3l9 7M5 9v12h5v-7h4v7h5V9",
     learn:
-      "M12 6C8 3 4 4 3 5v15c3-1 6-1 9 1 3-2 6-2 9-1V5c-2-1-5-2-9 1ZM12 6v15M6 9h3M6 13h3M16 8v5m-2-2h4",
+      "M8 16c0-3-3-4-3-8a7 7 0 0 1 14 0c0 4-3 5-3 8ZM8 19h8M10 22h4M9 8l3 3 3-3M12 11v5",
     mission: "M20 12a8 8 0 1 1-8-8M16 12a4 4 0 1 1-4-4M12 12l9-9M17 3h4v4",
     protocol: "M8 5H5v16h14V5h-3M8 3h8v4H8ZM8 11l1 1 2-2M13 11h3M8 16h8",
     lab: "M4 4h8M5 4v14a3 3 0 0 0 6 0V4M5 13h6M18 5c1 2 3 4 3 6a3 3 0 0 1-6 0c0-2 2-4 3-6Z",
@@ -9830,10 +9829,13 @@ SIAB.icons = (() => {
     meter:
       "M3 4h12v15H3ZM6 7h6v5H6ZM15 7h3a3 3 0 0 1 3 3v4M19 14h3v7h-3ZM6 15h2M11 15h1",
     report: "M5 3h10l4 4v14H5ZM15 3v5h4M8 12h8M8 16h8",
-    data: "M4 4h16v16H4ZM4 9h16M4 14h16M10 4v16",
+    data: "M3 7V4h7l2 3h9v13H3ZM7 12h2M7 16h2M12 12h5M12 16h5",
     help: "M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0M9 8a3 3 0 1 1 4 3c-1 1-1 1-1 3M12 17h.01",
-    arrow: "M5 12h14M13 6l6 6-6 6",
-    back: "M19 12H5M11 6l-6 6 6 6",
+    arrow: "M4 9v6M4 12h15M13.5 6.5 19 12l-5.5 5.5",
+    back: "M20 9v6M20 12H5M10.5 6.5 5 12l5.5 5.5",
+    explore: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM16 16l4.5 4.5M8 11h6M11 8v6",
+    calculator:
+      "M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01",
     search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
     projector: "M3 4h18v13H3ZM8 22l4-5 4 5M12 17v5",
   });
@@ -9844,22 +9846,41 @@ SIAB.icons = (() => {
     list: "protocol",
     access: "accessibility",
     teacher: "professor",
-    montagem: "mount",
+    montagem: "setup",
+    preparo: "prepare",
+    observar: "eye",
+    medir: "ruler",
+    analisar: "chart",
+    historico: "history",
+    tabela: "table",
     ver: "eye",
     dados: "data",
   };
-  function svg(name) {
+  function svg(name, extraClass = "") {
     name = aliases[name] || name;
     if (!paths[name]) name = "help";
-    return `<svg class="siab-icon" data-icon="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${paths[name]}"/></svg>`;
+    return `<svg class="siab-icon${extraClass ? " " + extraClass : ""}" data-icon="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${paths[name]}"/></svg>`;
   }
   function hydrate(root = document) {
     root.querySelectorAll("[data-app-icon]").forEach((el) => {
-      el.outerHTML = svg(el.dataset.appIcon);
+      el.outerHTML = svg(el.dataset.appIcon, el.getAttribute("class") || "");
+    });
+    root.querySelectorAll("summary:not(.with-disclosure)").forEach((el) => {
+      el.classList.add("with-disclosure");
+      el.insertAdjacentHTML("beforeend", svg("dropdown", "disclosure-icon"));
     });
   }
-  document.addEventListener("DOMContentLoaded", () => hydrate());
-  return Object.freeze({ svg, hydrate, paths });
+  document.addEventListener("DOMContentLoaded", () => {
+    hydrate();
+    new MutationObserver((records) => {
+      const parents = new Set(
+        records.filter((r) => r.addedNodes.length).map((r) => r.target),
+      );
+      for (const parent of parents)
+        if (parent.querySelectorAll) hydrate(parent);
+    }).observe(document.body, { childList: true, subtree: true });
+  });
+  return Object.freeze({ svg, hydrate, paths, aliases });
 })();
 
 </script>
@@ -14323,7 +14344,6 @@ SIAB.progresso = (() => {
       dados.missoes = {};
       dados.temas = {};
       dados.caderno = [];
-      dados.ultima = null;
       salvar();
     },
   };
@@ -16324,7 +16344,7 @@ SIAB.manualContent = {
       id: "comecar",
       title: "Comece por aqui",
       summary: "Primeiros passos, navegação e uso offline.",
-      icon: "book",
+      icon: "home",
       group: "Orientação",
     },
     {
@@ -16366,7 +16386,7 @@ SIAB.manualContent = {
       id: "montagens",
       title: "Montagens prontas",
       summary: "Conheça as bancadas pré-configuradas.",
-      icon: "flask",
+      icon: "mount",
       group: "Prepare e registre",
     },
     {
@@ -16387,7 +16407,7 @@ SIAB.manualContent = {
       id: "caderno",
       title: "Caderno",
       summary: "Guarde notas e investigações escolhidas por você.",
-      icon: "book",
+      icon: "notebook",
       group: "Prepare e registre",
     },
     {
@@ -16494,7 +16514,7 @@ SIAB.manualContent = {
         "Use Aprender para conceitos, Missões para desafios de investigação, Roteiros Experimentais para atividades estruturadas, Laboratório para exploração e Caderno para registros.",
       steps: [
         "Escolha um caminho na Página inicial ou abra o Menu.",
-        "No Menu, entre em Configurações → Inicialização para escolher a tela de entrada.",
+        "No Menu, entre em Preferências → Inicialização para escolher a tela de entrada.",
         "Use Manual para consulta e Área do Professor para preparar atividades.",
       ],
       example: "",
@@ -17450,19 +17470,12 @@ SIAB.manualContent = {
         "Preencha observações, análise, interpretação, resposta à investigação e conclusão.",
         "Escolha Relatório completo, Para preencher à mão ou Atividade de análise (Professor). Nos modos em papel, selecione 5, 10, 15, 20, 25 ou uma quantidade personalizada de 5 a 60 linhas por campo. O padrão é 10.",
         "Na Atividade de análise, escolha as condições, dados, tabela, gráficos e cálculos incluídos, e quais campos autorais ficarão em branco. Use medições da bancada ou insira dados explicitamente hipotéticos.",
-        "Após novas medições, use Atualizar dados da bancada. Imprima, baixe HTML ou registre no Caderno conforme os controles oferecidos.",
+        "Após novas medições, use Atualizar dados da bancada. Use Imprimir / Salvar como PDF ou registre no Caderno.",
       ],
       example:
         "Use a impressão preenchida para entregar a investigação, ou Para preencher à mão, preservando dados e deixando apenas campos autorais vazios.",
       related: ["roteiros", "tabela", "caderno"],
-      keywords: [
-        "relatório",
-        "imprimir",
-        "exportar",
-        "PDF",
-        "conclusão",
-        "HTML",
-      ],
+      keywords: ["relatório", "imprimir", "exportar", "PDF", "conclusão"],
       details: [
         {
           title: "Dados e texto",
@@ -17486,9 +17499,9 @@ SIAB.manualContent = {
       title: "Caderno de investigação",
       category: "caderno",
       summary:
-        "O Caderno reúne experiências, missões, explorações e anotações guardadas no navegador.",
+        "Registros pessoais de investigações, hipóteses, descobertas e práticas.",
       purpose:
-        "Guarde hipóteses e descobertas escolhidas por você, além das referências a relatórios.",
+        "Guarde notas pessoais. Ao encerrar uma atividade com dados, a Prática realizada fica registrada automaticamente, com Abrir dados e Abrir relatório.",
       steps: [
         "Abra Caderno pela navegação.",
         "Escreva uma anotação ou consulte os registros existentes.",
@@ -17501,8 +17514,8 @@ SIAB.manualContent = {
       keywords: ["caderno", "anotação", "notas", "salvar"],
       details: [
         {
-          title: "Três registros diferentes",
-          text: "Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda registros e referências escolhidos.",
+          title: "Quatro recursos diferentes",
+          text: "Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda notas pessoais e práticas realizadas, sem copiar o relatório inteiro como texto.",
         },
       ],
       actions: [
@@ -17634,7 +17647,7 @@ SIAB.manualContent = {
         "Abra o link recebido e leia a apresentação.",
         "Inicie a atividade e consulte a montagem preparada.",
         "Use os botões de ajuda para dúvidas curtas, sem abandonar o experimento.",
-        "Preencha o relatório e finalize. Encerrar atividade é a ação específica para sair desse contexto.",
+        "Use Finalizar para concluir a prática e abrir seu relatório. Encerrar atividade sai do contexto e volta ao Início, preservando os dados no Caderno.",
       ],
       example: "",
       related: ["problemas", "roteiros", "relatorios"],
@@ -17647,6 +17660,14 @@ SIAB.manualContent = {
         "bloqueado",
       ],
       details: [
+        {
+          title: "Retomar ou iniciar outra tentativa",
+          text: "Ao reabrir o mesmo link, escolha Continuar sessão ou Iniciar nova sessão. Se já finalizou, escolha Ver relatório anterior ou Iniciar nova tentativa. A nova tentativa recebe uma identidade própria; os dados e relatórios anteriores continuam separados.",
+        },
+        {
+          title: "Encerrar com ou sem dados",
+          text: "Com dados, você pode continuar, abrir o relatório antes de sair ou encerrar. Encerrar atualiza a mesma Prática realizada no Caderno, sem duplicá-la. Sem dados, a confirmação é simples e nenhum registro vazio é criado. A preferência de inicialização permanece igual.",
+        },
         {
           title: "Ajuda durante a atividade",
           text: "Em modo restrito, a ajuda contextual continua disponível, mas não oferece acesso ao Manual completo nem a outras áreas. As opções só reaparecem quando você sai da atividade pela ação própria.",
@@ -17908,81 +17929,79 @@ SIAB.manualContent = {
   },
 };
 SIAB.manualContent.topics.push({
-  "id": "referencias",
-  "title": "Referências e créditos",
-  "category": "calcular",
-  "summary": "Fontes do modelo químico e créditos das dependências do aplicativo.",
-  "purpose": "Consulte as fontes originais para aprofundar conceitos e constantes usados pelo SIAB.",
-  "steps": [
+  id: "referencias",
+  title: "Referências e créditos",
+  category: "calcular",
+  summary:
+    "Fontes do modelo químico e créditos das dependências do aplicativo.",
+  purpose:
+    "Consulte as fontes originais para aprofundar conceitos e constantes usados pelo SIAB.",
+  steps: [
     "Abra uma fonte de referência de acordo com o assunto investigado.",
-    "Confira as condições e as limitações descritas no modelo científico."
+    "Confira as condições e as limitações descritas no modelo científico.",
   ],
-  "related": [
-    "limites",
-    "tabela-indicadores"
+  related: ["limites", "tabela-indicadores"],
+  keywords: ["referências", "créditos", "licença", "bibliografia"],
+  details: [
+    {
+      title: "Licenças",
+      text: "SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE.",
+    },
   ],
-  "keywords": [
-    "referências",
-    "créditos",
-    "licença",
-    "bibliografia"
+  references: [
+    {
+      label: "OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)",
+      url: "https://openstax.org/books/chemistry-2e/pages/14-introduction",
+    },
+    {
+      label: "OpenStax — Apêndice H (Ka de ácidos fracos)",
+      url: "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    },
+    {
+      label: "OpenStax — Apêndice I (Kb de bases fracas)",
+      url: "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases",
+    },
+    {
+      label: "OpenStax — Apêndice J (Kps)",
+      url: "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    },
+    {
+      label:
+        "D. C. Harris, Análise Química Quantitativa : constantes de dissociação e indicadores",
+      url: null,
+    },
+    {
+      label:
+        "CRC Handbook of Chemistry and Physics : pKa e condutividade iônica limite (λ°)",
+      url: null,
+    },
+    {
+      label:
+        "Nelson e Cox, Princípios de Bioquímica de Lehninger : pKa dos aminoácidos",
+      url: null,
+    },
+    {
+      label:
+        "Baes e Mesmer, The Hydrolysis of Cations : acidez dos cátions metálicos hidratados",
+      url: null,
+    },
+    {
+      label: "OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)",
+      url: "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations",
+    },
+    {
+      label: "IUPAC — Ponto de equivalência",
+      url: "https://goldbook.iupac.org/terms/view/09042",
+    },
+    {
+      label: "PhET — Soluções ácido-base (lupa de partículas)",
+      url: "https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions",
+    },
+    {
+      label: "ACS — Indicador de repolho roxo",
+      url: "https://www.acs.org/education/activities/red-cabbage-indicator.html",
+    },
   ],
-  "details": [
-    {
-      "title": "Licenças",
-      "text": "SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE."
-    }
-  ],
-  "references": [
-    {
-      "label": "OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/14-introduction"
-    },
-    {
-      "label": "OpenStax — Apêndice H (Ka de ácidos fracos)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids"
-    },
-    {
-      "label": "OpenStax — Apêndice I (Kb de bases fracas)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases"
-    },
-    {
-      "label": "OpenStax — Apêndice J (Kps)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/j-solubility-products"
-    },
-    {
-      "label": "D. C. Harris, Análise Química Quantitativa : constantes de dissociação e indicadores",
-      "url": null
-    },
-    {
-      "label": "CRC Handbook of Chemistry and Physics : pKa e condutividade iônica limite (λ°)",
-      "url": null
-    },
-    {
-      "label": "Nelson e Cox, Princípios de Bioquímica de Lehninger : pKa dos aminoácidos",
-      "url": null
-    },
-    {
-      "label": "Baes e Mesmer, The Hydrolysis of Cations : acidez dos cátions metálicos hidratados",
-      "url": null
-    },
-    {
-      "label": "OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)",
-      "url": "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations"
-    },
-    {
-      "label": "IUPAC — Ponto de equivalência",
-      "url": "https://goldbook.iupac.org/terms/view/09042"
-    },
-    {
-      "label": "PhET — Soluções ácido-base (lupa de partículas)",
-      "url": "https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions"
-    },
-    {
-      "label": "ACS — Indicador de repolho roxo",
-      "url": "https://www.acs.org/education/activities/red-cabbage-indicator.html"
-    }
-  ]
 });
 SIAB.manualRegistry = (() => {
   const { categories, topics, aliases } = SIAB.manualContent;
@@ -20992,7 +21011,7 @@ SIAB.initSelects = () => {
     button.setAttribute("aria-controls", "choice-dialog");
     button.setAttribute("aria-expanded", "false");
     button.innerHTML =
-      '<span></span><svg viewBox="0 0 20 20" aria-hidden="true"><path d="m5 7 5 5 5-5"/></svg>';
+      '<span></span>' + SIAB.icons.svg("dropdown");
     select.hidden = true;
     select.after(button);
     const record = { select, button };
@@ -21317,7 +21336,7 @@ SIAB.MODULOS = {
   explorar: {
     numero: 1,
     nome: "Explorar",
-    icone: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14ZM16 16l4.5 4.5M8 11h6M11 8v6",
+    icone: "explore",
     define:
       "Observar antes de medir: escolha frascos e indicadores e veja a cor mudar gota a gota. Use um instrumento para obter uma leitura de pH.",
     fatos: [
@@ -21331,7 +21350,7 @@ SIAB.MODULOS = {
   medir: {
     numero: 2,
     nome: "Medir",
-    icone: "M4 17 17 4l3 3L7 20H4v-3ZM8 13l1.5 1.5M11 10l1.5 1.5M14 7l1.5 1.5",
+    icone: "ruler",
     define:
       "Controlar as quantidades: diluição, volume inicial e tamanho da gota. Registre leituras para acompanhar a variação de pH no gráfico.",
     fatos: [
@@ -21345,8 +21364,7 @@ SIAB.MODULOS = {
   calcular: {
     numero: 3,
     nome: "Calcular",
-    icone:
-      "M6 3h12a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1ZM8 7h8M8 12h.01M12 12h.01M16 12h.01M8 16h.01M12 16h.01M16 16h.01",
+    icone: "calculator",
     define:
       "Quantificar: concentrações em mol/L, [H₃O⁺] e [OH⁻], constantes de equilíbrio e quantidade de matéria.",
     fatos: [
@@ -21370,8 +21388,7 @@ SIAB.modulos = (() => {
   const $ = SIAB.$;
   let aberto = null; // módulo com o cartão aberto
 
-  const svg = (d) =>
-    `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>`;
+  const svg = SIAB.icons.svg;
 
   function montar() {
     const box = $("modulos");
@@ -21385,7 +21402,7 @@ SIAB.modulos = (() => {
           <span class="modulo-nome">${m.nome}</span>
           <span class="modulo-selo"><span class="sr-only">, módulo </span>${m.numero}</span>
           <span class="modulo-ativo" hidden><span class="sr-only">, </span>Ativo</span>
-          <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+          ${SIAB.icons.svg("dropdown", "chevron")}
         </button>
         <div class="modulo-corpo" id="modulo-corpo-${id}" role="region" aria-labelledby="modulo-cab-${id}" hidden>
           <button type="button" class="modulo-ativar" data-nivel="${id}" aria-pressed="false" aria-describedby="modulo-def-${id}"><span class="modulo-ponto" aria-hidden="true"></span><span class="modulo-ativar-texto">Ativar módulo ${m.nome}</span></button>
@@ -22692,7 +22709,9 @@ SIAB.selecionarVer = (id) => {
   );
   SIAB.state.verFamily = family.id;
   SIAB.state.verTab = id;
-  SIAB.state.reportViews = [...new Set([...(SIAB.state.reportViews || []), id])];
+  SIAB.state.reportViews = [
+    ...new Set([...(SIAB.state.reportViews || []), id]),
+  ];
   (SIAB.state.verLastTabs ||= {})[family.id] = id;
   SIAB.renderVer();
   SIAB.workspace?.sync();
@@ -22733,7 +22752,7 @@ SIAB.renderVer = () => {
   const single = groups.length === 1 && family.items.length === 1;
   $("ver-tabs").innerHTML = single
     ? `<p class="ver-single" id="tab-${selected.id}">${family.label.toUpperCase()} · ${selected.label}</p>`
-    : `${groups.length > 1 ? `<div class="ver-family-tabs" role="tablist" aria-label="Famílias do painel">${groups.map((g) => `<button class="tab-btn" id="family-${g.id}" role="tab" data-ver-family="${g.id}" aria-selected="${g.id === family.id}" tabindex="${g.id === family.id ? 0 : -1}" aria-controls="ver-subpanel">${g.label.toUpperCase()}</button>`).join("")}</div>` : `<p class="eyebrow">${family.label.toUpperCase()}</p>`}<div id="ver-subpanel" ${groups.length > 1 ? `role="tabpanel" aria-labelledby="family-${family.id}"` : ""}><div class="ver-item-tabs" role="tablist" aria-label="${family.label}">${family.items.map((item) => `<button class="tab-btn view-tab-btn" id="tab-${item.id}" role="tab" data-ver="${item.id}" aria-selected="${item.id === selected.id}" tabindex="${item.id === selected.id ? 0 : -1}" aria-controls="ver-conteudo">${item.label}</button>`).join("")}</div></div>`;
+    : `${groups.length > 1 ? `<div class="ver-family-tabs" role="tablist" aria-label="Famílias do painel">${groups.map((g) => `<button class="tab-btn" id="family-${g.id}" role="tab" data-ver-family="${g.id}" aria-selected="${g.id === family.id}" tabindex="${g.id === family.id ? 0 : -1}" aria-controls="ver-subpanel">${SIAB.icons.svg(g.id)}${g.label.toUpperCase()}</button>`).join("")}</div>` : `<p class="eyebrow">${family.label.toUpperCase()}</p>`}<div id="ver-subpanel" ${groups.length > 1 ? `role="tabpanel" aria-labelledby="family-${family.id}"` : ""}><div class="ver-item-tabs" role="tablist" aria-label="${family.label}">${family.items.map((item) => `<button class="tab-btn view-tab-btn" id="tab-${item.id}" role="tab" data-ver="${item.id}" aria-selected="${item.id === selected.id}" tabindex="${item.id === selected.id ? 0 : -1}" aria-controls="ver-conteudo">${item.label}</button>`).join("")}</div></div>`;
   $("ver-conteudo").setAttribute("aria-labelledby", `tab-${selected.id}`);
   $("ver-conteudo").innerHTML = t
     ? selected.render({
@@ -23190,7 +23209,7 @@ SIAB.workspace = (() => {
       "dock-section-hidden",
       state.left !== "compact",
     );
-    $("controls-title").textContent =
+    const heading =
       state.left === "compact"
         ? "Montagem"
         : {
@@ -23199,6 +23218,16 @@ SIAB.workspace = (() => {
             modulo: "Módulo",
             missao: "Missão",
           }[state.leftGroup];
+    const symbol =
+      state.left === "compact"
+        ? "setup"
+        : {
+            preparo: "prepare",
+            objetos: "lab",
+            modulo: "explore",
+            missao: "mission",
+          }[state.leftGroup];
+    $("controls-title").innerHTML = icon(symbol) + `<span>${heading}</span>`;
   }
   function sync() {
     if (!ready || syncing) return;
@@ -23355,12 +23384,13 @@ SIAB.workspace = (() => {
       ? false
       : state.source === "dados" ||
         (mobile.matches && state.level !== "families"));
-    nodes.back.textContent =
-      state.source === "dados"
-        ? "‹ Dados"
+    nodes.back.innerHTML =
+      icon("back") +
+      (state.source === "dados"
+        ? "Dados"
         : state.level === "tool"
-          ? `‹ ${family?.label || "Ver"}`
-          : "‹ Ver";
+          ? `${family?.label || "Ver"}`
+          : "Ver");
     const single =
       S.verFamiliasDisponiveis().flatMap((g) => g.items).length === 1;
     if (
@@ -23370,8 +23400,10 @@ SIAB.workspace = (() => {
     )
       nodes.back.hidden = true;
     nodes.expand.hidden = mobile.matches || state.level === "data";
-    nodes.expand.textContent =
-      state.presentation === "fullscreen" ? "Restaurar" : "Expandir";
+    nodes.expand.innerHTML =
+      state.presentation === "fullscreen"
+        ? icon("collapse") + "Restaurar"
+        : icon("expand") + "Expandir";
     nodes.expand.setAttribute(
       "aria-expanded",
       String(state.presentation === "fullscreen"),
@@ -23572,7 +23604,7 @@ SIAB.workspace = (() => {
       "button",
       "dock-back",
       "quiet-btn dock-button",
-      "‹ Ver",
+      icon("back") + "Ver",
     );
     nodes.back.type = "button";
     header.prepend(nodes.back);
@@ -23618,8 +23650,12 @@ SIAB.workspace = (() => {
     nodes.data = create("div", "dock-data-menu", "dock-data-menu");
     nodes.data.innerHTML =
       '<p class="field-hint">Consulte os registros e organize suas conclusões.</p>' +
-      button("dock-history", "Histórico", 'data-dock-tool="historico"') +
-      button("dock-table", "Tabela", 'data-dock-tool="tabela"');
+      button(
+        "dock-history",
+        icon("history") + "Histórico",
+        'data-dock-tool="historico"',
+      ) +
+      button("dock-table", icon("table") + "Tabela", 'data-dock-tool="tabela"');
     nodes.data.append(nodes.report);
     $("dock-right-content").prepend(nodes.data);
     nodes.launchers = create(
@@ -23882,7 +23918,8 @@ SIAB.tour = (() => {
       alvo: "#controls",
       alvoCelular: "#workspace-montagem",
       titulo: "Prepare a bancada",
-      texto: "Abra Montagem para escolher uma solução em Preparo e uma vidraria em Objetos.",
+      texto:
+        "Abra Montagem → Preparo → Prateleira para escolher a solução; em Objetos, escolha a vidraria.",
     },
     {
       alvo: "#modulos",
@@ -23906,9 +23943,9 @@ SIAB.tour = (() => {
     {
       alvo: "#ver-panel",
       alvoCelular: "#workspace-ver",
-      titulo: "Use o VER",
+      titulo: "Investigue e consulte os dados",
       texto:
-        "Observe representações, escolha uma técnica de medição e analise os dados registrados.",
+        "Em Ver, observe, meça e analise. Em Dados, consulte Histórico, Tabela e Relatório.",
     },
   ];
   let passos = [],
@@ -23996,8 +24033,10 @@ SIAB.tour = (() => {
       .map((_, i) => `<span${i === n ? ' class="atual"' : ""}></span>`)
       .join("");
     $("tour-voltar").hidden = n === 0;
-    $("tour-proximo").textContent =
-      n === passos.length - 1 ? "Concluir" : "Próximo";
+    $("tour-proximo").innerHTML =
+      (n === passos.length - 1 ? "Concluir" : "Próximo") +
+      SIAB.icons.svg("next");
+    $("tour-voltar").innerHTML = SIAB.icons.svg("previous") + "Voltar";
     alvoDe(passo)?.scrollIntoView({ block: "center", behavior: "auto" });
     requestAnimationFrame(posicionar);
     $("tour-proximo").focus();
@@ -24473,14 +24512,20 @@ SIAB.bancada = (() => {
     acao,
     rotulo = "Confirmar",
     intencao = "default",
+    opcoes = {},
   ) => {
     $("confirm-title").textContent = titulo;
     $("confirm-text").textContent = mensagem;
     $("confirm-yes").textContent = rotulo;
     $("confirm-yes").className = intencao === "danger" ? "danger-btn" : "primary-btn";
     $("confirm-dialog").dataset.intent = intencao;
+    $("confirm-cancel").textContent = opcoes.cancelar || "Cancelar";
+    $("confirm-extra").hidden = !opcoes.extra;
+    $("confirm-extra").textContent = opcoes.extra?.rotulo || "";
+    $("confirm-extra").onclick = () => {$("confirm-dialog").close();opcoes.extra?.acao();};
     confirmAction = acao;
     $("confirm-dialog").showModal();
+    $("confirm-cancel").focus();
   };
 
   // A mesma apresentação gerencia docas e bottom sheets; os conteúdos e
@@ -25798,7 +25843,7 @@ SIAB.telas.roteiros = {
     SIAB.$("roteiros-lista").innerHTML = SIAB.experimentos
       .map(
         (r) =>
-          `<a class="content-row" href="#/roteiro/${r.id}"><span><strong>${SIAB.escape(r.titulo)}</strong><small>${SIAB.escape(r.subtitulo)}</small></span><span>${SIAB.MODULOS[r.modulo].nome} <span aria-hidden="true">›</span></span></a>`,
+          `<a class="content-row" href="#/roteiro/${r.id}"><span><strong>${SIAB.escape(r.titulo)}</strong><small>${SIAB.escape(r.subtitulo)}</small></span><span>${SIAB.MODULOS[r.modulo].nome} ${SIAB.icons.svg("next")}</span></a>`,
       )
       .join("");
   },
@@ -25854,6 +25899,7 @@ SIAB.montarMontagem = (id) => {
 SIAB.relatorios = (() => {
   const esc = SIAB.escape;
   let atual = null,
+    arquivoAberto = false,
     rendering = false;
   const campos = [
     ["observacoes", "Observações"],
@@ -26038,7 +26084,18 @@ SIAB.relatorios = (() => {
         exp?.identificacao ||
         SIAB.atividades?.ativa?.identificacao ||
         {},
-      aluno: old?.aluno || {},
+      aluno: {
+        ...(SIAB.activeBench === "mission" &&
+        SIAB.motor.ativa?.respostas.conclusao
+          ? { conclusao: SIAB.motor.ativa.respostas.conclusao }
+          : {}),
+        ...old?.aluno,
+      },
+      respostasMissao:
+        SIAB.activeBench === "mission"
+          ? JSON.parse(JSON.stringify(SIAB.motor.ativa?.respostas || {}))
+          : {},
+      sessaoId: SIAB.atividades?.ativa?.sessionId || b.reportId,
       configuracao: old?.configuracao || defaults(),
       recipientes: rows,
       atualizado: new Date().toISOString(),
@@ -26121,6 +26178,33 @@ SIAB.relatorios = (() => {
   }
   function table(headers, rows, label) {
     return `<div class="table-scroll report-table" tabindex="0" role="region" aria-label="${esc(label)}"><table><caption>${esc(label)}</caption><thead><tr>${headers.map((h) => `<th scope="col">${esc(h)}</th>`).join("")}</tr></thead><tbody>${rows.map((row) => `<tr>${row.map((v) => `<td>${esc(v ?? "—")}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  }
+  function dadosHTML(id) {
+    const r = lerTodos()[id];
+    if (!r)
+      return "<p>Os dados desta prática não estão disponíveis neste navegador.</p>";
+    return r.recipientes
+      .map(
+        (t) =>
+          `<section class="practice-vessel"><h3>${esc(t.nome)}</h3>${table(["Solução inicial", "Vidraria", "Concentração", "Volume", "Indicador", "Temperatura"], [[t.inicial?.solucao || t.conteudo, t.inicial?.vidraria || t.vidraria, t.inicial?.concentracao || "Não registrada", `${SIAB.format(t.inicial?.volume ?? t.volume)} mL`, t.inicial?.indicador || t.indicador, `${SIAB.format(t.inicial?.temperatura ?? t.temperatura, 1)} °C`]], "Condições iniciais")}${t.reagente ? `<p>Reagente: ${esc(t.reagente.nome)} · ${esc(t.reagente.descricao || "")} · incremento ${SIAB.format(t.reagente.incremento)} mL.</p>` : ""}${table(
+            [
+              "Volume adicionado (mL)",
+              "Leitura",
+              "Unidade",
+              "Temperatura (°C)",
+              "Instrumento",
+            ],
+            (t.rawMeasurements || []).map((m) => [
+              SIAB.format(m.adicionado),
+              typeof m.valor === "number" ? SIAB.format(m.valor) : m.valor,
+              m.unidade,
+              SIAB.format(m.temperatura, 1),
+              SIAB.medicoes.resolution[m.tecnica]?.nome || m.tecnica,
+            ]),
+            "Medições registradas — dados completos",
+          )}${table(["Volume final", "pH (leitura)", "Temperatura", "Cor", "Estado"], [[`${SIAB.format(t.volume)} mL`, t.ph, `${SIAB.format(t.temperatura, 1)} °C`, t.cor, t.estado]], "Condições finais")}</section>`,
+      )
+      .join("");
   }
   function hypotheses(text) {
     if (!teacher()) throw new Error("Disponível na preparação do professor.");
@@ -26412,6 +26496,13 @@ SIAB.relatorios = (() => {
       if (!teacher() && config().modo === "analise") config().modo = "completo";
       SIAB.$("relatorio-config").innerHTML = settingsHTML();
       SIAB.$("relatorio-conteudo").innerHTML = html({ editar: true });
+      SIAB.$("relatorio-encerrar").hidden = !SIAB.atividades?.ativa;
+      SIAB.$("relatorio-voltar").textContent =
+        SIAB.atividades?.ativa?.etapa === "finalizada"
+          ? "Ver atividade"
+          : arquivoAberto
+            ? "Voltar ao Caderno"
+            : "Voltar à bancada";
       SIAB.refreshSelects?.();
       SIAB.activityUI?.render?.();
     } finally {
@@ -26428,6 +26519,9 @@ SIAB.relatorios = (() => {
       SIAB.notice("Relatório indisponível neste contexto.");
       return false;
     }
+    if (!id && SIAB.atividades?.ativa?.etapa === "finalizada")
+      id = SIAB.state.reportId;
+    arquivoAberto = !!id && id !== SIAB.state.reportId;
     if (id) {
       atual = lerTodos()[id] || null;
       if (!atual) SIAB.notice("Relatório não encontrado neste navegador.");
@@ -26518,6 +26612,15 @@ SIAB.relatorios = (() => {
     SIAB.$("relatorio-registrar").onclick = () => {
       if (!SIAB.ActivityContext.guard("files.notebook") || !atual) return;
       salvar();
+      if (SIAB.atividades?.ativa) {
+        const id = SIAB.atividades.registrarPratica();
+        SIAB.notice(
+          id
+            ? "Prática registrada no Caderno."
+            : "A prática ainda não tem dados experimentais ou respostas.",
+        );
+        return;
+      }
       if (!SIAB.progresso.dados.caderno.some((n) => n.relatorioId === atual.id))
         SIAB.progresso.anotar({
           tipo: "experiencia",
@@ -26530,16 +26633,12 @@ SIAB.relatorios = (() => {
         });
       SIAB.notice("Referência ao relatório registrada no Caderno.");
     };
-    SIAB.$("relatorio-baixar").onclick = () => {
-      if (!SIAB.ActivityContext.guard("files.html") || !atual) return;
-      salvar();
-      SIAB.baixarArquivo(
-        "SIAB-relatorio.html",
-        `<!doctype html><html lang="pt-BR"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Relatório SIAB</title><style>body{font:16px Georgia;max-width:900px;margin:35px auto;padding:20px;color:#111;background:#fff}table{border-collapse:collapse;width:100%;font-size:10pt}td,th{border:1px solid #bbb;padding:5px;overflow-wrap:anywhere}svg{width:100%;max-width:550px;color:#111}img{display:none}.table-scroll{overflow:auto}.student-text{white-space:pre-wrap}.writing-space{break-inside:auto}.response-line{height:7mm;border-bottom:1px solid #aaa;break-inside:avoid}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}.grafico-grade{stroke:#ddd}.grafico-especie{fill:none;stroke-width:2}.grafico-rotulo,.grafico-eixo{fill:#111;font:12px sans-serif}h2,h3{break-after:avoid}thead{display:table-header-group}tr{break-inside:avoid}@media print{body{margin:0;padding:0}.table-scroll{overflow:visible}button{display:none}section{break-inside:auto}}@page{size:A4;margin:16mm}</style>${html()}</html>`,
-        "text/html;charset=utf-8",
-      );
+    SIAB.$("relatorio-voltar").onclick = () => {
+      if (SIAB.atividades?.ativa) SIAB.atividades.retomar();
+      else SIAB.irPara(arquivoAberto ? "#/caderno" : "#/laboratorio");
     };
   }
+
   return {
     capturar,
     salvar,
@@ -26551,6 +26650,8 @@ SIAB.relatorios = (() => {
     ligar,
     configure,
     hypotheses,
+    dadosHTML,
+    obter: (id) => lerTodos()[id] || null,
     get atual() {
       return atual;
     },
@@ -26568,6 +26669,7 @@ SIAB.telas.relatorio = {
 SIAB.atividades = (() => {
   let ativa = null,
     loading = 0,
+    escolhaSessao = false,
     restoringToken = null,
     restoringRoute = null;
   const instrumentos = [
@@ -26595,7 +26697,7 @@ SIAB.atividades = (() => {
       ![1, 2].includes(c.schema) ||
       !["roteiro", "missao", "montagem"].includes(c.tipo) ||
       !["livre", "restrita"].includes(c.navegacao) ||
-      !["digital", "impresso"].includes(c.relatorio)
+      (c.relatorio != null && !["digital", "impresso"].includes(c.relatorio))
     )
       throw new Error("Configuração de atividade inválida.");
     const entry =
@@ -26674,12 +26776,99 @@ SIAB.atividades = (() => {
   }
   const chave = (token) => "siab_atividade_" + token.split(".")[1];
   const rotaAtividade = () => `#/atividade/${ativa.token}`;
+  const uuid = () =>
+    globalThis.crypto?.randomUUID?.() ||
+    `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const nova = (token, config) => ({
+    token,
+    config,
+    sessionId: uuid(),
+    etapa: "apresentacao",
+    criada: new Date().toISOString(),
+    identificacao: { ...config.identificacao },
+  });
+  const preparo = (b) =>
+    JSON.stringify(
+      (b?.tubes || []).map((t) => [
+        t.solution,
+        t.concentration,
+        t.initialVolume,
+        t.temperature,
+        t.titrant,
+        t.titrantConcentration,
+        t.dilution,
+        t.indicator,
+        t.componentes || null,
+      ]),
+    );
+  function temDados() {
+    if (!ativa || ativa.etapa === "apresentacao") return false;
+    const b = ativa.bench || SIAB.state,
+      r = SIAB.relatorios.obter(b.reportId);
+    return (
+      b.tubes.some(
+        (t) =>
+          t.additions?.length ||
+          (t.observacao?.rawMeasurements || t.observacao?.leituras || []).some(
+            (m) => m.tecnica !== "indicador",
+          ) ||
+          (t.observacao?.eventos || []).some((e) => !e.leitura),
+      ) ||
+      Object.values(r?.aluno || {}).some((v) => String(v).trim()) ||
+      Object.values(ativa.missao?.respostas || {}).some((v) =>
+        String(v).trim(),
+      ) ||
+      (ativa.preparoInicial != null && preparo(b) !== ativa.preparoInicial)
+    );
+  }
+  function consolidar() {
+    if (!ativa || ativa.etapa === "apresentacao") return null;
+    SIAB.state.tubes.forEach((t) => SIAB.instrumentos.parar(t));
+    const r = SIAB.relatorios.capturar();
+    salvarSessao();
+    return r;
+  }
+  function registrarPratica() {
+    if (!temDados()) return null;
+    const r = consolidar();
+    if (!r) return null;
+    const campos = {
+      tipo: "pratica",
+      sessaoId: ativa.sessionId,
+      relatorioId: r.id,
+      titulo: ativa.config.titulo,
+      estadoPratica:
+        ativa.etapa === "finalizada" ? "Finalizada" : "Sessão encerrada",
+      atividade: { tipo: ativa.config.tipo, item: ativa.config.item },
+      atualizado: new Date().toISOString(),
+      linhas: [
+        [
+          "Dados disponíveis",
+          "Condições iniciais, medições, tabela, condições finais e relatório",
+        ],
+      ],
+    };
+    const existente = SIAB.progresso.dados.caderno.find(
+      (n) => n.sessaoId === ativa.sessionId || n.relatorioId === r.id,
+    );
+    if (existente) {
+      SIAB.progresso.atualizarNota(existente.id, campos);
+      return existente.id;
+    }
+    return SIAB.progresso.anotar(campos);
+  }
   function guardarRota(nome, parametro) {
     if (restoringToken) return { nome: "atividade", parametro: restoringToken };
     if (!SIAB.ActivityContext.restricted()) return { nome, parametro };
     const go = () => ({ nome: "atividade", parametro: ativa.token });
     if (nome === "atividade")
       return parametro === ativa.token ? { nome, parametro } : go();
+    if (escolhaSessao) return go();
+    if (
+      ativa.etapa === "finalizada" &&
+      ["laboratorio", "missao"].includes(nome)
+    )
+      return { nome: "relatorio", parametro: ativa.bench.reportId };
     if (["bancada", "relatorio", "finalizada"].includes(ativa.etapa)) {
       if (
         nome === "relatorio" &&
@@ -26699,11 +26888,11 @@ SIAB.atividades = (() => {
     return go();
   }
   function salvarSessao() {
-    if (!ativa) return;
+    if (!ativa || escolhaSessao) return;
     const a = SIAB.motor.ativa;
     if (ativa.etapa !== "apresentacao") ativa.bench = SIAB.state;
     ativa.missao =
-      a && ativa.config.tipo === "missao"
+      a && ativa.etapa !== "apresentacao" && ativa.config.tipo === "missao"
         ? {
             id: a.def.id,
             respostas: a.respostas,
@@ -26756,15 +26945,19 @@ SIAB.atividades = (() => {
       if (turn !== loading) return;
       const stored = SIAB.persistencia.ler(chave(token), null);
       const saved = stored?.token === token ? stored : null;
-      if (ativa?.token !== token)
+      if (ativa?.token !== token) {
         ativa = saved?.config
           ? { ...saved, config, token }
-          : {
-              token,
-              config,
-              etapa: "apresentacao",
-              identificacao: { ...config.identificacao },
-            };
+          : nova(token, config);
+        ativa.sessionId ||=
+          ativa.bench?.reportId || ativa.bench?.experiencia?.id || uuid();
+        if (ativa.bench) ativa.bench.reportId = ativa.sessionId;
+        escolhaSessao =
+          !!saved?.bench &&
+          !/^#\/(laboratorio|missao|relatorio)(?:\/|$)/.test(
+            restoringRoute || "",
+          );
+      }
       ativa.context = SIAB.ActivityContext.create(
         config,
         ativa.identificacao,
@@ -26774,15 +26967,18 @@ SIAB.atividades = (() => {
       restoringToken = null;
       restoringRoute = null;
       restaurarBancada();
+      if (ativa.bench) ativa.preparoInicial ||= preparo(ativa.bench);
       salvarSessao();
       render();
       atualizarCabecalho();
       if (
+        !escolhaSessao &&
         ativa.etapa === "bancada" &&
         /^#\/(laboratorio|missao)(?:\/|$)/.test(returnRoute || "")
       )
         retomar();
       if (
+        !escolhaSessao &&
         returnRoute?.startsWith("#/relatorio") &&
         ativa.etapa !== "apresentacao"
       )
@@ -26798,9 +26994,11 @@ SIAB.atividades = (() => {
     const a = ativa,
       c = a.config,
       e = SIAB.escape;
+    const escolha = escolhaSessao || a.etapa === "finalizada";
     SIAB.$("atividade-conteudo").innerHTML =
-      `<h1 data-foco tabindex="-1">${e(c.titulo)}</h1><p>${{ roteiro: "Roteiro Experimental", missao: "Missão", montagem: "Montagem pronta" }[c.tipo]} · ${SIAB.MODULOS[c.modulo].nome}</p><p>${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao}</p>${a.etapa === "finalizada" ? '<h2>Atividade finalizada</h2><p>Seu relatório permanece salvo neste navegador.</p><button class="primary-btn" data-activity-close>Encerrar atividade</button>' : ["bancada", "relatorio"].includes(a.etapa) ? '<button class="primary-btn" data-activity-resume>Continuar na bancada</button><button class="secondary-btn" data-open-report>Abrir relatório</button>' : `<p>Prepare sua identificação para começar a investigação.</p><form id="atividade-iniciar">${SIAB.identificacaoHTML(a.identificacao)}<button class="primary-btn">Iniciar atividade</button></form>`}`;
+      `<h1 data-foco tabindex="-1">${e(c.titulo)}</h1><p>${{ roteiro: "Roteiro Experimental", missao: "Missão", montagem: "Montagem pronta" }[c.tipo]} · ${SIAB.MODULOS[c.modulo].nome}</p><p>${SIAB.format(c.temperatura, 1)} °C · Navegação ${c.navegacao}</p>${escolha ? `<section class="session-choice"><h2>${a.etapa === "finalizada" ? "Atividade finalizada" : "Uma sessão já foi iniciada"}</h2><p>Os dados desta sessão permanecem salvos neste navegador.</p><div class="actions"><button class="primary-btn" data-session-continue>${a.etapa === "finalizada" ? "Ver relatório anterior" : "Continuar sessão"}</button><button class="secondary-btn" data-session-new>${a.etapa === "finalizada" ? "Iniciar nova tentativa" : "Iniciar nova sessão"}</button></div></section>` : ["bancada", "relatorio"].includes(a.etapa) ? '<button class="primary-btn" data-activity-resume>Continuar na bancada</button><button class="secondary-btn" data-open-report>Abrir relatório</button>' : `<p>Prepare sua identificação para começar a investigação.</p><form id="atividade-iniciar">${SIAB.identificacaoHTML(a.identificacao)}<button class="primary-btn">Iniciar atividade</button></form>`}`;
   }
+
   function iniciar(ident) {
     if (!ativa || ativa.etapa !== "apresentacao") return false;
     const c = ativa.config;
@@ -26808,6 +27006,8 @@ SIAB.atividades = (() => {
     ativa.context.identity = { ...ident };
     const b = SIAB.ActivityContext.buildBench(c, ident);
     ativa.bench = SIAB.ActivityContext.sanitize(b, c, ativa.context);
+    ativa.bench.reportId = ativa.sessionId;
+    ativa.preparoInicial = preparo(ativa.bench);
     const type = c.tipo === "missao" ? "mission" : "lab";
     SIAB.benches[type] = ativa.bench;
     SIAB.usarBancada(type);
@@ -26822,6 +27022,12 @@ SIAB.atividades = (() => {
   }
   function retomar() {
     if (!ativa) return;
+    if (ativa.etapa === "finalizada") {
+      SIAB.irPara(rotaAtividade());
+      return;
+    }
+    escolhaSessao = false;
+    salvarSessao();
     SIAB.irPara(
       ativa.config.tipo === "missao"
         ? `#/missao/${ativa.config.item}`
@@ -26829,14 +27035,77 @@ SIAB.atividades = (() => {
     );
   }
   function finalizar() {
-    if (!ativa) return;
-    SIAB.relatorios.capturar();
-    ativa.etapa = "finalizada";
+    if (!ativa || escolhaSessao || ativa.etapa === "apresentacao") return;
+    if (ativa.etapa !== "finalizada") {
+      consolidar();
+      ativa.etapa = "finalizada";
+      ativa.finalizadaEm = new Date().toISOString();
+      salvarSessao();
+      atualizarCabecalho();
+      SIAB.notice("Atividade finalizada. Seu relatório está disponível.");
+    }
+    SIAB.irPara(`#/relatorio/${ativa.bench.reportId}`);
+  }
+  function continuarSessao() {
+    escolhaSessao = false;
     salvarSessao();
-    SIAB.irPara(rotaAtividade());
+    atualizarCabecalho();
+    if (ativa.etapa === "finalizada")
+      SIAB.irPara(`#/relatorio/${ativa.bench.reportId}`);
+    else retomar();
+  }
+  function novaSessao() {
+    SIAB.confirmar(
+      "Iniciar nova sessão?",
+      "Os dados da sessão anterior serão preservados. A nova tentativa começa com a montagem original e uma nova identificação de sessão.",
+      () => {
+        escolhaSessao = false;
+        registrarPratica();
+        const { token, config } = ativa;
+        ativa = nova(token, config);
+        ativa.context = SIAB.ActivityContext.create(
+          config,
+          ativa.identificacao,
+          ativa.etapa,
+        );
+        salvarSessao();
+        render();
+        atualizarCabecalho();
+        SIAB.irPara(rotaAtividade());
+      },
+      "Iniciar nova sessão",
+    );
+  }
+  function pedirEncerramento() {
+    if (!ativa) return;
+    const dados = temDados();
+    SIAB.confirmar(
+      "Encerrar atividade?",
+      dados
+        ? "Há dados registrados nesta prática. Os resultados serão registrados no Caderno para consulta posterior."
+        : "Nenhum dado experimental foi registrado. Deseja sair da atividade?",
+      encerrar,
+      "Encerrar atividade",
+      "default",
+      dados
+        ? {
+            cancelar: "Continuar atividade",
+            extra: {
+              rotulo: "Abrir relatório antes de sair",
+              acao: () => {
+                escolhaSessao = false;
+                consolidar();
+                SIAB.irPara(`#/relatorio/${ativa.bench.reportId}`);
+              },
+            },
+          }
+        : {},
+    );
   }
   function encerrar() {
     if (!ativa) return;
+    escolhaSessao = false;
+    registrarPratica();
     salvarSessao();
     ativa = null;
     restoringToken = null;
@@ -26862,7 +27131,9 @@ SIAB.atividades = (() => {
       SIAB.$("activity-caption").textContent =
         `ATIVIDADE EXPERIMENTAL${ativa.config.navegacao === "restrita" ? " · MODO RESTRITO" : ""} · ${ativa.config.titulo}`;
       SIAB.$("activity-finish").hidden =
-        ativa.etapa === "apresentacao" || ativa.etapa === "finalizada";
+        escolhaSessao ||
+        ativa.etapa === "apresentacao" ||
+        ativa.etapa === "finalizada";
     }
   }
   function ligar() {
@@ -26872,18 +27143,14 @@ SIAB.atividades = (() => {
       iniciar(Object.fromEntries(new FormData(e.target)));
     });
     document.addEventListener("click", (e) => {
+      if (e.target.closest("[data-session-continue]")) continuarSessao();
+      if (e.target.closest("[data-session-new]")) novaSessao();
       if (e.target.closest("[data-activity-resume]")) retomar();
       if (e.target.closest("[data-activity-close]"))
         SIAB.$("activity-exit").click();
     });
     SIAB.$("activity-finish").onclick = finalizar;
-    SIAB.$("activity-exit").onclick = () =>
-      SIAB.confirmar(
-        "Encerrar atividade?",
-        "Seus registros ficam salvos neste navegador. Você poderá reabrir o mesmo link.",
-        encerrar,
-        "Encerrar atividade",
-      );
+    SIAB.$("activity-exit").onclick = pedirEncerramento;
     SIAB.loja.assinar(salvarSessao);
     window.addEventListener("pagehide", salvarSessao);
   }
@@ -26900,6 +27167,10 @@ SIAB.atividades = (() => {
     retomar,
     finalizar,
     encerrar,
+    temDados,
+    registrarPratica,
+    novaSessao,
+    pedirEncerramento,
     atualizarCabecalho,
     ligar,
     link: (token) => `${location.href.split("#")[0]}#/atividade/${token}`,
@@ -27046,7 +27317,7 @@ SIAB.professor = (() => {
           .map(([, value]) => value.label),
     );
     $("prof-resumo").textContent =
-      `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
+      `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
     $("prof-abrir").href = SIAB.atividades.link(token);
   }
   async function criar(c, id = null) {
@@ -27108,7 +27379,6 @@ SIAB.professor = (() => {
           permissions: lerPermissoes(f),
           initialView: f.get("initialView") || null,
           navegacao: f.get("navegacao"),
-          relatorio: f.get("relatorio"),
           identificacao: Object.fromEntries(
             ["nome", "turma", "data", "professor", "grupo"].map((k) => [
               k,
@@ -27193,7 +27463,6 @@ SIAB.professor = (() => {
       temperatura: c.temperatura,
       temperaturaModo: c.temperaturaModo || "referencia",
       navegacao: c.navegacao,
-      relatorio: c.relatorio,
       initialView: c.initialView || "",
       ...c.identificacao,
     })) {
@@ -27216,7 +27485,7 @@ SIAB.professor = (() => {
     SIAB.refreshSelects?.();
     f.elements.titulo.focus();
     SIAB.notice(
-      "Editando uma cópia independente. Links já enviados preservam sua configuração original.",
+      "Editando a atividade selecionada. Links já enviados preservam sua configuração original.",
     );
   }
   const ajustes = {
@@ -27398,23 +27667,34 @@ let filtroCaderno = "todos";
 SIAB.telas.caderno = {
   secao: "caderno",
   titulo: () => "Caderno",
-  entrar() {
+  entrar(id) {
     const all = SIAB.progresso.dados.caderno,
       notas = all.filter(
         (n) => filtroCaderno === "todos" || n.tipo === filtroCaderno,
       ),
       esc = SIAB.escape;
     const tipos = {
+      pratica: "Prática realizada",
       experiencia: "Experiência",
       missao: "Missão",
       exploracao: "Exploração livre",
-      anotacao: "Anotação",
+      anotacao: "Nota pessoal",
     };
+    const pratica =
+      id &&
+      SIAB.progresso.dados.caderno.find(
+        (n) => n.id === id && n.tipo === "pratica",
+      );
+    if (pratica) {
+      SIAB.$("caderno-lista").innerHTML =
+        `<article class="nota practice-record"><p class="eyebrow">PRÁTICA REALIZADA · ${esc(pratica.estadoPratica || "")}</p><h2 data-foco tabindex="-1">${esc(pratica.titulo)}</h2><div class="actions"><a class="quiet-btn" href="#/caderno">${SIAB.icons.svg("back")}Voltar aos registros</a><a class="secondary-btn" href="#/relatorio/${encodeURIComponent(pratica.relatorioId)}">${SIAB.icons.svg("report")}Abrir relatório</a></div>${SIAB.relatorios.dadosHTML(pratica.relatorioId)}</article>`;
+      return;
+    }
     SIAB.$("caderno-lista").innerHTML = notas.length
       ? notas
           .map(
             (n) =>
-              `<article class="nota timeline-entry"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2></header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl>${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="danger-btn" data-apagar-nota="${esc(n.id)}">Apagar nota</button></article>`,
+              `<article class="nota timeline-entry ${n.tipo === "pratica" ? "practice-record" : ""}"><header><p class="eyebrow">${tipos[n.tipo] || "Registro preservado"} · ${SIAB.dataHora(new Date(n.data))}</p><h2>${esc(n.titulo)}</h2>${n.tipo === "pratica" ? `<p>${esc(n.estadoPratica || "")}</p>` : ""}</header><dl>${(n.linhas || []).map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl><div class="actions">${n.tipo === "pratica" ? `<a class="secondary-btn" data-practice-data="${esc(n.id)}" href="#/caderno/${encodeURIComponent(n.id)}">${SIAB.icons.svg("data")}Abrir dados</a>` : ""}${n.relatorioId ? `<a class="secondary-btn" href="#/relatorio/${encodeURIComponent(n.relatorioId)}">${SIAB.icons.svg("report")}Abrir relatório</a>` : SIAB.notaTabelaHTML(n)}<button class="danger-btn" data-apagar-nota="${esc(n.id)}">${n.tipo === "pratica" ? "Apagar registro" : "Apagar nota"}</button></div></article>`,
           )
           .join("")
       : "<p>Nenhum registro neste filtro. Registre uma exploração na bancada ou escreva uma anotação.</p>";
@@ -27457,13 +27737,15 @@ SIAB.telas.caderno = {
         );
         if (!nota) return;
         SIAB.confirmar(
-          "Apagar nota?",
+          nota.tipo === "pratica"
+            ? "Apagar registro da prática?"
+            : "Apagar nota?",
           `“${nota.titulo}” será removida. Esta ação não pode ser desfeita.`,
           () => {
             SIAB.progresso.removerNota(nota.id);
             SIAB.telas.caderno.entrar();
           },
-          "Apagar nota",
+          nota.tipo === "pratica" ? "Apagar registro" : "Apagar nota",
           "danger",
         );
       }
@@ -27516,17 +27798,17 @@ SIAB.manualTela = (() => {
   }
   function topicLink(t, compact = false) {
     const cat = R.category(t.category);
-    return `<a class="manual-topic-link${compact ? " compact" : ""}" href="${href(t.id)}"><span class="manual-symbol">${icon(cat.icon)}</span><span><strong>${esc(t.title)}</strong><span>${esc(t.summary)}</span></span>${icon("arrow")}</a>`;
+    return `<a class="manual-topic-link${compact ? " compact" : ""}" href="${href(t.id)}"><span class="manual-symbol">${icon({ historico: "history", tabela: "table", aprender: "learn", projetor: "projector", preparo: "prepare" }[t.id] || cat.icon)}</span><span><strong>${esc(t.title)}</strong><span>${esc(t.summary)}</span></span>${icon("arrow")}</a>`;
   }
   function diagram(kind) {
     if (kind === "workspace")
-      return `<figure class="manual-diagram manual-workspace-map"><div class="manual-map-actions"><a href="${href("bancada")}">${icon("flask")}Montagem</a><a href="${href("painel-medir")}">${icon("eye")}Ver</a><a href="${href("tabela")}">${icon("report")}Dados</a></div><div class="manual-map-scene"><svg viewBox="0 0 180 160" role="img" aria-label="Recipiente ao centro, com espaço livre para observar o experimento"><path class="glass" d="M62 12h56M68 12v112a22 22 0 0 0 44 0V12"/><path class="liquid" d="M70 91h40v33a20 20 0 0 1-40 0Z"/><path class="ticks" d="M102 35h10M105 51h7M102 67h10"/><circle cx="77" cy="111" r="3" class="bubble"/><circle cx="96" cy="123" r="2" class="bubble"/></svg><div><strong>Seu experimento em foco</strong><span>Gotejar · Agitar · Medir</span></div></div><figcaption>Abra uma ferramenta quando precisar. Fechar o painel devolve espaço à bancada.</figcaption></figure>`;
+      return `<figure class="manual-diagram manual-workspace-map"><div class="manual-map-actions"><a href="${href("bancada")}">${icon("setup")}Montagem</a><a href="${href("painel-medir")}">${icon("eye")}Ver</a><a href="${href("tabela")}">${icon("data")}Dados</a></div><div class="manual-map-scene"><svg viewBox="0 0 180 160" role="img" aria-label="Recipiente ao centro, com espaço livre para observar o experimento"><path class="glass" d="M62 12h56M68 12v112a22 22 0 0 0 44 0V12"/><path class="liquid" d="M70 91h40v33a20 20 0 0 1-40 0Z"/><path class="ticks" d="M102 35h10M105 51h7M102 67h10"/><circle cx="77" cy="111" r="3" class="bubble"/><circle cx="96" cy="123" r="2" class="bubble"/></svg><div><strong>Seu experimento em foco</strong><span>Gotejar · Agitar · Medir</span></div></div><figcaption>Abra uma ferramenta quando precisar. Fechar o painel devolve espaço à bancada.</figcaption></figure>`;
     if (kind === "meter")
       return `<figure class="manual-diagram"><svg class="manual-instrument" viewBox="0 0 520 210" role="img" aria-label="Esquema do pHmetro: visor ligado por um cabo ao eletrodo mergulhado na solução. Aguarde estabilizar antes de interpretar a leitura."><rect x="25" y="30" width="218" height="150" rx="16" class="device"/><rect x="45" y="52" width="177" height="64" rx="6" class="screen"/><text x="63" y="91" class="readout">— —</text><text x="165" y="94">pH</text><text x="46" y="150">Visor</text><path d="M242 65C310 0 395 20 395 64" class="glass"/><path d="M348 95v76q0 22 46 22t46-22V95" class="glass"/><path d="M351 140h86v30q0 20-43 20t-43-20Z" class="liquid"/><rect x="389" y="62" width="13" height="98" rx="5" class="probe"/><text x="312" y="47">Eletrodo</text></svg><figcaption>Esquema do instrumento. O visor só apresenta uma leitura depois da medição.</figcaption></figure>`;
     if (kind === "strip")
       return `<figure class="manual-diagram"><div class="manual-strip"><span aria-hidden="true"></span><div><strong>Uma estimativa por faixa</strong><p>Compare a cor com a escala de 0 a 14. A leitura é apresentada em passos de 1 unidade de pH.</p></div></div><figcaption>A descrição e o número acompanham a cor; não é necessário distinguir apenas o tom.</figcaption></figure>`;
     if (kind === "compaction")
-      return `<figure class="manual-diagram"><div class="manual-comparison"><div><strong>Compacta</strong><p>Um grupo de leituras compatíveis</p><span>Contagem + faixa + Ver medições</span></div><span aria-hidden="true">↔</span><div><strong>Completa</strong><p>Cada leitura individual</p><span>Técnica + valor + contexto</span></div></div><figcaption>São duas apresentações dos mesmos dados. O agrupamento não remove registros.</figcaption></figure>`;
+      return `<figure class="manual-diagram"><div class="manual-comparison"><div><strong>Compacta</strong><p>Um grupo de leituras compatíveis</p><span>Contagem + faixa + Ver medições</span></div>${icon("exchange")}<div><strong>Completa</strong><p>Cada leitura individual</p><span>Técnica + valor + contexto</span></div></div><figcaption>São duas apresentações dos mesmos dados. O agrupamento não remove registros.</figcaption></figure>`;
     if (kind === "instruments")
       return `<div class="manual-reference-table" role="region" aria-label="Comparação dos instrumentos" tabindex="0"><table><caption>Qual evidência você precisa?</caption><thead><tr><th scope="col">Técnica</th><th scope="col">Evidência</th><th scope="col">Limite principal</th></tr></thead><tbody><tr><th scope="row"><a href="${href("indicadores")}">Indicador</a></th><td>Cor e faixa de viragem</td><td>Não dá pH exato</td></tr><tr><th scope="row"><a href="${href("fita")}">Fita de pH</a></th><td>Estimativa de pH</td><td>Resolução de 1 unidade</td></tr><tr><th scope="row"><a href="${href("phmetro")}">pHmetro</a></th><td>Leitura numérica</td><td>Resolução simulada de 0,01</td></tr><tr><th scope="row"><a href="${href("condutividade")}">Condutivímetro</a></th><td>Condução em µS/cm</td><td>Estimativa ideal</td></tr><tr><th scope="row"><a href="${href("temperatura")}">Termômetro</a></th><td>Temperatura da solução</td><td>Condição do modelo</td></tr></tbody></table></div>`;
     const flow = {
@@ -27543,7 +27825,7 @@ SIAB.manualTela = (() => {
       report: [
         ["Investigar", "Obter evidências"],
         ["Interpretar", "Escrever suas conclusões"],
-        ["Compartilhar", "Imprimir ou exportar"],
+        ["Compartilhar", "Imprimir / Salvar como PDF"],
       ],
       modules: [
         ["Explorar", "Observar e manipular"],
@@ -27557,7 +27839,7 @@ SIAB.manualTela = (() => {
       ],
     }[kind];
     return flow
-      ? `<figure class="manual-diagram"><ol class="manual-flow${kind === "modules" ? " independent" : ""}">${flow.map(([title, detail]) => `<li><strong>${esc(title)}</strong><span>${esc(detail)}</span></li>`).join("")}</ol><figcaption>${kind === "modules" ? "Módulos independentes: escolha pelo objetivo, sem ordem obrigatória." : kind === "representations" ? "Três formas de interpretar o mesmo sistema." : "Uma sequência de consulta para orientar sua investigação."}</figcaption></figure>`
+      ? `<figure class="manual-diagram"><ol class="manual-flow${kind === "modules" ? " independent" : ""}">${flow.map(([title, detail], i) => `<li><strong>${esc(title)}</strong><span>${esc(detail)}</span>${kind !== "modules" && i < flow.length - 1 ? icon("flow", "manual-flow-arrow") : ""}</li>`).join("")}</ol><figcaption>${kind === "modules" ? "Módulos independentes: escolha pelo objetivo, sem ordem obrigatória." : kind === "representations" ? "Três formas de interpretar o mesmo sistema." : "Uma sequência de consulta para orientar sua investigação."}</figcaption></figure>`
       : "";
   }
   function generated(kind) {
@@ -27608,7 +27890,7 @@ SIAB.manualTela = (() => {
       .map((d, i) =>
         print
           ? `<section class="manual-print-detail"><h3>${esc(d.title)}</h3><p>${rich(d.text)}</p></section>`
-          : `<section class="manual-accordion"><h3><button type="button" class="secondary-btn" aria-expanded="false" aria-controls="manual-detail-${t.id}-${i}" id="manual-toggle-${t.id}-${i}" data-manual-expand>${esc(d.title)}<span aria-hidden="true">+</span></button></h3><div id="manual-detail-${t.id}-${i}" aria-labelledby="manual-toggle-${t.id}-${i}" hidden><p>${rich(d.text)}</p></div></section>`,
+          : `<section class="manual-accordion"><h3><button type="button" class="secondary-btn" aria-expanded="false" aria-controls="manual-detail-${t.id}-${i}" id="manual-toggle-${t.id}-${i}" data-manual-expand>${esc(d.title)}${icon("dropdown", "disclosure-icon")}</button></h3><div id="manual-detail-${t.id}-${i}" aria-labelledby="manual-toggle-${t.id}-${i}" hidden><p>${rich(d.text)}</p></div></section>`,
       )
       .join("");
   }
@@ -27627,7 +27909,7 @@ SIAB.manualTela = (() => {
             })
             .join("")}</div></nav>`
         : ""
-    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map(ref => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
+    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map((ref) => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
   }
   function home() {
     return `<header class="manual-hero"><div><p class="eyebrow">MANUAL DO USUÁRIO</p><h1 id="manual-titulo" data-foco tabindex="-1">Encontre seu próximo passo.</h1><p>Uma dúvida na bancada? Consulte uma ferramenta, entenda uma leitura ou descubra por onde começar.</p><div class="manual-hero-actions"><a class="primary-btn" href="${href("comecar")}">Começar a usar ${icon("arrow")}</a><button class="quiet-btn" type="button" data-manual-command="tour">Iniciar tour da bancada</button></div></div>${diagram("workspace")}</header><nav class="manual-shortcuts" aria-label="Consultas rápidas"><span>QUERO SABER</span>${[
@@ -27772,7 +28054,6 @@ SIAB.manualTela = (() => {
         const open = expand.getAttribute("aria-expanded") !== "true";
         expand.setAttribute("aria-expanded", String(open));
         $(expand.getAttribute("aria-controls")).hidden = !open;
-        expand.querySelector("span").textContent = open ? "−" : "+";
       }
       const command = e.target.closest("[data-manual-command]")?.dataset
         .manualCommand;
@@ -28045,21 +28326,22 @@ SIAB.initPreferences = () => {
     const script = document.createElement("script");
     script.id = "vlibras-script";
     script.src = "https://vlibras.gov.br/app/vlibras-plugin.js";
-    script.onload = () => {
-      try {
-        new window.VLibras.Widget("https://vlibras.gov.br/app");
-        window.onload?.();
-      } catch (erro) {
-        /* segue sem o tradutor */
-      }
-    };
-    script.onerror = () => {
+    const falha = () => {
       script.remove();
       widget.remove();
       SIAB.notice(
         "O VLibras não pôde ser carregado agora. Verifique a conexão ou tente mais tarde.",
       );
     };
+    script.onload = () => {
+      try {
+        new window.VLibras.Widget("https://vlibras.gov.br/app");
+        window.onload?.();
+      } catch (erro) {
+        falha();
+      }
+    };
+    script.onerror = falha;
     document.body.append(script);
   }
 
@@ -28200,7 +28482,6 @@ SIAB.activityUI = (() => {
     ["#indicator-chips,#indicator-only", "bench.changeIndicator"],
     ["#selecao-misturar-btn", "vessels.changeContent"],
     ["#compare-btn", "vessels.add"],
-    ["#relatorio-baixar", "files.html"],
     ["#relatorio-registrar,#selecao-registrar-btn", "files.notebook"],
     ["#relatorio-print,#relatorio-blank", "report.print"],
   ];

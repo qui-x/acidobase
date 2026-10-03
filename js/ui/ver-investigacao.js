@@ -171,7 +171,9 @@ SIAB.selecionarVer = (id) => {
   );
   SIAB.state.verFamily = family.id;
   SIAB.state.verTab = id;
-  SIAB.state.reportViews = [...new Set([...(SIAB.state.reportViews || []), id])];
+  SIAB.state.reportViews = [
+    ...new Set([...(SIAB.state.reportViews || []), id]),
+  ];
   (SIAB.state.verLastTabs ||= {})[family.id] = id;
   SIAB.renderVer();
   SIAB.workspace?.sync();
@@ -212,7 +214,7 @@ SIAB.renderVer = () => {
   const single = groups.length === 1 && family.items.length === 1;
   $("ver-tabs").innerHTML = single
     ? `<p class="ver-single" id="tab-${selected.id}">${family.label.toUpperCase()} · ${selected.label}</p>`
-    : `${groups.length > 1 ? `<div class="ver-family-tabs" role="tablist" aria-label="Famílias do painel">${groups.map((g) => `<button class="tab-btn" id="family-${g.id}" role="tab" data-ver-family="${g.id}" aria-selected="${g.id === family.id}" tabindex="${g.id === family.id ? 0 : -1}" aria-controls="ver-subpanel">${g.label.toUpperCase()}</button>`).join("")}</div>` : `<p class="eyebrow">${family.label.toUpperCase()}</p>`}<div id="ver-subpanel" ${groups.length > 1 ? `role="tabpanel" aria-labelledby="family-${family.id}"` : ""}><div class="ver-item-tabs" role="tablist" aria-label="${family.label}">${family.items.map((item) => `<button class="tab-btn view-tab-btn" id="tab-${item.id}" role="tab" data-ver="${item.id}" aria-selected="${item.id === selected.id}" tabindex="${item.id === selected.id ? 0 : -1}" aria-controls="ver-conteudo">${item.label}</button>`).join("")}</div></div>`;
+    : `${groups.length > 1 ? `<div class="ver-family-tabs" role="tablist" aria-label="Famílias do painel">${groups.map((g) => `<button class="tab-btn" id="family-${g.id}" role="tab" data-ver-family="${g.id}" aria-selected="${g.id === family.id}" tabindex="${g.id === family.id ? 0 : -1}" aria-controls="ver-subpanel">${SIAB.icons.svg(g.id)}${g.label.toUpperCase()}</button>`).join("")}</div>` : `<p class="eyebrow">${family.label.toUpperCase()}</p>`}<div id="ver-subpanel" ${groups.length > 1 ? `role="tabpanel" aria-labelledby="family-${family.id}"` : ""}><div class="ver-item-tabs" role="tablist" aria-label="${family.label}">${family.items.map((item) => `<button class="tab-btn view-tab-btn" id="tab-${item.id}" role="tab" data-ver="${item.id}" aria-selected="${item.id === selected.id}" tabindex="${item.id === selected.id ? 0 : -1}" aria-controls="ver-conteudo">${item.label}</button>`).join("")}</div></div>`;
   $("ver-conteudo").setAttribute("aria-labelledby", `tab-${selected.id}`);
   $("ver-conteudo").innerHTML = t
     ? selected.render({

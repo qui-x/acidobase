@@ -1,74 +1,76 @@
-# Validação — SIAB 1.0.0-rc.4.5
+# Validação — SIAB 1.0.0-rc.5
 
-Base: `SIAB(2).zip`, RC.4.1. Esta rodada implementa os 118 itens documentados em [docs/COBERTURA-RC45.md](docs/COBERTURA-RC45.md). Não há promoção para 1.0.0.
+**Conclusão: APTO PARA HOMOLOGAÇÃO FINAL.** Não houve promoção para 1.0.0. A iconografia aguarda avaliação do usuário; aparelhos físicos e leitores de tela permanecem pendentes, conforme os limites abaixo.
 
-Testes executados em 02/10/2026 UTC, em Linux, com binários reais instalados: **Chromium Headless Shell 141.0.7390.37**, **Firefox/Gecko 142.0.1** e **WebKit MiniBrowser 26.0**, via Playwright 1.56.1. As datas individuais constam nos JSON. Os testes foram executados por suíte; as suítes afetadas por correções foram repetidas.
+Base: RC.4.5, SHA-256 `82b43e881620f2123cd7fcc9733bdb9112fd2aeb957bc056a756236589ac3a57`. Prompt: `Texto colado(6).txt`, 145 seções. Execução final em **03/10/2026 UTC**, Linux, Playwright 1.56.1, Chromium Headless Shell **141.0.7390.37**, Firefox/Gecko **142.0.1** e WebKit MiniBrowser **26.0**. Os binários foram instalados e executados; não são resultados presumidos.
 
-## Resultados
+## Resultados finais
 
-| Suíte | Chromium | Firefox | WebKit | Execuções | Registro |
+| Suíte | Chromium | Firefox | WebKit | Total | Registro |
 |---|---:|---:|---:|---:|---|
 | Permissões e contexto RC.2 | 23 | 23 | 23 | 69 | `tests/results/rc2.json` |
 | Fluxos gerais | 16 | 16 | 16 | 48 | `tests/results/navegadores.json` |
 | Regressão e acessibilidade | 12 | 12 | 12 | 36 | `tests/results/regressao.json` |
-| HTTPS, toque, tour e ambiente | 5 | 5 | 5 | 15 | `tests/results/ambiente.json` |
+| HTTPS, toque e ambiente | 5 | 5 | 5 | 15 | `tests/results/ambiente.json` |
 | Impressão e cálculos | 3 | 3 | 3 | 9 | `tests/results/impressao.json` |
-| Entrada, standalone e PWA | 4 | 4 | 4 | 12 | `tests/results/entrega.json` |
+| Entrada e standalone | 4 | 4 | 4 | 12 | `tests/results/entrega.json` |
 | Workspace e responsividade | 30 | 30 | 30 | 90 | `tests/results/workspace.json` |
 | Manual e ajuda | 30 | 30 | 30 | 90 | `tests/results/manual.json` |
 | Contrato visual mobile | 37 | 37 | 37 | 111 | `tests/results/mobile-controls.json` |
-| Refinamentos RC.4.5 | 37 | 37 | 37 | 111 | `tests/results/rc45.json` |
-| **Total** | **197** | **197** | **197** | **591** | **Sem falhas ou erros de página nos registros finais** |
+| Regressões RC.4.5 | 37 | 37 | 37 | 111 | `tests/results/rc45.json` |
+| Sessões, iconografia e RC.5 | 25 | 25 | 25 | 75 | `tests/results/rc5.json` |
+| Atualização RC.4.5 → RC.5 e offline | 5 | 5 | 5 | 15 | `tests/results/offline-rc5.json` |
+| **Total** | **227** | **227** | **227** | **681** | **0 falhas** |
 
-Além dos casos de navegador: **25 testes científicos cobrindo 140 substâncias**, **12 verificações de migração** e **18 testes de compactação**, registrados em `tests/results/ciencia.json` e `unitarios-rc45.log`. A suíte de layout passou para 10 vidrarias/capacidades, 1–10 cartões, projeção, seleção, redimensionamento e celular (`layout-rc45.log`). `execucao-rc45.log` consolida os resultados finais dos JSON, com suas datas.
+Mais **25 testes científicos**, incluindo validação das **140 substâncias**, **12 verificações de migração** e **18 de compactação**: **55 aprovados, 0 falhas**. Soma: **736 casos aprovados**. Registros: `ciencia.json`, `migracao.json`, `compactacao.json` e `resumo-rc5.json` em `tests/results/`.
 
-Quinze arquivos do núcleo químico, catálogo, permissões, persistência, abertura e símbolo oficial permanecem idênticos à base, conforme `preservacao-rc45.json`. Os metadados adicionados aos instrumentos não mudam o cálculo de leituras. O empacotamento verifica hashes, ativos do service worker e reprodução do standalone.
+A suíte adicional de layout foi aprovada para dez vidrarias/capacidades, 1–10 cartões, projeção, resize, seleção e mobile. Capturas/PDF e integridade do pacote são verificações adicionais, não infladas na contagem de 736. Os JSON finais não registram exceções JavaScript de página não tratadas. Falhas de serviços opcionais foram simuladas deliberadamente e tratadas.
 
-## Controles mobile
+Os nomes RC.2/RC.4.5 nas suítes identificam regressões históricas executadas novamente sobre esta RC.5. Datas individuais constam nos JSON. Falhas preliminares de seletores de teste foram corrigidas para reconhecer a nova escolha de sessão, e as suítes afetadas foram repetidas; apenas resultados finais integram a distribuição.
 
-Auditoria em **320×568, 360×800, 390×844 e 414×896**, nos três motores. Foram comparados altura, largura, radius, padding, margem e fonte de controles irmãos; alvos interativos, espaçamentos e enquadramento. O teste também exige progressão contínua da largura do botão central entre as quatro telas.
+## Contrato mobile
 
-| Largura | Desfazer | Gotejar | Doses | Agitar = Medir pH (largura) | Altura dos cinco controles |
-|---|---:|---:|---:|---:|---:|
-| 320 px | 44 px | 164 px | 76 px | 145 px | 44 px |
-| 360 px | 44 px | 204 px | 76 px | 165 px | 44 px |
-| 390 px | 44 px | 234 px | 76 px | 180 px | 44 px |
-| 414 px | 44 px | 258 px | 76 px | 192 px | 44 px |
+As quatro larguras foram medidas nos três motores e comparadas visualmente. Todos os cinco controles abaixo têm 44 px de altura; Agitar e Medir pH têm largura igual, radius 6 px, padding 8 × 12 px e margem esquerda 0. O ícone de Agitar foi preservado.
 
-Agitar e Medir pH têm `margin-left:0`, radius de 6 px, padding de 8 × 12 px e a mesma fonte. A nova família de botões herda a fonte da aplicação. As ações da barra têm gap de 6 px; chips usam 8 px de intervalo. Controles principais móveis têm alvo mínimo de 44 px; ações inteiras do bottom sheet, 48 px; cards de seleção mantêm 52 px. Elementos decorativos não são ampliados.
+| Viewport | Desfazer | Gotejar | Doses | Agitar = Medir pH |
+|---|---:|---:|---:|---:|
+| 320×568 | 44 px | 164 px | 76 px | 145 px |
+| 360×800 | 44 px | 204 px | 76 px | 165 px |
+| 390×844 | 44 px | 234 px | 76 px | 180 px |
+| 414×896 | 44 px | 258 px | 76 px | 192 px |
 
-As quatro capturas de bancada e os painéis Montagem, Medir e Dados foram comparados visualmente. Não há controles fora da viewport, sobreposição de ações ou compressão de rótulos nas telas verificadas. Em 320×568, a cena central pode rolar para mostrar o recipiente; essa adaptação já existente foi mantida, com as ações e a navegação disponíveis.
+O botão central absorve progressivamente a diferença de largura. O gap entre irmãos é 6 px. Chips mantêm conteúdo sem compressão, padding coerente e intervalo de 8 px. Alvos principais têm mínimo de 44 px, ações inteiras de bottom sheet 48 px e cards de famílias/ferramentas 52 px. Os testes verificam enquadramento, dimensões, radius, padding, gap e continuidade das proporções. Nenhum controle dos cenários medidos excedeu a viewport.
 
-Evidências: `mobile-320-bancada.png`, `mobile-360-bancada.png`, `mobile-390-bancada.png`, `mobile-414-bancada.png`, `mobile-montagem.png`, `mobile-medir.png`, `mobile-dados.png`. Composições para comparação: `rc45-mobile-comparacao.png` e `rc45-mobile-paineis.png`. Os arquivos estão em `tests/results/`; a [galeria](docs/EVIDENCIAS-RC45.html) abre as capturas originais.
+Capturas exigidas: `mobile-320-bancada`, `mobile-360-bancada`, `mobile-390-bancada`, `mobile-414-bancada`, `mobile-montagem`, `mobile-medir` e `mobile-dados`, em PNG. `rc5-mobile-comparacao.png` reúne as quatro larguras. Em 320×568, o recipiente pode exigir rolagem interna da cena; comportamento existente na base, preservado sem refazer a arquitetura.
 
-## Relatório, atividades e navegação
+## Fluxos e relatório
 
-Os 37 cenários novos por motor verificam bancada vazia, água como padrão genérico, restauração de HCl escolhido, montagens/visualização, comparador oficial, arco-íris sem anotações automáticas, duplicação/edição/exclusão com UUID e persistência, confirmação de notas, menu contextual/restrito e reutilização dos ícones SVG.
+Os 25 cenários RC.5 por motor abrangem Montagem, Missão e Roteiro: sem dados, diálogo com três alternativas, relatório antes de sair, encerramento, Caderno estruturado, finalização, reabertura, cancelamento e nova tentativa sem sobrescrever a anterior. Links legados digital/impresso continuam válidos. As permissões e o contexto restrito também passam nas regressões.
 
-Os três modos de relatório mantêm os dados automáticos e distinguem texto autoral. A análise permite selecionar conteúdo e usar dados hipotéticos identificados, sem alterar as medições. Há teste específico de concentração declarada e composição de misturas. As linhas são verificadas em 5, 10, 15, 20, 25, valor personalizado e configuração por campo; os limites 5–60 também são exercitados.
+O relatório mantém dez seções e três modos. Foram exercitados dados iniciais/finais, medidas, representações, mistura, campos autorais e linhas 5/10/15/20/25/personalizado, incluindo ajustes independentes e limites 5–60. Histórico e dados brutos permanecem separados da apresentação. Os PDFs `rc5-relatorio-completo.pdf` (3 páginas), `rc5-relatorio-mao.pdf` (4) e `rc5-relatorio-analise.pdf` (4) foram renderizados e inspecionados. A suíte de paginação da base foi reexecutada; a interface não entra na folha impressa. Papel e diálogo nativo por sistema permanecem externos.
 
-A amostra `rc45-relatorio-25-linhas.pdf` foi renderizada e inspecionada em todas as **7 páginas A4**. A contagem vetorial encontrou **125 linhas de resposta completas**: 31, 36, 33 e 25 nas páginas 4 a 7, respectivamente. A análise continua na página seguinte. Gráficos mantêm legendas, tabelas continuam legíveis e controles da interface não são impressos. Detalhes e hash do PDF em `pdf-layout-rc45.json`.
+## Matriz, ícones e acessibilidade
 
-A suíte simula o encerramento do diálogo de impressão com o evento `afterprint` nos três motores; assim a cópia temporária da folha é retirada também onde a API de geração de PDF não está disponível.
+Dez viewports: **320×568, 360×800, 390×844, 414×896, 768×1024, 1024×768, 1280×720, 1366×768, 1440×900 e 1920×1080**. Verificados docas/painéis, expansão, resize, foco, Enter/Space/Escape, anúncio de pH, fonte 200%, rotação e viewport reduzida para campo de formulário. O zoom 200% foi representado por viewport CSS 683×450 e escala 2 para uma tela 1366×900.
 
-## Matriz de apresentação
+Axe com regras WCAG A/AA aplicáveis não detectou violações nas telas exercitadas; isso não é certificação integral de acessibilidade. Temas claro/escuro, contraste, deuteranopia e movimento reduzido integram as regressões. Inventário de 22 áreas, mesma função/mesmo SVG e nove usos de seta entregues em `docs/ICONOGRAFIA-RC5.html`. A aprovação visual final do usuário não foi presumida.
 
-Dez viewports: **320×568, 360×800, 390×844, 414×896, 768×1024, 1024×768, 1280×720, 1366×768, 1440×900 e 1920×1080**. Temas claro, escuro, alto contraste e filtro de deuteranopia; teclado, foco, fonte ampliada e axe nas suítes Manual/workspace. O Manual contém 52 tópicos em 13 categorias, incluindo Referências científicas.
+Foram capturados 37 arquivos na rodada de evidências. Quatro representavam cenas repetidas da bancada mobile e foram removidos do pacote; os **33 screenshots canônicos**, mais a composição comparativa, permanecem na [galeria](docs/EVIDENCIAS-RC5.html). A seleção e os nomes excluídos estão em `tests/results/evidencias-rc5.json`.
 
-PWA/cache offline, HTTPS local e arquivo único por `file://` foram exercitados nos três motores. O teste de indisponibilidade do clima usa o contexto realmente offline, incluindo requisições mediadas pelo service worker.
+## Offline, atualização e standalone
 
-## Reproduzir
+Em cada motor, o teste instalou o cache da **RC.4.5 real**, abriu sessão com medidas, publicou os arquivos RC.5 no servidor temporário, atualizou o Service Worker e recarregou pela notificação. O cache antigo foi descartado; os recursos do novo cache foram comparados byte a byte via SHA-256 com a distribuição; dados e ActivityContext foram preservados.
 
-```sh
-npm ci
-npx playwright install --with-deps chromium firefox webkit
-npm run build
-npm test
-npm run test:layout
-```
+A página foi fechada e reaberta com o servidor recusando conexões e serviços externos bloqueados. Chromium também usou contexto offline do Playwright. Firefox/WebKit usaram indisponibilidade real do servidor e bloqueio externo, pois a flag offline desses executores impedia a navegação antes do atendimento pelo SW. O teste percorreu as áreas essenciais, experimento, relatório, Professor e reload. Não se declara instalação física de PWA.
 
-As suítes iniciam servidores locais temporários. `SIAB_TEST_ENGINES` limita motores; `SIAB_PLAYWRIGHT_MODULE` e `SIAB_AXE_MODULE` permitem dependências externas à pasta. O runtime de testes não é necessário para usar o aplicativo e não integra o ZIP.
+O standalone foi reconstruído após as alterações e exercitado por `file://` nos três motores, incluindo permissões, novo ciclo de sessão e serviços opcionais bloqueados. O núcleo usa recursos locais; clima/VLibras são opcionais. Veja [auditoria offline](docs/OFFLINE-RC5.md) e [inventário de dependências](docs/DEPENDENCIAS-RC5.md).
 
-## Limites da homologação
+## Integridade e reprodução
 
-A evidência é de motores em Linux, com viewports e toque simulados. Testes em Safari/iOS, navegadores comerciais por sistema, aparelhos físicos, leitores de tela, instalação nativa da PWA e impressão em papel permanecem pendentes em [docs/LIMITACOES.md](docs/LIMITACOES.md). A entrega é **1.0.0-rc.4.5**.
+31 arquivos preservados foram comparados com SHA-256 contra a RC.4.5 em `docs/PRESERVACAO-RC5.json`. Os manifestos `SHA256SUMS.txt` e `SHA512SUMS.txt` cobrem os arquivos distribuídos, exceto os próprios manifestos. O arquivo externo de hashes cobre ZIP, standalone, inventário visual e validação. Método: Python 3 `hashlib.sha256/sha512`; verificação adicional do conteúdo do ZIP.
+
+Os comandos estão no [README](README.md). O teste de atualização requer a base RC.4.5 extraída, indicada por `SIAB_BASELINE_DIR`.
+
+## Não testado em dispositivo real
+
+Safari/iOS/iPadOS, Android, NVDA, TalkBack, VoiceOver, instalação da PWA pelo sistema, teclado/safe areas físicos, zoom nativo, impressão em papel e desempenho em aparelho limitado. O VLibras teve suas falhas tratadas/testadas, sem homologação da tradução online real. A iconografia foi inspecionada tecnicamente e apresentada para aprovação. Essas pendências constam em [LIMITACOES.md](docs/LIMITACOES.md), sem preenchimento fictício de resultados.

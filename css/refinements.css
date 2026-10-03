@@ -282,3 +282,90 @@
     border-color: #888;
   }
 }
+/* RC.5: mesma família de ícones e controles; arquitetura preservada. */
+summary.with-disclosure::after {
+  content: none;
+}
+summary.with-disclosure {
+  list-style: none;
+}
+.disclosure-icon {
+  margin-left: auto;
+  color: var(--accent);
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+details[open] > summary > .disclosure-icon,
+[aria-expanded="true"] > .disclosure-icon {
+  transform: rotate(180deg);
+}
+.manual-flow li::after {
+  content: none !important;
+}
+.manual-flow-arrow {
+  position: absolute;
+  right: -22px;
+  top: 0;
+  color: var(--accent);
+  width: 20px;
+  height: 20px;
+}
+.dock-button,
+.dock-data-menu > button,
+.ver-family-tabs button {
+  display: inline-flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+.ver-family-tabs .siab-icon {
+  width: 18px;
+  height: 18px;
+}
+.about-links .quiet-btn {
+  border: 1px solid var(--border);
+  background: var(--panel);
+  min-height: 44px;
+  padding: 10px 15px;
+}
+.about-links .quiet-btn:hover {
+  border-color: var(--accent);
+  background: var(--hover);
+}
+.practice-record {
+  background: var(--panel2);
+  border-left-color: var(--brand);
+}
+.practice-record .actions {
+  margin-top: 12px;
+}
+.practice-vessel {
+  border-top: 1px solid var(--border);
+  padding-block: 18px;
+}
+.practice-vessel .report-table {
+  overflow: auto;
+  max-width: 100%;
+}
+.session-choice {
+  display: grid;
+  gap: 16px;
+}
+#controls-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+@media (max-width: 640px) {
+  .manual-flow-arrow {
+    right: 0;
+    top: 10px;
+    transform: rotate(90deg);
+  }
+}
+@media print {
+  .disclosure-icon {
+    display: none;
+  }
+}

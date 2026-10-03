@@ -615,7 +615,7 @@
   align-content: start;
 }
 .manual-flow li:not(:last-child):after {
-  content: "→";
+  content: none;
   position: absolute;
   right: -18px;
   top: -2px;
@@ -995,7 +995,7 @@
     gap: 22px;
   }
   .manual-flow li:not(:last-child):after {
-    content: "↓";
+    content: none;
     right: 0;
     top: 10px;
   }

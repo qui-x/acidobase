@@ -2,6 +2,7 @@
 SIAB.atividades = (() => {
   let ativa = null,
     loading = 0,
+    escolhaSessao = false,
     restoringToken = null,
     restoringRoute = null;
   const instrumentos = [
@@ -29,7 +30,7 @@ SIAB.atividades = (() => {
       ![1, 2].includes(c.schema) ||
       !["roteiro", "missao", "montagem"].includes(c.tipo) ||
       !["livre", "restrita"].includes(c.navegacao) ||
-      !["digital", "impresso"].includes(c.relatorio)
+      (c.relatorio != null && !["digital", "impresso"].includes(c.relatorio))
     )
       throw new Error("Configuração de atividade inválida.");
     const entry =
@@ -108,12 +109,99 @@ SIAB.atividades = (() => {
   }
   const chave = (token) => "siab_atividade_" + token.split(".")[1];
   const rotaAtividade = () => `#/atividade/${ativa.token}`;
+  const uuid = () =>
+    globalThis.crypto?.randomUUID?.() ||
+    `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  const nova = (token, config) => ({
+    token,
+    config,
+    sessionId: uuid(),
+    etapa: "apresentacao",
+    criada: new Date().toISOString(),
+    identificacao: { ...config.identificacao },
+  });
+  const preparo = (b) =>
+    JSON.stringify(
+      (b?.tubes || []).map((t) => [
+        t.solution,
+        t.concentration,
+        t.initialVolume,
+        t.temperature,
+        t.titrant,
+        t.titrantConcentration,
+        t.dilution,
+        t.indicator,
+        t.componentes || null,
+      ]),
+    );
+  function temDados() {
+    if (!ativa || ativa.etapa === "apresentacao") return false;
+    const b = ativa.bench || SIAB.state,
+      r = SIAB.relatorios.obter(b.reportId);
+    return (
+      b.tubes.some(
+        (t) =>
+          t.additions?.length ||
+          (t.observacao?.rawMeasurements || t.observacao?.leituras || []).some(
+            (m) => m.tecnica !== "indicador",
+          ) ||
+          (t.observacao?.eventos || []).some((e) => !e.leitura),
+      ) ||
+      Object.values(r?.aluno || {}).some((v) => String(v).trim()) ||
+      Object.values(ativa.missao?.respostas || {}).some((v) =>
+        String(v).trim(),
+      ) ||
+      (ativa.preparoInicial != null && preparo(b) !== ativa.preparoInicial)
+    );
+  }
+  function consolidar() {
+    if (!ativa || ativa.etapa === "apresentacao") return null;
+    SIAB.state.tubes.forEach((t) => SIAB.instrumentos.parar(t));
+    const r = SIAB.relatorios.capturar();
+    salvarSessao();
+    return r;
+  }
+  function registrarPratica() {
+    if (!temDados()) return null;
+    const r = consolidar();
+    if (!r) return null;
+    const campos = {
+      tipo: "pratica",
+      sessaoId: ativa.sessionId,
+      relatorioId: r.id,
+      titulo: ativa.config.titulo,
+      estadoPratica:
+        ativa.etapa === "finalizada" ? "Finalizada" : "Sessão encerrada",
+      atividade: { tipo: ativa.config.tipo, item: ativa.config.item },
+      atualizado: new Date().toISOString(),
+      linhas: [
+        [
+          "Dados disponíveis",
+          "Condições iniciais, medições, tabela, condições finais e relatório",
+        ],
+      ],
+    };
+    const existente = SIAB.progresso.dados.caderno.find(
+      (n) => n.sessaoId === ativa.sessionId || n.relatorioId === r.id,
+    );
+    if (existente) {
+      SIAB.progresso.atualizarNota(existente.id, campos);
+      return existente.id;
+    }
+    return SIAB.progresso.anotar(campos);
+  }
   function guardarRota(nome, parametro) {
     if (restoringToken) return { nome: "atividade", parametro: restoringToken };
     if (!SIAB.ActivityContext.restricted()) return { nome, parametro };
     const go = () => ({ nome: "atividade", parametro: ativa.token });
     if (nome === "atividade")
       return parametro === ativa.token ? { nome, parametro } : go();
+    if (escolhaSessao) return go();
+    if (
+      ativa.etapa === "finalizada" &&
+      ["laboratorio", "missao"].includes(nome)
+    )
+      return { nome: "relatorio", parametro: ativa.bench.reportId };
     if (["bancada", "relatorio", "finalizada"].includes(ativa.etapa)) {
       if (
         nome === "relatorio" &&
@@ -133,11 +221,11 @@ SIAB.atividades = (() => {
     return go();
   }
   function salvarSessao() {
-    if (!ativa) return;
+    if (!ativa || escolhaSessao) return;
     const a = SIAB.motor.ativa;
     if (ativa.etapa !== "apresentacao") ativa.bench = SIAB.state;
     ativa.missao =
-      a && ativa.config.tipo === "missao"
+      a && ativa.etapa !== "apresentacao" && ativa.config.tipo === "missao"
         ? {
             id: a.def.id,
             respostas: a.respostas,
@@ -190,15 +278,19 @@ SIAB.atividades = (() => {
       if (turn !== loading) return;
       const stored = SIAB.persistencia.ler(chave(token), null);
       const saved = stored?.token === token ? stored : null;
-      if (ativa?.token !== token)
+      if (ativa?.token !== token) {
         ativa = saved?.config
           ? { ...saved, config, token }
-          : {
-              token,
-              config,
-              etapa: "apresentacao",
-              identificacao: { ...config.identificacao },
-            };
+          : nova(token, config);
+        ativa.sessionId ||=
+          ativa.bench?.reportId || ativa.bench?.experiencia?.id || uuid();
+        if (ativa.bench) ativa.bench.reportId = ativa.sessionId;
+        escolhaSessao =
+          !!saved?.bench &&
+          !/^#\/(laboratorio|missao|relatorio)(?:\/|$)/.test(
+            restoringRoute || "",
+          );
+      }
       ativa.context = SIAB.ActivityContext.create(
         config,
         ativa.identificacao,
@@ -208,15 +300,18 @@ SIAB.atividades = (() => {
       restoringToken = null;
       restoringRoute = null;
       restaurarBancada();
+      if (ativa.bench) ativa.preparoInicial ||= preparo(ativa.bench);
       salvarSessao();
       render();
       atualizarCabecalho();
       if (
+        !escolhaSessao &&
         ativa.etapa === "bancada" &&
         /^#\/(laboratorio|missao)(?:\/|$)/.test(returnRoute || "")
       )
         retomar();
       if (
+        !escolhaSessao &&
         returnRoute?.startsWith("#/relatorio") &&
         ativa.etapa !== "apresentacao"
       )
@@ -232,9 +327,11 @@ SIAB.atividades = (() => {
     const a = ativa,
       c = a.config,
       e = SIAB.escape;
+    const escolha = escolhaSessao || a.etapa === "finalizada";
     SIAB.$("atividade-conteudo").innerHTML =
-      `<h1 data-foco tabindex="-1">${e(c.titulo)}</h1><p>${{ roteiro: "Roteiro Experimental", missao: "Missão", montagem: "Montagem pronta" }[c.tipo]} · ${SIAB.MODULOS[c.modulo].nome}</p><p>${SIAB.format(c.temperatura, 1)} °C · Relatório ${c.relatorio} · Navegação ${c.navegacao}</p>${a.etapa === "finalizada" ? '<h2>Atividade finalizada</h2><p>Seu relatório permanece salvo neste navegador.</p><button class="primary-btn" data-activity-close>Encerrar atividade</button>' : ["bancada", "relatorio"].includes(a.etapa) ? '<button class="primary-btn" data-activity-resume>Continuar na bancada</button><button class="secondary-btn" data-open-report>Abrir relatório</button>' : `<p>Prepare sua identificação para começar a investigação.</p><form id="atividade-iniciar">${SIAB.identificacaoHTML(a.identificacao)}<button class="primary-btn">Iniciar atividade</button></form>`}`;
+      `<h1 data-foco tabindex="-1">${e(c.titulo)}</h1><p>${{ roteiro: "Roteiro Experimental", missao: "Missão", montagem: "Montagem pronta" }[c.tipo]} · ${SIAB.MODULOS[c.modulo].nome}</p><p>${SIAB.format(c.temperatura, 1)} °C · Navegação ${c.navegacao}</p>${escolha ? `<section class="session-choice"><h2>${a.etapa === "finalizada" ? "Atividade finalizada" : "Uma sessão já foi iniciada"}</h2><p>Os dados desta sessão permanecem salvos neste navegador.</p><div class="actions"><button class="primary-btn" data-session-continue>${a.etapa === "finalizada" ? "Ver relatório anterior" : "Continuar sessão"}</button><button class="secondary-btn" data-session-new>${a.etapa === "finalizada" ? "Iniciar nova tentativa" : "Iniciar nova sessão"}</button></div></section>` : ["bancada", "relatorio"].includes(a.etapa) ? '<button class="primary-btn" data-activity-resume>Continuar na bancada</button><button class="secondary-btn" data-open-report>Abrir relatório</button>' : `<p>Prepare sua identificação para começar a investigação.</p><form id="atividade-iniciar">${SIAB.identificacaoHTML(a.identificacao)}<button class="primary-btn">Iniciar atividade</button></form>`}`;
   }
+
   function iniciar(ident) {
     if (!ativa || ativa.etapa !== "apresentacao") return false;
     const c = ativa.config;
@@ -242,6 +339,8 @@ SIAB.atividades = (() => {
     ativa.context.identity = { ...ident };
     const b = SIAB.ActivityContext.buildBench(c, ident);
     ativa.bench = SIAB.ActivityContext.sanitize(b, c, ativa.context);
+    ativa.bench.reportId = ativa.sessionId;
+    ativa.preparoInicial = preparo(ativa.bench);
     const type = c.tipo === "missao" ? "mission" : "lab";
     SIAB.benches[type] = ativa.bench;
     SIAB.usarBancada(type);
@@ -256,6 +355,12 @@ SIAB.atividades = (() => {
   }
   function retomar() {
     if (!ativa) return;
+    if (ativa.etapa === "finalizada") {
+      SIAB.irPara(rotaAtividade());
+      return;
+    }
+    escolhaSessao = false;
+    salvarSessao();
     SIAB.irPara(
       ativa.config.tipo === "missao"
         ? `#/missao/${ativa.config.item}`
@@ -263,14 +368,77 @@ SIAB.atividades = (() => {
     );
   }
   function finalizar() {
-    if (!ativa) return;
-    SIAB.relatorios.capturar();
-    ativa.etapa = "finalizada";
+    if (!ativa || escolhaSessao || ativa.etapa === "apresentacao") return;
+    if (ativa.etapa !== "finalizada") {
+      consolidar();
+      ativa.etapa = "finalizada";
+      ativa.finalizadaEm = new Date().toISOString();
+      salvarSessao();
+      atualizarCabecalho();
+      SIAB.notice("Atividade finalizada. Seu relatório está disponível.");
+    }
+    SIAB.irPara(`#/relatorio/${ativa.bench.reportId}`);
+  }
+  function continuarSessao() {
+    escolhaSessao = false;
     salvarSessao();
-    SIAB.irPara(rotaAtividade());
+    atualizarCabecalho();
+    if (ativa.etapa === "finalizada")
+      SIAB.irPara(`#/relatorio/${ativa.bench.reportId}`);
+    else retomar();
+  }
+  function novaSessao() {
+    SIAB.confirmar(
+      "Iniciar nova sessão?",
+      "Os dados da sessão anterior serão preservados. A nova tentativa começa com a montagem original e uma nova identificação de sessão.",
+      () => {
+        escolhaSessao = false;
+        registrarPratica();
+        const { token, config } = ativa;
+        ativa = nova(token, config);
+        ativa.context = SIAB.ActivityContext.create(
+          config,
+          ativa.identificacao,
+          ativa.etapa,
+        );
+        salvarSessao();
+        render();
+        atualizarCabecalho();
+        SIAB.irPara(rotaAtividade());
+      },
+      "Iniciar nova sessão",
+    );
+  }
+  function pedirEncerramento() {
+    if (!ativa) return;
+    const dados = temDados();
+    SIAB.confirmar(
+      "Encerrar atividade?",
+      dados
+        ? "Há dados registrados nesta prática. Os resultados serão registrados no Caderno para consulta posterior."
+        : "Nenhum dado experimental foi registrado. Deseja sair da atividade?",
+      encerrar,
+      "Encerrar atividade",
+      "default",
+      dados
+        ? {
+            cancelar: "Continuar atividade",
+            extra: {
+              rotulo: "Abrir relatório antes de sair",
+              acao: () => {
+                escolhaSessao = false;
+                consolidar();
+                SIAB.irPara(`#/relatorio/${ativa.bench.reportId}`);
+              },
+            },
+          }
+        : {},
+    );
   }
   function encerrar() {
     if (!ativa) return;
+    escolhaSessao = false;
+    registrarPratica();
     salvarSessao();
     ativa = null;
     restoringToken = null;
@@ -296,7 +464,9 @@ SIAB.atividades = (() => {
       SIAB.$("activity-caption").textContent =
         `ATIVIDADE EXPERIMENTAL${ativa.config.navegacao === "restrita" ? " · MODO RESTRITO" : ""} · ${ativa.config.titulo}`;
       SIAB.$("activity-finish").hidden =
-        ativa.etapa === "apresentacao" || ativa.etapa === "finalizada";
+        escolhaSessao ||
+        ativa.etapa === "apresentacao" ||
+        ativa.etapa === "finalizada";
     }
   }
   function ligar() {
@@ -306,18 +476,14 @@ SIAB.atividades = (() => {
       iniciar(Object.fromEntries(new FormData(e.target)));
     });
     document.addEventListener("click", (e) => {
+      if (e.target.closest("[data-session-continue]")) continuarSessao();
+      if (e.target.closest("[data-session-new]")) novaSessao();
       if (e.target.closest("[data-activity-resume]")) retomar();
       if (e.target.closest("[data-activity-close]"))
         SIAB.$("activity-exit").click();
     });
     SIAB.$("activity-finish").onclick = finalizar;
-    SIAB.$("activity-exit").onclick = () =>
-      SIAB.confirmar(
-        "Encerrar atividade?",
-        "Seus registros ficam salvos neste navegador. Você poderá reabrir o mesmo link.",
-        encerrar,
-        "Encerrar atividade",
-      );
+    SIAB.$("activity-exit").onclick = pedirEncerramento;
     SIAB.loja.assinar(salvarSessao);
     window.addEventListener("pagehide", salvarSessao);
   }
@@ -334,6 +500,10 @@ SIAB.atividades = (() => {
     retomar,
     finalizar,
     encerrar,
+    temDados,
+    registrarPratica,
+    novaSessao,
+    pedirEncerramento,
     atualizarCabecalho,
     ligar,
     link: (token) => `${location.href.split("#")[0]}#/atividade/${token}`,

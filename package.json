@@ -1,13 +1,13 @@
 {
   "name": "siab-acidobase",
-  "version": "1.0.0-rc.4.5",
+  "version": "1.0.0-rc.5",
   "private": true,
   "description": "SIAB — investigação em ácidos e bases: temas, missões, roteiros, relatórios e PWA.",
   "license": "GPL-3.0-only",
   "scripts": {
     "start": "python3 -m http.server 8080",
-    "build": "node build_manual_docs.cjs && python3 build_standalone.py",
-    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/compactacao.test.cjs && node tests/rc2.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs && node tests/entrega.test.cjs && node tests/workspace.test.cjs && node tests/manual.test.cjs && node tests/mobile-controls.test.cjs && node tests/rc45.test.cjs",
+    "build": "node build_manual_docs.cjs && node build_icon_inventory.cjs && python3 build_standalone.py",
+    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/compactacao.test.cjs && node tests/rc2.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs && node tests/entrega.test.cjs && node tests/workspace.test.cjs && node tests/manual.test.cjs && node tests/mobile-controls.test.cjs && node tests/rc45.test.cjs && node tests/rc5.test.cjs",
     "test:science": "node tests/ciencia.test.cjs",
     "test:browser": "node tests/fluxos.test.cjs",
     "test:layout": "node tests/layout-bancada.test.cjs",
@@ -21,10 +21,17 @@
     "test:manual": "node tests/manual.test.cjs",
     "test:mobile-controls": "node tests/mobile-controls.test.cjs",
     "build:manual-docs": "node build_manual_docs.cjs",
-    "test:rc45": "node tests/rc45.test.cjs"
+    "test:rc45": "node tests/rc45.test.cjs",
+    "test:rc5": "node tests/rc5.test.cjs",
+    "test:offline-upgrade": "node tests/offline-rc5.test.cjs",
+    "test:evidence": "node tests/evidencias-rc5.cjs",
+    "test:artifacts": "node tests/artefatos-rc5.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.56.1",
     "@axe-core/playwright": "4.10.2"
+  },
+  "overrides": {
+    "playwright-core": "1.56.1"
   }
 }

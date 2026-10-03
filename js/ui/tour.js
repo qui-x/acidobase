@@ -12,7 +12,8 @@ SIAB.tour = (() => {
       alvo: "#controls",
       alvoCelular: "#workspace-montagem",
       titulo: "Prepare a bancada",
-      texto: "Abra Montagem para escolher uma solução em Preparo e uma vidraria em Objetos.",
+      texto:
+        "Abra Montagem → Preparo → Prateleira para escolher a solução; em Objetos, escolha a vidraria.",
     },
     {
       alvo: "#modulos",
@@ -36,9 +37,9 @@ SIAB.tour = (() => {
     {
       alvo: "#ver-panel",
       alvoCelular: "#workspace-ver",
-      titulo: "Use o VER",
+      titulo: "Investigue e consulte os dados",
       texto:
-        "Observe representações, escolha uma técnica de medição e analise os dados registrados.",
+        "Em Ver, observe, meça e analise. Em Dados, consulte Histórico, Tabela e Relatório.",
     },
   ];
   let passos = [],
@@ -126,8 +127,10 @@ SIAB.tour = (() => {
       .map((_, i) => `<span${i === n ? ' class="atual"' : ""}></span>`)
       .join("");
     $("tour-voltar").hidden = n === 0;
-    $("tour-proximo").textContent =
-      n === passos.length - 1 ? "Concluir" : "Próximo";
+    $("tour-proximo").innerHTML =
+      (n === passos.length - 1 ? "Concluir" : "Próximo") +
+      SIAB.icons.svg("next");
+    $("tour-voltar").innerHTML = SIAB.icons.svg("previous") + "Voltar";
     alvoDe(passo)?.scrollIntoView({ block: "center", behavior: "auto" });
     requestAnimationFrame(posicionar);
     $("tour-proximo").focus();

@@ -24,12 +24,12 @@
     <link rel="apple-touch-icon" href="assets/icones/apple-touch-icon.png" />
     <link
       rel="stylesheet"
-      href="vendor/dialog-polyfill/dialog-polyfill.css?v=1.0.0-rc.4.5"
+      href="vendor/dialog-polyfill/dialog-polyfill.css?v=1.0.0-rc.5"
     />
-    <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0-rc.4.5" />
-    <link rel="stylesheet" href="css/mobile-study.css?v=1.0.0-rc.4.5" />
-    <script src="js/core/compatibilidade.js?v=1.0.0-rc.4.5"></script>
-    <script src="a11y.js?v=1.0.0-rc.4.5"></script>
+    <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/mobile-study.css?v=1.0.0-rc.5" />
+    <script src="js/core/compatibilidade.js?v=1.0.0-rc.5"></script>
+    <script src="a11y.js?v=1.0.0-rc.5"></script>
     <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
     <script>
       try {
@@ -37,11 +37,11 @@
           document.documentElement.dataset.abertura = "off";
       } catch (erro) {}
     </script>
-    <link rel="stylesheet" href="css/investigacao.css?v=1.0.0-rc.4.5" />
-    <link rel="stylesheet" href="css/workspace.css?v=1.0.0-rc.4.5" />
-    <link rel="stylesheet" href="css/manual.css?v=1.0.0-rc.4.5" />
-    <link rel="stylesheet" href="css/mobile-controls.css?v=1.0.0-rc.4.5" />
-    <link rel="stylesheet" href="css/refinements.css?v=1.0.0-rc.4.5" />
+    <link rel="stylesheet" href="css/investigacao.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/workspace.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/manual.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/mobile-controls.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/refinements.css?v=1.0.0-rc.5" />
   </head>
   <body>
     <noscript
@@ -106,9 +106,7 @@
         aria-label="Abrir menu"
         title="Menu"
       >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
+        <span data-app-icon="menu"></span>
       </button>
       <a
         class="header-brand"
@@ -142,9 +140,7 @@
           aria-expanded="false"
           title="Prateleira e ajustes"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M4 7h9M17 7h3M4 17h3M11 17h9M13 4v6M7 14v6" /></svg
-          ><span class="header-btn-texto">Prateleira</span>
+          <span data-app-icon="setup"></span><span class="header-btn-texto">Prateleira</span>
         </button>
         <button
           id="access-btn"
@@ -154,12 +150,7 @@
           aria-controls="app-drawer"
           title="Acessibilidade"
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="12" cy="4.5" r="1.8" />
-            <path
-              d="M5 8.5c2.3.7 4.6 1 7 1s4.7-.3 7-1M12 9.5V14m0 0-3 6.5M12 14l3 6.5"
-            /></svg
-          ><span class="header-btn-texto">Acessibilidade</span>
+          <span data-app-icon="accessibility"></span><span class="header-btn-texto">Acessibilidade</span>
         </button>
       </div>
     </header>
@@ -210,21 +201,13 @@
             ></span>
             <span class="inicio-card-acao"
               >Entrar no laboratório
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              <span data-app-icon="arrow"></span></span>
           </a>
           <a class="caminho caminho-aprender" href="#/aprender">
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="learn"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Aprender</strong>
             <span>Entenda a química por trás de cada transformação.</span>
             <span class="caminho-meta" id="inicio-temas-meta"
@@ -235,13 +218,7 @@
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="mission"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Missões</strong>
             <span>Teste suas hipóteses e resolva desafios.</span>
             <span class="caminho-meta" id="inicio-missoes-meta"
@@ -252,13 +229,7 @@
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="protocol"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Roteiros Experimentais</strong>
             <span>Investigue com uma sequência de etapas.</span>
             <span class="caminho-meta" id="inicio-roteiros-meta"
@@ -269,13 +240,7 @@
             <span class="inicio-card-topo"
               ><span class="inicio-card-icone"
                 ><span data-app-icon="notebook"></span></span
-              ><svg
-                class="inicio-card-seta"
-                viewBox="0 0 24 24"
-                aria-hidden="true"
-              >
-                <path d="M5 12h14m-6-6 6 6-6 6" /></svg
-            ></span>
+              ><span data-app-icon="arrow" class="inicio-card-seta"></span></span>
             <strong>Caderno</strong>
             <span>Reúna registros e reveja suas descobertas.</span>
             <span class="caminho-meta" id="inicio-caderno-meta"
@@ -289,9 +254,7 @@
             <a href="#/professor">Área do Professor</a>
           </nav>
           <button class="quiet-btn" data-startup-settings>
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M4 7h9m4 0h3M4 17h3m4 0h9M13 4v6M7 14v6" /></svg
-            >Configurações de inicialização
+            <span data-app-icon="professor"></span>Configurações de inicialização
           </button>
         </footer>
       </section>
@@ -413,11 +376,6 @@
               <option value="restrita">Restrita à atividade</option>
               <option value="livre">Livre</option>
             </select></label
-          ><label class="field"
-            >Relatório<select name="relatorio">
-              <option value="digital">Digital</option>
-              <option value="impresso">Impresso</option>
-            </select></label
           >
           <p id="prof-erro" role="alert"></p>
           <button type="button" id="prof-cancel-edit" class="quiet-btn" hidden>
@@ -480,15 +438,14 @@
             Atualizar dados da bancada</button
           ><button id="relatorio-registrar" class="secondary-btn">
             Registrar no Caderno</button
-          ><button id="relatorio-baixar" class="secondary-btn">
-            Baixar relatório</button
           ><button id="relatorio-print" class="secondary-btn">
-            Imprimir relatório</button
+            Imprimir / Salvar como PDF</button
           ><button id="relatorio-blank" class="secondary-btn">
             Imprimir para preencher à mão</button
-          ><button class="quiet-btn" data-activity-resume>
+          ><button id="relatorio-voltar" class="quiet-btn">
             Voltar à bancada
           </button>
+          <button id="relatorio-encerrar" class="secondary-btn" data-activity-close hidden>Encerrar atividade</button>
         </div>
         <div id="relatorio-config"></div>
         <div id="relatorio-conteudo"></div>
@@ -503,7 +460,7 @@
         <header class="tela-cabecalho">
           <p class="eyebrow">CADERNO DE LABORATÓRIO</p>
           <h1 id="caderno-titulo" data-foco tabindex="-1">Seu caderno</h1>
-          <p>Registros pessoais de investigações, hipóteses e descobertas.</p>
+          <p>Registros pessoais de investigações, hipóteses, descobertas e práticas.</p>
         </header>
         <div class="caderno-acoes">
           <button type="button" id="caderno-csv" class="secondary-btn">
@@ -519,7 +476,7 @@
         <label class="field"
           >Filtrar registros<select id="caderno-filtro">
             <option value="todos">Todos</option>
-            <option value="experiencia">Experiências</option>
+            <option value="pratica">Práticas realizadas</option><option value="experiencia">Experiências</option>
             <option value="missao">Missões</option>
             <option value="exploracao">Explorações</option>
             <option value="anotacao">Anotações</option>
@@ -646,9 +603,7 @@
                 aria-label="Recolher prateleira"
                 title="Recolher prateleira"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m14 6-6 6 6 6M19 6v12" />
-                </svg>
+                <span data-app-icon="back"></span>
               </button>
               <button
                 type="button"
@@ -656,9 +611,7 @@
                 aria-label="Fechar cartão"
                 title="Fechar (Esc)"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6 6 18" />
-                </svg>
+                <span data-app-icon="close"></span>
               </button>
               <button
                 id="close-controls"
@@ -778,9 +731,7 @@
                       ><strong class="menu-frasco-atual"></strong
                     ></span>
                     <span class="menu-frasco-cor" aria-hidden="true"></span>
-                    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                    <span data-app-icon="dropdown" class="chevron"></span>
                   </button>
                   <div
                     id="menu-frasco-corpo"
@@ -824,9 +775,7 @@
                       ><strong class="menu-frasco-atual"></strong
                     ></span>
                     <span class="menu-frasco-cor" aria-hidden="true"></span>
-                    <svg class="chevron" viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="m6 9 6 6 6-6" />
-                    </svg>
+                    <span data-app-icon="dropdown" class="chevron"></span>
                   </button>
                 </div>
               </div>
@@ -1486,9 +1435,7 @@
                 aria-label="Recolher painel VER"
                 title="Recolher painel VER"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="m10 6 6 6-6 6M5 6v12" />
-                </svg>
+                <span data-app-icon="arrow"></span>
               </button>
               <h2 id="ver-title" class="eyebrow">VER</h2>
               <a
@@ -1503,9 +1450,7 @@
                 aria-label="Fechar cartão"
                 title="Fechar (Esc)"
               >
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M6 6l12 12M18 6 6 18" />
-                </svg>
+                <span data-app-icon="close"></span>
               </button>
             </div>
             <!-- Escala de pH (saiu do centro da bancada): marcador no pH e faixa de viragem do indicador. -->
@@ -1601,9 +1546,9 @@
       </div>
       <p id="confirm-text"></p>
       <div class="dialog-actions">
-        <button type="button" class="secondary-btn" data-close="confirm-dialog">
+        <button type="button" id="confirm-cancel" class="secondary-btn" data-close="confirm-dialog">
           Cancelar</button
-        ><button type="button" id="confirm-yes" class="primary-btn">
+        ><button type="button" id="confirm-extra" class="secondary-btn" hidden></button><button type="button" id="confirm-yes" class="primary-btn">
           Confirmar
         </button>
       </div>
@@ -1776,9 +1721,7 @@
           >
             <span data-app-icon="accessibility"></span
             ><span>Acessibilidade</span
-            ><svg viewBox="0 0 24 24" aria-hidden="true" class="drawer-chevron">
-              <path d="m9 6 6 6-6 6" />
-            </svg>
+            ><span data-app-icon="next" class="drawer-chevron"></span>
           </button>
           <div
             id="a11y-panel"
@@ -2061,10 +2004,10 @@
         BSD-3-Clause.
       </p>
       <nav class="about-links" aria-label="Documentação">
-        <a href="#/manual" data-close="about-dialog">Manual de uso</a
-        ><a href="#/manual/limites" data-close="about-dialog"
+        <a class="quiet-btn" href="#/manual" data-close="about-dialog">Manual de uso</a
+        ><a class="quiet-btn" href="#/manual/limites" data-close="about-dialog"
           >Modelo científico</a
-        ><a href="#/manual/referencias" data-close="about-dialog"
+        ><a class="quiet-btn" href="#/manual/referencias" data-close="about-dialog"
           >Referências e créditos</a
         >
       </nav>
@@ -2244,9 +2187,7 @@
             data-close="startup-dialog"
             aria-label="Fechar configurações de inicialização"
           >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="m6 6 12 12M6 18 18 6" />
-            </svg>
+            <span data-app-icon="close"></span>
           </button>
         </div>
         <h2 id="startup-title" tabindex="-1" autofocus>Como deseja iniciar?</h2>
@@ -2377,73 +2318,73 @@
         </button>
       </form>
     </dialog>
-    <script src="vendor/dialog-polyfill/dialog-polyfill.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/namespace.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/icons.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/util.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/catalogo.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/cotidiano.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/sais.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/ambiente-saude.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/reagentes.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/amostras.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/funcoes.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/simulation/quimica.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/simulation/condutividade.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/estado.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/abertura.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/loja.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/persistencia.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/migracoes.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/progresso.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/roteador.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/missoes.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/temas.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/montagens.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/experimentos.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/data/manual.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/activity-context.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/simulation/motor-missoes.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/tubo.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/regua-ph.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/grafico.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/lupa.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/condutimetro.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/equacao.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/som.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/conta-gotas.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/seletores.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/prateleira.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/modulos.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/layout-bancada.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/simulation/instrumentos.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/render.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/simulation/medicoes.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/ver-investigacao.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/gaveta.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/workspace.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/trilho.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/tour.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/segredo.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/impressao.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/selecao-tubos.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/bancada.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/laboratorio.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/missao.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/inicio.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/aprender.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/roteiros.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/relatorios.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/core/atividades.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/professor.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/caderno.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/telas/manual.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/a11y/preferencias.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/init/pwa.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/activity-ui.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/init/integracao.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/init/app.js?v=1.0.0-rc.4.5"></script>
-    <script src="js/ui/mobile-study.js?v=1.0.0-rc.4.5"></script>
+    <script src="vendor/dialog-polyfill/dialog-polyfill.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/namespace.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/icons.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/util.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/catalogo.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/cotidiano.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/sais.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/ambiente-saude.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/reagentes.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/amostras.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/funcoes.js?v=1.0.0-rc.5"></script>
+    <script src="js/simulation/quimica.js?v=1.0.0-rc.5"></script>
+    <script src="js/simulation/condutividade.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/estado.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/abertura.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/loja.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/persistencia.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/migracoes.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/progresso.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/roteador.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/missoes.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/temas.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/montagens.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/experimentos.js?v=1.0.0-rc.5"></script>
+    <script src="js/data/manual.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/activity-context.js?v=1.0.0-rc.5"></script>
+    <script src="js/simulation/motor-missoes.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/tubo.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/regua-ph.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/grafico.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/lupa.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/condutimetro.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/equacao.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/som.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/conta-gotas.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/seletores.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/prateleira.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/modulos.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/layout-bancada.js?v=1.0.0-rc.5"></script>
+    <script src="js/simulation/instrumentos.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/render.js?v=1.0.0-rc.5"></script>
+    <script src="js/simulation/medicoes.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/ver-investigacao.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/gaveta.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/workspace.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/trilho.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/tour.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/segredo.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/impressao.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/selecao-tubos.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/bancada.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/laboratorio.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/missao.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/inicio.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/aprender.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/roteiros.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/relatorios.js?v=1.0.0-rc.5"></script>
+    <script src="js/core/atividades.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/professor.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/caderno.js?v=1.0.0-rc.5"></script>
+    <script src="js/telas/manual.js?v=1.0.0-rc.5"></script>
+    <script src="js/a11y/preferencias.js?v=1.0.0-rc.5"></script>
+    <script src="js/init/pwa.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/activity-ui.js?v=1.0.0-rc.5"></script>
+    <script src="js/init/integracao.js?v=1.0.0-rc.5"></script>
+    <script src="js/init/app.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/mobile-study.js?v=1.0.0-rc.5"></script>
     <script>
       if (window.SIABCompat) window.SIABCompat.concluir();
     </script>
