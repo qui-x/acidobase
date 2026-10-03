@@ -1,0 +1,20 @@
+{
+  "version": "1.0.0-rc.5",
+  "date": "2026-10-03",
+  "migrationChecks": 12,
+  "status": "OK",
+  "cases": [
+    "schema",
+    "notes",
+    "table",
+    "text",
+    "original backup",
+    "mission",
+    "startup",
+    "idempotence",
+    "reload",
+    "351 records",
+    "corrupt JSON",
+    "quota fallback"
+  ]
+}

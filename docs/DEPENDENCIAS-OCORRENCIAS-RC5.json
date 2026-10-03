@@ -1,0 +1,116 @@
+{
+  "version": "1.0.0-rc.5",
+  "terms": [
+    "http://",
+    "https://",
+    "cdn",
+    "unpkg",
+    "jsdelivr",
+    "cdnjs",
+    "googleapis"
+  ],
+  "occurrences": [
+    {
+      "file": "js/simulation/instrumentos.js",
+      "line": 226,
+      "classification": "Serviço opcional de temperatura",
+      "source": "`https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(cidade.trim())}&count=1&language=pt`,"
+    },
+    {
+      "file": "js/simulation/instrumentos.js",
+      "line": 235,
+      "classification": "Serviço opcional de temperatura",
+      "source": "`https://api.open-meteo.com/v1/forecast?latitude=${loc.latitude}&longitude=${loc.longitude}&current=temperature_2m`,"
+    },
+    {
+      "file": "js/a11y/preferencias.js",
+      "line": 148,
+      "classification": "Serviço opcional VLibras",
+      "source": "script.src = \"https://vlibras.gov.br/app/vlibras-plugin.js\";"
+    },
+    {
+      "file": "js/a11y/preferencias.js",
+      "line": 158,
+      "classification": "Serviço opcional VLibras",
+      "source": "new window.VLibras.Widget(\"https://vlibras.gov.br/app\");"
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1616,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://openstax.org/books/chemistry-2e/pages/14-introduction\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1620,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1624,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1628,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://openstax.org/books/chemistry-2e/pages/j-solubility-products\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1652,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1656,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://goldbook.iupac.org/terms/view/09042\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1660,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions\","
+    },
+    {
+      "file": "js/data/manual.js",
+      "line": 1664,
+      "classification": "Referência bibliográfica; link voluntário",
+      "source": "url: \"https://www.acs.org/education/activities/red-cabbage-indicator.html\","
+    },
+    {
+      "file": "js/ui/lupa.js",
+      "line": 207,
+      "classification": "Namespace SVG; não dispara rede",
+      "source": "const NS = \"http://www.w3.org/2000/svg\";"
+    },
+    {
+      "file": "js/ui/tubo.js",
+      "line": 326,
+      "classification": "Namespace SVG; não dispara rede",
+      "source": "const NS = \"http://www.w3.org/2000/svg\";"
+    },
+    {
+      "file": "vendor/dialog-polyfill/dialog-polyfill.js",
+      "line": 1,
+      "classification": "Atribuição/licença da dependência local",
+      "source": "/* dialog-polyfill 0.5.6 — https://github.com/GoogleChrome/dialog-polyfill"
+    },
+    {
+      "file": "vendor/dialog-polyfill/dialog-polyfill.js",
+      "line": 461,
+      "classification": "Atribuição/licença da dependência local",
+      "source": "'https://github.com/GoogleChrome/dialog-polyfill/#stacking-context');"
+    },
+    {
+      "file": "vendor/dialog-polyfill/dialog-polyfill.css",
+      "line": 1,
+      "classification": "Atribuição/licença da dependência local",
+      "source": "/* dialog-polyfill 0.5.6 — https://github.com/GoogleChrome/dialog-polyfill"
+    }
+  ]
+}

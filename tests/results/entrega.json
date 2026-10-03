@@ -1,0 +1,71 @@
+{
+  "date": "2026-10-03T08:56:59.283Z",
+  "engines": [
+    {
+      "engine": "chromium",
+      "version": "141.0.7390.37",
+      "cases": [
+        {
+          "name": "Menu inicial: cinco caminhos, ícone oficial e fundo desfocado",
+          "status": "OK"
+        },
+        {
+          "name": "Entrada em 320–414 px: opções, rolagem, foco e fechamento",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone final: arquivo local, sem dependências externas",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone: contexto restrito, leitura, guarda e refresh",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "version": "142.0.1",
+      "cases": [
+        {
+          "name": "Menu inicial: cinco caminhos, ícone oficial e fundo desfocado",
+          "status": "OK"
+        },
+        {
+          "name": "Entrada em 320–414 px: opções, rolagem, foco e fechamento",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone final: arquivo local, sem dependências externas",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone: contexto restrito, leitura, guarda e refresh",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "version": "26.0",
+      "cases": [
+        {
+          "name": "Menu inicial: cinco caminhos, ícone oficial e fundo desfocado",
+          "status": "OK"
+        },
+        {
+          "name": "Entrada em 320–414 px: opções, rolagem, foco e fechamento",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone final: arquivo local, sem dependências externas",
+          "status": "OK"
+        },
+        {
+          "name": "Standalone: contexto restrito, leitura, guarda e refresh",
+          "status": "OK"
+        }
+      ]
+    }
+  ]
+}

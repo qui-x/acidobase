@@ -1,0 +1,319 @@
+{
+  "version": "1.0.0-rc.5",
+  "date": "2026-10-03T09:07:11.515Z",
+  "browser": "141.0.7390.37",
+  "shots": [
+    {
+      "name": "rc5-inicio",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "b41a450c08ab2cccfab5a13bc50f7cc8a04432d4937d500cd92bd990a5a06427"
+    },
+    {
+      "name": "rc5-aprender",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "65490494351b6cd143d8d6753401e0339c8d43b5ba07e754e186bdf256138f8f"
+    },
+    {
+      "name": "rc5-missoes",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "3e805e65801cab02a8649b505a3ab64a125dd567fd2328584b663fab09760d80"
+    },
+    {
+      "name": "rc5-roteiros",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "7e4896cc1a93df57ad2186384702ddfc808c62a815d8c279da8853ccdadc1af8"
+    },
+    {
+      "name": "rc5-montagens",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "420919c81ced7cbfd961fc8c277c44992e2f6c3f3a85886004379b183b85e4b0"
+    },
+    {
+      "name": "rc5-manual",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "7c4d0f2b9f6823111663fda59af1af1a65433eb96ecfb9a5c30cb06374efb163"
+    },
+    {
+      "name": "rc5-professor",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "f9c348cfce5417aba0c9eaee6e60354aa36410d0f28e433008b75e235d723928"
+    },
+    {
+      "name": "rc5-bancada-desktop",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "0124c91fb551db189640ae5ecab28985e74a5434eeaee3945c1381ba1505db7b"
+    },
+    {
+      "name": "rc5-montagem",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "c070cd1ba125b24db9467b5e55897dc9a6a119342bf64a3066a510c96686b6b7"
+    },
+    {
+      "name": "rc5-ver",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "ae70d8bb3ad7a73f264d5237b6746bb8646ac22ed65f0915bf0be8b1252a154d"
+    },
+    {
+      "name": "rc5-dados",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "d49b0a06b7536285a8297bfcc159840fda897d46b4036a1cda1564503885f190"
+    },
+    {
+      "name": "rc5-menu-desktop",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "01e02009d6bd85119bb3799d06952e4cb23cd0c67021013b0a47cc01eb272115"
+    },
+    {
+      "name": "rc5-projetor",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "05be376bdda9005d3f5cc68fecd2d65197a5a98519d0f46601e65c930d417bb3"
+    },
+    {
+      "name": "rc5-tour",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "40b84ce2fa2e845c7088ee1e8ee7296484d42b863eea1e028ddde713b25605fe"
+    },
+    {
+      "name": "rc5-tema-escuro",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "6677ccac7ee3e144f000e824d2d2847ab9e5a4e0175ce95b793b917223bb3aa0"
+    },
+    {
+      "name": "rc5-alto-contraste",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "022ca4f4b11983cb505be7c54c0e3a8b79c049ee38ab8efcb5cf68fcdd84d89d"
+    },
+    {
+      "name": "rc5-relatorio-completo",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "471deb723f4b71db2c4ce004ff1f8b715ff1e3c5d2615794c2a8184bcfe920cd"
+    },
+    {
+      "name": "rc5-relatorio-mao",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "fa5abadce5377b1bd489a3c7e58dddba44970255216c5b4cf7cfbdbb4cabe643"
+    },
+    {
+      "name": "rc5-relatorio-analise",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "9c21dd4778ac60ca1ca772168d4f3cb467c9e7cb4cc370b94bd797cb564fc325"
+    },
+    {
+      "name": "rc5-encerrar-com-dados",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": false,
+      "sha256": "bda8b186d1272b8532ed64a5076e97fc8c44f508736c6f712bc7482ec20f85d1"
+    },
+    {
+      "name": "rc5-caderno-pratica",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "6ac16924a0a8ae232ad55cb4e834b0b441380ec6f846d6e99c5ae964a8036a98"
+    },
+    {
+      "name": "rc5-caderno-pratica-dados",
+      "viewport": {
+        "width": 1366,
+        "height": 768
+      },
+      "fullPage": true,
+      "sha256": "5a20ec6c56ba384ed463f5c09a59b818374ab7dddc65c0bbb8b75d3226ef72cd"
+    },
+    {
+      "name": "mobile-320-bancada",
+      "viewport": {
+        "width": 320,
+        "height": 568
+      },
+      "fullPage": false,
+      "sha256": "ffa9a8bc1c95d9c764c1148b8f8a63dd56be027f3463074de1001fb7ba7d7c94"
+    },
+    {
+      "name": "mobile-360-bancada",
+      "viewport": {
+        "width": 360,
+        "height": 800
+      },
+      "fullPage": false,
+      "sha256": "b472a1608dbae020f3bbd9881f2e42cd8c186e42dee828acabe9f230af744f4b"
+    },
+    {
+      "name": "mobile-390-bancada",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fullPage": false,
+      "sha256": "e2b36894c036794852ae6c0797487443a1669e87b030d7f19faba92e1006c133"
+    },
+    {
+      "name": "mobile-414-bancada",
+      "viewport": {
+        "width": 414,
+        "height": 896
+      },
+      "fullPage": false,
+      "sha256": "351cf18de4d5aca1be8f3ebcc1e535615b12bfb285e4f4dbf474cab63cb59c44"
+    },
+    {
+      "name": "mobile-montagem",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fullPage": false,
+      "sha256": "f0f80204f8d9a2ceb01b5762a1542bf1a472f0d57475170afcf064e46e288189"
+    },
+    {
+      "name": "mobile-medir",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fullPage": false,
+      "sha256": "53e96c2866e14b35e5448f54a30f7163ee96401dd2bff6082199d546b7400771"
+    },
+    {
+      "name": "mobile-dados",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fullPage": false,
+      "sha256": "3d1a0c98440b03355060a8e223a7c7bbb86e8a82f550cf1bda83d4ea612954df"
+    },
+    {
+      "name": "rc5-menu-mobile",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "fullPage": false,
+      "sha256": "8504f3709f01c4ce79ffd400fbd929f6d0d470e021f37ef0fd449c3c76b66484"
+    },
+    {
+      "name": "rc5-zoom-200",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "fullPage": true,
+      "sha256": "1da90dc6198f68012227a87f233513f003c99d6938a0bb0185cd5a43743c0f83"
+    },
+    {
+      "name": "rc5-iconografia",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "fullPage": true,
+      "sha256": "4ddeff257448ea8705405b0c2c2ed5f6b40010049323715ac2bc265ccb426c1d"
+    },
+    {
+      "name": "rc5-iconografia-escura",
+      "viewport": {
+        "width": 1366,
+        "height": 900
+      },
+      "fullPage": true,
+      "sha256": "f3cfd561717fffe7c45248dee0547bcf028b57293d55f07e81ceee2d1b7a159c"
+    }
+  ],
+  "errors": [],
+  "zoom": "Emulação de zoom 200%: viewport CSS 683×450 e escala 2 para tela 1366×900; zoom nativo em aparelho permanece externo",
+  "capturedSceneEntries": 37,
+  "packagedScreenshots": 33,
+  "excludedRepeatedScenes": [
+    "rc5-mobile-320-bancada",
+    "rc5-mobile-360-bancada",
+    "rc5-mobile-390-bancada",
+    "rc5-mobile-414-bancada"
+  ],
+  "packagingNote": "Selecionada uma captura canônica por cena; variações da mesma bancada geradas pelas suítes foram excluídas. Não se presume identidade binária entre variações.",
+  "comparison": {
+    "name": "rc5-mobile-comparacao.png",
+    "sha256": "ff024e4198e43366e05a052392c9f75513f5d02a47efc03bff970072da500402"
+  }
+}

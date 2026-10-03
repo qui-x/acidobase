@@ -1,0 +1,302 @@
+{
+  "date": "2026-10-03T08:51:44.288Z",
+  "engines": [
+    {
+      "engine": "chromium",
+      "version": "141.0.7390.37",
+      "cases": [
+        {
+          "name": "Professor: grupos separados, guia modal e permissões preservadas",
+          "status": "OK"
+        },
+        {
+          "name": "Capacidades: fita OU pHmetro; configuração inviável recusada",
+          "status": "OK"
+        },
+        {
+          "name": "Somente fita: montagem informativa e função única",
+          "status": "OK"
+        },
+        {
+          "name": "Bancada fechada: solução, reagente, vidro, volume, concentração e recipiente",
+          "status": "OK"
+        },
+        {
+          "name": "Desvio: rotas externas, Manual e outro roteiro não escapam",
+          "status": "OK"
+        },
+        {
+          "name": "Instrumentos proibidos e fallback não reativam recursos",
+          "status": "OK"
+        },
+        {
+          "name": "Ajuda contextual mantém a bancada",
+          "status": "OK"
+        },
+        {
+          "name": "Refresh e nova aba preservam contexto, gota e leitura",
+          "status": "OK"
+        },
+        {
+          "name": "Restauração ignora permissões e preparo incompatíveis do armazenamento",
+          "status": "OK"
+        },
+        {
+          "name": "Relatório somente fita: técnicas reais sem instrução de pHmetro",
+          "status": "OK"
+        },
+        {
+          "name": "Finalizar preserva contexto; encerramento exige ação deliberada",
+          "status": "OK"
+        },
+        {
+          "name": "Observar, Medir e Analisar mostram só os próprios submenus",
+          "status": "OK"
+        },
+        {
+          "name": "Histórico cronológico é diferente da tabela; compactação reversível e CSV bruto",
+          "status": "OK"
+        },
+        {
+          "name": "PDF compactado preserva faixa, contagem e dados brutos",
+          "status": "OK"
+        },
+        {
+          "name": "Gráfico não conecta preparos nem deriva através de troca de técnica",
+          "status": "OK"
+        },
+        {
+          "name": "Painel sem função desaparece e não reabre Partículas",
+          "status": "OK"
+        },
+        {
+          "name": "Permissão parcial: temperatura editável, solução e preparo bloqueados",
+          "status": "OK"
+        },
+        {
+          "name": "Semirrestrita: volume e vidro do recipiente são liberados separadamente",
+          "status": "OK"
+        },
+        {
+          "name": "Relatório pHmetro contém leituras estabilizadas e gráfico medido",
+          "status": "OK"
+        },
+        {
+          "name": "Matriz de telas: atividade e painéis 320–1920 px, sem overflow",
+          "status": "OK"
+        },
+        {
+          "name": "Acessibilidade automática: atividade, Professor, contraste e teclado",
+          "status": "OK"
+        },
+        {
+          "name": "button-style-contract: botões visíveis têm classe visual reconhecida",
+          "status": "OK"
+        },
+        {
+          "name": "Sem erros de execução na RC.2",
+          "status": "OK"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "engine": "firefox",
+      "version": "142.0.1",
+      "cases": [
+        {
+          "name": "Professor: grupos separados, guia modal e permissões preservadas",
+          "status": "OK"
+        },
+        {
+          "name": "Capacidades: fita OU pHmetro; configuração inviável recusada",
+          "status": "OK"
+        },
+        {
+          "name": "Somente fita: montagem informativa e função única",
+          "status": "OK"
+        },
+        {
+          "name": "Bancada fechada: solução, reagente, vidro, volume, concentração e recipiente",
+          "status": "OK"
+        },
+        {
+          "name": "Desvio: rotas externas, Manual e outro roteiro não escapam",
+          "status": "OK"
+        },
+        {
+          "name": "Instrumentos proibidos e fallback não reativam recursos",
+          "status": "OK"
+        },
+        {
+          "name": "Ajuda contextual mantém a bancada",
+          "status": "OK"
+        },
+        {
+          "name": "Refresh e nova aba preservam contexto, gota e leitura",
+          "status": "OK"
+        },
+        {
+          "name": "Restauração ignora permissões e preparo incompatíveis do armazenamento",
+          "status": "OK"
+        },
+        {
+          "name": "Relatório somente fita: técnicas reais sem instrução de pHmetro",
+          "status": "OK"
+        },
+        {
+          "name": "Finalizar preserva contexto; encerramento exige ação deliberada",
+          "status": "OK"
+        },
+        {
+          "name": "Observar, Medir e Analisar mostram só os próprios submenus",
+          "status": "OK"
+        },
+        {
+          "name": "Histórico cronológico é diferente da tabela; compactação reversível e CSV bruto",
+          "status": "OK"
+        },
+        {
+          "name": "PDF compactado preserva faixa, contagem e dados brutos",
+          "status": "OK"
+        },
+        {
+          "name": "Gráfico não conecta preparos nem deriva através de troca de técnica",
+          "status": "OK"
+        },
+        {
+          "name": "Painel sem função desaparece e não reabre Partículas",
+          "status": "OK"
+        },
+        {
+          "name": "Permissão parcial: temperatura editável, solução e preparo bloqueados",
+          "status": "OK"
+        },
+        {
+          "name": "Semirrestrita: volume e vidro do recipiente são liberados separadamente",
+          "status": "OK"
+        },
+        {
+          "name": "Relatório pHmetro contém leituras estabilizadas e gráfico medido",
+          "status": "OK"
+        },
+        {
+          "name": "Matriz de telas: atividade e painéis 320–1920 px, sem overflow",
+          "status": "OK"
+        },
+        {
+          "name": "Acessibilidade automática: atividade, Professor, contraste e teclado",
+          "status": "OK"
+        },
+        {
+          "name": "button-style-contract: botões visíveis têm classe visual reconhecida",
+          "status": "OK"
+        },
+        {
+          "name": "Sem erros de execução na RC.2",
+          "status": "OK"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "engine": "webkit",
+      "version": "26.0",
+      "cases": [
+        {
+          "name": "Professor: grupos separados, guia modal e permissões preservadas",
+          "status": "OK"
+        },
+        {
+          "name": "Capacidades: fita OU pHmetro; configuração inviável recusada",
+          "status": "OK"
+        },
+        {
+          "name": "Somente fita: montagem informativa e função única",
+          "status": "OK"
+        },
+        {
+          "name": "Bancada fechada: solução, reagente, vidro, volume, concentração e recipiente",
+          "status": "OK"
+        },
+        {
+          "name": "Desvio: rotas externas, Manual e outro roteiro não escapam",
+          "status": "OK"
+        },
+        {
+          "name": "Instrumentos proibidos e fallback não reativam recursos",
+          "status": "OK"
+        },
+        {
+          "name": "Ajuda contextual mantém a bancada",
+          "status": "OK"
+        },
+        {
+          "name": "Refresh e nova aba preservam contexto, gota e leitura",
+          "status": "OK"
+        },
+        {
+          "name": "Restauração ignora permissões e preparo incompatíveis do armazenamento",
+          "status": "OK"
+        },
+        {
+          "name": "Relatório somente fita: técnicas reais sem instrução de pHmetro",
+          "status": "OK"
+        },
+        {
+          "name": "Finalizar preserva contexto; encerramento exige ação deliberada",
+          "status": "OK"
+        },
+        {
+          "name": "Observar, Medir e Analisar mostram só os próprios submenus",
+          "status": "OK"
+        },
+        {
+          "name": "Histórico cronológico é diferente da tabela; compactação reversível e CSV bruto",
+          "status": "OK"
+        },
+        {
+          "name": "PDF compactado preserva faixa, contagem e dados brutos",
+          "status": "OK"
+        },
+        {
+          "name": "Gráfico não conecta preparos nem deriva através de troca de técnica",
+          "status": "OK"
+        },
+        {
+          "name": "Painel sem função desaparece e não reabre Partículas",
+          "status": "OK"
+        },
+        {
+          "name": "Permissão parcial: temperatura editável, solução e preparo bloqueados",
+          "status": "OK"
+        },
+        {
+          "name": "Semirrestrita: volume e vidro do recipiente são liberados separadamente",
+          "status": "OK"
+        },
+        {
+          "name": "Relatório pHmetro contém leituras estabilizadas e gráfico medido",
+          "status": "OK"
+        },
+        {
+          "name": "Matriz de telas: atividade e painéis 320–1920 px, sem overflow",
+          "status": "OK"
+        },
+        {
+          "name": "Acessibilidade automática: atividade, Professor, contraste e teclado",
+          "status": "OK"
+        },
+        {
+          "name": "button-style-contract: botões visíveis têm classe visual reconhecida",
+          "status": "OK"
+        },
+        {
+          "name": "Sem erros de execução na RC.2",
+          "status": "OK"
+        }
+      ],
+      "errors": []
+    }
+  ]
+}

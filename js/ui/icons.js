@@ -8,6 +8,10 @@ SIAB.icons = (() => {
     flow: "M3 5h5a4 4 0 0 1 4 4v5a4 4 0 0 0 4 4h5M17 14l4 4-4 4",
     collapse: "M9 4v5H4M9 9 3 3M15 20v-5h5M15 15l6 6M14 3h7v7M3 14v7h7",
     expand: "M8 3H3v5M3 3l6 6M16 21h5v-5M21 21l-6-6M14 3h7v7M3 14v7h7",
+
+    /* Chevron específico para abrir/recolher seções */
+    chevron: "M9 6l6 6-6 6",
+
     dropdown: "M6 9.5 12 15.5l6-6M12 4v5",
     next: "M6 12h11M11.5 5.5 18 12l-6.5 6.5",
     previous: "M18 12H7M12.5 5.5 6 12l6.5 6.5",
@@ -52,6 +56,7 @@ SIAB.icons = (() => {
     search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
     projector: "M3 4h18v13H3ZM8 22l4-5 4 5M12 17v5",
   });
+
   const aliases = {
     book: "manual",
     tube: "lab",
@@ -69,29 +74,70 @@ SIAB.icons = (() => {
     ver: "eye",
     dados: "data",
   };
+
   function svg(name, extraClass = "") {
     name = aliases[name] || name;
-    if (!paths[name]) name = "help";
-    return `<svg class="siab-icon${extraClass ? " " + extraClass : ""}" data-icon="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${paths[name]}"/></svg>`;
+
+    if (!paths[name]) {
+      name = "help";
+    }
+
+    return `<svg
+      class="siab-icon${extraClass ? " " + extraClass : ""}"
+      data-icon="${name}"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    ><path d="${paths[name]}"/></svg>`;
   }
+
   function hydrate(root = document) {
     root.querySelectorAll("[data-app-icon]").forEach((el) => {
-      el.outerHTML = svg(el.dataset.appIcon, el.getAttribute("class") || "");
+      el.outerHTML = svg(
+        el.dataset.appIcon,
+        el.getAttribute("class") || ""
+      );
     });
+
     root.querySelectorAll("summary:not(.with-disclosure)").forEach((el) => {
       el.classList.add("with-disclosure");
-      el.insertAdjacentHTML("beforeend", svg("dropdown", "disclosure-icon"));
+      el.insertAdjacentHTML(
+        "beforeend",
+        svg("dropdown", "disclosure-icon")
+      );
     });
   }
+
   document.addEventListener("DOMContentLoaded", () => {
     hydrate();
+
     new MutationObserver((records) => {
       const parents = new Set(
-        records.filter((r) => r.addedNodes.length).map((r) => r.target),
+        records
+          .filter((r) => r.addedNodes.length)
+          .map((r) => r.target)
       );
-      for (const parent of parents)
-        if (parent.querySelectorAll) hydrate(parent);
-    }).observe(document.body, { childList: true, subtree: true });
+
+      for (const parent of parents) {
+        if (parent.querySelectorAll) {
+          hydrate(parent);
+        }
+      }
+    }).observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   });
-  return Object.freeze({ svg, hydrate, paths, aliases });
+
+  return Object.freeze({
+    svg,
+    hydrate,
+    paths,
+    aliases,
+  });
 })();

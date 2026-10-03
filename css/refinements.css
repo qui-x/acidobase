@@ -80,9 +80,6 @@
 .drawer-now strong {
   font-size: 1.05rem;
 }
-.drawer-chevron {
-  margin-left: auto;
-}
 .about-links {
   display: grid;
   gap: 12px;

@@ -1,0 +1,160 @@
+{
+  "version": "1.0.0-rc.5",
+  "date": "2026-10-03",
+  "browserSuites": [
+    {
+      "name": "Permissões e contexto RC.2",
+      "file": "rc2.json",
+      "date": "2026-10-03T08:51:44.288Z",
+      "passed": {
+        "chromium": 23,
+        "firefox": 23,
+        "webkit": 23
+      },
+      "failed": 0
+    },
+    {
+      "name": "Fluxos gerais",
+      "file": "navegadores.json",
+      "date": "2026-10-03T08:58:45.003Z",
+      "passed": {
+        "chromium": 16,
+        "firefox": 16,
+        "webkit": 16
+      },
+      "failed": 0
+    },
+    {
+      "name": "Regressão e acessibilidade",
+      "file": "regressao.json",
+      "date": "2026-10-03T08:55:39.058Z",
+      "passed": {
+        "chromium": 12,
+        "firefox": 12,
+        "webkit": 12
+      },
+      "failed": 0
+    },
+    {
+      "name": "HTTPS, toque e ambiente",
+      "file": "ambiente.json",
+      "date": "2026-10-03T08:56:22.125Z",
+      "passed": {
+        "chromium": 5,
+        "firefox": 5,
+        "webkit": 5
+      },
+      "failed": 0
+    },
+    {
+      "name": "Impressão e cálculos",
+      "file": "impressao.json",
+      "date": "2026-10-03T08:56:53.166Z",
+      "passed": {
+        "chromium": 3,
+        "firefox": 3,
+        "webkit": 3
+      },
+      "failed": 0
+    },
+    {
+      "name": "Entrada e standalone",
+      "file": "entrega.json",
+      "date": "2026-10-03T08:56:59.283Z",
+      "passed": {
+        "chromium": 4,
+        "firefox": 4,
+        "webkit": 4
+      },
+      "failed": 0
+    },
+    {
+      "name": "Workspace e responsividade",
+      "file": "workspace.json",
+      "date": "2026-10-03T08:57:07.444Z",
+      "passed": {
+        "chromium": 30,
+        "firefox": 30,
+        "webkit": 30
+      },
+      "failed": 0
+    },
+    {
+      "name": "Manual e ajuda",
+      "file": "manual.json",
+      "date": "2026-10-03T08:58:04.280Z",
+      "passed": {
+        "chromium": 30,
+        "firefox": 30,
+        "webkit": 30
+      },
+      "failed": 0
+    },
+    {
+      "name": "Contrato visual mobile",
+      "file": "mobile-controls.json",
+      "date": "2026-10-03T08:59:06.030Z",
+      "passed": {
+        "chromium": 37,
+        "firefox": 37,
+        "webkit": 37
+      },
+      "failed": 0
+    },
+    {
+      "name": "Regressões RC.4.5",
+      "file": "rc45.json",
+      "date": "2026-10-03T09:00:40.857Z",
+      "passed": {
+        "chromium": 37,
+        "firefox": 37,
+        "webkit": 37
+      },
+      "failed": 0
+    },
+    {
+      "name": "Sessões, iconografia e RC.5",
+      "file": "rc5.json",
+      "date": "2026-10-03T09:10:15.349Z",
+      "passed": {
+        "chromium": 25,
+        "firefox": 25,
+        "webkit": 25
+      },
+      "failed": 0
+    },
+    {
+      "name": "Atualização RC.4.5 → RC.5 e offline",
+      "file": "offline-rc5.json",
+      "date": "2026-10-03T09:03:12.840Z",
+      "passed": {
+        "chromium": 5,
+        "firefox": 5,
+        "webkit": 5
+      },
+      "failed": 0
+    }
+  ],
+  "browserCases": 681,
+  "nonBrowserCases": 55,
+  "totalCases": 736,
+  "failed": 0,
+  "unhandledPageErrors": 0,
+  "extraChecksNotCounted": [
+    "Layout da bancada",
+    "Capturas e PDF",
+    "Integridade do pacote"
+  ],
+  "conclusion": "APTO PARA HOMOLOGAÇÃO FINAL",
+  "stableRelease": false,
+  "externalPending": [
+    "Aprovação visual dos ícones pelo usuário",
+    "Aparelhos iOS/Android",
+    "Safari real",
+    "NVDA",
+    "TalkBack",
+    "VoiceOver",
+    "PWA instalada pelo sistema",
+    "Impressão física"
+  ]
+}

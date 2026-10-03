@@ -1636,14 +1636,17 @@
         </section>
         <section class="drawer-section">
           <button
-            class="drawer-cat-expand drawer-link quiet-btn"
-            aria-controls="drawer-navigation"
-            aria-expanded="true"
-          >
-            <span data-app-icon="tour"></span>Navegar<span
-              class="drawer-chevron"
-              >⌄</span
-            >
+  class="drawer-cat-expand drawer-link quiet-btn"
+  aria-controls="drawer-navigation"
+  aria-expanded="true"
+>
+  <span data-app-icon="tour"></span>
+  <span class="drawer-link-label">Navegar</span>
+    <span
+         data-app-icon="disclosure"
+         class="drawer-chevron"
+         ></span>
+      </button>
           </button>
           <nav id="drawer-navigation" aria-label="Todos os destinos">
             <ul class="drawer-lista">
@@ -1673,8 +1676,7 @@
                   class="drawer-link"
                   href="#/laboratorio"
                   data-nav="laboratorio"
-                  ><span data-app-icon="lab"></span><span>Laboratório</span></a
-                >
+                  ><span data-app-icon="lab"></span><span>Laboratório</span></a>
               </li>
               <li>
                 <a class="drawer-link" href="#/caderno" data-nav="caderno"
@@ -1683,8 +1685,7 @@
               </li>
               <li>
                 <a class="drawer-link" href="#/manual" data-nav="manual"
-                  ><span data-app-icon="manual"></span><span>Manual</span></a
-                >
+                  ><span data-app-icon="manual"></span><span>Manual</span></a>
               </li>
             </ul>
           </nav>
@@ -1713,16 +1714,19 @@
             Preferências
           </h3>
           <button
-            type="button"
-            id="a11y-toggle"
-            class="drawer-link drawer-cat-btn"
-            aria-expanded="false"
-            aria-controls="a11y-panel"
-          >
-            <span data-app-icon="accessibility"></span
-            ><span>Acessibilidade</span
-            ><span data-app-icon="next" class="drawer-chevron"></span>
-          </button>
+  type="button"
+  id="a11y-toggle"
+  class="drawer-link drawer-cat-btn"
+  aria-expanded="false"
+  aria-controls="a11y-panel"
+>
+  <span data-app-icon="accessibility"></span>
+  <span>Acessibilidade</span>
+  <span
+    data-app-icon="chevron"
+    class="drawer-chevron"
+  ></span>
+</button>
           <div
             id="a11y-panel"
             class="a11y-panel"

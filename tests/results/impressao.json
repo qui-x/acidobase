@@ -1,0 +1,56 @@
+{
+  "date": "2026-10-03T08:56:53.166Z",
+  "engines": [
+    {
+      "engine": "chromium",
+      "cases": [
+        {
+          "name": "Relatório Calcular usa quantidades dos componentes da mistura",
+          "status": "OK"
+        },
+        {
+          "name": "Impressão preenchida: texto e dados preservados",
+          "status": "OK"
+        },
+        {
+          "name": "Impressão em branco: campos livres e mesma proposta",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "engine": "firefox",
+      "cases": [
+        {
+          "name": "Relatório Calcular usa quantidades dos componentes da mistura",
+          "status": "OK"
+        },
+        {
+          "name": "Impressão preenchida: texto e dados preservados",
+          "status": "OK"
+        },
+        {
+          "name": "Impressão em branco: campos livres e mesma proposta",
+          "status": "OK"
+        }
+      ]
+    },
+    {
+      "engine": "webkit",
+      "cases": [
+        {
+          "name": "Relatório Calcular usa quantidades dos componentes da mistura",
+          "status": "OK"
+        },
+        {
+          "name": "Impressão preenchida: texto e dados preservados",
+          "status": "OK"
+        },
+        {
+          "name": "Impressão em branco: campos livres e mesma proposta",
+          "status": "OK"
+        }
+      ]
+    }
+  ]
+}
