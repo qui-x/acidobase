@@ -7,7 +7,7 @@
   "scripts": {
     "start": "python3 -m http.server 8080",
     "build": "node build_manual_docs.cjs && node build_icon_inventory.cjs && python3 build_standalone.py",
-    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/compactacao.test.cjs && node tests/rc2.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs && node tests/entrega.test.cjs && node tests/workspace.test.cjs && node tests/manual.test.cjs && node tests/mobile-controls.test.cjs && node tests/rc45.test.cjs && node tests/rc5.test.cjs",
+    "test": "node tests/ciencia.test.cjs && node tests/migracao.test.cjs && node tests/compactacao.test.cjs && node tests/rc2.test.cjs && node tests/fluxos.test.cjs && node tests/regressao.test.cjs && node tests/ambiente.test.cjs && node tests/impressao.test.cjs && node tests/entrega.test.cjs && node tests/workspace.test.cjs && node tests/manual.test.cjs && node tests/mobile-controls.test.cjs && node tests/rc45.test.cjs && node tests/rc5.test.cjs && node tests/chevron.test.cjs",
     "test:science": "node tests/ciencia.test.cjs",
     "test:browser": "node tests/fluxos.test.cjs",
     "test:layout": "node tests/layout-bancada.test.cjs",
@@ -25,7 +25,8 @@
     "test:rc5": "node tests/rc5.test.cjs",
     "test:offline-upgrade": "node tests/offline-rc5.test.cjs",
     "test:evidence": "node tests/evidencias-rc5.cjs",
-    "test:artifacts": "node tests/artefatos-rc5.test.cjs"
+    "test:artifacts": "node tests/artefatos-rc5.test.cjs",
+    "test:chevron": "node tests/chevron.test.cjs"
   },
   "devDependencies": {
     "playwright": "1.56.1",

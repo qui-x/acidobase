@@ -26,7 +26,7 @@
       rel="stylesheet"
       href="vendor/dialog-polyfill/dialog-polyfill.css?v=1.0.0-rc.5"
     />
-    <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0-rc.5-chevron-1" />
     <link rel="stylesheet" href="css/mobile-study.css?v=1.0.0-rc.5" />
     <script src="js/core/compatibilidade.js?v=1.0.0-rc.5"></script>
     <script src="a11y.js?v=1.0.0-rc.5"></script>
@@ -41,7 +41,7 @@
     <link rel="stylesheet" href="css/workspace.css?v=1.0.0-rc.5" />
     <link rel="stylesheet" href="css/manual.css?v=1.0.0-rc.5" />
     <link rel="stylesheet" href="css/mobile-controls.css?v=1.0.0-rc.5" />
-    <link rel="stylesheet" href="css/refinements.css?v=1.0.0-rc.5" />
+    <link rel="stylesheet" href="css/refinements.css?v=1.0.0-rc.5-chevron-1" />
   </head>
   <body>
     <noscript
@@ -1636,17 +1636,14 @@
         </section>
         <section class="drawer-section">
           <button
-  class="drawer-cat-expand drawer-link quiet-btn"
-  aria-controls="drawer-navigation"
-  aria-expanded="true"
->
-  <span data-app-icon="tour"></span>
-  <span class="drawer-link-label">Navegar</span>
-    <span
-         data-app-icon="disclosure"
-         class="drawer-chevron"
-         ></span>
-      </button>
+            type="button"
+            class="drawer-cat-expand drawer-link quiet-btn"
+            aria-controls="drawer-navigation"
+            aria-expanded="true"
+          >
+            <span data-app-icon="tour"></span>
+            <span class="drawer-link-label">Navegar</span>
+            <span data-app-icon="chevron" class="drawer-chevron"></span>
           </button>
           <nav id="drawer-navigation" aria-label="Todos os destinos">
             <ul class="drawer-lista">
@@ -1714,19 +1711,16 @@
             Preferências
           </h3>
           <button
-  type="button"
-  id="a11y-toggle"
-  class="drawer-link drawer-cat-btn"
-  aria-expanded="false"
-  aria-controls="a11y-panel"
->
-  <span data-app-icon="accessibility"></span>
-  <span>Acessibilidade</span>
-  <span
-    data-app-icon="chevron"
-    class="drawer-chevron"
-  ></span>
-</button>
+            type="button"
+            id="a11y-toggle"
+            class="drawer-link drawer-cat-btn"
+            aria-expanded="false"
+            aria-controls="a11y-panel"
+          >
+            <span data-app-icon="accessibility"></span>
+            <span class="drawer-link-label">Acessibilidade</span>
+            <span data-app-icon="chevron" class="drawer-chevron"></span>
+          </button>
           <div
             id="a11y-panel"
             class="a11y-panel"
@@ -2324,7 +2318,7 @@
     </dialog>
     <script src="vendor/dialog-polyfill/dialog-polyfill.js?v=1.0.0-rc.5"></script>
     <script src="js/core/namespace.js?v=1.0.0-rc.5"></script>
-    <script src="js/ui/icons.js?v=1.0.0-rc.5"></script>
+    <script src="js/ui/icons.js?v=1.0.0-rc.5-chevron-1"></script>
     <script src="js/core/util.js?v=1.0.0-rc.5"></script>
     <script src="js/data/catalogo.js?v=1.0.0-rc.5"></script>
     <script src="js/data/cotidiano.js?v=1.0.0-rc.5"></script>

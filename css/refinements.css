@@ -45,6 +45,28 @@
   stroke: currentColor;
   stroke-width: 1.8;
 }
+/* Disclosure da gaveta: contrato único, após a regra genérica de SVG. */
+.drawer-chevron {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px;
+  margin-left: auto;
+  color: var(--muted);
+  transform-origin: center;
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+.drawer-cat-btn[aria-expanded="true"] > .drawer-chevron,
+.drawer-cat-expand[aria-expanded="true"] > .drawer-chevron {
+  transform: rotate(90deg);
+}
+.drawer-cat-btn:hover > .drawer-chevron,
+.drawer-cat-btn:focus-visible > .drawer-chevron,
+.drawer-cat-expand:hover > .drawer-chevron,
+.drawer-cat-expand:focus-visible > .drawer-chevron {
+  color: var(--text);
+}
 .drawer-section {
   padding-block: 16px;
 }

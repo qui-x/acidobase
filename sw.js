@@ -1,9 +1,9 @@
 /* Service worker do SIAB: guarda os arquivos do app para funcionar sem internet.
-   Ao publicar uma versão nova, mude VERSAO (igual a SIAB.version e ao ?v= do
-   index.html): o navegador baixa tudo de novo, a versão nova assume e o app
+   Ao publicar uma versão nova, mude VERSAO (identificador do cache; uma revisão pode
+   manter SIAB.version): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-const VERSAO = "siab-1.0.0-rc.5";
+const VERSAO = "siab-1.0.0-rc.5-chevron-1";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);

@@ -1,5 +1,14 @@
 # Compatibilidade — SIAB 1.0.0-rc.5
 
+## Correção pontual chevron-1
+
+Acessibilidade e Navegar usam exclusivamente o chevron SVG central. A regra de rotação foi consolidada, o standalone foi reconstruído e o cache passou a `siab-1.0.0-rc.5-chevron-1`, mantendo a versão RC.5. **51 cenários executados nesta correção: 36 focados e 15 de atualização/offline, todos aprovados em Chromium, Firefox e WebKit.**
+
+Veja o [relatório com capturas e DOM](docs/CORRECAO-CHEVRON-RC5.html) e o [relatório técnico](docs/CORRECAO-CHEVRON-RC5.md). `npm run test:chevron` reproduz a nova regressão; a variável `SIAB_CHEVRON_BASELINE_DIR` habilita a atualização a partir do pacote anexado.
+
+Os resultados completos da entrega anterior, descritos abaixo, foram recebidos na base e não representam uma repetição de toda a bateria nesta correção.
+
+
 Execução em Linux, 03/10/2026, com binários efetivamente instalados e Playwright 1.56.1.
 
 | Ambiente | Evidência | Limite |

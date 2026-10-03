@@ -1,5 +1,15 @@
 # Registro de integração — SIAB
 
+
+## 1.0.0-rc.5 — correção pontual chevron-1
+
+- Corrigida a divergência entre modular e standalone: arquivo único reconstruído com chevron central em Acessibilidade e Navegar.
+- Removida rotação incondicional e consolidado o contrato de 18 × 18 px após a regra genérica de SVG. Rotação somente no estado expandido.
+- Corrigidos o nome inexistente de ícone de Navegar e seu fechamento HTML excedente.
+- Cache revisado para chevron-1, sem mudar a versão funcional. Adicionada regressão focada; 51 cenários aprovados em três motores, incluindo atualização e offline.
+- Nenhuma mudança em js/, permissões, ciência, comportamento de Acessibilidade, seções do menu ou identidade visual.
+
+
 ## 1.0.0-rc.5 — 03/10/2026
 
 - Ciclo de atividade: Finalizar consolida/marca/abre relatório; Encerrar oferece relatório antes da saída, preserva registros e sempre retorna ao Início sem alterar a preferência de inicialização.

@@ -345,14 +345,16 @@ dialog.drawer::backdrop { background: #000a; backdrop-filter: blur(2px); }
   background: transparent; border: 1px solid transparent; border-radius: var(--radius); color: var(--text);
   font-size: .9rem; font-weight: 600; text-decoration: none; text-align: left;
 }
+.drawer-link-label {
+  flex: 1;
+  min-width: 0;
+}
 .drawer-link:hover { background: var(--hover); }
 .drawer-link[aria-current=page] { color: var(--accent); background: var(--panel2); border-color: var(--border); }
 .drawer-link > svg { width: 20px; height: 20px; flex-shrink: 0; color: var(--muted); }
 .drawer-link[aria-current=page] > svg { color: var(--accent); }
 .drawer-link > span:first-of-type { flex: 1; }
 .drawer-count { font: .72rem Consolas, monospace; color: var(--secondary); background: var(--panel2); border: 1px solid var(--border); border-radius: 999px; padding: 1px 8px; }
-.drawer-chevron { width: 18px !important; height: 18px !important; color: var(--muted); transition: transform .18s ease; }
-[aria-expanded=true] > .drawer-chevron { transform: rotate(90deg); }
 .drawer-cat-row { display: flex; align-items: stretch; gap: 2px; }
 .drawer-cat-row .drawer-link { flex: 1; min-width: 0; }
 .drawer-cat-expand { display: flex; align-items: center; justify-content: center; width: 44px; flex-shrink: 0; background: transparent; border: 1px solid transparent; border-radius: var(--radius); }
@@ -6278,6 +6280,28 @@ button:disabled {
   stroke: currentColor;
   stroke-width: 1.8;
 }
+/* Disclosure da gaveta: contrato único, após a regra genérica de SVG. */
+.drawer-chevron {
+  width: 18px !important;
+  height: 18px !important;
+  flex: 0 0 18px;
+  margin-left: auto;
+  color: var(--muted);
+  transform-origin: center;
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+.drawer-cat-btn[aria-expanded="true"] > .drawer-chevron,
+.drawer-cat-expand[aria-expanded="true"] > .drawer-chevron {
+  transform: rotate(90deg);
+}
+.drawer-cat-btn:hover > .drawer-chevron,
+.drawer-cat-btn:focus-visible > .drawer-chevron,
+.drawer-cat-expand:hover > .drawer-chevron,
+.drawer-cat-expand:focus-visible > .drawer-chevron {
+  color: var(--text);
+}
 .drawer-section {
   padding-block: 16px;
 }
@@ -6312,9 +6336,6 @@ button:disabled {
 }
 .drawer-now strong {
   font-size: 1.05rem;
-}
-.drawer-chevron {
-  margin-left: auto;
 }
 .about-links {
   display: grid;
@@ -8198,14 +8219,14 @@ details[open] > summary > .disclosure-icon,
         </section>
         <section class="drawer-section">
           <button
+            type="button"
             class="drawer-cat-expand drawer-link quiet-btn"
             aria-controls="drawer-navigation"
             aria-expanded="true"
           >
-            <span data-app-icon="tour"></span>Navegar<span
-              class="drawer-chevron"
-              >⌄</span
-            >
+            <span data-app-icon="tour"></span>
+            <span class="drawer-link-label">Navegar</span>
+            <span data-app-icon="chevron" class="drawer-chevron"></span>
           </button>
           <nav id="drawer-navigation" aria-label="Todos os destinos">
             <ul class="drawer-lista">
@@ -8235,8 +8256,7 @@ details[open] > summary > .disclosure-icon,
                   class="drawer-link"
                   href="#/laboratorio"
                   data-nav="laboratorio"
-                  ><span data-app-icon="lab"></span><span>Laboratório</span></a
-                >
+                  ><span data-app-icon="lab"></span><span>Laboratório</span></a>
               </li>
               <li>
                 <a class="drawer-link" href="#/caderno" data-nav="caderno"
@@ -8245,8 +8265,7 @@ details[open] > summary > .disclosure-icon,
               </li>
               <li>
                 <a class="drawer-link" href="#/manual" data-nav="manual"
-                  ><span data-app-icon="manual"></span><span>Manual</span></a
-                >
+                  ><span data-app-icon="manual"></span><span>Manual</span></a>
               </li>
             </ul>
           </nav>
@@ -8281,9 +8300,9 @@ details[open] > summary > .disclosure-icon,
             aria-expanded="false"
             aria-controls="a11y-panel"
           >
-            <span data-app-icon="accessibility"></span
-            ><span>Acessibilidade</span
-            ><span data-app-icon="next" class="drawer-chevron"></span>
+            <span data-app-icon="accessibility"></span>
+            <span class="drawer-link-label">Acessibilidade</span>
+            <span data-app-icon="chevron" class="drawer-chevron"></span>
           </button>
           <div
             id="a11y-panel"
@@ -9795,6 +9814,10 @@ SIAB.icons = (() => {
     flow: "M3 5h5a4 4 0 0 1 4 4v5a4 4 0 0 0 4 4h5M17 14l4 4-4 4",
     collapse: "M9 4v5H4M9 9 3 3M15 20v-5h5M15 15l6 6M14 3h7v7M3 14v7h7",
     expand: "M8 3H3v5M3 3l6 6M16 21h5v-5M21 21l-6-6M14 3h7v7M3 14v7h7",
+
+    /* Chevron específico para abrir/recolher seções */
+    chevron: "M9 6l6 6-6 6",
+
     dropdown: "M6 9.5 12 15.5l6-6M12 4v5",
     next: "M6 12h11M11.5 5.5 18 12l-6.5 6.5",
     previous: "M18 12H7M12.5 5.5 6 12l6.5 6.5",
@@ -9839,6 +9862,7 @@ SIAB.icons = (() => {
     search: "M17 10a7 7 0 1 1-14 0 7 7 0 0 1 14 0M15 15l6 6",
     projector: "M3 4h18v13H3ZM8 22l4-5 4 5M12 17v5",
   });
+
   const aliases = {
     book: "manual",
     tube: "lab",
@@ -9856,33 +9880,73 @@ SIAB.icons = (() => {
     ver: "eye",
     dados: "data",
   };
+
   function svg(name, extraClass = "") {
     name = aliases[name] || name;
-    if (!paths[name]) name = "help";
-    return `<svg class="siab-icon${extraClass ? " " + extraClass : ""}" data-icon="${name}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="${paths[name]}"/></svg>`;
+
+    if (!paths[name]) {
+      name = "help";
+    }
+
+    return `<svg
+      class="siab-icon${extraClass ? " " + extraClass : ""}"
+      data-icon="${name}"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.8"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    ><path d="${paths[name]}"/></svg>`;
   }
+
   function hydrate(root = document) {
     root.querySelectorAll("[data-app-icon]").forEach((el) => {
-      el.outerHTML = svg(el.dataset.appIcon, el.getAttribute("class") || "");
+      el.outerHTML = svg(
+        el.dataset.appIcon,
+        el.getAttribute("class") || ""
+      );
     });
+
     root.querySelectorAll("summary:not(.with-disclosure)").forEach((el) => {
       el.classList.add("with-disclosure");
-      el.insertAdjacentHTML("beforeend", svg("dropdown", "disclosure-icon"));
+      el.insertAdjacentHTML(
+        "beforeend",
+        svg("dropdown", "disclosure-icon")
+      );
     });
   }
+
   document.addEventListener("DOMContentLoaded", () => {
     hydrate();
+
     new MutationObserver((records) => {
       const parents = new Set(
-        records.filter((r) => r.addedNodes.length).map((r) => r.target),
+        records
+          .filter((r) => r.addedNodes.length)
+          .map((r) => r.target)
       );
-      for (const parent of parents)
-        if (parent.querySelectorAll) hydrate(parent);
-    }).observe(document.body, { childList: true, subtree: true });
-  });
-  return Object.freeze({ svg, hydrate, paths, aliases });
-})();
 
+      for (const parent of parents) {
+        if (parent.querySelectorAll) {
+          hydrate(parent);
+        }
+      }
+    }).observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
+  });
+
+  return Object.freeze({
+    svg,
+    hydrate,
+    paths,
+    aliases,
+  });
+})();
 </script>
     <script>
 "use strict";
