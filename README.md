@@ -1,81 +1,41 @@
-# SIAB — A química das cores
+# SIAB 1.0.0
 
-## Correção pontual chevron-1
+Simulador Interativo de Ácidos e Bases. Aplicação educacional estática com 140 substâncias, módulos Explorar, Medir e Calcular, instrumentos, atividades, Manual, relatórios e Caderno local.
 
-Acessibilidade e Navegar usam exclusivamente o chevron SVG central. A regra de rotação foi consolidada, o standalone foi reconstruído e o cache passou a `siab-1.0.0-rc.5-chevron-1`, mantendo a versão RC.5. **51 cenários executados nesta correção: 36 focados e 15 de atualização/offline, todos aprovados em Chromium, Firefox e WebKit.**
+Promove a RC.5 aprovada sem novas funcionalidades, alterações científicas, pedagógicas ou de interface. A linha 1.0.0 fica congelada para novas funcionalidades.
 
-Veja o [relatório com capturas e DOM](docs/CORRECAO-CHEVRON-RC5.html) e o [relatório técnico](docs/CORRECAO-CHEVRON-RC5.md). `npm run test:chevron` reproduz a nova regressão; a variável `SIAB_CHEVRON_BASELINE_DIR` habilita a atualização a partir do pacote anexado.
+## Abrir e instalar
 
-Os resultados completos da entrega anterior, descritos abaixo, foram recebidos na base e não representam uma repetição de toda a bateria nesta correção.
+- **Distribuição modular:** extraia `SIAB-1.0.0.zip` e sirva a pasta `SIAB/` em um servidor web. Para uso local, nela execute `python3 -m http.server 8080` e abra `http://localhost:8080`.
+- **Arquivo único:** abra o artefato separado `SIAB-1.0.0-standalone.html` no navegador. Contém os recursos essenciais e funciona sem servidor ou instalação.
+- **PWA:** publique a pasta modular em HTTPS ou use localhost. Abra conectado e aguarde o cache antes de desconectar. Use Instalar no navegador ou no menu, quando disponível. O standalone não é uma PWA.
 
+Requisitos: navegador moderno com JavaScript. Node, npm e ferramentas de teste não são exigidos para usar o programa. Python é somente uma opção para servir a versão modular localmente.
 
-**1.0.0-rc.5 · APTO PARA HOMOLOGAÇÃO FINAL.** Candidata construída sobre a RC.4.5. A aprovação visual dos ícones e as verificações em aparelhos/leitores de tela reais continuam pendentes. Não houve promoção para 1.0.0.
+## Offline e atualização
 
-O SIAB é um simulador educacional de ácidos e bases, com 140 substâncias e três módulos independentes: Explorar, Medir e Calcular. A rodada preserva o núcleo científico, a marca, a abertura, o ActivityContext e a arquitetura de docas e painéis mobile.
+Laboratório, Manual, Montagens, Relatório e Caderno são locais. Open-Meteo e VLibras são opcionais e precisam de internet. As fontes são do sistema.
 
-## Abrir o programa
+Ao substituir os arquivos da RC.5 no mesmo endereço, o service worker prepara o cache `siab-1.0.0` e oferece **Recarregar**. A limpeza afeta apenas caches antigos desta publicação. Caderno, sessões, práticas, relatórios e preferências permanecem armazenados no navegador.
 
-- **Arquivo único:** abra `SIAB-standalone.html`. Não requer instalação nem internet para o núcleo do programa.
-- **Projeto modular:** nesta pasta, execute `python3 -m http.server 8080` e abra `http://localhost:8080`.
-- **PWA:** sirva esta pasta em HTTPS ou localhost. Abra conectado uma vez e aguarde a preparação do cache. A instalação depende do navegador; não funciona por `file://`.
+Mantenha a mesma origem, caminho e perfil para conservar os dados. Trocar domínio, aparelho ou perfil não transfere registros automaticamente. Exporte o Caderno e salve os relatórios antes de limpar dados do navegador.
 
-Os dados ficam no navegador. Trocar domínio, perfil ou aparelho não transfere o Caderno. Exporte os registros e imprima/salve os relatórios antes de limpar o armazenamento.
+## Estrutura
 
-## Mudanças desta rodada
-
-- **Finalizar atividade** consolida os dados, marca a sessão como finalizada e abre diretamente o relatório.
-- **Encerrar atividade** oferece continuar, consultar o relatório antes de sair ou encerrar quando há dados. Registra a prática no Caderno e retorna sempre ao Início, preservando a preferência de inicialização. Uma sessão sem dados não gera prática vazia.
-- A reabertura do mesmo link permite continuar a sessão ou iniciar outra. Uma sessão finalizada oferece relatório anterior ou nova tentativa. Novas tentativas têm identidade própria e preservam os relatórios anteriores.
-- O Caderno distingue **Prática realizada** de notas pessoais e abre os dados e o relatório. Atualizações da mesma sessão não duplicam a prática.
-- O Professor deixa de oferecer a escolha digital/impresso. Links antigos continuam aceitos. O relatório oferece **Imprimir / Salvar como PDF**; o download HTML do relatório saiu da interface.
-- Biblioteca SVG compartilhada com 22 identidades de área e nova família de setas. Manual, tour, navegação e Sobre usam a terminologia atual.
-- Tratamento de falha do VLibras e remoção de CSS sem consumidores; migrações e aliases históricos preservados.
-
-As normalizações mobile aprovadas foram revalidadas: Desfazer 44 px, Doses 76 px e Gotejar flexível; Agitar/Medir pH com mesmas dimensões; alvos principais de 44 px, ações de linha inteira de 48 px. Não foi reconstruída a arquitetura mobile.
-
-## Documentos e evidências
-
-- [Guia de uso](LEIA-ME.md), [Manual](docs/MANUAL.md) e [modelo científico](docs/MODELO-CIENTIFICO.md).
-- [Validação e quantidades](VALIDACAO.md), [compatibilidade](COMPATIBILIDADE.md) e [limitações](docs/LIMITACOES.md).
-- [145 seções do prompt](docs/COBERTURA-RC5.md), [implementação](docs/IMPLEMENTACAO.md) e [mudanças RC.5](docs/RC5.md).
-- [Galeria de evidências](docs/EVIDENCIAS-RC5.html) e [inventário visual de ícones](docs/ICONOGRAFIA-RC5.html).
-- [Dependências](docs/DEPENDENCIAS-RC5.md), [auditoria offline](docs/OFFLINE-RC5.md), [acessibilidade](docs/ACESSIBILIDADE-RC5.md) e [preservação por SHA-256](docs/PRESERVACAO-RC5.json).
-
-`docs/historico/` conserva documentação das versões anteriores, identificada como histórica. `tests/results/` contém os resultados desta execução, mesmo quando a suíte tem nome de uma rodada anterior.
-
-## Reproduzir
-
-Node.js 20 ou posterior, Python 3 e OpenSSL para a suíte HTTPS local. Dependências de teste não fazem parte do aplicativo em execução.
-
-```sh
-npm ci
-npx playwright install --with-deps chromium firefox webkit
-npm run build
-npm test
-npm run test:layout
-npm run test:evidence
-npm run test:artifacts
-```
-
-Para repetir a atualização entre versões, extraia separadamente a RC.4.5 e indique sua pasta modular:
-
-```sh
-SIAB_BASELINE_DIR=/caminho/RC45/SIAB npm run test:offline-upgrade
-```
-
-O pacote anterior não é duplicado neste ZIP. `SIAB_TEST_ENGINES=chromium` limita motores; `SIAB_PLAYWRIGHT_MODULE` e `SIAB_AXE_MODULE` permitem instalações externas das dependências. As suítes abrem servidores locais temporários e gravam JSON/capturas em `tests/results/`.
-
-O executor usa `--no-sandbox` no Chromium e, quando necessário, `MOZ_DISABLE_CONTENT_SANDBOX=1` no Firefox. São opções do ambiente automatizado, não do aplicativo. Os navegadores usados nesta validação foram instalados efetivamente.
-
-## Organização
-
-| Arquivo/pasta | Função |
+| Caminho | Finalidade |
 |---|---|
-| `index.html`, `css/`, `assets/` | Aplicativo modular e identidade visual |
-| `js/core/`, `js/simulation/`, `js/data/` | Estado, permissões, ciência e conteúdo |
-| `js/telas/`, `js/ui/`, `js/a11y/` | Telas, interações e preferências |
-| `vendor/` | Dependência de interface distribuída localmente |
-| `sw.js`, `manifest.webmanifest` | Cache offline e metadados PWA |
-| `build_standalone.py` | Geração do HTML único |
-| `tests/`, `docs/` | Regressões, evidências e documentação |
-| `SHA256SUMS.txt`, `SHA512SUMS.txt` | Integridade dos arquivos do pacote |
+| `index.html`, `a11y.js`, `css/`, `js/` | Aplicação e acessibilidade |
+| `sw.js`, `manifest.webmanifest` | Cache offline e instalação |
+| `assets/`, favicons | Marca e ícones utilizados |
+| `vendor/dialog-polyfill/` | Compatibilidade local de diálogos e licença |
+| `docs/` | Manual, modelo científico, migração e limitações |
+| Documentos na raiz | Uso, validação, compatibilidade, dependências e mudanças |
+| `FILES.txt`, `SHA256SUMS.txt`, `SHA512SUMS.txt` | Manifesto e integridade dos arquivos |
+
+O standalone é separado para evitar duplicação no ZIP modular. `SIAB-1.0.0-source.zip` contém código, geradores, lockfile, testes e documentação técnica, sem node_modules nem navegadores.
+
+## Documentação e limites
+
+[Guia de uso](LEIA-ME.md) · [Manual](docs/MANUAL.md) · [Validação](VALIDACAO.md) · [Compatibilidade](COMPATIBILIDADE.md) · [Dependências](DEPENDENCIAS.md) · [Mudanças](CHANGELOG.md) · [Limitações](docs/LIMITACOES.md) · [Licença](LICENSE).
+
+A validação usa Chromium, Firefox e WebKit Linux. Viewports mobile são emulados; aparelhos, leitores de tela, instalação pelo sistema e impressão física não são declarados como testados. O modelo é didático, com hipóteses descritas em [MODELO-CIENTIFICO.md](docs/MODELO-CIENTIFICO.md).

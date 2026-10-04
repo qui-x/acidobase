@@ -1,6 +1,6 @@
-# SIAB 1.0.0-rc.5 — guia de uso
+# SIAB 1.0.0 — guia de uso
 
-Abra **SIAB-standalone.html** para usar o núcleo do programa offline, sem instalação. Para a PWA, use a pasta modular em localhost ou HTTPS. Esta versão permanece candidata à homologação.
+Abra o arquivo separado **SIAB-1.0.0-standalone.html** para usar o núcleo do programa offline, sem instalação. Para a PWA, use a pasta modular em localhost ou HTTPS. A versão 1.0.0 preserva o comportamento da RC.5 aprovada.
 
 ## Começar uma investigação
 
