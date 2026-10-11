@@ -1,20 +1,17 @@
-'use strict';
-/* Tela inicial: quatro caminhos e "continuar de onde parei". */
+"use strict";
 SIAB.telas.inicio = {
-  completo: true,
-  secao: 'inicio',
-  titulo: () => '',
+  secao: "inicio",
+  titulo: () => "Início",
   entrar() {
-    const $ = SIAB.$, p = SIAB.progresso;
-    const feitas = SIAB.missoes.filter(m => p.missao(m.id)?.concluida).length;
-    $('meta-aprender').textContent = `${feitas} de ${SIAB.missoes.length} missões concluídas`;
-    const jogados = Object.keys(SIAB.desafios).filter(id => p.desafio(id)).length;
-    $('meta-desafios').textContent = `${jogados} de ${Object.keys(SIAB.desafios).length} desafios jogados`;
-    const ultima = p.dados.ultima;
-    $('continuar').hidden = !ultima;
-    if (ultima) {
-      $('continuar').href = ultima.rota;
-      $('continuar').innerHTML = `<span class="eyebrow">CONTINUAR DE ONDE PAROU</span><strong>${SIAB.escape(ultima.titulo)}</strong><span aria-hidden="true">→</span>`;
-    }
-  }
+    SIAB.$("inicio-temas-meta").textContent =
+      `${SIAB.temas.length} temas para explorar`;
+    SIAB.$("inicio-missoes-meta").textContent =
+      `${SIAB.missoes.length} desafios para resolver`;
+    SIAB.$("inicio-roteiros-meta").textContent =
+      `${SIAB.experimentos.length} investigações guiadas`;
+    const registros = SIAB.progresso.dados.caderno.length;
+    SIAB.$("inicio-caderno-meta").textContent = registros
+      ? `${registros} ${registros === 1 ? "registro salvo" : "registros salvos"}`
+      : "Pronto para suas descobertas";
+  },
 };

@@ -1,304 +1,412 @@
-'use strict';
-/* Manual digital: monta as seções de js/data/manual.js, as tabelas geradas a
-   partir do catálogo e os roteiros de teste.
-   "Mostrar na bancada" destaca a parte na bancada; "Montar na bancada"
-   prepara os tubos de um roteiro (dá para desfazer na bancada). */
-SIAB.ajuda = (() => {
-  const VISTO = 'siab_manual_visto';
-  let pendente = null;
-
-  // Leva à bancada e destaca a parte descrita na seção do manual.
-  function mostrar(id) {
-    const secao = SIAB.manual.find(x => x.id === id);
-    if (!secao?.alvo) return;
-    pendente = secao;
-    SIAB.irPara('#/laboratorio');
-  }
-
-  // Chamado pela tela da bancada. Espera o roteador terminar (foco e rolagem).
-  function aplicarPendente() {
-    if (!pendente) return;
-    const secao = pendente;
-    pendente = null;
-    requestAnimationFrame(() => {
-      const ordem = ['explorar', 'medir', 'calcular'];
-      if (secao.nivel && ordem.indexOf(SIAB.state.level) < ordem.indexOf(secao.nivel)) {
-        SIAB.state.level = secao.nivel;
-        SIAB.render(true);
-      }
-      if (secao.painel && SIAB.bancada.mobile.matches) SIAB.bancada.openSheet();
-      let alvo = document.querySelector(secao.alvo);
-      if (!alvo) return;
-      // Bancada vazia: leitura, conta-gotas e ajustes só aparecem com um tubo.
-      if (!alvo.getClientRects().length && !SIAB.current()) {
-        alvo = SIAB.$('bancada-vazia');
-        SIAB.notice(`A bancada está vazia. Escolha um frasco na prateleira para ver: ${secao.titulo}.`);
-        alvo.scrollIntoView({ block: 'center' });
-        alvo.classList.add('ajuda-destaque');
-        setTimeout(() => alvo.classList.remove('ajuda-destaque'), 4500);
-        return;
-      }
-      if (alvo.tagName === 'DETAILS') alvo.open = true;
-      alvo.scrollIntoView({ block: 'center', behavior: window.A11Y?.estado?.motion ? 'auto' : 'smooth' });
-      alvo.classList.remove('ajuda-destaque');
-      void alvo.offsetWidth;
-      alvo.classList.add('ajuda-destaque');
-      setTimeout(() => alvo.classList.remove('ajuda-destaque'), 4500);
-      SIAB.notice(`Destacado na bancada: ${secao.titulo}.`);
-    });
-  }
-
-  return {
-    mostrar,
-    aplicarPendente,
-    jaViu: () => SIAB.armazenamento.ler(VISTO, false),
-    marcarVisto: () => SIAB.armazenamento.gravar(VISTO, true)
-  };
-})();
-
+"use strict";
+/* RC.4 — consulta sob demanda. Nenhuma ação do Manual cria tubos ou medições. */
 SIAB.manualTela = (() => {
-  const $ = SIAB.$, esc = SIAB.escape;
-  const tubo = spec => {
-    const { grupo, ...resto } = spec;
-    return { id: 0, name: 'tubo', ...SIAB.TUBE_DEFAULTS, ...resto, additions: [] };
-  };
-
-  // "Rótulo: texto" vira rótulo em negrito.
-  function rotulado(item) {
-    const i = item.indexOf(': ');
-    return i > 0 && i < 45 ? `<strong>${esc(item.slice(0, i))}:</strong> ${esc(item.slice(i + 2))}` : esc(item);
+  const S = SIAB,
+    $ = S.$,
+    esc = S.escape,
+    R = S.manualRegistry;
+  let current = "",
+    bound = false;
+  const icon = S.icons.svg;
+  const href = (id) => "#/manual/" + encodeURIComponent(id);
+  function rich(text) {
+    return String(text || "")
+      .split(/(\[\[[^\]]+\]\])/g)
+      .map((s) => {
+        const match = s.match(/^\[\[([a-z0-9-]+)(?:\|([^\]]+))?\]\]$/);
+        if (!match) return esc(s);
+        const t = R.resolve(match[1]);
+        return t
+          ? `<a href="${href(t.id)}">${esc(match[2] || t.title)}</a>`
+          : esc(match[2] || match[1]);
+      })
+      .join("");
   }
-
-  /* ---------- Conteúdo gerado ---------- */
-  function diagrama() {
-    // Caixas baixas (a tira de tubos) levam o número à esquerda do texto.
-    const caixa = (x, y, w, h, n, texto, sub) => {
-      const baixa = h < 40, by = baixa ? y + h / 2 : y + 14;
-      return `<g><rect class="diag-caixa" x="${x}" y="${y}" width="${w}" height="${h}" rx="6"/>
-      <circle class="diag-bola" cx="${x + 14}" cy="${by}" r="9"/><text class="diag-num" x="${x + 14}" y="${by + 4}" text-anchor="middle">${n}</text>
-      <text class="diag-texto" x="${x + w / 2 + (baixa ? 10 : 0)}" y="${baixa ? y + h / 2 + 4 : y + h / 2 + 2}" text-anchor="middle">${texto}</text>
-      ${sub ? `<text class="diag-sub" x="${x + w / 2}" y="${y + h / 2 + 16}" text-anchor="middle">${sub}</text>` : ''}</g>`;
-    };
-    return `<figure class="manual-figura">
-      <svg class="diagrama" viewBox="0 0 360 214" role="img" aria-label="Esquema da bancada no computador: 1 prateleira à esquerda; 2 tubo e leitura no centro; 3 conta-gotas abaixo do tubo; 4 painel VER à direita; 5 tira de tubos embaixo.">
-        ${caixa(4, 4, 98, 170, 1, 'Prateleira', 'frascos e indicador')}
-        ${caixa(108, 4, 144, 104, 2, 'Tubo e leitura', 'pH, régua, cor')}
-        ${caixa(108, 114, 144, 60, 3, 'Conta-gotas', 'gotas e Desfazer')}
-        ${caixa(258, 4, 98, 170, 4, 'Painel VER', 'gráfico, partículas')}
-        ${caixa(108, 180, 144, 30, 5, 'Tubos da bancada', '')}
-      </svg>
-      <figcaption>A bancada no computador. No celular, as partes ficam uma embaixo da outra, e a prateleira abre pelo botão “Prateleira”.</figcaption>
-    </figure>`;
+  function actions(topic) {
+    return (topic.actions || [])
+      .map((a) =>
+        a.route
+          ? `<a class="secondary-btn" href="${esc(a.route)}">${esc(a.label)} ${icon("arrow")}</a>`
+          : `<button type="button" class="secondary-btn" data-manual-command="${esc(a.command)}">${esc(a.label)}</button>`,
+      )
+      .join("");
   }
-
-  // Primeira gota em que a cor do indicador muda.
-  function viragem(t) {
-    if (t.indicator === 'none') return null;
-    const inicial = SIAB.chem.color(t.indicator, SIAB.chem.solve(t).pH).name;
-    const maximo = Math.floor((SIAB.CAPACITY_ML - t.initialVolume) / t.dropVolume + 1e-9);
-    for (let n = 1; n <= maximo; n++) {
-      const nome = SIAB.chem.color(t.indicator, SIAB.chem.solve({ ...t, additions: Array(n).fill(t.dropVolume) }).pH).name;
-      if (nome !== inicial) return { n, de: inicial, para: nome };
+  function topicLink(t, compact = false) {
+    const cat = R.category(t.category);
+    return `<a class="manual-topic-link${compact ? " compact" : ""}" href="${href(t.id)}"><span class="manual-symbol">${icon({ historico: "history", tabela: "table", aprender: "learn", projetor: "projector", preparo: "prepare" }[t.id] || cat.icon)}</span><span><strong>${esc(t.title)}</strong><span>${esc(t.summary)}</span></span>${icon("arrow")}</a>`;
+  }
+  function diagram(kind) {
+    if (kind === "workspace")
+      return `<figure class="manual-diagram manual-workspace-map"><div class="manual-map-actions"><a href="${href("bancada")}">${icon("setup")}Montagem</a><a href="${href("painel-medir")}">${icon("eye")}Ver</a><a href="${href("tabela")}">${icon("data")}Dados</a></div><div class="manual-map-scene"><svg viewBox="0 0 180 160" role="img" aria-label="Recipiente ao centro, com espaço livre para observar o experimento"><path class="glass" d="M62 12h56M68 12v112a22 22 0 0 0 44 0V12"/><path class="liquid" d="M70 91h40v33a20 20 0 0 1-40 0Z"/><path class="ticks" d="M102 35h10M105 51h7M102 67h10"/><circle cx="77" cy="111" r="3" class="bubble"/><circle cx="96" cy="123" r="2" class="bubble"/></svg><div><strong>Seu experimento em foco</strong><span>Gotejar · Agitar · Medir</span></div></div><figcaption>Abra uma ferramenta quando precisar. Fechar o painel devolve espaço à bancada.</figcaption></figure>`;
+    if (kind === "meter")
+      return `<figure class="manual-diagram"><svg class="manual-instrument" viewBox="0 0 520 210" role="img" aria-label="Esquema do pHmetro: visor ligado por um cabo ao eletrodo mergulhado na solução. Aguarde estabilizar antes de interpretar a leitura."><rect x="25" y="30" width="218" height="150" rx="16" class="device"/><rect x="45" y="52" width="177" height="64" rx="6" class="screen"/><text x="63" y="91" class="readout">— —</text><text x="165" y="94">pH</text><text x="46" y="150">Visor</text><path d="M242 65C310 0 395 20 395 64" class="glass"/><path d="M348 95v76q0 22 46 22t46-22V95" class="glass"/><path d="M351 140h86v30q0 20-43 20t-43-20Z" class="liquid"/><rect x="389" y="62" width="13" height="98" rx="5" class="probe"/><text x="312" y="47">Eletrodo</text></svg><figcaption>Esquema do instrumento. O visor só apresenta uma leitura depois da medição.</figcaption></figure>`;
+    if (kind === "strip")
+      return `<figure class="manual-diagram"><div class="manual-strip"><span aria-hidden="true"></span><div><strong>Uma estimativa por faixa</strong><p>Compare a cor com a escala de 0 a 14. A leitura é apresentada em passos de 1 unidade de pH.</p></div></div><figcaption>A descrição e o número acompanham a cor; não é necessário distinguir apenas o tom.</figcaption></figure>`;
+    if (kind === "compaction")
+      return `<figure class="manual-diagram"><div class="manual-comparison"><div><strong>Compacta</strong><p>Um grupo de leituras compatíveis</p><span>Contagem + faixa + Ver medições</span></div>${icon("exchange")}<div><strong>Completa</strong><p>Cada leitura individual</p><span>Técnica + valor + contexto</span></div></div><figcaption>São duas apresentações dos mesmos dados. O agrupamento não remove registros.</figcaption></figure>`;
+    if (kind === "instruments")
+      return `<div class="manual-reference-table" role="region" aria-label="Comparação dos instrumentos" tabindex="0"><table><caption>Qual evidência você precisa?</caption><thead><tr><th scope="col">Técnica</th><th scope="col">Evidência</th><th scope="col">Limite principal</th></tr></thead><tbody><tr><th scope="row"><a href="${href("indicadores")}">Indicador</a></th><td>Cor e faixa de viragem</td><td>Não dá pH exato</td></tr><tr><th scope="row"><a href="${href("fita")}">Fita de pH</a></th><td>Estimativa de pH</td><td>Resolução de 1 unidade</td></tr><tr><th scope="row"><a href="${href("phmetro")}">pHmetro</a></th><td>Leitura numérica</td><td>Resolução simulada de 0,01</td></tr><tr><th scope="row"><a href="${href("condutividade")}">Condutivímetro</a></th><td>Condução em µS/cm</td><td>Estimativa ideal</td></tr><tr><th scope="row"><a href="${href("temperatura")}">Termômetro</a></th><td>Temperatura da solução</td><td>Condição do modelo</td></tr></tbody></table></div>`;
+    const flow = {
+      measurement: [
+        ["Selecionar", "Recipiente em foco"],
+        ["Medir", "Acionar o instrumento"],
+        ["Interpretar", "Conferir técnica e valor"],
+      ],
+      titration: [
+        ["Preparar", "Solução e reagente"],
+        ["Adicionar e medir", "Registrar a cada intervenção"],
+        ["Analisar", "Volume e mudança de pH"],
+      ],
+      report: [
+        ["Investigar", "Obter evidências"],
+        ["Interpretar", "Escrever suas conclusões"],
+        ["Compartilhar", "Imprimir / Salvar como PDF"],
+      ],
+      modules: [
+        ["Explorar", "Observar e manipular"],
+        ["Medir", "Controlar volumes e coletar"],
+        ["Calcular", "Relacionar quantidades"],
+      ],
+      representations: [
+        ["Recipiente", "Cor e transformação visível"],
+        ["Partículas", "Moléculas e íons"],
+        ["Símbolos", "Equações e números"],
+      ],
+    }[kind];
+    return flow
+      ? `<figure class="manual-diagram"><ol class="manual-flow${kind === "modules" ? " independent" : ""}">${flow.map(([title, detail], i) => `<li><strong>${esc(title)}</strong><span>${esc(detail)}</span>${kind !== "modules" && i < flow.length - 1 ? icon("flow", "manual-flow-arrow") : ""}</li>`).join("")}</ol><figcaption>${kind === "modules" ? "Módulos independentes: escolha pelo objetivo, sem ordem obrigatória." : kind === "representations" ? "Três formas de interpretar o mesmo sistema." : "Uma sequência de consulta para orientar sua investigação."}</figcaption></figure>`
+      : "";
+  }
+  function generated(kind) {
+    if (kind === "substances") {
+      return `<p class="manual-note">Referência: soluções mecanísticas a 0,0100 mol/L, temperatura de 25 °C, sem adições. Amostras usam sua composição representativa. O pH abaixo é calculado, não medido.</p><div class="manual-reference-table" tabindex="0" role="region" aria-label="Biblioteca de substâncias"><table><caption>Substâncias do catálogo</caption><thead><tr><th scope="col">Substância</th><th scope="col">Fórmula</th><th scope="col">Classificação</th><th scope="col">pH calculado</th></tr></thead><tbody>${Object.entries(
+        S.solutions,
+      )
+        .map(([id, x]) => {
+          const t = {
+            ...S.TUBE_DEFAULTS,
+            id: 0,
+            name: "Referência",
+            solution: id,
+            concentration: x.kind === "sample" || x.kind === "water" ? 0 : 0.01,
+            titrant: "water",
+            indicator: "none",
+            temperature: 25,
+            additions: [],
+          };
+          return `<tr><th scope="row">${esc(x.name)}</th><td>${esc(x.kind === "sample" ? "—" : x.formula || "—")}</td><td>${esc(x.label || x.kind)}</td><td>${S.phFormat(S.chem.solve(t))}</td></tr>`;
+        })
+        .join("")}</tbody></table></div>`;
     }
-    return null;
+    if (kind === "indicators")
+      return `<div class="manual-reference-table" tabindex="0" role="region" aria-label="Biblioteca de indicadores"><table><caption>Faixas e cores de referência</caption><thead><tr><th scope="col">Indicador</th><th scope="col">Faixa de pH</th><th scope="col">Cores</th></tr></thead><tbody>${Object.entries(
+        S.indicators,
+      )
+        .filter(([id]) => id !== "none")
+        .map(([id, x]) => {
+          const dot = (pH) =>
+            `<span class="mini-dot" aria-hidden="true" style="background:rgb(${S.chem.color(id, pH).rgb.join(",")})"></span>`;
+          const colors = x.acid
+            ? `${dot(0)}${esc(x.acidName)} → ${dot((x.low + x.high) / 2)}${esc(x.middleName)} → ${dot(14)}${esc(x.baseName)}`
+            : S.chem
+                .colorNames(id)
+                .map((name) => {
+                  const [a, b] = S.chem.colorRange(id, name);
+                  return `${dot((a + b) / 2)}${esc(name)} (${S.format(a, 0)}–${S.format(b, 0)})`;
+                })
+                .join(" · ");
+          return `<tr><th scope="row">${esc(x.name)}</th><td>${x.acid ? S.format(x.low, 1) + " a " + S.format(x.high, 1) : "Carta aproximada de 1 a 14"}</td><td>${colors}</td></tr>`;
+        })
+        .join("")}</tbody></table></div>`;
+    return "";
   }
-
-  // Resultado esperado de um roteiro, calculado pelo motor.
-  function esperado(roteiro) {
-    const linhas = [];
-    roteiro.tubos.forEach(spec => {
-      const t = tubo(spec);
-      const r = SIAB.chem.solve(t);
-      const cor = SIAB.chem.color(t.indicator, r.pH).name;
-      linhas.push([t.name, `pH inicial ${SIAB.phFormat(r)} · ${cor}`]);
-      if (r.equivalenceVolume !== null && r.equivalenceVolume + t.initialVolume <= SIAB.CAPACITY_ML) {
-        const veq = r.equivalenceVolume;
-        const naEq = SIAB.chem.solve({ ...t, additions: [veq] });
-        linhas.push(['', `equivalência em ${SIAB.format(veq)} mL (${Math.round(veq / t.dropVolume)} gotas), pH ${SIAB.phFormat(naEq)}`]);
-        if (r.halfEquivalenceVolume !== null) {
-          const meia = SIAB.chem.solve({ ...t, additions: [r.halfEquivalenceVolume] });
-          linhas.push(['', `meia-equivalência em ${SIAB.format(r.halfEquivalenceVolume)} mL, pH ${SIAB.format(meia.pH)} (= pKa)`]);
-        }
-        const v = viragem(t);
-        if (v) linhas.push(['', `${SIAB.indicators[t.indicator].short} muda na gota ${v.n} (${v.de} → ${v.para})`]);
+  function accordion(t, print = false) {
+    return t.details
+      .map((d, i) =>
+        print
+          ? `<section class="manual-print-detail"><h3>${esc(d.title)}</h3><p>${rich(d.text)}</p></section>`
+          : `<section class="manual-accordion"><h3><button type="button" class="secondary-btn" aria-expanded="false" aria-controls="manual-detail-${t.id}-${i}" id="manual-toggle-${t.id}-${i}" data-manual-expand>${esc(d.title)}${icon("dropdown", "disclosure-icon")}</button></h3><div id="manual-detail-${t.id}-${i}" aria-labelledby="manual-toggle-${t.id}-${i}" hidden><p>${rich(d.text)}</p></div></section>`,
+      )
+      .join("");
+  }
+  function article(t, print = false) {
+    const cat = R.category(t.category),
+      children =
+        t.id === cat.id
+          ? R.topics.filter((x) => x.category === cat.id && x.id !== t.id)
+          : [];
+    return `${!print ? `<nav class="manual-breadcrumb" aria-label="Caminho do Manual"><a href="#/manual">Manual</a>${t.id !== cat.id ? `<span aria-hidden="true">/</span><a href="${href(cat.id)}">${esc(cat.title)}</a>` : ""}<span aria-hidden="true">/</span><span aria-current="page">${esc(t.title)}</span></nav>` : ""}<article class="manual-article" data-manual-topic="${t.id}"><header><p class="eyebrow">${esc(cat.title)}</p><h1 ${!print ? 'id="manual-titulo" data-foco tabindex="-1"' : ""}>${esc(t.title)}</h1><p class="manual-lead">${rich(t.summary)}</p></header><section class="manual-purpose"><h2>Para que serve</h2><p>${rich(t.purpose)}</p></section>${t.diagram ? diagram(t.diagram) : ""}<section class="manual-how"><h2>Como usar</h2><ol class="manual-steps">${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></section>${t.example ? `<aside class="manual-example" aria-label="Exemplo"><strong>Exemplo</strong><p>${rich(t.example)}</p></aside>` : ""}${!print && t.actions?.length ? `<div class="manual-actions"><p>Use a função no programa</p>${actions(t)}</div>` : ""}${t.generated ? generated(t.generated) : ""}${t.details.length ? `<section class="manual-details"><h2>Detalhes importantes</h2>${accordion(t, print)}</section>` : ""}${!print && children.length ? `<section class="manual-more"><h2>Nesta categoria</h2><div class="manual-topic-list">${children.map((x) => topicLink(x, true)).join("")}</div></section>` : ""}${
+      t.related.length
+        ? `<nav class="manual-related" aria-label="Veja também"><h2>Veja também</h2><div>${t.related
+            .map((id) => {
+              const x = R.resolve(id);
+              return `<a href="${href(x.id)}">${esc(x.title)} ${icon("arrow")}</a>`;
+            })
+            .join("")}</div></nav>`
+        : ""
+    }${(t.references || []).length ? `<section><h2>Fontes</h2><ul>${t.references.map((ref) => `<li>${ref.url ? `<a href="${esc(ref.url)}" target="_blank" rel="noopener">${esc(ref.label)}</a>` : esc(ref.label)}</li>`).join("")}</ul></section>` : ""}</article>${!print ? `<a class="quiet-btn manual-back" href="${t.id === cat.id ? "#/manual" : href(cat.id)}">${icon("back")}Voltar ${t.id === cat.id ? "ao início do Manual" : "a " + esc(cat.title)}</a>` : ""}`;
+  }
+  function home() {
+    return `<header class="manual-hero"><div><p class="eyebrow">MANUAL DO USUÁRIO</p><h1 id="manual-titulo" data-foco tabindex="-1">Encontre seu próximo passo.</h1><p>Uma dúvida na bancada? Consulte uma ferramenta, entenda uma leitura ou descubra por onde começar.</p><div class="manual-hero-actions"><a class="primary-btn" href="${href("comecar")}">Começar a usar ${icon("arrow")}</a><button class="quiet-btn" type="button" data-manual-command="tour">Iniciar tour da bancada</button></div></div>${diagram("workspace")}</header><nav class="manual-shortcuts" aria-label="Consultas rápidas"><span>QUERO SABER</span>${[
+      ["phmetro", "Como medir pH"],
+      ["montagens", "Como abrir uma montagem"],
+      ["problemas", "Por que uma opção não aparece"],
+    ]
+      .map(
+        ([id, label]) =>
+          `<a href="${href(id)}">${esc(label)} ${icon("arrow")}</a>`,
+      )
+      .join("")}</nav>${[
+      "Investigue",
+      "Prepare e registre",
+      "Orientação",
+      "Para ensinar",
+    ]
+      .map(
+        (group) =>
+          `<section class="manual-category-section"><h2>${group}</h2><div class="manual-category-grid">${R.categories
+            .filter((c) => c.group === group)
+            .map(
+              (c) =>
+                `<a class="manual-category" href="${href(c.id)}"><span class="manual-symbol">${icon(c.icon)}</span><h3>${esc(c.title)}</h3><p>${esc(c.summary)}</p><span class="manual-category-action">Consultar ${icon("arrow")}</span></a>`,
+            )
+            .join("")}</div></section>`,
+      )
+      .join("")}`;
+  }
+  function setIndex(open, focus = false) {
+    const button = $("manual-index-toggle");
+    button.setAttribute("aria-expanded", String(open));
+    button.textContent = open ? "Fechar índice" : "Índice do Manual";
+    document
+      .querySelector(".tela-manual")
+      .classList.toggle("manual-index-open", open);
+    if (focus) button.focus();
+  }
+  function index(id) {
+    const cat = R.resolve(id)?.category;
+    $("manual-indice").innerHTML =
+      `<a class="manual-index-home" href="#/manual">${icon("book")}Início do Manual</a><ul>${R.categories
+        .map(
+          (c) =>
+            `<li><a href="${href(c.id)}" ${id === c.id ? 'aria-current="page"' : ""}>${icon(c.icon)}${esc(c.title)}</a>${
+              cat === c.id
+                ? `<ul>${R.topics
+                    .filter((t) => t.category === c.id && t.id !== c.id)
+                    .map(
+                      (t) =>
+                        `<li><a href="${href(t.id)}" ${t.id === id ? 'aria-current="page"' : ""}>${esc(t.title)}</a></li>`,
+                    )
+                    .join("")}</ul>`
+                : ""
+            }</li>`,
+        )
+        .join("")}</ul>`;
+  }
+  function render(id = "", options = {}) {
+    current = id;
+    const topic = R.resolve(id),
+      screen = document.querySelector(".tela-manual");
+    screen.dataset.manualView = id ? "topic" : "home";
+    if (!options.keepSearch) $("manual-busca").value = "";
+    $("manual-clear").hidden = !$("manual-busca").value;
+    setIndex(false);
+    index(topic?.id || "");
+    $("manual-imprimir").textContent =
+      id && topic ? "Imprimir tópico" : "Imprimir guia rápido";
+    $("manual-conteudo").innerHTML = id
+      ? topic
+        ? article(topic)
+        : `<div class="manual-empty"><h1 id="manual-titulo" data-foco tabindex="-1">Tópico não encontrado</h1><p>Este endereço não corresponde a um tópico do Manual.</p><a class="secondary-btn" href="#/manual">Voltar ao índice</a></div>`
+      : home();
+    $("manual-status").textContent = "";
+  }
+  function search() {
+    const query = $("manual-busca").value.trim();
+    $("manual-clear").hidden = !query;
+    if (!query) {
+      render(current, { keepSearch: true });
+      return;
+    }
+    const items = R.search(query);
+    document.querySelector(".tela-manual").dataset.manualView = "search";
+    setIndex(false);
+    $("manual-status").textContent = items.length
+      ? `${items.length} ${items.length === 1 ? "tópico encontrado" : "tópicos encontrados"}.`
+      : "Nenhum tópico encontrado.";
+    $("manual-conteudo").innerHTML =
+      `<section class="manual-search-results"><p class="eyebrow">BUSCA NO MANUAL</p><h1 id="manual-titulo" data-foco tabindex="-1">${items.length ? "Resultados para “" + esc(query) + "”" : "Nenhum tópico encontrado"}</h1><p>${items.length ? "Escolha um tópico para abrir a explicação." : "Tente outro termo, como “pHmetro”, “fita” ou “relatório”. Você também pode voltar ao índice."}</p>${items.length ? `<ul>${items.map((t) => `<li><a href="${href(t.id)}"><span class="eyebrow">${esc(R.category(t.category).title)}</span><h2>${esc(t.title)}</h2><p>${esc(t.summary)}</p>${icon("arrow")}</a></li>`).join("")}</ul>` : ""}<a class="quiet-btn" href="#/manual">Voltar ao índice</a></section>`;
+    $("manual-imprimir").textContent = "Imprimir guia rápido";
+  }
+  function preparePrint() {
+    if (S.rota.nome !== "manual") return;
+    const topic = R.resolve(current),
+      searching = Boolean($("manual-busca").value.trim());
+    $("manual-print").innerHTML =
+      topic && !searching
+        ? article(topic, true)
+        : `<header><p>SIAB · Manual do Usuário</p><h1>Guia rápido de consulta</h1><p>Escolha o caminho pela sua dúvida. O Manual digital inclui instruções e referências completas para cada tópico.</p></header>${R.categories
+            .map((c) => {
+              const t = R.resolve(c.id);
+              return `<section class="manual-print-category"><h2>${esc(c.title)}</h2><p>${rich(t.summary)}</p><ol>${t.steps
+                .slice(0, 3)
+                .map((s) => `<li>${rich(s)}</li>`)
+                .join("")}</ol></section>`;
+            })
+            .join("")}`;
+  }
+  function bind() {
+    if (bound) return;
+    bound = true;
+    $("manual-busca").addEventListener("input", search);
+    $("manual-search-form").addEventListener("submit", (e) => {
+      e.preventDefault();
+      search();
+      $("manual-titulo")?.focus();
+    });
+    $("manual-clear").addEventListener("click", () => {
+      $("manual-busca").value = "";
+      search();
+      $("manual-busca").focus();
+    });
+    $("manual-index-toggle").addEventListener("click", () =>
+      setIndex(
+        $("manual-index-toggle").getAttribute("aria-expanded") !== "true",
+      ),
+    );
+    document.querySelector(".tela-manual").addEventListener("keydown", (e) => {
+      if (
+        e.key === "Escape" &&
+        $("manual-index-toggle").getAttribute("aria-expanded") === "true"
+      ) {
+        e.preventDefault();
+        setIndex(false, true);
       }
     });
-    if (roteiro.extra) {
-      const medir = (nome, n) => {
-        const t = tubo(roteiro.tubos.find(x => x.name === nome));
-        return `pH ${SIAB.phFormat(SIAB.chem.solve({ ...t, additions: Array(n).fill(t.dropVolume) }))}`;
-      };
-      linhas.push(...roteiro.extra(medir));
-    }
-    return linhas;
-  }
-
-  function descricaoTubo(spec) {
-    const t = tubo(spec);
-    const gotas = t.titrant === 'water' && spec.titrant === 'water' && !spec.dropVolume
-      ? 'sem gotas'
-      : `conta-gotas: ${SIAB.solutionSummary(t.titrant, t.titrantConcentration, t.titrantDilution)}, gota de ${SIAB.format(t.dropVolume)} mL`;
-    return `<strong>${esc(t.name)}</strong>: ${esc(SIAB.solutionSummary(t.solution, t.concentration, t.dilution))}, ${SIAB.format(t.initialVolume)} mL · ${esc(gotas)} · ${esc(SIAB.indicators[t.indicator].name)}${spec.grupo ? ' · vinculado' : ''}`;
-  }
-
-  function roteiros() {
-    return `<div class="roteiros">${SIAB.roteiros.map(r => `<article class="roteiro" id="roteiro-${r.id}">
-      <h3>${esc(r.titulo)}</h3>
-      <p>${esc(r.objetivo)}</p>
-      <p class="eyebrow">MONTA · MÓDULO ${esc(r.nivel.toUpperCase())}</p>
-      <ul class="manual-lista">${r.tubos.map(spec => `<li>${descricaoTubo(spec)}</li>`).join('')}</ul>
-      <p class="eyebrow">DEPOIS DE MONTAR</p>
-      <ol class="manual-passos">${r.passos.map(p => `<li>${esc(p)}</li>`).join('')}</ol>
-      <p class="eyebrow">RESULTADO ESPERADO</p>
-      <dl class="roteiro-esperado">${esperado(r).map(([a, b]) => `<div><dt>${esc(a)}</dt><dd>${esc(b)}</dd></div>`).join('')}</dl>
-      <button type="button" class="primary-btn" data-roteiro="${r.id}">Montar na bancada</button>
-    </article>`).join('')}</div>`;
-  }
-
-  function frascos() {
-    const grupos = Object.entries(SIAB.solutionGroups).map(([grupo, rotulo]) => {
-      const itens = Object.entries(SIAB.solutions).filter(([, x]) => x.group === grupo);
-      if (!itens.length) return '';
-      const linhas = itens.map(([id, x]) => {
-        const reagente = x.kind !== 'sample' && x.kind !== 'water';
-        const r = SIAB.chem.solve(tubo({ solution: id, concentration: reagente ? .01 : 0, titrant: 'water', indicator: 'none' }));
-        return `<tr><td>${esc(x.name)}</td><td>${esc(x.kind === 'sample' ? '—' : x.formula || '—')}</td><td>${esc(x.label || '')}</td><td>${SIAB.phFormat(r)}</td></tr>`;
-      }).join('');
-      return `<tbody><tr class="tabela-grupo"><th colspan="4" scope="rowgroup">${esc(rotulo)}</th></tr>${linhas}</tbody>`;
-    }).join('');
-    return `<div class="tabela-rolagem"><table class="manual-tabela"><caption class="sr-only">Frascos da prateleira e pH de cada um sozinho</caption>
-      <thead><tr><th scope="col">Frasco</th><th scope="col">Fórmula</th><th scope="col">Tipo</th><th scope="col">pH sozinho</th></tr></thead>${grupos}</table></div>`;
-  }
-
-  function indicadores() {
-    const amostra = (id, pH) => `<span class="mini-dot" style="background:rgb(${SIAB.chem.color(id, pH).rgb.join(',')})" aria-hidden="true"></span>`;
-    const linhas = Object.entries(SIAB.indicators).filter(([id]) => id !== 'none').map(([id, x]) => {
-      let faixa, cores;
-      if (x.acid) {
-        faixa = `${SIAB.format(x.low, 1)} a ${SIAB.format(x.high, 1)}`;
-        cores = `${amostra(id, 0)} ${esc(x.acidName)} → ${amostra(id, (x.low + x.high) / 2)} ${esc(x.middleName)} → ${amostra(id, 14)} ${esc(x.baseName)}`;
-      } else {
-        faixa = 'carta de 1 a 14 (aproximada)';
-        const pontos = [];
-        for (const nome of SIAB.chem.colorNames(id)) {
-          const [a, b] = SIAB.chem.colorRange(id, nome);
-          pontos.push(`${amostra(id, (a + b) / 2)} ${esc(nome)} (${SIAB.format(a, 0)}–${SIAB.format(b, 0)})`);
-        }
-        cores = pontos.join(' · ');
+    document.querySelector(".tela-manual").addEventListener("click", (e) => {
+      const expand = e.target.closest("[data-manual-expand]");
+      if (expand) {
+        const open = expand.getAttribute("aria-expanded") !== "true";
+        expand.setAttribute("aria-expanded", String(open));
+        $(expand.getAttribute("aria-controls")).hidden = !open;
       }
-      return `<tr><td>${esc(x.name)}</td><td>${faixa}</td><td class="celula-cores">${cores}</td></tr>`;
-    }).join('');
-    return `<div class="tabela-rolagem"><table class="manual-tabela"><caption class="sr-only">Indicadores, faixas de viragem e cores</caption>
-      <thead><tr><th scope="col">Indicador</th><th scope="col">Faixa de viragem (pH)</th><th scope="col">Cores (ácido → básico)</th></tr></thead><tbody>${linhas}</tbody></table></div>`;
-  }
-
-  const GERADOS = { diagrama, roteiros, frascos, indicadores };
-
-  function bloco(b) {
-    if (b.p) return `<p>${esc(b.p)}</p>`;
-    if (b.lista) return `<ul class="manual-lista">${b.lista.map(item => `<li>${rotulado(item)}</li>`).join('')}</ul>`;
-    if (b.passos) return `<ol class="manual-passos">${b.passos.map(item => `<li>${esc(item)}</li>`).join('')}</ol>`;
-    if (b.dica) return `<p class="manual-dica"><strong>Dica:</strong> ${esc(b.dica)}</p>`;
-    if (b.teclas) return `<dl class="manual-teclas">${b.teclas.map(([tecla, acao]) => `<div><dt><kbd>${esc(tecla)}</kbd></dt><dd>${esc(acao)}</dd></div>`).join('')}</dl>`;
-    if (b.faq) return `<dl class="manual-faq">${b.faq.map(([pergunta, resposta]) => `<dt>${esc(pergunta)}</dt><dd>${esc(resposta)}</dd>`).join('')}</dl>`;
-    if (b.gerado) return GERADOS[b.gerado]();
-    return '';
-  }
-
-  function render() {
-    $('manual-indice').innerHTML = SIAB.manual.map((s, i) => `<li data-indice="${s.id}"><a href="#/manual/${s.id}">${i + 1}. ${esc(s.titulo)}</a></li>`).join('');
-    $('manual-conteudo').innerHTML = SIAB.manual.map((s, i) => `<section class="manual-secao" id="manual-${s.id}" aria-labelledby="manual-h-${s.id}">
-      <h2 id="manual-h-${s.id}" tabindex="-1">${i + 1}. ${esc(s.titulo)}</h2>
-      <p class="manual-resumo">${esc(s.resumo)}</p>
-      ${s.blocos.map(bloco).join('')}
-      <div class="manual-acoes-secao">
-        ${s.alvo ? `<button type="button" class="secondary-btn" data-mostrar="${s.id}">Mostrar na bancada</button>` : ''}
-        ${s.link ? `<a class="secondary-btn" href="${s.link[0]}">${esc(s.link[1])}</a>` : ''}
-        <a class="quiet-btn" href="#/manual">Voltar ao índice</a>
-      </div>
-    </section>`).join('');
-  }
-
-  function filtrar() {
-    const busca = SIAB.normalizar($('manual-busca').value.trim());
-    let visiveis = 0;
-    SIAB.manual.forEach(s => {
-      const secao = $(`manual-${s.id}`);
-      const mostra = !busca || SIAB.normalizar(secao.textContent).includes(busca);
-      secao.hidden = !mostra;
-      document.querySelector(`[data-indice="${s.id}"]`).hidden = !mostra;
-      if (mostra) visiveis++;
+      const command = e.target.closest("[data-manual-command]")?.dataset
+        .manualCommand;
+      if (S.ActivityContext.restricted()) return;
+      if (command === "tour") S.tour.iniciar();
+      if (command === "a11y") S.gaveta.abrir("acessibilidade");
+      const same = e.target.closest("a[href]");
+      if (same && same.getAttribute("href") === location.hash) {
+        e.preventDefault();
+        S.irPara(same.getAttribute("href"));
+      }
     });
-    $('manual-vazio').hidden = visiveis > 0;
-  }
-
-  // Substitui os tubos da bancada pelos do roteiro (fica no Desfazer).
-  function montar(id) {
-    const roteiro = SIAB.roteiros.find(r => r.id === id);
-    if (!roteiro) return;
-    SIAB.usarBancada('lab');
-    SIAB.alterar(`montar roteiro “${roteiro.titulo}”`, estado => {
-      estado.tubes = [];
-      const grupos = {};
-      roteiro.tubos.forEach(spec => {
-        const { grupo, ...resto } = spec;
-        if (grupo && !grupos[grupo]) grupos[grupo] = estado.nextGroup++;
-        SIAB.newTube({ ...resto, group: grupo ? grupos[grupo] : null }, estado);
-      });
-      estado.activeId = estado.tubes[0].id;
-      estado.level = roteiro.nivel;
-      estado.view = 'focus';
-      estado.showPH = true;
-      estado.verTab = roteiro.ver || 'grafico';
-      estado.destination = 'tube';
-      // Os roteiros foram calculados para o tubo de ensaio (5 mL).
-      estado.vidraria = 'tubo';
-    });
-    SIAB.irPara('#/laboratorio');
-    SIAB.notice(`Roteiro montado: ${roteiro.titulo}. “Desfazer” volta aos tubos anteriores.`);
-  }
-
-  function ligar() {
-    $('manual-busca').addEventListener('input', filtrar);
-    $('manual-imprimir').addEventListener('click', () => {
-      $('manual-busca').value = '';
-      filtrar();
+    $("manual-imprimir").addEventListener("click", () => {
+      preparePrint();
       window.print();
     });
-    $('manual-conteudo').addEventListener('click', evento => {
-      const botao = evento.target.closest('button');
-      if (!botao) return;
-      if (botao.dataset.mostrar) SIAB.ajuda.mostrar(botao.dataset.mostrar);
-      if (botao.dataset.roteiro) montar(botao.dataset.roteiro);
+    window.addEventListener("beforeprint", preparePrint);
+    window.addEventListener("afterprint", () => {
+      $("manual-print").innerHTML = "";
     });
-    $('boas-vindas-fechar').addEventListener('click', () => {
-      SIAB.ajuda.marcarVisto();
-      $('boas-vindas').hidden = true;
-      $(SIAB.current() ? 'tube-name' : 'vazia-titulo').focus();
+    $("boas-vindas-fechar").addEventListener("click", () => {
+      S.ajuda.marcarVisto();
+      $("boas-vindas").hidden = true;
+      $(S.current() ? "tube-name" : "vazia-titulo").focus();
     });
+    S.ajuda.bind();
   }
-
-  return { render, ligar, montar, esperado, viragem };
+  return {
+    render,
+    ligar: bind,
+    prepararImpressao: preparePrint,
+    icon,
+    rich,
+    href,
+    // Compatibility: the drawer still owns the operational catalog action.
+    montar: (id) => S.montarMontagem(id),
+  };
 })();
 
-SIAB.telas.manual = {
-  secao: 'manual',
-  titulo: () => 'Manual',
-  montado: false,
-  entrar(parametro) {
-    SIAB.ajuda.marcarVisto();
-    if (!this.montado) {
-      SIAB.manualTela.render();
-      this.montado = true;
-    }
-    const secao = parametro && document.getElementById(`manual-${parametro}`);
-    if (secao) {
-      // Depois que o roteador termina, rola até a seção pedida.
-      requestAnimationFrame(() => {
-        secao.hidden = false;
-        secao.scrollIntoView({ block: 'start' });
-        document.getElementById(`manual-h-${parametro}`).focus({ preventScroll: true });
-      });
-    }
+SIAB.ajuda = (() => {
+  const S = SIAB,
+    $ = S.$,
+    R = S.manualRegistry,
+    VISTO = "siab_manual_visto";
+  let opener = null;
+  function topicFor(target) {
+    if (target?.dataset.manualHelp) return target.dataset.manualHelp;
+    const id = target?.getAttribute("href")?.match(/^#\/manual\/(.+)$/)?.[1];
+    // The general Ver help follows the active tool; other help links keep their own topic.
+    if (id === "ver" || target?.hasAttribute("data-activity-help"))
+      return S.state.verTab || "bancada";
+    return id || S.state.verTab || "bancada";
   }
+  function contextual(id = S.state.verTab, target = document.activeElement) {
+    const t = R.resolve(id) || R.resolve("bancada"),
+      restricted = S.ActivityContext.restricted();
+    opener = target;
+    S.gaveta.fechar();
+    $("activity-help-title").textContent = t.title;
+    $("activity-help-content").innerHTML =
+      `<div class="manual-context"><p class="manual-context-summary">${S.escape(t.summary)}</p><p>${S.escape(t.purpose.replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g, (_, key, label) => label || R.resolve(key)?.title || key))}</p><div class="manual-context-next"><strong>Próximo passo</strong><p>${S.escape(t.steps[0] || "")}</p></div>${restricted ? '<p class="field-hint">A ajuda permanece nesta atividade. Use somente os recursos disponibilizados pelo professor.</p>' : `<div class="manual-context-links">${t.id === "ph" ? '<a class="secondary-btn" data-manual-help-link href="#/manual/painel-medir">Como medir pH</a>' : ""}<a class="secondary-btn" data-manual-help-link href="${S.manualTela.href(t.id)}">Abrir no Manual ${S.manualTela.icon("arrow")}</a></div>`}</div>`;
+    const dialog = $("activity-help-dialog");
+    if (!dialog.open) dialog.showModal();
+  }
+  function bind() {
+    document.addEventListener(
+      "click",
+      (e) => {
+        const link = e.target.closest(".ajuda-link,[data-manual-help]");
+        if (!link) return;
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        contextual(topicFor(link), link);
+      },
+      true,
+    );
+    $("activity-help-dialog").addEventListener("click", (e) => {
+      const a = e.target.closest("[data-manual-help-link]");
+      if (!a) return;
+      e.preventDefault();
+      if (S.ActivityContext.restricted()) return;
+      opener = null;
+      $("activity-help-dialog").close();
+      S.irPara(a.getAttribute("href"));
+    });
+    $("activity-help-dialog").addEventListener("close", () => {
+      const target = opener;
+      opener = null;
+      requestAnimationFrame(() => {
+        if (S.rota.nome !== "laboratorio" && S.rota.nome !== "missao") return;
+        if (
+          target?.isConnected &&
+          target.getClientRects().length &&
+          !target.closest("[inert]")
+        )
+          target.focus({ preventScroll: true });
+      });
+    });
+  }
+  return {
+    contextual,
+    topicFor,
+    bind,
+    jaViu: () => S.armazenamento.ler(VISTO, false),
+    marcarVisto: () => S.armazenamento.gravar(VISTO, true),
+    aplicarPendente: () => {},
+    mostrar: (id) =>
+      S.irPara(S.manualTela.href(R.resolve(id)?.id || "bancada")),
+  };
+})();
+SIAB.telas.manual = {
+  secao: "manual",
+  titulo: (id) => SIAB.manualRegistry.resolve(id)?.title || "Manual",
+  entrar(id) {
+    SIAB.ajuda.marcarVisto();
+    SIAB.manualTela.render(id);
+  },
+  sair() {
+    SIAB.$("manual-print").innerHTML = "";
+  },
 };

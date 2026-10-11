@@ -1,446 +1,1767 @@
-'use strict';
-/* Manual digital da bancada, escrito como dados.
-   Cada seção: id (endereço #/manual/<id>), titulo, resumo, alvo (elemento da
-   bancada destacado por "Mostrar na bancada"), painel (true se o alvo fica na
-   prateleira, que no celular é um painel inferior), nivel (módulo necessário
-   para o alvo aparecer: explorar, medir ou calcular) e blocos de conteúdo:
-     { p }            parágrafo
-     { lista: [] }    lista de itens ("Rótulo: texto" deixa o rótulo em negrito)
-     { passos: [] }   passo a passo numerado
-     { dica }         observação destacada
-     { teclas: [[tecla, ação]] }
-     { faq: [[pergunta, resposta]] }
-     { gerado }       conteúdo montado pelo programa: diagrama, roteiros, frascos, indicadores
-   Para mudar um texto, edite aqui. O "alvo" precisa existir no index.html,
-   senão "Mostrar na bancada" não encontra a parte. */
-SIAB.manual = [
-  {
-    id: 'comecar', titulo: 'Primeiros passos',
-    resumo: 'O que é a bancada e como fazer o primeiro teste em um minuto.',
-    blocos: [
-      { p: 'A bancada é um laboratório virtual de ácidos e bases. Você escolhe o que vai no tubo, escolhe o que vai no conta-gotas e acompanha, a cada gota, a cor, o pH, as partículas e o gráfico.' },
-      { gerado: 'diagrama' },
-      { p: 'A bancada começa vazia: nenhum tubo, nenhuma amostra. Você monta o teste do zero.' },
-      { passos: [
-        'Na Prateleira (1), abra o menu “Tubo” e toque em um frasco: ele vira o “Tubo 1”.',
-        'Abra o menu “Conta-gotas” e toque no frasco que vai gotejar.',
-        'Escolha um indicador, logo abaixo dos frascos.',
-        'Segure o botão “Segure para gotejar” (3) e observe a leitura (2) e o painel VER (4).',
-        'Se algo sair diferente do que queria, toque em “Desfazer”.'
-      ] },
-      { dica: 'No celular, a prateleira abre pelo botão de ajustes no alto da tela (ícone de controles deslizantes, ao lado do botão de acessibilidade). A barra de chips logo abaixo do cabeçalho leva ao painel VER; a tira de tubos (5) fica no fim da tela.' },
-      { p: 'Para um passeio de 1 minuto por cada parte, use Menu ☰ → “Tour guiado da bancada”. Quer começar com um teste já montado? Veja “Roteiros de teste prontos”.' }
-    ]
+"use strict";
+/* RC.4: registro central do Manual. Texto de uso, sem dados privados de atividades. */
+SIAB.manualContent = {
+  categories: [
+    {
+      id: "comecar",
+      title: "Comece por aqui",
+      summary: "Primeiros passos, navegação e uso offline.",
+      icon: "home",
+      group: "Orientação",
+    },
+    {
+      id: "bancada",
+      title: "Bancada",
+      summary: "Prepare soluções e acompanhe cada recipiente.",
+      icon: "tube",
+      group: "Investigue",
+    },
+    {
+      id: "explorar",
+      title: "Explorar",
+      summary: "Conecte cores, partículas e transformações.",
+      icon: "eye",
+      group: "Investigue",
+    },
+    {
+      id: "medir",
+      title: "Medir",
+      summary: "Use instrumentos e registre evidências.",
+      icon: "ruler",
+      group: "Investigue",
+    },
+    {
+      id: "calcular",
+      title: "Calcular",
+      summary: "Interprete concentrações, tabelas e gráficos.",
+      icon: "chart",
+      group: "Investigue",
+    },
+    {
+      id: "instrumentos",
+      title: "Instrumentos",
+      summary: "Escolha a técnica e compreenda seus limites.",
+      icon: "meter",
+      group: "Investigue",
+    },
+    {
+      id: "montagens",
+      title: "Montagens prontas",
+      summary: "Conheça as bancadas pré-configuradas.",
+      icon: "mount",
+      group: "Prepare e registre",
+    },
+    {
+      id: "roteiros",
+      title: "Roteiros Experimentais",
+      summary: "Siga uma investigação com objetivo e tarefas.",
+      icon: "list",
+      group: "Prepare e registre",
+    },
+    {
+      id: "relatorios",
+      title: "Relatórios",
+      summary: "Reúna resultados, interpretação e conclusão.",
+      icon: "report",
+      group: "Prepare e registre",
+    },
+    {
+      id: "caderno",
+      title: "Caderno",
+      summary: "Guarde notas e investigações escolhidas por você.",
+      icon: "notebook",
+      group: "Prepare e registre",
+    },
+    {
+      id: "acessibilidade",
+      title: "Acessibilidade",
+      summary: "Ajuste leitura, cores e navegação.",
+      icon: "access",
+      group: "Orientação",
+    },
+    {
+      id: "problemas",
+      title: "Ajuda e solução de problemas",
+      summary: "Encontre uma resposta para dúvidas frequentes.",
+      icon: "help",
+      group: "Orientação",
+    },
+    {
+      id: "professor",
+      title: "Área do Professor",
+      summary: "Configure atividades e consulte orientações.",
+      icon: "teacher",
+      group: "Para ensinar",
+    },
+  ],
+  topics: [
+    {
+      id: "comecar",
+      title: "Primeiros passos",
+      category: "comecar",
+      summary:
+        "Monte um experimento, observe as mudanças e escolha como registrar suas descobertas.",
+      purpose:
+        "A bancada livre permite explorar sem uma atividade restrita. Uma nova bancada começa vazia; uma sessão já salva pode ser retomada.",
+      steps: [
+        "Abra o Laboratório. Se a bancada estiver vazia, escolha uma solução para criar o primeiro recipiente.",
+        "Abra Montagem para escolher preparo, vidraria e módulo.",
+        "Use Ver para observar, medir ou analisar. As ações de gotejar e agitar ficam junto à bancada.",
+        "Abra Dados para consultar medições e acessar o relatório.",
+      ],
+      example:
+        "Comece com uma solução e um indicador. Adicione uma gota, observe a cor e faça uma leitura de pH.",
+      related: ["bancada", "ph", "menu", "app"],
+      keywords: ["inicio", "começar", "primeira visita", "bancada livre"],
+      details: [],
+      diagram: "workspace",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+        {
+          label: "Iniciar tour da bancada",
+          command: "tour",
+        },
+      ],
+    },
+    {
+      id: "bancada",
+      title: "Usar a bancada",
+      category: "bancada",
+      summary:
+        "O recipiente fica em foco; Montagem, Ver e Dados abrem as ferramentas de que você precisa.",
+      purpose:
+        "Prepare em Montagem, investigue em Ver e reúna registros em Dados. Fechar um painel libera espaço para o experimento.",
+      steps: [
+        "Em Montagem, use Resumo para consultar as condições e Preparo para escolher soluções e indicador.",
+        "Use Objetos para vidrarias e recipientes, e Módulo para Explorar, Medir ou Calcular.",
+        "Abra Ver e escolha Observar, Medir ou Analisar. Use Dados para tabela, histórico e relatório.",
+        "No celular, os mesmos botões ficam na parte inferior. Voltar retorna um nível; Fechar devolve o foco à bancada.",
+      ],
+      example:
+        "Abra a Tabela e use Expandir quando precisar de mais espaço. Feche o painel para voltar ao recipiente.",
+      related: ["prateleira", "vidraria", "conta-gotas", "tubos"],
+      keywords: [
+        "layout",
+        "montagem",
+        "docas",
+        "painel",
+        "celular",
+        "mobile",
+        "tablet",
+        "workspace",
+      ],
+      details: [
+        {
+          title: "Bancada livre e atividade",
+          text: "Na bancada livre você escolhe a montagem. Em uma atividade, só aparecem as opções disponibilizadas pelo professor. Consulte [[atividades|Atividades por link]].",
+        },
+      ],
+      diagram: "workspace",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "menu",
+      title: "Página inicial e navegação",
+      category: "comecar",
+      summary: "A Página inicial reúne os caminhos principais do SIAB.",
+      purpose:
+        "Use Aprender para conceitos, Missões para desafios de investigação, Roteiros Experimentais para atividades estruturadas, Laboratório para exploração e Caderno para registros.",
+      steps: [
+        "Escolha um caminho na Página inicial ou abra o Menu.",
+        "No Menu, entre em Preferências → Inicialização para escolher a tela de entrada.",
+        "Use Manual para consulta e Área do Professor para preparar atividades.",
+      ],
+      example: "",
+      related: ["comecar", "aprender", "roteiros"],
+      keywords: ["menu", "inicialização", "tela inicial"],
+      details: [],
+      actions: [
+        {
+          label: "Abrir Página inicial",
+          route: "#/inicio",
+        },
+      ],
+    },
+    {
+      id: "modulos",
+      title: "Escolher um módulo",
+      category: "comecar",
+      summary:
+        "Explorar, Medir e Calcular são três modos independentes de investigar.",
+      purpose:
+        "O módulo muda os controles e o detalhamento. Não é necessário concluir um módulo para usar outro.",
+      steps: [
+        "Abra Montagem → Módulo.",
+        "Escolha Explorar, Medir ou Calcular pelo objetivo da investigação.",
+        "Ative o módulo desejado. Em atividades, a escolha pode estar definida pelo professor.",
+      ],
+      example: "",
+      related: ["explorar", "medir", "calcular"],
+      keywords: ["modo", "módulos", "nível"],
+      details: [],
+      diagram: "modules",
+    },
+    {
+      id: "explorar",
+      title: "Explorar: observar e manipular",
+      category: "explorar",
+      summary:
+        "Compare cores, indicadores e transformações visíveis antes de aprofundar os números.",
+      purpose:
+        "O módulo Explorar enfatiza soluções, indicadores e vidrarias. As ferramentas de Ver continuam sujeitas à configuração da atividade.",
+      steps: [
+        "Ative Explorar em Montagem → Módulo.",
+        "Escolha solução e indicador em Preparo.",
+        "Goteje e observe cor, volume, turvação ou sólido, quando representados.",
+        "Use Ver → Observar para conectar a cena às representações.",
+      ],
+      example:
+        "Compare a mesma solução com dois indicadores. Uma diferença de cor não significa que a solução mudou de pH.",
+      related: ["indicadores", "observar", "tubos"],
+      keywords: ["observação", "cor", "manipulação"],
+      details: [],
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "medir",
+      title: "Medir: coletar evidências",
+      category: "medir",
+      summary:
+        "Controle volumes e diluições e obtenha leituras com os instrumentos disponíveis.",
+      purpose:
+        "O módulo Medir acrescenta ajustes de volume inicial, diluição e tamanho da gota. Medir também é o nome da família de instrumentos em Ver; os dois controles têm funções diferentes.",
+      steps: [
+        "Ative o módulo em Montagem → Módulo.",
+        "Em Preparo, confira volume inicial, diluição e volume da gota.",
+        "Abra Ver → Medir e selecione pH, Temperatura ou Condutividade.",
+        "Acione a medição e consulte os registros em Dados.",
+      ],
+      example:
+        "Faça uma leitura de pH, adicione uma dose e meça novamente. Compare as duas evidências na Tabela.",
+      related: ["painel-medir", "phmetro", "fita", "titulacao"],
+      keywords: ["medida", "medição", "medidor", "coletar"],
+      details: [],
+      diagram: "measurement",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "calcular",
+      title: "Calcular: interpretar quantidades",
+      category: "calcular",
+      summary:
+        "Relacione concentrações e equilíbrio químico às observações e medições.",
+      purpose:
+        "O módulo Calcular acrescenta concentrações no preparo e detalhes quantitativos nas representações. Valores calculados pelo modelo são diferentes de leituras instrumentais.",
+      steps: [
+        "Ative Calcular em Montagem → Módulo.",
+        "Em Preparo, confira as concentrações disponíveis.",
+        "Use Ver → Observar para espécies e equações; use Analisar para interpretar os registros.",
+        "Compare o que foi medido com o que foi calculado, respeitando os limites de cada um.",
+      ],
+      example:
+        "Compare uma leitura de pH com as concentrações de H₃O⁺ e OH⁻ mostradas pelo modelo.",
+      related: ["especies", "equacao", "analisar", "limites"],
+      keywords: ["concentração", "mol", "cálculo", "quantitativo"],
+      details: [],
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "prateleira",
+      title: "Escolher soluções e reagentes",
+      category: "bancada",
+      summary:
+        "Em Montagem → Preparo, escolha qual solução vai para o recipiente e qual vai para o conta-gotas.",
+      purpose:
+        "A escolha do destino evita trocar o conteúdo do tubo quando você queria mudar apenas o reagente adicionado.",
+      steps: [
+        "Abra Montagem → Preparo.",
+        "Selecione o destino Tubo ou Conta-gotas.",
+        "Escolha o frasco e confira o nome exibido na bancada.",
+        "Se necessário, ajuste o indicador e os valores permitidos pelo módulo.",
+      ],
+      example:
+        "Para adicionar base a um ácido, mantenha o ácido no Tubo e escolha a base no Conta-gotas.",
+      related: ["conta-gotas", "medidas", "frascos"],
+      keywords: ["solução", "reagente", "frasco", "preparo", "prateleira"],
+      details: [
+        {
+          title: "Troca de solução",
+          text: "Trocar o preparo altera o experimento. Confira o recipiente em foco antes de modificar a solução. Uma medição anterior não representa automaticamente o novo preparo.",
+        },
+      ],
+    },
+    {
+      id: "vidraria",
+      title: "Vidrarias e capacidade",
+      category: "bancada",
+      summary:
+        "Tubo de ensaio, béquer e erlenmeyer oferecem formatos e capacidades diferentes.",
+      purpose: "Escolha a vidraria adequada ao volume que pretende manipular.",
+      steps: [
+        "Abra Montagem → Objetos.",
+        "Escolha a vidraria e, quando disponível, sua capacidade.",
+        "Confira o volume inicial e o espaço livre antes de adicionar reagente.",
+      ],
+      example:
+        "Uma titulação com mais volume pode usar um erlenmeyer. A capacidade limita a quantidade que cabe no recipiente.",
+      related: ["medidas", "tubos"],
+      keywords: ["recipiente", "béquer", "erlenmeyer", "tubo", "capacidade"],
+      details: [
+        {
+          title: "Limites do desenho",
+          text: "As marcas são representações didáticas, não vidrarias volumétricas certificadas. Em um grupo vinculado, a adição respeita o recipiente com menor espaço livre.",
+        },
+      ],
+    },
+    {
+      id: "medidas",
+      title: "Volumes, diluição e concentração",
+      category: "bancada",
+      summary:
+        "Os ajustes de preparo definem as quantidades usadas no experimento.",
+      purpose:
+        "Medir permite ajustar volume inicial, diluição e tamanho da gota. Calcular também expõe concentrações em mol/L.",
+      steps: [
+        "Abra Montagem → Preparo e os ajustes do preparo.",
+        "Informe os valores disponíveis no módulo e aplique a preparação.",
+        "Confira as condições exibidas antes de iniciar novas medições.",
+      ],
+      example:
+        "Compare uma solução antes e depois da diluição. Adicionar água conserva a quantidade de soluto e pode mudar o equilíbrio.",
+      related: ["medir", "calcular", "conta-gotas"],
+      keywords: ["volume", "concentração", "diluir", "diluição", "gota"],
+      details: [
+        {
+          title: "Hipóteses do modelo",
+          text: "O modelo considera volumes aditivos. Não faz média de pH: calcula novamente o equilíbrio a partir da composição.",
+        },
+      ],
+    },
+    {
+      id: "conta-gotas",
+      title: "Gotejar, adicionar volume e agitar",
+      category: "bancada",
+      summary:
+        "As ações próximas ao recipiente permitem intervir e observar o que mudou.",
+      purpose:
+        "Use gotas pequenas para acompanhar mudanças graduais e os botões de volume para doses maiores.",
+      steps: [
+        "Confira o reagente mostrado no conta-gotas.",
+        "Toque em Segure para gotejar para adicionar uma gota, ou mantenha pressionado para repetir.",
+        "Use os atalhos de gotas e volume quando necessário; no celular, abra Doses.",
+        "Use Agitar para uniformizar a representação e Desfazer para recuperar uma intervenção recente.",
+      ],
+      example:
+        "Faça uma leitura, adicione uma gota e leia novamente. O valor anterior permanece identificado até uma nova medição.",
+      related: ["titulacao", "prever", "ph"],
+      keywords: [
+        "conta gotas",
+        "gotejamento",
+        "gotas",
+        "agitação",
+        "agitar",
+        "dose",
+        "desfazer",
+      ],
+      details: [
+        {
+          title: "Agitação e equilíbrio",
+          text: "O equilíbrio químico é imediato no modelo. Agitar atua na representação visual, sem simular cinética. A adição para ao atingir a capacidade.",
+        },
+        {
+          title: "Meia gota",
+          text: "O erlenmeyer oferece a ação de meia gota. Use apenas os controles apresentados para a vidraria atual.",
+        },
+      ],
+    },
+    {
+      id: "tubos",
+      title: "Selecionar e comparar recipientes",
+      category: "bancada",
+      summary:
+        "Alterne o recipiente em foco ou abra Visão geral para trabalhar com várias amostras.",
+      purpose:
+        "Comparar observa recipientes lado a lado; vincular faz com que recebam as mesmas intervenções do conta-gotas.",
+      steps: [
+        "Toque no nome de um recipiente na faixa da bancada para colocá-lo em foco.",
+        "Abra Visão geral e use Selecionar recipientes para ações em conjunto.",
+        "Escolha Comparar para observar, ou Vincular para sincronizar intervenções futuras.",
+        "Para Misturar, escolha o destino e confira a capacidade antes de confirmar.",
+      ],
+      example:
+        "Compare soluções com indicadores diferentes. Vincule apenas se quiser adicionar o mesmo reagente a todas.",
+      related: ["bancada", "vidraria", "conta-gotas"],
+      keywords: [
+        "múltiplos tubos",
+        "grupo",
+        "comparação",
+        "mistura",
+        "vincular",
+        "selecionar",
+      ],
+      details: [
+        {
+          title: "Vínculo não mistura",
+          text: "Vincular sincroniza reagente, concentração e quantidade do conta-gotas, preservando o conteúdo que já estava nos recipientes.",
+        },
+        {
+          title: "Mistura transfere conteúdo",
+          text: "Misturar reúne todo o conteúdo no destino e esvazia as origens. A temperatura final usa média ponderada por volume para soluções aquosas; não há aquecimento de reação no modelo.",
+        },
+      ],
+    },
+    {
+      id: "prever",
+      title: "Prever e gotejar",
+      category: "bancada",
+      summary:
+        "Compare sua previsão com as evidências observadas após uma intervenção.",
+      purpose:
+        "A sequência ajuda a separar hipótese, observação e interpretação.",
+      steps: [
+        "Abra Prever e gotejar.",
+        "Registre uma previsão e escolha a intervenção.",
+        "Execute e compare antes e depois.",
+        "Escreva sua interpretação e use Registrar no Caderno se quiser guardá-la.",
+      ],
+      example: "",
+      related: ["conta-gotas", "caderno"],
+      keywords: ["previsão", "hipótese", "investigação"],
+      details: [
+        {
+          title: "Registro",
+          text: "A explicação é opcional na bancada livre. Uma atividade pode solicitá-la como parte da investigação.",
+        },
+      ],
+    },
+    {
+      id: "ph",
+      title: "O que o pH informa",
+      category: "medir",
+      summary:
+        "O pH indica a condição ácido-base da solução e precisa ser interpretado junto à temperatura e à técnica de leitura.",
+      purpose:
+        "Use uma técnica disponível para obter evidência: [[indicadores|indicador]], [[fita|fita de pH]] ou [[phmetro|pHmetro]].",
+      steps: [
+        "Coloque o recipiente desejado em foco.",
+        "Abra Ver → Medir → pH.",
+        "Escolha a técnica disponível e execute a leitura.",
+        "Após uma intervenção, faça nova leitura ou acompanhe a medição contínua.",
+      ],
+      example:
+        "“pH não medido” significa que ainda não houve leitura instrumental. A solução pode ter cor mesmo sem essa leitura.",
+      related: ["painel-medir", "fita", "phmetro", "temperatura"],
+      keywords: ["acidez", "basicidade", "ácido", "base", "como medir ph"],
+      details: [
+        {
+          title: "Neutralidade",
+          text: "A referência de neutralidade depende da temperatura: pH neutro = pKw(T)/2. Em torno de 25 °C, a referência usual é próxima de 7.",
+        },
+        {
+          title: "Leitura anterior",
+          text: "Uma intervenção pode invalidar a medida pontual. “Leitura anterior” preserva a informação histórica e pede uma nova medição, sem atualizar o valor por conta própria.",
+        },
+      ],
+    },
+    {
+      id: "painel-medir",
+      title: "Usar Ver → Medir",
+      category: "medir",
+      summary: "A família Medir reúne pH, Temperatura e Condutividade.",
+      purpose:
+        "Cada instrumento registra uma grandeza diferente. Só aparecem os recursos liberados para a atividade.",
+      steps: [
+        "Abra Ver e selecione a família Medir.",
+        "Escolha pH, Temperatura ou Condutividade.",
+        "Acione o botão de medição da ferramenta.",
+        "Consulte as medições em Dados → Tabela.",
+      ],
+      example: "",
+      related: ["phmetro", "fita", "condutividade", "temperatura"],
+      keywords: ["painel medir", "instrumentação", "ferramenta", "medição"],
+      details: [],
+      diagram: "measurement",
+    },
+    {
+      id: "instrumentos",
+      title: "Escolher um instrumento",
+      category: "instrumentos",
+      summary:
+        "Indicador, fita, pHmetro, termômetro e condutivímetro oferecem evidências diferentes.",
+      purpose:
+        "Escolha a técnica pela pergunta da investigação, pela grandeza medida e pela resolução disponível.",
+      steps: [
+        "Confira quais instrumentos aparecem em Ver → Medir.",
+        "Leia como usar e quais limites a técnica apresenta.",
+        "Meça no recipiente em foco e identifique a técnica ao comparar resultados.",
+      ],
+      example: "",
+      related: [
+        "indicadores",
+        "fita",
+        "phmetro",
+        "condutividade",
+        "temperatura",
+      ],
+      keywords: ["instrumento", "aparelho", "técnica"],
+      details: [],
+      diagram: "instruments",
+    },
+    {
+      id: "indicadores",
+      title: "Indicadores ácido-base",
+      category: "instrumentos",
+      summary:
+        "Um indicador adicionado à solução muda de cor em uma faixa de pH.",
+      purpose:
+        "É útil para observar tendências e regiões de viragem; a cor não equivale a uma leitura numérica precisa.",
+      steps: [
+        "Abra Montagem → Preparo e escolha um indicador.",
+        "Observe a cor junto ao recipiente e leia seu nome.",
+        "Adicione reagente e compare as mudanças com a faixa do indicador.",
+      ],
+      example:
+        "A mesma solução pode produzir cores diferentes com indicadores distintos. Consulte a faixa de cada um.",
+      related: ["tabela-indicadores", "fita", "ph"],
+      keywords: [
+        "indicador",
+        "cor",
+        "viragem",
+        "fenolftaleína",
+        "bromotimol",
+        "repolho",
+      ],
+      details: [
+        {
+          title: "Cor própria da amostra",
+          text: "Sem indicador preserva a cor própria. Realçar indicador muda a apresentação dos pigmentos da amostra, sem alterar o equilíbrio.",
+        },
+        {
+          title: "Limitação",
+          text: "A carta é didática e as cores aproximadas. Um indicador informa uma faixa; não substitui uma análise física de uma amostra real.",
+        },
+      ],
+    },
+    {
+      id: "fita",
+      title: "Fita de pH",
+      category: "instrumentos",
+      summary:
+        "A fita de pH fornece uma estimativa aproximada pela comparação de cor.",
+      purpose:
+        "Use-a quando uma faixa de pH for suficiente ou quando for a técnica disponibilizada na atividade.",
+      steps: [
+        "Coloque o recipiente em foco e abra Ver → Medir → pH.",
+        "Toque em Mergulhar fita no recipiente.",
+        "Compare a cor com a escala de 0 a 14 e leia a estimativa.",
+        "Após adicionar reagente, mergulhe uma nova fita para obter outra leitura.",
+      ],
+      example:
+        "“≈ 4” é uma estimativa em passos de uma unidade, não uma leitura de 4,00.",
+      related: ["phmetro", "indicadores", "compactacao"],
+      keywords: [
+        "papel indicador",
+        "papel de ph",
+        "fita de ph",
+        "tira",
+        "estimativa",
+      ],
+      details: [
+        {
+          title: "Resolução e extremos",
+          text: "A resolução didática é de 1 unidade. Valores nos extremos da escala não descrevem com precisão soluções fora dessa faixa.",
+        },
+        {
+          title: "Comparar técnicas",
+          text: "Diferencie a estimativa da fita da resolução de 0,01 do [[phmetro|pHmetro]]. Mais casas na exibição não eliminam os limites do modelo.",
+        },
+      ],
+      diagram: "strip",
+    },
+    {
+      id: "phmetro",
+      title: "pHmetro",
+      category: "instrumentos",
+      summary:
+        "O pHmetro fornece uma leitura numérica de pH após a estabilização.",
+      purpose:
+        "Use-o para acompanhar variações menores do que as distinguidas pela [[fita|fita de pH]].",
+      steps: [
+        "Coloque o recipiente em foco e abra Ver → Medir → pH.",
+        "No pHmetro, toque em Medir uma vez para iniciar a leitura com o eletrodo.",
+        "Aguarde o aviso de leitura estável. O resultado é registrado.",
+        "Para acompanhar intervenções, escolha Medição contínua; encerre com Retirar eletrodo.",
+      ],
+      example:
+        "Meça antes de adicionar reagente e repita depois. No modo pontual, a leitura antiga não muda sozinha.",
+      related: ["ph", "fita", "titulacao", "tabela"],
+      keywords: [
+        "medidor de ph",
+        "ph meter",
+        "eletrodo",
+        "calibração",
+        "estabilização",
+        "medição contínua",
+      ],
+      details: [
+        {
+          title: "Como interpretar",
+          text: "A resolução exibida é de 0,01. Isso descreve a mecânica didática do instrumento, não uma garantia de exatidão para uma amostra real.",
+        },
+        {
+          title: "Calibração simulada",
+          text: "Calibrar com padrões 4,00 e 7,00 usa referências a 25 °C. Não há ruído aleatório. A estabilização é parte da interação; o equilíbrio da solução já foi calculado.",
+        },
+        {
+          title: "Leitura anterior",
+          text: "Depois de mudar o preparo ou adicionar reagente, repita a leitura pontual. No modo contínuo, novas leituras são registradas após as mudanças.",
+        },
+      ],
+      diagram: "meter",
+    },
+    {
+      id: "condutividade",
+      title: "Condutivímetro",
+      category: "instrumentos",
+      summary:
+        "O condutivímetro estima a condução elétrica da solução a partir de suas espécies iônicas.",
+      purpose:
+        "Compare a presença e as contribuições dos íons; condutividade não é sinônimo de pH.",
+      steps: [
+        "Abra Ver → Medir → Condutividade.",
+        "Toque em Medir condutividade.",
+        "Leia o resultado em µS/cm e confira se a leitura é atual ou anterior.",
+        "Após uma intervenção, meça novamente.",
+      ],
+      example:
+        "Soluções com pH semelhante podem ter condutividades diferentes por causa de sua composição iônica.",
+      related: ["especies", "temperatura", "limites"],
+      keywords: [
+        "condutividade",
+        "condutivimetro",
+        "condutimetro",
+        "condução",
+        "eletricidade",
+        "ions",
+      ],
+      details: [
+        {
+          title: "Limites",
+          text: "A estimativa ideal soma contribuições iônicas e usa mobilidades de referência a 25 °C. Algumas mobilidades são estimadas. Não se aplica uma correção térmica arbitrária.",
+        },
+      ],
+    },
+    {
+      id: "temperatura",
+      title: "Temperatura da solução",
+      category: "instrumentos",
+      summary:
+        "O termômetro registra a temperatura usada para o recipiente em foco.",
+      purpose:
+        "A temperatura da solução, o ambiente da bancada e a referência meteorológica são condições diferentes.",
+      steps: [
+        "Abra Ver → Medir → Temperatura.",
+        "Toque em Registrar temperatura.",
+        "Se o controle estiver disponível, informe um valor e aplique à solução.",
+        "Faça novas medições para comparar as condições.",
+      ],
+      example:
+        "Alterar a temperatura pode mudar a referência de neutralidade; pH neutro não é sempre exatamente 7.",
+      related: ["ph", "condutividade", "atividades"],
+      keywords: [
+        "termômetro",
+        "temperatura",
+        "ambiente",
+        "cidade",
+        "neutralidade",
+      ],
+      details: [
+        {
+          title: "Referências",
+          text: "Você pode usar a referência de 25 °C ou a temperatura do ambiente da bancada. A consulta opcional por cidade depende da internet; sem resposta, há referência de 25 °C e ajuste manual.",
+        },
+        {
+          title: "Limites térmicos",
+          text: "O modelo ajusta a autoionização da água. Ka, pKIn, Kps e mobilidades mantêm valores de referência; não há dependências térmicas inventadas.",
+        },
+      ],
+    },
+    {
+      id: "observar",
+      title: "Usar Ver → Observar",
+      category: "explorar",
+      summary:
+        "Partículas, Espécies, Equações e Transferência de próton mostram perspectivas complementares da solução.",
+      purpose:
+        "Conecte o que aparece no recipiente ao modelo de moléculas, íons e equilíbrio.",
+      steps: [
+        "Abra Ver → Observar.",
+        "Escolha uma representação disponível.",
+        "Consulte a legenda e selecione uma espécie quando o controle existir.",
+        "Compare a mesma espécie em outra representação.",
+      ],
+      example: "",
+      related: ["particulas", "especies", "equacao", "proton"],
+      keywords: ["representações", "microscópico", "macroscópico", "simbólico"],
+      details: [],
+      diagram: "representations",
+    },
+    {
+      id: "particulas",
+      title: "Partículas",
+      category: "explorar",
+      summary:
+        "A visão de partículas representa moléculas e íons de forma proporcional e simplificada.",
+      purpose:
+        "Observe quais espécies predominam e conecte-as à cor e ao equilíbrio.",
+      steps: [
+        "Abra Ver → Observar → Partículas.",
+        "Consulte a legenda e selecione a espécie que deseja destacar.",
+        "Quando disponível, compare as escalas de representação.",
+      ],
+      example: "",
+      related: ["especies", "equacao", "distribuicao"],
+      keywords: ["moléculas", "íons", "lupa", "microscópico"],
+      details: [
+        {
+          title: "Escala",
+          text: "O número de desenhos não é uma contagem literal de partículas. A escala logarítmica amplia espécies raras para que possam ser vistas.",
+        },
+      ],
+    },
+    {
+      id: "especies",
+      title: "Espécies em solução",
+      category: "explorar",
+      summary:
+        "A tabela de espécies mostra concentrações calculadas pelo modelo químico.",
+      purpose:
+        "Use fórmula, carga e predominância para interpretar a composição.",
+      steps: [
+        "Abra Ver → Observar → Espécies.",
+        "Leia a concentração em mol/L e a indicação de predominância.",
+        "Selecione uma espécie para conectá-la às demais representações.",
+      ],
+      example: "",
+      related: ["particulas", "distribuicao", "calcular"],
+      keywords: ["espécie", "concentração", "carga", "predominância"],
+      details: [
+        {
+          title: "Cálculo não é medição",
+          text: "Esses valores resultam do modelo. Uma leitura instrumental só existe depois de usar a técnica correspondente.",
+        },
+      ],
+    },
+    {
+      id: "equacao",
+      title: "Equações",
+      category: "explorar",
+      summary:
+        "As equações descrevem simbolicamente o equilíbrio e as espécies envolvidas.",
+      purpose:
+        "Use-as para relacionar ácidos, bases e produtos aos dados da solução.",
+      steps: [
+        "Abra Ver → Observar → Equações.",
+        "Identifique reagentes, produtos e as informações quantitativas disponíveis no módulo.",
+        "Compare a equação com Partículas e Espécies.",
+      ],
+      example: "",
+      related: ["proton", "calcular", "especies"],
+      keywords: ["equação", "reação", "equilíbrio", "neutralização"],
+      details: [
+        {
+          title: "Interpretação",
+          text: "Uma equação é uma representação do sistema químico. Ela não é um registro instrumental nem comprova que uma medição foi feita.",
+        },
+      ],
+    },
+    {
+      id: "proton",
+      title: "Transferência de próton",
+      category: "explorar",
+      summary: "Na descrição de Brønsted, o ácido doa H⁺ e a base recebe H⁺.",
+      purpose:
+        "Compare os pares ácido-base conjugados, que diferem por um próton.",
+      steps: [
+        "Abra Ver → Observar → Transferência de próton.",
+        "Identifique doador e receptor.",
+        "Selecione um componente e conecte-o às outras representações.",
+      ],
+      example: "",
+      related: ["equacao", "especies"],
+      keywords: ["proton", "prótons", "Brønsted", "par conjugado"],
+      details: [
+        {
+          title: "Em água",
+          text: "A água pode receber o próton e formar H₃O⁺. Na neutralização, H₃O⁺ doa o próton e OH⁻ o recebe, formando água.",
+        },
+      ],
+    },
+    {
+      id: "analisar",
+      title: "Usar Ver → Analisar",
+      category: "calcular",
+      summary:
+        "Gráfico, ΔpH/ΔV, Distribuição de espécies, Histórico e Tabela ajudam a interpretar a investigação.",
+      purpose:
+        "Gráfico e derivada usam leituras registradas; distribuição descreve o equilíbrio calculado; histórico organiza eventos.",
+      steps: [
+        "Abra Ver → Analisar e escolha uma ferramenta.",
+        "Confira a origem dos dados antes de interpretar.",
+        "Use Expandir quando a tabela ou o gráfico precisar de mais espaço.",
+      ],
+      example: "",
+      related: ["grafico", "derivada", "distribuicao", "historico", "tabela"],
+      keywords: ["análise", "analisar", "dados"],
+      details: [],
+    },
+    {
+      id: "grafico",
+      title: "Gráfico de pH por volume",
+      category: "calcular",
+      summary:
+        "O gráfico conecta medições de pH ao volume de reagente adicionado.",
+      purpose:
+        "Compare o avanço de uma titulação usando evidências registradas, não uma curva prevista automaticamente.",
+      steps: [
+        "Faça pelo menos duas medições com uma técnica de pH disponível.",
+        "Adicione reagente entre leituras para acompanhar a variação com o volume.",
+        "Abra Ver → Analisar → Gráfico.",
+        "Leia o volume adicionado no eixo horizontal e o pH no vertical.",
+      ],
+      example:
+        "Fita usa linha tracejada; pHmetro, linha contínua. Compare séries da mesma técnica e do mesmo preparo.",
+      related: ["titulacao", "derivada", "tabela"],
+      keywords: ["gráfico", "curva", "eixo", "volume", "ponto"],
+      details: [
+        {
+          title: "Origem dos pontos",
+          text: "Sem leituras suficientes, o gráfico informa o que falta. As linhas apenas conectam registros. Mudanças de preparo e de técnica separam séries.",
+        },
+      ],
+    },
+    {
+      id: "derivada",
+      title: "ΔpH/ΔV: mudança por volume",
+      category: "calcular",
+      summary:
+        "ΔpH/ΔV mostra quanto o pH mudou entre leituras para cada volume adicionado.",
+      purpose:
+        "Valores mais intensos indicam regiões onde uma pequena adição produziu maior mudança de pH.",
+      steps: [
+        "Registre leituras sucessivas com a mesma técnica, em volumes distintos.",
+        "Abra Ver → Analisar → ΔpH/ΔV.",
+        "Compare a variação com o gráfico e os dados de origem.",
+      ],
+      example:
+        "Se o pH muda de 4 para 5 após 1 mL, a razão nesse intervalo é 1 unidade de pH por mL. É um exemplo ilustrativo.",
+      related: ["grafico", "titulacao", "compactacao"],
+      keywords: ["derivada", "delta", "ΔpH/ΔV", "salto", "equivalência"],
+      details: [
+        {
+          title: "Resolução importa",
+          text: "Intervalos de volume nulo não produzem essa razão. A derivada usa dados brutos sucessivos da mesma técnica; a resolução da fita pode gerar degraus. Um pico isolado exige interpretação, não identifica sozinho uma equivalência exata.",
+        },
+      ],
+    },
+    {
+      id: "distribuicao",
+      title: "Distribuição de espécies",
+      category: "calcular",
+      summary:
+        "A distribuição compara frações de espécies de um mesmo sistema químico.",
+      purpose:
+        "Observe como as formas ácido-base variam e qual delas predomina.",
+      steps: [
+        "Abra Ver → Analisar → Distribuição de espécies.",
+        "Leia as frações ou percentuais e selecione a espécie de interesse.",
+        "Compare com Espécies e Equações.",
+      ],
+      example: "",
+      related: ["especies", "equacao", "limites"],
+      keywords: ["distribuição", "fração", "percentual"],
+      details: [
+        {
+          title: "Disponibilidade",
+          text: "A representação depende da presença de uma família química apropriada na solução. Os percentuais vêm do equilíbrio calculado, não de medições instrumentais.",
+        },
+      ],
+    },
+    {
+      id: "historico",
+      title: "Histórico da sessão",
+      category: "calcular",
+      summary: "O Histórico mostra a sequência cronológica de ações e eventos.",
+      purpose:
+        "Consulte o que foi feito e em que ordem para interpretar as evidências.",
+      steps: [
+        "Abra Dados → Histórico ou Ver → Analisar → Histórico.",
+        "Leia os eventos em ordem e relacione-os às intervenções.",
+        "Use a Tabela para consultar medições de forma estruturada.",
+      ],
+      example: "",
+      related: ["tabela", "caderno", "relatorios"],
+      keywords: ["histórico", "eventos", "cronologia", "registro"],
+      details: [
+        {
+          title: "Histórico não é Caderno",
+          text: "O Histórico não é compactado e não é copiado automaticamente para o Caderno. O [[caderno|Caderno]] reúne registros que você escolhe guardar.",
+        },
+      ],
+    },
+    {
+      id: "tabela",
+      title: "Tabela de medições",
+      category: "calcular",
+      summary:
+        "A Tabela organiza as leituras registradas com técnica, valor e contexto.",
+      purpose:
+        "Compare resultados sem confundir medição com a sequência de eventos do Histórico.",
+      steps: [
+        "Abra Dados → Tabela ou Ver → Analisar → Tabela.",
+        "Escolha Compacta para agrupar leituras semelhantes ou Completa para ver cada registro.",
+        "Use Ver medições para expandir um grupo e Expandir para ampliar o painel.",
+        "Quando necessário, exporte CSV com os dados brutos.",
+      ],
+      example: "",
+      related: ["compactacao", "historico", "relatorios"],
+      keywords: ["tabela", "medições", "CSV", "exportar", "dados"],
+      details: [],
+      diagram: "compaction",
+    },
+    {
+      id: "compactacao",
+      title: "Tabela compacta e completa",
+      category: "calcular",
+      summary:
+        "A tabela compacta reúne medições semelhantes sem apagar os dados originais.",
+      purpose:
+        "A leitura fica mais curta, preservando contagem, faixa e acesso a cada registro.",
+      steps: [
+        "Na Tabela, escolha Compacta.",
+        "Confira a quantidade de leituras e a faixa do grupo.",
+        "Use Ver medições para inspecionar seus registros.",
+        "Escolha Completa para voltar à lista individual.",
+      ],
+      example:
+        "Leituras repetidas com a mesma técnica e condições podem formar um grupo. Trocar o instrumento ou o preparo separa os registros.",
+      related: ["tabela", "derivada", "fita", "phmetro"],
+      keywords: [
+        "compactação",
+        "agrupar",
+        "agrupamento",
+        "expandir",
+        "completa",
+        "compacta",
+        "repetidos",
+      ],
+      details: [
+        {
+          title: "Critério do agrupamento",
+          text: "A compactação considera a resolução do instrumento e o contexto da medição, agrupando apenas registros contíguos compatíveis. Não une indiscriminadamente toda a sessão.",
+        },
+        {
+          title: "Dados preservados",
+          text: "Os dados brutos não são apagados. Cálculos, derivada e exportação CSV continuam usando os registros originais.",
+        },
+      ],
+      diagram: "compaction",
+    },
+    {
+      id: "titulacao",
+      title: "Titulação ácido-base",
+      category: "medir",
+      summary:
+        "Uma titulação acompanha a resposta da solução à adição gradual de um reagente.",
+      purpose: "Relacione volume adicionado, mudança de cor e leituras de pH.",
+      steps: [
+        "Confira solução inicial, reagente e condições de preparo.",
+        "Faça uma leitura inicial com a técnica disponível.",
+        "Adicione uma dose conhecida e meça novamente; repita em passos menores perto de uma mudança rápida.",
+        "Interprete a Tabela, o Gráfico e, quando disponível, ΔpH/ΔV.",
+      ],
+      example:
+        "Use um [[roteiros|Roteiro Experimental]] para uma investigação orientada, ou uma [[montagens|Montagem pronta]] para iniciar a exploração.",
+      related: ["conta-gotas", "phmetro", "grafico", "derivada"],
+      keywords: [
+        "titulação",
+        "titular",
+        "titulante",
+        "equivalência",
+        "ácido base",
+      ],
+      details: [
+        {
+          title: "Cor e equivalência",
+          text: "O ponto de viragem depende do indicador. A interpretação da equivalência depende do sistema e das evidências; não presuma que toda equivalência tem pH 7.",
+        },
+      ],
+      diagram: "titration",
+    },
+    {
+      id: "montagens",
+      title: "Montagens prontas",
+      category: "montagens",
+      summary:
+        "Uma Montagem pronta é uma bancada pré-configurada para exploração.",
+      purpose:
+        "Use-a para começar rapidamente e comparar condições. Ela não exige a estrutura de identificação e relatório de um [[roteiros|Roteiro Experimental]].",
+      steps: [
+        "Use Abrir Montagens prontas para entrar no catálogo.",
+        "Escolha uma montagem e leia o que ela propõe observar.",
+        "Monte na bancada e explore os recipientes preparados.",
+        "Para retomar o experimento, use Laboratório na navegação.",
+      ],
+      example:
+        "Uma montagem com indicadores diferentes permite comparar as cores em condições preparadas.",
+      related: ["roteiros", "bancada"],
+      keywords: [
+        "montagem",
+        "montagens prontas",
+        "pré-configurada",
+        "catálogo",
+      ],
+      details: [],
+      actions: [
+        {
+          label: "Abrir Montagens prontas",
+          route: "#/montagens",
+        },
+      ],
+    },
+    {
+      id: "roteiros",
+      title: "Roteiros Experimentais",
+      category: "roteiros",
+      summary:
+        "Um Roteiro Experimental é uma atividade estruturada com objetivo e tarefas de investigação.",
+      purpose:
+        "Cada roteiro pertence a um único módulo e conduz à coleta e interpretação de evidências.",
+      steps: [
+        "Abra o catálogo de Roteiros Experimentais e selecione uma ficha.",
+        "Leia objetivo, tarefas e montagem. Preencha a identificação solicitada.",
+        "Use Montar na bancada para iniciar a experiência.",
+        "Realize a investigação e abra o Relatório da Experiência.",
+      ],
+      example:
+        "A coleção contempla as substâncias do catálogo em investigações temáticas. Escolha pelo objetivo e pelo módulo indicado.",
+      related: ["montagens", "relatorios", "atividades"],
+      keywords: [
+        "roteiro",
+        "experimento",
+        "atividade estruturada",
+        "identificação",
+        "ficha",
+      ],
+      details: [
+        {
+          title: "Montagem ou Roteiro?",
+          text: "Montagem pronta configura a bancada para explorar. Roteiro acrescenta objetivo, tarefas e registro da experiência. Esta página explica o recurso; o catálogo é aberto pelo botão acima.",
+        },
+      ],
+      diagram: "report",
+      actions: [
+        {
+          label: "Abrir Roteiros Experimentais",
+          route: "#/roteiros",
+        },
+      ],
+    },
+    {
+      id: "aprender",
+      title: "Temas e Missões",
+      category: "roteiros",
+      summary:
+        "Temas apresentam conceitos; Missões propõem problemas e objetivos de investigação.",
+      purpose:
+        "Escolha a abordagem que ajuda sua pergunta, sem uma sequência obrigatória entre módulos.",
+      steps: [
+        "Em Aprender, escolha um Tema para consultar conceitos e conexões.",
+        "Em Missões, leia o problema e os objetivos.",
+        "Investigue e registre evidências. Uma missão concluída pode ser refeita.",
+      ],
+      example: "",
+      related: ["comecar", "prever", "caderno"],
+      keywords: ["tema", "missão", "missões", "aprender", "objetivo"],
+      details: [],
+      actions: [
+        {
+          label: "Abrir Aprender",
+          route: "#/aprender",
+        },
+        {
+          label: "Abrir Missões",
+          route: "#/missoes",
+        },
+      ],
+    },
+    {
+      id: "relatorios",
+      title: "Relatórios",
+      category: "relatorios",
+      summary:
+        "O relatório reúne a montagem, os dados obtidos e a interpretação escrita da investigação.",
+      purpose:
+        "Uma experiência formal gera Relatório da Experiência; a bancada livre gera Relatório da Bancada, sem inventar objetivo ou pergunta.",
+      steps: [
+        "Abra Dados → Abrir relatório.",
+        "Confira a identificação, a montagem e os resultados automáticos.",
+        "Preencha observações, análise, interpretação, resposta à investigação e conclusão.",
+        "Escolha Relatório completo, Para preencher à mão ou Atividade de análise (Professor). Nos modos em papel, selecione 5, 10, 15, 20, 25 ou uma quantidade personalizada de 5 a 60 linhas por campo. O padrão é 10.",
+        "Na Atividade de análise, escolha as condições, dados, tabela, gráficos e cálculos incluídos, e quais campos autorais ficarão em branco. Use medições da bancada ou insira dados explicitamente hipotéticos.",
+        "Após novas medições, use Atualizar dados da bancada. Use Imprimir / Salvar como PDF ou registre no Caderno.",
+      ],
+      example:
+        "Use a impressão preenchida para entregar a investigação, ou Para preencher à mão, preservando dados e deixando apenas campos autorais vazios.",
+      related: ["roteiros", "tabela", "caderno"],
+      keywords: ["relatório", "imprimir", "exportar", "PDF", "conclusão"],
+      details: [
+        {
+          title: "Dados e texto",
+          text: "Condições iniciais, reagente, medições, tabelas, gráficos e estado final vêm do experimento. A tabela preserva técnicas e contextos, e a compactação não altera os dados brutos. O Histórico cronológico permanece em Dados → Histórico. Identificação e textos autorais são salvos no navegador.",
+        },
+        {
+          title: "Imprimir ou salvar PDF",
+          text: "A impressão usa um formato próprio para papel. Na janela de impressão do navegador, escolha uma impressora ou Salvar como PDF, se essa opção estiver disponível.",
+        },
+      ],
+      diagram: "report",
+      actions: [
+        {
+          label: "Abrir relatório atual",
+          route: "#/relatorio",
+        },
+      ],
+    },
+    {
+      id: "caderno",
+      title: "Caderno de investigação",
+      category: "caderno",
+      summary:
+        "Registros pessoais de investigações, hipóteses, descobertas e práticas.",
+      purpose:
+        "Guarde notas pessoais. Ao encerrar uma atividade com dados, a Prática realizada fica registrada automaticamente, com Abrir dados e Abrir relatório.",
+      steps: [
+        "Abra Caderno pela navegação.",
+        "Escreva uma anotação ou consulte os registros existentes.",
+        "Filtre o tipo de registro quando precisar localizar uma investigação.",
+        "Exporte CSV ou imprima para manter uma cópia.",
+      ],
+      example:
+        "Uma exploração livre só vai para o Caderno quando você pede para registrar.",
+      related: ["historico", "relatorios", "persistencia"],
+      keywords: ["caderno", "anotação", "notas", "salvar"],
+      details: [
+        {
+          title: "Quatro recursos diferentes",
+          text: "Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda notas pessoais e práticas realizadas, sem copiar o relatório inteiro como texto.",
+        },
+      ],
+      actions: [
+        {
+          label: "Abrir Caderno",
+          route: "#/caderno",
+        },
+      ],
+    },
+    {
+      id: "acessibilidade",
+      title: "Ajustar a experiência de uso",
+      category: "acessibilidade",
+      summary:
+        "Tema, contraste, texto, cores e movimento podem ser adaptados no painel Acessibilidade.",
+      purpose:
+        "Escolha uma apresentação confortável para ler e interagir; os nomes e símbolos acompanham as informações de cor.",
+      steps: [
+        "Abra Acessibilidade no cabeçalho ou no Menu.",
+        "Ajuste tema claro ou escuro, contraste, tamanho e espaçamento do texto.",
+        "Confira os filtros de cor e a opção de reduzir movimento.",
+        "Use Tab para percorrer os controles e veja [[atalhos|Navegação por teclado]].",
+      ],
+      example: "",
+      related: ["atalhos", "app"],
+      keywords: [
+        "acessível",
+        "contraste",
+        "daltonismo",
+        "tema claro",
+        "escuro",
+        "fonte",
+        "movimento",
+        "Libras",
+      ],
+      details: [
+        {
+          title: "Libras e internet",
+          text: "O tradutor VLibras é opcional e depende da internet. O restante da consulta essencial do Manual funciona offline junto ao aplicativo.",
+        },
+      ],
+      actions: [
+        {
+          label: "Abrir Acessibilidade",
+          command: "a11y",
+        },
+      ],
+    },
+    {
+      id: "atalhos",
+      title: "Navegação por teclado",
+      category: "acessibilidade",
+      summary:
+        "Use as teclas de navegação dos controles para percorrer o SIAB sem depender do mouse.",
+      purpose:
+        "O foco visível indica qual link, botão ou campo vai responder à próxima ação.",
+      steps: [
+        "Use Tab para avançar e Shift+Tab para voltar entre controles.",
+        "Use Enter em links; Enter ou Espaço ativam botões e expansores.",
+        "Use as setas nas abas da família Ver.",
+        "Use Esc para fechar diálogos e painéis contextuais; no Manual, Esc fecha o índice móvel aberto.",
+      ],
+      example: "",
+      related: ["acessibilidade", "bancada"],
+      keywords: [
+        "teclado",
+        "atalho",
+        "Tab",
+        "Shift",
+        "Enter",
+        "Espaço",
+        "Esc",
+        "setas",
+      ],
+      details: [],
+    },
+    {
+      id: "problemas",
+      title: "Ajuda e solução de problemas",
+      category: "problemas",
+      summary:
+        "Encontre o motivo de uma opção ausente ou de um resultado que ainda não apareceu.",
+      purpose:
+        "Uma restrição da atividade pode ser intencional. Confira o contexto antes de reiniciar sua investigação.",
+      steps: [
+        "Identifique o recipiente em foco e o módulo atual.",
+        "Confira se está em uma atividade enviada pelo professor.",
+        "Consulte a dúvida abaixo e siga o próximo passo indicado.",
+      ],
+      example: "",
+      related: ["atividades", "grafico", "compactacao", "persistencia"],
+      keywords: ["erro", "problema", "não aparece", "não consigo", "travado"],
+      details: [
+        {
+          title: "Não consigo alterar a solução",
+          text: "Em uma atividade enviada pelo professor, o preparo pode estar definido. Consulte Montagem → Resumo e as orientações. Isso faz parte da configuração da atividade.",
+        },
+        {
+          title: "Um instrumento não aparece",
+          text: "Só aparecem instrumentos disponibilizados para o contexto. Confira Ver → Medir e consulte o professor se a investigação pedir uma técnica que não foi oferecida.",
+        },
+        {
+          title: "Não consigo abrir outro Roteiro",
+          text: "Uma atividade restrita mantém você na investigação atual. Para sair, use Encerrar atividade e confirme, quando for o momento apropriado.",
+        },
+        {
+          title: "O gráfico ainda não apareceu",
+          text: "Faça ao menos duas leituras com uma técnica de pH disponível. Para acompanhar volume e calcular ΔpH/ΔV, adicione reagente entre as leituras. Veja [[grafico|Gráfico de pH por volume]].",
+        },
+        {
+          title: "Minha tabela está compactada",
+          text: "Isso é uma forma de apresentar leituras semelhantes. Use Completa ou Ver medições; os dados originais foram preservados. Veja [[compactacao|Tabela compacta e completa]].",
+        },
+        {
+          title: "Vejo uma leitura anterior",
+          text: "O valor foi registrado antes da última intervenção. Faça nova medição pontual ou use a medição contínua do pHmetro, quando disponível.",
+        },
+      ],
+    },
+    {
+      id: "atividades",
+      title: "Atividades por link e modo restrito",
+      category: "problemas",
+      summary:
+        "Em atividades enviadas pelo professor, algumas opções ficam indisponíveis por fazerem parte da configuração.",
+      purpose:
+        "O ambiente concentra a investigação nos recursos escolhidos; uma opção ausente não significa necessariamente erro.",
+      steps: [
+        "Abra o link recebido e leia a apresentação.",
+        "Inicie a atividade e consulte a montagem preparada.",
+        "Use os botões de ajuda para dúvidas curtas, sem abandonar o experimento.",
+        "Use Finalizar para concluir a prática e abrir seu relatório. Encerrar atividade sai do contexto e volta ao Início, preservando os dados no Caderno.",
+      ],
+      example: "",
+      related: ["problemas", "roteiros", "relatorios"],
+      keywords: [
+        "restrito",
+        "restrita",
+        "permissão",
+        "link do aluno",
+        "professor",
+        "bloqueado",
+      ],
+      details: [
+        {
+          title: "Retomar ou iniciar outra tentativa",
+          text: "Ao reabrir o mesmo link, escolha Continuar sessão ou Iniciar nova sessão. Se já finalizou, escolha Ver relatório anterior ou Iniciar nova tentativa. A nova tentativa recebe uma identidade própria; os dados e relatórios anteriores continuam separados.",
+        },
+        {
+          title: "Encerrar com ou sem dados",
+          text: "Com dados, você pode continuar, abrir o relatório antes de sair ou encerrar. Encerrar atualiza a mesma Prática realizada no Caderno, sem duplicá-la. Sem dados, a confirmação é simples e nenhum registro vazio é criado. A preferência de inicialização permanece igual.",
+        },
+        {
+          title: "Ajuda durante a atividade",
+          text: "Em modo restrito, a ajuda contextual continua disponível, mas não oferece acesso ao Manual completo nem a outras áreas. As opções só reaparecem quando você sai da atividade pela ação própria.",
+        },
+      ],
+    },
+    {
+      id: "professor",
+      title: "Preparar uma atividade",
+      category: "professor",
+      summary:
+        "A Área do Professor reúne configuração, link do aluno e orientações para conduzir a investigação.",
+      purpose:
+        "Prepare uma Missão, um Roteiro Experimental ou uma Montagem pronta com os recursos adequados à turma.",
+      steps: [
+        "Abra a Área do Professor e escolha o tipo e o item da atividade.",
+        "Configure identificação, módulo, temperatura, instrumentos, representações, análises e permissões oferecidas.",
+        "Gere o link e use Abrir como aluno para conferir a experiência configurada.",
+        "Consulte Orientações e a impressão do guia na própria Área do Professor.",
+      ],
+      example:
+        "Atividades recentes podem ser reabertas ou duplicadas para preparar outra configuração.",
+      related: ["atividades", "roteiros", "projetor"],
+      keywords: [
+        "docente",
+        "professor",
+        "criar atividade",
+        "configurar",
+        "gerar link",
+        "orientações",
+        "impressão",
+      ],
+      details: [
+        {
+          title: "Orientações do professor",
+          text: "Referências de resposta e orientações específicas ficam na Área do Professor. Esta página explica o fluxo de preparação e não reproduz resultados esperados para o estudante.",
+        },
+      ],
+      actions: [
+        {
+          label: "Abrir Área do Professor",
+          route: "#/professor",
+        },
+      ],
+    },
+    {
+      id: "projetor",
+      title: "Modo projetor",
+      category: "professor",
+      summary:
+        "O modo projetor amplia a apresentação da mesma bancada para uso coletivo.",
+      purpose:
+        "Apresente o experimento com melhor leitura a distância, mantendo as ferramentas contextuais.",
+      steps: [
+        "Ative Menu → Preferências → Apresentação · Modo projetor, ou use o controle da Área do Professor.",
+        "Abra apenas Montagem, Ver ou Dados conforme a explicação.",
+        "Desative o modo ao voltar ao uso individual.",
+      ],
+      example: "",
+      related: ["bancada", "acessibilidade"],
+      keywords: ["projeção", "projetor", "aula", "ampliar"],
+      details: [],
+    },
+    {
+      id: "app",
+      title: "Instalação e uso offline",
+      category: "comecar",
+      summary:
+        "O Manual essencial acompanha o aplicativo e pode ser consultado sem conexão após o preparo do acesso offline.",
+      purpose:
+        "Use a versão instalada ou o arquivo HTML independente conforme a forma de acesso disponível.",
+      steps: [
+        "Na versão oferecida por um endereço compatível, abra o aplicativo uma vez conectado.",
+        "Use Instalar quando o navegador oferecer essa opção.",
+        "Teste a abertura sem conexão antes da aula.",
+        "O HTML independente pode ser aberto diretamente no navegador e também inclui este Manual.",
+      ],
+      example: "",
+      related: ["persistencia", "acessibilidade"],
+      keywords: [
+        "offline",
+        "sem internet",
+        "PWA",
+        "instalar",
+        "standalone",
+        "arquivo HTML",
+      ],
+      details: [
+        {
+          title: "Recursos externos",
+          text: "A consulta meteorológica e o VLibras dependem da internet. Não são necessários para ler o Manual ou executar a bancada.",
+        },
+        {
+          title: "Instalação disponível",
+          text: "A opção de instalar depende do navegador e da forma como o aplicativo foi disponibilizado. Abrir o HTML como arquivo local não instala a PWA.",
+        },
+      ],
+    },
+    {
+      id: "persistencia",
+      title: "Guardar e recuperar registros",
+      category: "comecar",
+      summary:
+        "O SIAB guarda preferências, Caderno e relatórios no navegador utilizado.",
+      purpose: "Mantenha cópias exportadas do que precisa conservar ou enviar.",
+      steps: [
+        "Confira os registros no Caderno e os textos no relatório.",
+        "Use as opções de exportação e impressão para guardar uma cópia.",
+        "Se aparecer um aviso de armazenamento indisponível ou cheio, exporte antes de fechar.",
+        "Para retomar uma atividade, conserve também o link recebido.",
+      ],
+      example: "",
+      related: ["caderno", "relatorios", "app"],
+      keywords: [
+        "salvamento",
+        "salvar",
+        "recuperar",
+        "armazenamento",
+        "backup",
+      ],
+      details: [
+        {
+          title: "Mesmo navegador",
+          text: "Limpar os dados do site ou usar outro navegador pode impedir a retomada dos registros locais. Uma exportação é a forma de manter uma cópia independente.",
+        },
+      ],
+    },
+    {
+      id: "limites",
+      title: "O que o modelo representa",
+      category: "calcular",
+      summary:
+        "O SIAB é um modelo didático de soluções aquosas e equilíbrio ácido-base.",
+      purpose:
+        "Use as representações para investigar relações, sem tratar o resultado como medição de uma amostra física.",
+      steps: [
+        "Confira a classificação da solução ou amostra utilizada.",
+        "Diferencie cálculo do modelo e leitura instrumental simulada.",
+        "Interprete os resultados considerando as condições de preparo e os limites apresentados.",
+      ],
+      example: "",
+      related: ["calcular", "frascos", "precipitacao"],
+      keywords: ["modelo", "limitação", "ideal", "precisão"],
+      details: [
+        {
+          title: "Hipóteses",
+          text: "O equilíbrio é imediato e usa conservação de matéria e balanço de cargas em solução ideal. O pH de uma mistura não é uma média dos pHs.",
+        },
+        {
+          title: "Não representado",
+          text: "O modelo não inclui atividades químicas, cinética, aquecimento de reação ou troca gasosa aberta. Amostras representativas têm composição parcial.",
+        },
+      ],
+    },
+    {
+      id: "precipitacao",
+      title: "Precipitação e redissolução",
+      category: "calcular",
+      summary:
+        "Algumas suspensões de hidróxidos podem apresentar sólido e mudanças de solubilidade.",
+      purpose:
+        "Observe o sólido quando o sistema químico utilizado incluir esse comportamento.",
+      steps: [
+        "Escolha uma solução ou suspensão apropriada do catálogo.",
+        "Observe a representação de sólido e faça intervenções permitidas.",
+        "Compare a cena com Espécies e Equações.",
+      ],
+      example: "",
+      related: ["limites", "frascos", "observar"],
+      keywords: [
+        "precipitação",
+        "precipitado",
+        "solubilidade",
+        "sólido",
+        "Kps",
+        "redissolução",
+      ],
+      details: [
+        {
+          title: "Limite do recurso",
+          text: "O modelo representa sistemas específicos com produto de solubilidade. Não há um banco geral de precipitados para todas as combinações de frascos.",
+        },
+      ],
+    },
+    {
+      id: "frascos",
+      title: "Biblioteca de substâncias",
+      category: "bancada",
+      summary:
+        "Consulte as substâncias disponíveis e sua classificação no modelo.",
+      purpose:
+        "A biblioteca é uma referência explicativa. Escolha frascos em Montagem → Preparo para montar um experimento.",
+      steps: [
+        "Localize a substância e confira seu tipo.",
+        "Interprete amostras representativas como aproximações de composição.",
+        "Abra a bancada para preparar a solução nas condições que deseja investigar.",
+      ],
+      example: "",
+      related: ["prateleira", "limites"],
+      keywords: [
+        "substância",
+        "catálogo",
+        "biblioteca",
+        "frascos",
+        "ácidos",
+        "bases",
+        "sais",
+      ],
+      details: [],
+      generated: "substances",
+      actions: [
+        {
+          label: "Ir à bancada",
+          route: "#/laboratorio",
+        },
+      ],
+    },
+    {
+      id: "tabela-indicadores",
+      title: "Biblioteca de indicadores",
+      category: "instrumentos",
+      summary:
+        "Compare nomes, faixas de viragem e cores dos indicadores presentes no SIAB.",
+      purpose:
+        "Use a faixa para escolher um indicador coerente com a investigação.",
+      steps: [
+        "Consulte a faixa e os nomes das cores na tabela.",
+        "Em Montagem → Preparo, selecione o indicador desejado.",
+        "Compare a cor observada e a leitura de uma técnica disponível.",
+      ],
+      example: "",
+      related: ["indicadores", "fita", "titulacao"],
+      keywords: [
+        "biblioteca indicadores",
+        "carta de cores",
+        "faixa de viragem",
+      ],
+      details: [
+        {
+          title: "Carta didática",
+          text: "Cores e faixas são referências de interpretação no simulador. Não use esta carta como instrumento físico de análise.",
+        },
+      ],
+      generated: "indicators",
+    },
+  ],
+  aliases: {
+    layout: "bancada",
+    montagem: "bancada",
+    leitura: "ph",
+    ver: "painel-medir",
+    representacoes: "observar",
+    phmeter: "phmetro",
+    "ph-strip": "fita",
+    titration: "titulacao",
+    mounts: "montagens",
+    reports: "relatorios",
+    equacoes: "equacao",
   },
-  {
-    id: 'menu', titulo: 'Menu ☰, modos e tela', alvo: '#menu-btn',
-    resumo: 'O que há no menu lateral, como ligar missões e desafios e como a tela se adapta.',
-    blocos: [
-      { p: 'O botão ☰, no canto esquerdo do cabeçalho, abre o menu lateral. Ele fecha com ×, com Esc, com um toque fora dele ou depois que você escolhe um destino.' },
-      { lista: [
-        'Navegar: bancada de testes, manual e caderno.',
-        'Roteiros de teste: a seta ao lado mostra os 10 roteiros; tocar em um monta os tubos na bancada (dá para desfazer).',
-        'Modos: o interruptor “Missões, desafios e professor” mostra as 14 missões guiadas, os 5 jogos e o painel do professor. Desligado, fica só a bancada. A escolha fica salva. Um link de aula enviado pelo professor liga esse modo sozinho.',
-        'Preferências → Acessibilidade: interruptores de tema, contraste, texto, animações, cores, som e Libras (veja “Acessibilidade e teclado”).',
-        'Aplicativo: tour guiado da bancada, instalar o app, ideias para a aula e informações sobre o SIAB.'
-      ] },
-      { lista: [
-        'Cabeçalho: “SIAB” com o nome por extenso, Simulador Interativo de Ácidos e Bases. A aba destacada (ou, no celular, a barra de baixo) mostra em que parte você está. Se faltar espaço (texto ampliado), os botões ficam só com o ícone e as abas descem para uma segunda linha.',
-        'Computador: o botão com seta ao lado de “Prateleira” e de “VER” recolhe o painel num trilho de ícones, e a bancada ganha espaço (a escolha fica salva). Tocar num ícone traz só aquela parte, num cartão flutuando por cima da bancada, sem mudar o tamanho dela: dá, por exemplo, para deixar o gráfico flutuando e gotejar enquanto ele muda. O mesmo ícone, o ×, Esc ou um toque na bancada (no caso da prateleira) fecham o cartão. O primeiro ícone do trilho, ou o botão com seta no cartão, fixa o painel de novo.',
-        'Celular e tablet: a barra de chips (Tubo em foco, Visão geral, Gráfico, Partículas, Equação, Histórico) rola para os lados e fica presa abaixo do cabeçalho.',
-        'Celular: a prateleira abre por baixo e fecha sozinha depois que você escolhe um frasco, para o resultado aparecer na hora.'
-      ] }
-    ]
-  },
-  {
-    id: 'modulos', titulo: 'Módulos: Explorar, Medir e Calcular', alvo: '#modulos', painel: true,
-    resumo: 'O que cada módulo propõe e o que ele libera na bancada.',
-    blocos: [
-      { p: 'A bancada tem três módulos, do qualitativo ao quantitativo. A química é sempre a mesma (o mesmo balanço de cargas calcula o pH); o módulo só decide quantos controles e números aparecem, para não sobrecarregar quem está começando.' },
-      { lista: [
-        'Explorar (módulo 1): frascos, indicadores e vidraria. Você observa a cor, o pH e as partículas; os números do preparo ficam escondidos.',
-        'Medir (módulo 2): acrescenta os ajustes de diluição, volume inicial e volume da gota. O gráfico prevê o volume de equivalência e a Equação mostra pOH e pH + pOH.',
-        'Calcular (módulo 3): acrescenta as concentrações em mol/L no preparo; a Equação mostra [H₃O⁺], [OH⁻], Ka ou Kb, grau de ionização α e n = C · V; a lupa mostra a concentração de cada espécie.'
-      ] },
-      { passos: [
-        'Toque no nome de um módulo para abrir o cartão dele.',
-        'Leia o que ele propõe e o que libera.',
-        'Toque em “Ativar módulo”. O selo “Ativo” mostra o módulo em uso, e a barra da bancada também (por exemplo, “MÓDULO · MEDIR”).'
-      ] },
-      { dica: 'Trocar de módulo não mexe nos tubos: as gotas e as medidas continuam como estavam.' }
-    ]
-  },
-  {
-    id: 'prateleira', titulo: 'Prateleira de frascos', alvo: '#painel-laboratorio', painel: true,
-    resumo: 'Menus Tubo e Conta-gotas, busca e grupos de frascos.',
-    blocos: [
-      { p: 'A prateleira guarda cerca de 140 frascos, em 16 grupos recolhíveis: frutas e sucos; alimentos e bebidas; casa, limpeza e higiene; saúde e farmácia; corpo humano; água e ambiente; ácidos fortes; ácidos fracos; ácidos polipróticos; bases fortes; bases fracas; sais; sais de metais (cátions ácidos); tampões; aminoácidos; e referência (água pura). A busca procura no nome, na fórmula e no tipo (experimente “sal ácido”, “tampão” ou “NH₄”).' },
-      { lista: [
-        'Ácidos e bases fortes e fracos: HNO₃, HBr, HClO₄, H₂SO₄, KOH, Ba(OH)₂; ácidos fórmico, benzoico, láctico, fluorídrico, hipocloroso, bórico; aminas (metilamina, piridina, anilina…) e o Tris dos laboratórios de biologia.',
-        'Ácidos polipróticos: H₃PO₄, H₂SO₃, ácido carbônico, oxálico, cítrico, tartárico e ascórbico (vitamina C). Cada H⁺ tem seu pKa; na titulação aparecem os saltos que um indicador consegue ver.',
-        'Sais: neutros (KCl, KNO₃), ácidos (NH₄NO₃, NaHSO₄), básicos (NaF, NaClO, Na₃PO₄) e anfóteros (NaHCO₃, NaH₂PO₄, Na₂HPO₄), que podem doar ou receber H⁺.',
-        'Sais de metais: AlCl₃, FeCl₃, CuSO₄, ZnCl₂ e pedra-ume. Deixam a água ácida porque o cátion pequeno e com carga alta enfraquece a ligação O–H das águas presas a ele: [Al(H₂O)₆]³⁺ ⇌ [Al(H₂O)₅OH]²⁺ + H⁺.',
-        'Aminoácidos: glicina, alanina, ácido glutâmico e lisina. Em água são zwitteríons, e o pH fica perto do ponto isoelétrico (pI): cerca de 6 na glicina, 3,2 no ácido glutâmico e 9,7 na lisina.',
-        'Amostras novas: sucos (maracujá, uva, acerola…), bebidas com gás (bolhas de CO₂), água sanitária, soro fisiológico, fluidos do corpo (suco gástrico, saliva, plasma, urina) e águas (mar, mineral, piscina, destilada exposta ao ar). Íons que não mudam o pH, como o sal da água do mar, aparecem na lupa e na condução.'
-      ] },
-      { lista: [
-        'Menus Tubo e Conta-gotas: cada um mostra o frasco em uso. Toque no menu para abrir a lista logo abaixo dele; tocar em um frasco coloca a solução ali e o menu se fecha. Esc também fecha.',
-        'Grupos recolhíveis: a lista abre só o grupo do frasco em uso. Toque no nome de um grupo para abrir ou fechar; o número ao lado diz quantos frascos ele tem.',
-        'Buscar frasco: digite parte do nome ou da fórmula, com ou sem acento (“limao” encontra “Suco de limão”; “NaOH” encontra o hidróxido de sódio). Os grupos com resultado se abrem sozinhos.',
-        'Etiquetas: “no tubo” e “conta-gotas” mostram o que está em uso no tubo selecionado.'
-      ] },
-      { dica: 'Trocar o frasco recomeça as gotas do tubo. Se foi sem querer, toque em “Desfazer”.' }
-    ]
-  },
-  {
-    id: 'vidraria', titulo: 'Vidraria', alvo: '#vidraria-grupo', painel: true,
-    resumo: 'Tubo de ensaio, béquer ou erlenmeyer: o que muda e o que não muda.',
-    blocos: [
-      { p: 'Na prateleira, “Vidraria” troca o recipiente de todos os tubos da bancada. O SIAB sempre abre com o tubo de ensaio.' },
-      { lista: [
-        'Tubo de ensaio: microescala (5 mL), o clássico dos testes rápidos com poucas gotas.',
-        'Béquer: boca larga, usado para misturar, aquecer e transferir. As marcas de volume de um béquer são aproximadas (cerca de ± 5 % da capacidade).',
-        'Erlenmeyer: o frasco das titulações. A boca estreita evita respingos quando se agita a mistura. Como ele é cônico, 1 mL a mais sobe pouco perto do fundo largo e sobe mais perto do gargalo: por isso as marcas ficam cada vez mais afastadas.'
-      ] },
-      { lista: [
-        'Capacidade: o tubo de ensaio tem sempre 5 mL. O béquer pode ter 10, 25, 50, 100 ou 250 mL (começa com 50) e o erlenmeyer 25, 50, 125 ou 250 mL (começa com 125, o tamanho clássico das titulações).',
-        'Ao trocar a vidraria ou a capacidade, o volume inicial acompanha: o líquido continua na mesma altura (1 mL no tubo vira 10 mL no béquer de 50 mL e 25 mL no erlenmeyer de 125 mL). As gotas recomeçam, e “Desfazer” volta tudo, inclusive a vidraria.',
-        'Num recipiente novo, o volume inicial é 20 % da capacidade. No módulo Medir, “Volume inicial” vai até 80 % dela.',
-      ] },
-      { p: 'Tamanho de verdade: na bancada, cada recipiente aparece com as medidas reais de catálogo e todos na mesma escala, apoiados na mesma linha. O tubo de 5 mL tem 12 × 75 mm; o béquer de 50 mL, 42 × 60 mm (mais baixo e bem mais largo que o tubo); o erlenmeyer de 250 mL, 85 × 145 mm (quase o dobro da altura do tubo). A marca da capacidade fica a cerca de 2/3 da altura do béquer e perto da metade do erlenmeyer, porque vidraria de verdade tem folga acima da capacidade. Béqueres seguem a norma ISO 3819 e erlenmeyers a ISO 1773.' },
-      { p: 'A escala da bancada acompanha a capacidade escolhida:' },
-      { lista: [
-        'Precisão do volume: centésimos de mL no tubo de 5 mL, décimos de 10 a 125 mL e mL inteiros em 250 mL. Béquer e erlenmeyer têm marcas com incerteza de cerca de 5 % da capacidade: mostrar “50,25 mL” num béquer de 250 mL seria uma precisão que o vidro não tem. O que sai do conta-gotas continua contado em centésimos, gota a gota.',
-        'Atalhos em mL, perto de 1/10 da capacidade: +1 mL no tubo e no béquer de 10 mL; +1 e +5 mL em 25 e 50 mL; +5 e +10 mL em 100 e 125 mL; +10 e +25 mL em 250 mL.',
-        'Prever e gotejar: as gotas oferecidas vão de cerca de 1 % a 10 % da capacidade (de 1 a 20 gotas no tubo, de 50 a 500 no recipiente de 250 mL), para a previsão ter efeito visível.',
-        'A capacidade aparece uma vez só, ao lado do volume (“10,3 mL de 50 mL”).'
-      ] },
-      { dica: 'A concentração não muda com a vidraria: o pH e a cor de cada frasco são os mesmos. O que muda com o volume é quanto é preciso gotejar para neutralizar (mais amostra pede mais gotas).' },
-      { p: 'Os nomes que o programa dá (“Tubo 2”) acompanham a troca (“Béquer 2”). Nomes escolhidos por você não mudam.' }
-    ]
-  },
-  {
-    id: 'indicadores', titulo: 'Indicadores e cor', alvo: '#indicator-group', painel: true,
-    resumo: 'Como escolher o indicador e ler a cor.',
-    blocos: [
-      { p: 'O indicador muda de cor conforme o pH. Cada indicador muda em uma faixa diferente; a tabela “Indicadores disponíveis” mostra as faixas.' },
-      { lista: [
-        'Escolher: toque em um dos botões com a amostra de cores (bromotimol, fenolftaleína, alaranjado de metila, tornassol, universal, repolho roxo).',
-        'Mais indicadores (recolhido, com a faixa de viragem ao lado): vermelho de metila (4,4–6,2), verde de bromocresol (3,8–5,4), vermelho de fenol (6,8–8,4), timolftaleína (9,3–10,5) e cúrcuma, o açafrão-da-terra da cozinha (7,4–8,6: amarela em meio ácido, marrom avermelhada em meio básico).',
-        'Sem indicador: mostra só a cor própria da amostra.',
-        'Realçar indicador: esconde a cor própria de alimentos como café e suco de morango, para ler só o indicador. Não muda o pH.',
-        'Nome da cor: aparece sempre em texto, abaixo do tubo. “Cor composta” quer dizer que a amostra também tem cor própria.'
-      ] },
-      { p: 'Como a cor é calculada: o indicador é um ácido fraco (HIn ⇌ H⁺ + In⁻) cujas duas formas têm cores diferentes. A fração da forma básica é α = 1 / (1 + 10^(pKIn − pH)) (equação de Henderson–Hasselbalch; pKIn ≈ 9,4 na fenolftaleína, 7,1 no bromotimol, 6,5 no tornassol e 3,7 no alaranjado de metila). A cor vista é a soma das absorções das duas formas (lei de Beer–Lambert): por isso o bromotimol passa por verde (amarelo + azul), o tornassol por violeta e o alaranjado de metila por laranja. O olho percebe a troca quando uma forma é cerca de 10 vezes mais abundante que a outra: daí a faixa de viragem de mais ou menos 1 unidade em torno do pKIn.' },
-      { dica: 'Repolho roxo e indicador universal são cartas aproximadas: servem para comparar amostras, não para medir o pH exato. A cor também não escurece nos recipientes largos: no laboratório, a quantidade de indicador acompanha o recipiente (poucas gotas no tubo, algumas a mais no béquer), e assim a intensidade fica parecida.' }
-    ]
-  },
-  {
-    id: 'medidas', titulo: 'Ajustes de medida', alvo: '#ajustes', painel: true, nivel: 'calcular',
-    resumo: 'Concentração, diluição, volume inicial e tamanho da gota.',
-    blocos: [
-      { p: 'Os ajustes aparecem nos módulos Medir e Calcular. Valem para o tubo selecionado e para os tubos vinculados a ele.' },
-      { lista: [
-        'Concentração no tubo e no conta-gotas (módulo Calcular): de 0,0001 a 0,1 mol/L. Aparece para reagentes de laboratório, sais, tampões e antiácidos.',
-        'Diluição da amostra: para frutas, alimentos e chuva. Como preparada, 1 + 1, 1 + 4 ou 1 + 9 partes de água.',
-        'Volume inicial: de 0,1 a 4 mL de solução no tubo.',
-        'Volume da gota: 0,01, 0,02, 0,05 ou 0,10 mL. Gotas menores mostram melhor o salto de pH.'
-      ] },
-      { passos: [
-        'Mude os valores.',
-        'Toque em “Aplicar medidas”.',
-        'As gotas do tubo recomeçam do zero (“Desfazer” volta ao estado anterior).'
-      ] },
-      { dica: 'Se um valor estiver fora do limite, aparece uma mensagem no próprio formulário e nada é alterado.' }
-    ]
-  },
-  {
-    id: 'leitura', titulo: 'Leitura do tubo', alvo: '.stage-stats',
-    resumo: 'pH, olho, variação, volume, cor e equivalência.',
-    blocos: [
-      { lista: [
-        'pH: duas casas decimais para reagentes; “≈” e uma casa para amostras do cotidiano e da chuva, que são estimativas.',
-        'Ácida, Neutra ou Básica: comparação com o pH neutro (7 a 25 °C).',
-        'Variação: depois das gotas, aparece por alguns segundos, por exemplo “3,59 → 7,00 (+3,41)”.',
-        'Olho, ao lado de “pH”: oculta o pH (o número, a escala e o gráfico) e mostra de novo. Use para prever antes de ver.',
-        'Escala de pH: fica no painel VER, acima das abas (veja “Painel VER”).',
-        'Volume: quanto líquido há no recipiente e a capacidade dele (5 mL no tubo de ensaio).',
-        'Cor: nome da cor e do indicador, abaixo do tubo.',
-        'Ponto final observado: quando a cor do indicador muda e fica, aparece “Ponto final observado: incolor → rosa claro com 10,05 mL”. Nos módulos Medir e Calcular, vem junto a equivalência calculada (quantidades estequiométricas). Os dois nem sempre coincidem: a diferença é o erro de titulação, e depende do indicador escolhido.',
-        'Ponto de equivalência: aviso que aparece quando uma gota atinge exatamente a quantidade de base que reage com todo o ácido (ou o contrário).'
-      ] },
-      { dica: 'Equivalência (quantidades) e viragem (mudança de cor do indicador) são coisas diferentes e podem acontecer em gotas diferentes.' }
-    ]
-  },
-  {
-    id: 'conta-gotas', titulo: 'Conta-gotas', alvo: '#dose-area',
-    resumo: 'Gotejar, atalhos, desfazer e teclado.',
-    blocos: [
-      { lista: [
-        'Segure para gotejar: enquanto o botão estiver pressionado, cai uma gota a cada quarto de segundo; depois de 8 gotas, o ritmo acelera. Um toque rápido adiciona 1 gota.',
-        '+5 gotas e os atalhos em mL: para ir mais rápido. Os mL acompanham a capacidade (+1 mL no tubo; +10 e +25 mL no béquer de 250 mL; veja “Vidraria”).',
-        'Desfazer: desfaz a última ação inteira (uma sequência de gotas, a troca de frasco, as medidas, a remoção de um tubo…).',
-        'Linha acima do botão: o que está no conta-gotas, quantas gotas já caíram, o volume e o tamanho de cada gota.',
-        'Capacidade: quando o recipiente fica cheio, os botões de gotejar ficam desativados.',
-        'Na vidraria: enquanto você goteja, o conta-gotas aparece sobre a boca do recipiente. Cada gota se forma na ponta, cai e, ao chegar, faz ondas; o nível sobe nesse momento. “Reduzir animações” desliga esse movimento.',
-        'Tamanho da gota: a gota desenhada tem o tamanho de verdade, na mesma escala da vidraria. Uma gota de volume V é uma esfera de diâmetro d = ∛(6V/π): 0,01 mL dá 2,7 mm; 0,05 mL, 4,6 mm; 0,10 mL, 5,8 mm.',
-        'Bureta (no erlenmeyer): nas titulações, o titulante vem de uma bureta presa sobre o erlenmeyer; a torneira abre enquanto você goteja, e a linha do conta-gotas passa a dizer “Bureta”. O botão “½ gota” adiciona meia gota: no laboratório, abre-se a torneira só até a gota ficar pendurada na ponta, encosta-se a gota na parede do frasco e ela é lavada para dentro com a pisseta. Perto do ponto final, isso deixa a leitura mais precisa.',
-        'Menisco: a água molha o vidro e sobe um pouco junto da parede, formando uma superfície curva (menisco côncavo). O volume se lê pela parte de baixo do menisco, na altura dos olhos.',
-        'Cor onde a gota cai: antes de se misturar, a gota forma uma zona com pH próprio. Numa titulação com fenolftaleína, o NaOH deixa essa zona rosa mesmo com o resto ainda ácido; o rosa some quando a gota se mistura. Longe do ponto final, some logo; perto dele, demora; depois dele, fica. O simulador calcula essa zona em etapas (a gota com 1,5, 3, 6… 96 gotas de volume do líquido), até virar o recipiente todo.',
-        'Agitar (ao lado da cor): termina a mistura na hora, como girar o erlenmeyer ou mexer o béquer. No laboratório, o ponto final é quando a cor clara dura cerca de 30 segundos, agitando.',
-        'Turvação: bases pouco solúveis, como Mg(OH)₂ e Al(OH)₃, deixam o líquido leitoso enquanto sobra sólido sem dissolver; com ácido, o sólido dissolve e o líquido clareia. Parado por uns segundos, o sólido assenta no fundo (na vida real leva minutos); uma gota ou Agitar suspende de novo.',
-        'Bolhas de CO₂: com carbonato ou bicarbonato em meio ácido, forma-se CO₂. Quando o CO₂ dissolvido passa da solubilidade (cerca de 0,034 mol/L a 25 °C e 1 atm, lei de Henry), aparecem bolhas; se isso acontece só onde a gota cai, sobe um jorro de bolhas ali. É uma ilustração: o cálculo do pH mantém o gás dissolvido (sistema fechado).'
-      ] },
-      { teclas: [['Enter', 'adiciona 1 gota'], ['Espaço (segurar)', 'goteja sem parar até soltar'], ['Tab', 'passa para o próximo controle']] },
-      { dica: 'Tubos vinculados (veja “Tubos da bancada”) recebem as mesmas gotas ao mesmo tempo.' }
-    ]
-  },
-  {
-    id: 'prever', titulo: 'Prever e gotejar', alvo: '#poe-btn',
-    resumo: 'Registrar uma hipótese antes de ver o resultado.',
-    blocos: [
-      { p: 'Serve para testar uma hipótese: prever → observar → explicar. Tudo fica registrado no caderno.' },
-      { passos: [
-        'Toque em “Prever e gotejar”, abaixo do botão de gotejar.',
-        'Escolha quantas gotas (no tubo, 1, 5, 10 ou 20; em recipientes maiores, mais gotas, com o volume em mL embaixo), se a solução ficará ácida, neutra ou básica e, se quiser, a cor esperada.',
-        'Toque em “Gotejar e conferir”: as gotas caem e aparece a comparação com ✓ ou ✗.',
-        'Escreva a explicação e toque em “Salvar no caderno”.'
-      ] },
-      { dica: 'A previsão é salva no caderno mesmo se você fechar sem escrever a explicação.' }
-    ]
-  },
-  {
-    id: 'ver', titulo: 'Painel VER', alvo: '#ver-panel',
-    resumo: 'Escala de pH, gráfico, partículas, condução, equação e histórico do tubo selecionado.',
-    blocos: [
-      { p: 'No alto do painel fica a Escala de pH: o triângulo marca o pH na escala de 0 a 14, o tracejado marca o neutro e o colchete embaixo mostra a faixa de viragem do indicador (onde ele muda de cor). A segunda linha mostra [H₃O⁺] em potências de 10 (10⁰, 10⁻⁷, 10⁻¹⁴ mol/L): a escala de pH é logarítmica, e cada unidade de pH é 10 vezes mais ou menos H₃O⁺. Com o pH oculto, a escala some junto com o número e o gráfico.' },
-      { lista: [
-        'Gráfico: pH × volume adicionado, um ponto por gota. Faixa colorida: viragem do indicador. Linha tracejada vertical: equivalência (uma por etapa nos polipróticos: o H₃PO₄ e o Na₂CO₃ têm duas). Losango: ponto final observado (a gota em que a cor mudou). Círculo “pH = pKa”: meia-equivalência (ácido ou base fraca; “pKa₁”, “pKa₂” em cada etapa), só onde o pH ali fica mesmo perto do pKa. Faixa clara “região tampão”: onde a razão base/ácido conjugado vai de 0,1 a 10 (pH = pKa ± 1) e o pH quase não muda. Tracejado horizontal: pH neutro.',
-        'No módulo Calcular, o gráfico tem mais duas vistas. ΔpH/ΔV: a variação de pH por mL entre gotas seguidas (a conta que se faz com a tabela do Histórico); o pico marca a equivalência, onde a curva é mais íngreme. Espécies: o diagrama de distribuição, com a fração α de cada espécie do ácido ou base fraca em função do pH, dada por α = [espécie] / total; duas espécies vizinhas se cruzam em α = 0,5 quando pH = pKa, e a linha “pH agora” mostra a mistura do momento.',
-        'Partículas: a lupa mostra íons e moléculas dissolvidos, em proporção à concentração (a espécie mais abundante tem 36 partículas). Círculo com contorno: molécula; círculo vazado: íon espectador (Na⁺, Cl⁻…, que não troca prótons); quadrado: sólido não dissolvido; “traço”: menos de 1 partícula nesta escala. A água não aparece. As partículas passeiam devagar (difusão).',
-        'Escala logarítmica (botão na lupa): o número de partículas passa a acompanhar o expoente da concentração (cada 3 partículas = 10 vezes), e aparecem os íons raros, como o OH⁻ em meio ácido.',
-        'Acontecimentos na lupa: depois das gotas, partículas do conta-gotas entram e reagem (H₃O⁺ + OH⁻ → 2 H₂O, ou CH₃COOH + OH⁻ → CH₃COO⁻ + H₂O com um ácido fraco). Com um ácido fraco e sua base conjugada presentes, um próton pula de uma partícula para a outra de tempos em tempos e as quantidades não mudam: o equilíbrio é dinâmico.',
-        'Condução: o teste de condução elétrica e o condutímetro. A lâmpada acende mais quando há mais íons, ou íons mais rápidos. A leitura (µS/cm ou mS/cm) vem da lei de Kohlrausch, κ = Σ λ° · c: cada íon contribui com a própria condutividade molar (λ°) vezes a concentração. A barra “Quem carrega a corrente” mostra a parte de cada íon, com as cores da lupa (listrado: íon espectador).',
-        'H₃O⁺ (λ° = 349,6) e OH⁻ (198) conduzem de 4 a 7 vezes mais que Na⁺ (50,1) ou Cl⁻ (76,3): o próton salta de uma molécula de água para a vizinha (mecanismo de Grotthuss). Por isso a curva κ × volume faz um “V” numa titulação de ácido forte com base forte, com o vértice na equivalência: é a titulação condutométrica, que dispensa indicador. No módulo Calcular aparece a conta íon por íon. Os valores são ideais (diluição infinita); acima de 0,01 mol/L o medido é um pouco menor.',
-        'Pontes entre representações: toque numa fórmula da Equação, num íon da Condução ou numa espécie do diagrama de distribuição, e a lupa abre com aquela espécie em destaque (as outras ficam apagadas). Na lupa, tocar no nome da espécie liga e desliga o destaque.',
-        'Equação: ionização do que está no tubo e no conta-gotas, reação ao misturar e números. Uma seta curva laranja, com “H⁺”, vai do doador de próton (ácido) ao receptor (base): em CH₃COOH + H₂O ⇌ H₃O⁺ + CH₃COO⁻, o H⁺ passa do ácido acético para a água. pOH aparece no módulo Medir; [H₃O⁺], Ka, α e quantidades em mmol, no módulo Calcular.',
-        'Histórico: tabela das gotas, da mais recente para a primeira. Numa titulação longa, gotas seguidas com a mesma cor e pH quase igual viram uma linha (veja “Caderno de laboratório”). “Baixar tabela (CSV)” traz todas as gotas, uma por linha, e abre em planilha (ponto e vírgula, vírgula decimal). “Registrar no caderno” guarda a leitura atual.'
-      ] },
-      { dica: 'Com o teclado, use as setas ← e → para trocar de aba.' }
-    ]
-  },
-  {
-    id: 'tubos', titulo: 'Tubos da bancada', alvo: '.tube-strip',
-    resumo: 'Vários tubos, comparação de indicadores e visão geral.',
-    blocos: [
-      { lista: [
-        'Tira de tubos: fica embaixo e mostra todos os tubos (até 10). Toque em um para selecioná-lo.',
-        '+ Novo tubo: cria um tubo com água; depois escolha o frasco na prateleira.',
-        'Lápis ao lado do nome: renomeia o tubo (até 40 caracteres).',
-        'Visão geral (aba no alto): todos os tubos lado a lado, com cor e pH. O número no canto é a posição do tubo na bancada.',
-        'Selecionar tubos: use o botão, Ctrl + clique (⌘ no Mac) ou pressione e segure um tubo por cerca de meio segundo. Depois toque para marcar ou desmarcar; “Selecionar todos” marca todos os recipientes desta bancada. Arrastar para rolar cancela o toque prolongado.',
-        'No celular, a seleção vira uma lista vertical com um recipiente por linha, miniatura, nome e marca de seleção. “Selecionar todos” e “Adicionar ao relatório” ficam na parte inferior da tela enquanto você percorre a lista.',
-        'Adicionar ao relatório: confirma os tubos marcados e mostra o botão “Imprimir relatório” da prateleira. Esse mesmo botão também usa os tubos marcados enquanto a seleção está aberta. Cada um terá preparo, leitura, gráfico e histórico. “Revisar seleção” altera a lista; “Usar relatório padrão” volta ao resumo da bancada e ao detalhe do tubo em foco.',
-        'Vincular tubos: selecione pelo menos dois e use a ação na visão geral. Eles recebem doses juntos, com o mesmo volume de gota. Amostras, indicadores, conta-gotas e gotas anteriores são preservados. O volume da gota segue o tubo em foco, se marcado, ou o primeiro selecionado na ordem da bancada; a referência aparece antes de vincular.',
-        'Compartilhar também (ao vincular): marque “Substância do tubo” e/ou “Conta-gotas”. Todos passam a usar o que está no tubo de referência (o tubo em foco, se marcado, ou o primeiro selecionado); quem mudar de substância ou de conta-gotas recomeça as gotas, porque as antigas foram feitas com outro reagente. Depois, trocar o frasco ou o preparo dessa parte em um tubo muda todos do grupo. O indicador continua de cada tubo: dá para comparar indicadores na mesma titulação. Para mudar o que o grupo compartilha, selecione os mesmos tubos, marque as opções e use “Atualizar vínculo”.',
-        'Grupos: o número aparece nos cartões, na tira e no tubo em foco. Cada recipiente mantém seu próprio reagente do conta-gotas. Nos vínculos manuais, trocar frasco ou refazer o preparo afeta só o tubo em foco; ajustar o volume da gota vale para todo o grupo. Se uma dose não couber em qualquer integrante, nenhum recebe a dose.',
-        'Desvincular (na seleção) retira os tubos marcados dos seus grupos. Ao reorganizar vínculos, apenas os selecionados formam o novo grupo. Um integrante que ficar sozinho passa a ser independente. “Desfazer” restaura os vínculos anteriores.',
-        'Ordenar por pH (na visão geral, com o pH à vista): os recipientes ficam do mais ácido ao mais básico, e uma régua de pH marca cada um com a cor do líquido e o número dele. Bom para montar uma escala de pH com amostras do cotidiano.',
-        'Comparar indicadores (na prateleira): cria 3 cópias do tubo com bromotimol, fenolftaleína e indicador universal, vinculadas: cada gota cai nas três.',
-        'Desvincular este tubo: o tubo volta a receber gotas sozinho.',
-        'Recomeçar gotas: tira todas as gotas do tubo.',
-        'Imprimir relatório (botão do painel esquerdo, ou Ctrl+P): usa a seleção da visão geral ou a lista já confirmada. Sem lista personalizada, imprime o resumo da bancada e os detalhes do tubo em foco. Inclui cabeçalho (Nome, Turma e Data), leituras, gráfico, tabela de gotas e espaço para observações. No celular, o mesmo botão fica em Prateleira.',
-        'Remover tubo: pede confirmação; “Desfazer” traz o tubo de volta. Removendo o último, a bancada fica vazia de novo.'
-      ] }
-    ]
-  },
-  {
-    id: 'caderno', titulo: 'Caderno de laboratório', link: ['#/caderno', 'Abrir o caderno'],
-    resumo: 'Onde ficam previsões e leituras.',
-    blocos: [
-      { lista: [
-        'O que entra: previsões do “Prever e gotejar”, leituras de “Registrar no caderno” e, no modo completo, missões e desafios. Cada nota tem data e hora.',
-        'Leituras: guardam a tabela de gotas como tabela (Gota, Adicionado, pH, Cor), com rolagem própria e “Baixar esta tabela (CSV)”. Com o pH oculto, a coluna pH fica “—”.',
-        'Tabela compacta: com mais de 60 linhas, gotas seguidas com a mesma cor e pH quase igual (até 0,2 de diferença) viram um registro só, como “51–100 | 2,55–5,00 | 2,31–2,48 | vermelho”. Cada registro junta até 50 gotas (100 quando passa de 1000 gotas). Perto do ponto final, onde a cor ou o pH mudam de uma gota para outra, cada gota continua numa linha. Tabelas curtas ficam gota a gota, e as leituras antigas longas são compactadas ao abrir o caderno.',
-        'Baixar caderno (CSV): uma planilha com todas as notas. As linhas da tabela de gotas ocupam as colunas gota, volume_adicionado_mL, pH e cor.',
-        'Imprimir: imprime as notas numa folha com cabeçalho (Nome, Turma e Data) e número de página; tabelas longas continuam na página seguinte, repetindo o cabeçalho.',
-        'Apagar nota ou apagar caderno: apagar o caderno pede confirmação.'
-      ] },
-      { dica: 'O caderno fica guardado só neste navegador, neste aparelho. Baixe o CSV para guardar uma cópia.' }
-    ]
-  },
-  {
-    id: 'roteiros', titulo: 'Roteiros de teste prontos',
-    resumo: 'Testes montados com um toque, com o resultado esperado.',
-    blocos: [
-      { p: '“Montar na bancada” substitui os tubos atuais pelos do roteiro (use “Desfazer” na bancada para voltar). Os resultados esperados são calculados pelo próprio simulador.' },
-      { gerado: 'roteiros' }
-    ]
-  },
-  {
-    id: 'frascos', titulo: 'Frascos disponíveis',
-    resumo: 'Todos os frascos da prateleira, com o pH de cada um sozinho.',
-    blocos: [
-      { p: 'pH calculado para 1 mL do frasco sozinho, a 25 °C. Reagentes, sais e antiácidos a 0,01 mol/L; amostras como preparadas.' },
-      { gerado: 'frascos' }
-    ]
-  },
-  {
-    id: 'tabela-indicadores', titulo: 'Indicadores disponíveis',
-    resumo: 'Faixa de viragem e cores de cada indicador.',
-    blocos: [{ gerado: 'indicadores' }]
-  },
-  {
-    id: 'acessibilidade', titulo: 'Acessibilidade e teclado', alvo: '#access-btn',
-    resumo: 'Painel com interruptores, som do pH, Libras e uso sem mouse.',
-    blocos: [
-      { p: 'O botão de acessibilidade (figura humana), no alto da tela, abre o menu ☰ direto no painel “Acessibilidade”. Cada linha tem um interruptor; tudo fica salvo neste navegador.' },
-      { lista: [
-        'Modo escuro: desligado, a tela fica clara.',
-        'Alto contraste: fundo preto, texto branco e destaques amarelos.',
-        'Tamanho do texto: A− e A+, de 80 % a 200 %.',
-        'Espaçamento de letras: mais espaço entre letras e palavras.',
-        'Reduzir animações: desliga gota caindo, partículas se mexendo e a animação de abertura.',
-        'Animação de abertura: tubos de ensaio mudando de cor ao abrir ou recarregar. Um toque ou uma tecla pula.',
-        'Leitura simples: texto um pouco maior, cores mais firmes e nada se mexendo.',
-        'Simular daltonismo: filtros para ver como a bancada aparece para pessoas com daltonismo. Não são correções.',
-        'Som do pH: um tom a cada gota, mais agudo quanto maior o pH.',
-        'Vibrar na viragem: o celular vibra quando o indicador muda de cor (em aparelhos compatíveis).',
-        'Tradutor de Libras (VLibras): o tradutor oficial do governo federal. Precisa de internet.',
-        'Restaurar padrões: volta tudo ao início.'
-      ] },
-      { teclas: [['Tab / Shift + Tab', 'avançar / voltar entre controles'], ['Enter ou Espaço', 'acionar botões e interruptores'], ['← →', 'trocar de aba no painel VER'], ['↑ ↓', 'percorrer listas de escolha'], ['Esc', 'fechar diálogos, o menu ☰, o painel da prateleira e o tour'], ['Qualquer tecla', 'pular a animação de abertura']] },
-      { dica: 'Leitores de tela anunciam a cor, o pH e o número de gotas depois de cada sequência de gotas.' }
-    ]
-  },
-  {
-    id: 'app', titulo: 'Instalar e usar sem internet',
-    resumo: 'Aplicativo no computador ou no celular.',
-    blocos: [
-      { lista: [
-        'Aberto como arquivo (index.html): tudo funciona, mas não dá para instalar.',
-        'Aberto por um endereço http(s), como o GitHub Pages ou “npm start”: aparece “Instalar app” no cabeçalho (computador) e em Menu ☰ → Aplicativo (ou use o menu do navegador, “Instalar aplicativo” / “Adicionar à tela de início”).',
-        'Ao abrir: a animação de abertura mostra tubos de ensaio mudando de composto e de cor (as cores vêm do próprio simulador). Toque para pular; dá para desligar em Acessibilidade.',
-        'Sem internet: depois da primeira visita pelo endereço, o SIAB abre mesmo offline.',
-        'Atualização: quando há versão nova, ela é baixada sozinha e aparece “Nova versão do SIAB instalada · Recarregar”.'
-      ] },
-      { dica: 'Se aparecer um erro depois de trocar a versão, recarregue com Ctrl + Shift + R (no Mac, Cmd + Shift + R). Se continuar, feche todas as abas do SIAB e abra de novo.' }
-    ]
-  },
-  {
-    id: 'limites', titulo: 'Limites do modelo e dúvidas',
-    resumo: 'O que o simulador calcula e o que ele não representa.',
-    blocos: [
-      { p: 'O simulador resolve o equilíbrio de soluções ideais a 25 °C, com volumes que se somam e mistura imediata. Os indicadores estão em quantidade muito pequena e não alteram o pH.' },
-      { faq: [
-        ['Por que alguns pH aparecem com “≈”?', 'Frutas, alimentos e chuva são amostras representativas. O pH delas é uma estimativa; amostras reais variam com marca, maturação e preparo.'],
-        ['Por que vinagre com bicarbonato não faz espuma?', 'O cálculo não retira gases: o CO₂ formado fica dissolvido (sistema fechado). Quando ele passa da solubilidade (cerca de 0,034 mol/L), a vidraria mostra bolhas, só como ilustração. Na vida real o gás escapa, e o pH final fica um pouco mais alto.'],
-        ['A condutividade é exata?', 'É o valor ideal da lei de Kohlrausch (diluição infinita, 25 °C). Em soluções mais concentradas que 0,01 mol/L, os íons se atrapalham e o condutímetro de verdade mostra um valor menor. Íons sem valor tabelado (ânions orgânicos dos alimentos) usam uma estimativa pela carga, marcada com ≈.'],
-        ['Por que a fenolftaleína não muda na equivalência do HCl?', 'Ela muda entre pH 8,2 e 10. Na titulação de HCl com NaOH, o pH salta de cerca de 3,6 para 10,4 em duas gotas; a cor rosa aparece logo depois da equivalência.'],
-        ['Diluir muito um ácido deixa a solução básica?', 'Não. Com mais água, o pH se aproxima de 7, sem passar dele.'],
-        ['Por que o FeCl₃ não forma precipitado quando pinga NaOH?', 'Nos sais de metais, o simulador calcula só a primeira hidrólise do cátion ([Fe(H₂O)₆]³⁺ ⇌ [Fe(H₂O)₅OH]²⁺ + H⁺). Na vida real, com base suficiente, o hidróxido (Fe(OH)₃, Al(OH)₃, Cu(OH)₂) precipita; isso não é simulado.'],
-        ['Por que o (NH₄)₂SO₄ e o CuSO₄ ficam menos ácidos do que o esperado?', 'O sulfato é uma base muito fraca (pKa₂ do H₂SO₄ = 1,92): ele captura parte do H₃O⁺ e vira HSO₄⁻. O simulador inclui esse efeito, que a conta de livro com só o cátion ignora.'],
-        ['As amostras novas são exatas?', 'Não. Sucos, bebidas, produtos de limpeza e fluidos do corpo são representativos: o pH de referência vem de faixas publicadas, e a quantidade de ácido ou base é um parâmetro didático. Reagentes usam constantes de tabela (Harris; CRC Handbook; Lehninger para aminoácidos).'],
-        ['As cores são exatas?', 'Não. São representações didáticas das faixas de viragem. O repolho roxo real varia com o preparo do extrato.'],
-        ['A vidraria muda o resultado?', 'O pH de cada frasco não muda: ele depende da concentração, não do volume. Com mais amostra (um recipiente maior), é preciso gotejar mais para neutralizar, e a curva do gráfico se estica no eixo do volume.'],
-        ['Posso mudar a temperatura?', 'Na bancada, não: tudo está a 25 °C. A temperatura só muda na missão “Neutro nem sempre é 7”, no modo completo.'],
-        ['Antiácidos: posso usar isso para saber a dose?', 'Não. É uma atividade didática, não uma orientação de saúde.']
-      ] },
-      { p: 'Fontes das constantes e equações: Menu ☰ → Aplicativo → Sobre o SIAB (OpenStax, Chemistry 2e).' }
-    ]
+};
+SIAB.manualContent.topics.push({
+  id: "referencias",
+  title: "Referências e créditos",
+  category: "calcular",
+  summary:
+    "Fontes do modelo químico e créditos das dependências do aplicativo.",
+  purpose:
+    "Consulte as fontes originais para aprofundar conceitos e constantes usados pelo SIAB.",
+  steps: [
+    "Abra uma fonte de referência de acordo com o assunto investigado.",
+    "Confira as condições e as limitações descritas no modelo científico.",
+  ],
+  related: ["limites", "tabela-indicadores"],
+  keywords: ["referências", "créditos", "licença", "bibliografia"],
+  details: [
+    {
+      title: "Licenças",
+      text: "SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE.",
+    },
+  ],
+  references: [
+    {
+      label: "OpenStax — Chemistry 2e, cap. 14 (ácidos e bases)",
+      url: "https://openstax.org/books/chemistry-2e/pages/14-introduction",
+    },
+    {
+      label: "OpenStax — Apêndice H (Ka de ácidos fracos)",
+      url: "https://openstax.org/books/chemistry-2e/pages/h-ionization-constants-of-weak-acids",
+    },
+    {
+      label: "OpenStax — Apêndice I (Kb de bases fracas)",
+      url: "https://openstax.org/books/chemistry-2e/pages/i-ionization-constants-of-weak-bases",
+    },
+    {
+      label: "OpenStax — Apêndice J (Kps)",
+      url: "https://openstax.org/books/chemistry-2e/pages/j-solubility-products",
+    },
+    {
+      label:
+        "D. C. Harris, Análise Química Quantitativa : constantes de dissociação e indicadores",
+      url: null,
+    },
+    {
+      label:
+        "CRC Handbook of Chemistry and Physics : pKa e condutividade iônica limite (λ°)",
+      url: null,
+    },
+    {
+      label:
+        "Nelson e Cox, Princípios de Bioquímica de Lehninger : pKa dos aminoácidos",
+      url: null,
+    },
+    {
+      label:
+        "Baes e Mesmer, The Hydrolysis of Cations : acidez dos cátions metálicos hidratados",
+      url: null,
+    },
+    {
+      label: "OpenStax — Chemistry 2e, 14.7 (titulações e indicadores)",
+      url: "https://openstax.org/books/chemistry-2e/pages/14-7-acid-base-titrations",
+    },
+    {
+      label: "IUPAC — Ponto de equivalência",
+      url: "https://goldbook.iupac.org/terms/view/09042",
+    },
+    {
+      label: "PhET — Soluções ácido-base (lupa de partículas)",
+      url: "https://phet.colorado.edu/pt_BR/simulations/acid-base-solutions",
+    },
+    {
+      label: "ACS — Indicador de repolho roxo",
+      url: "https://www.acs.org/education/activities/red-cabbage-indicator.html",
+    },
+  ],
+});
+SIAB.manualRegistry = (() => {
+  const { categories, topics, aliases } = SIAB.manualContent;
+  const byId = new Map(topics.map((t) => [t.id, t]));
+  const categoryMap = new Map(categories.map((c) => [c.id, c]));
+  const resolve = (id) => byId.get(aliases[id] || id);
+  const normalize = (value) =>
+    String(value || "")
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .replace(/[^a-z0-9Δ]+/gi, " ")
+      .trim();
+  const stem = (word) =>
+    word.length > 4
+      ? word.replace(/oes$/, "ao").replace(/ais$/, "al").replace(/s$/, "")
+      : word;
+  const stop = new Set([
+    "a",
+    "o",
+    "as",
+    "os",
+    "de",
+    "do",
+    "da",
+    "dos",
+    "das",
+    "um",
+    "uma",
+    "e",
+    "como",
+    "para",
+    "no",
+    "na",
+    "com",
+    "meu",
+    "minha",
+  ]);
+  const tokens = (value) =>
+    normalize(value)
+      .split(/\s+/)
+      .filter((w) => w && !stop.has(w))
+      .map(stem);
+  const index = topics.map((topic) => ({
+    topic,
+    title: normalize(topic.title),
+    keys: normalize(topic.keywords.join(" ")),
+    words: tokens(
+      [
+        topic.title,
+        topic.summary,
+        topic.purpose,
+        ...topic.keywords,
+        ...topic.steps,
+        topic.example,
+        ...topic.details.map((d) => d.title + " " + d.text),
+      ].join(" "),
+    ),
+  }));
+  function search(query) {
+    const clean = normalize(String(query).slice(0, 120)),
+      terms = tokens(clean);
+    if (!terms.length) return [];
+    return index
+      .map((x) => ({
+        topic: x.topic,
+        score: terms.every((t) =>
+          x.words.some((w) => w === t || (t.length > 2 && w.startsWith(t))),
+        )
+          ? 1 +
+            (x.title === clean ? 100 : 0) +
+            (x.title.includes(clean) ? 30 : 0) +
+            (x.keys.includes(clean) ? 20 : 0) +
+            terms.reduce(
+              (n, t) =>
+                n + (tokens(x.title).some((w) => w.startsWith(t)) ? 5 : 0),
+              0,
+            )
+          : 0,
+      }))
+      .filter((x) => x.score > 0)
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          topics.indexOf(a.topic) - topics.indexOf(b.topic),
+      )
+      .map((x) => x.topic);
   }
-];
-
-/* Roteiros de teste prontos: tubos (como em SIAB.newTube; "grupo" vincula
-   tubos), módulo da bancada, aba do painel VER e o que fazer depois de montar.
-   O resultado esperado é calculado pelo motor em js/telas/manual.js. */
-SIAB.roteiros = [
-  {
-    id: 'titulacao-forte', titulo: 'Ácido forte × base forte', nivel: 'medir', ver: 'grafico',
-    objetivo: 'Encontrar o ponto de equivalência de HCl com NaOH.',
-    tubos: [{ name: 'HCl + NaOH', solution: 'hcl', concentration: .01, initialVolume: 1, titrant: 'naoh', titrantConcentration: .01, dropVolume: .05, indicator: 'btb' }],
-    passos: ['Goteje até o bromotimol ficar verde.', 'Veja no gráfico o salto de pH perto da equivalência.']
-  },
-  {
-    id: 'titulacao-fraco', titulo: 'Ácido fraco × base forte', nivel: 'medir', ver: 'grafico',
-    objetivo: 'Comparar com o ácido forte: a equivalência fica acima de pH 7.',
-    tubos: [{ name: 'CH₃COOH + NaOH', solution: 'acetic', concentration: .01, initialVolume: 1, titrant: 'naoh', titrantConcentration: .01, dropVolume: .05, indicator: 'phenol' }],
-    passos: ['Goteje até passar da equivalência.', 'No gráfico, encontre o ponto “pH = pKa” (meia-equivalência).']
-  },
-  {
-    id: 'titulacao-base-fraca', titulo: 'Base fraca × ácido forte', nivel: 'medir', ver: 'grafico',
-    objetivo: 'A equivalência de amônia com HCl fica abaixo de pH 7.',
-    tubos: [{ name: 'NH₃ + HCl', solution: 'ammonia', concentration: .01, initialVolume: 1, titrant: 'hcl', titrantConcentration: .01, dropVolume: .05, indicator: 'methyl' }],
-    passos: ['Goteje HCl e observe o pH cair.', 'Compare o pH da equivalência com o da titulação de ácido fraco.']
-  },
-  {
-    id: 'tres-indicadores', titulo: 'Mesma titulação, três indicadores', nivel: 'medir', ver: 'grafico',
-    objetivo: 'Ver cada indicador mudar de cor em um momento diferente.',
-    tubos: ['methyl', 'btb', 'phenol'].map(indicator => ({ name: SIAB.indicators[indicator].short, solution: 'hcl', concentration: .01, initialVolume: 1, titrant: 'naoh', titrantConcentration: .01, dropVolume: .05, indicator, grupo: 'A' })),
-    passos: ['Os três tubos estão vinculados: cada gota cai nos três.', 'Goteje devagar e anote em que gota cada cor muda.']
-  },
-  {
-    id: 'tampao', titulo: 'Tampão × água', nivel: 'medir', ver: 'grafico',
-    objetivo: 'As mesmas gotas de HCl mudam muito o pH da água e pouco o do tampão.',
-    tubos: [
-      { name: 'Água', solution: 'water', initialVolume: 1, titrant: 'hcl', titrantConcentration: .01, dropVolume: .05, indicator: 'universal', grupo: 'A' },
-      { name: 'Tampão acetato', solution: 'acetateBuffer', concentration: .01, initialVolume: 1, titrant: 'hcl', titrantConcentration: .01, dropVolume: .05, indicator: 'universal', grupo: 'A' }
-    ],
-    passos: ['Adicione 2 gotas e compare os dois tubos.', 'Continue até o tampão “quebrar” (pH abaixo de 4).'],
-    extra: medir => [
-      ['Depois de 2 gotas', `água ${medir('Água', 2)} · tampão ${medir('Tampão acetato', 2)}`],
-      ['Depois de 20 gotas', `água ${medir('Água', 20)} · tampão ${medir('Tampão acetato', 20)}`]
-    ]
-  },
-  {
-    id: 'sais', titulo: 'Todo sal é neutro?', nivel: 'explorar', ver: 'equacao',
-    objetivo: 'Comparar soluções de quatro sais com repolho roxo.',
-    tubos: [
-      { name: 'NaCl', solution: 'nacl', concentration: .1, titrant: 'water', indicator: 'cabbage' },
-      { name: 'NH₄Cl', solution: 'nh4cl', concentration: .1, titrant: 'water', indicator: 'cabbage' },
-      { name: 'CH₃COONa', solution: 'ch3coona', concentration: .1, titrant: 'water', indicator: 'cabbage' },
-      { name: 'Na₂CO₃', solution: 'na2co3', concentration: .1, titrant: 'water', indicator: 'cabbage' }
-    ],
-    passos: ['Toque em cada tubo e compare as cores.', 'No painel Equação, veja qual íon reage com a água.']
-  },
-  {
-    id: 'antiacidos', titulo: 'Antiácidos', nivel: 'medir', ver: 'grafico',
-    objetivo: 'Comparar Al(OH)₃ e Mg(OH)₂ neutralizando HCl 0,1 mol/L.',
-    tubos: [
-      { name: 'HCl + Al(OH)₃', solution: 'hcl', concentration: .1, initialVolume: 1, titrant: 'aloh3', titrantConcentration: .1, dropVolume: .02, indicator: 'universal' },
-      { name: 'HCl + Mg(OH)₂', solution: 'hcl', concentration: .1, initialVolume: 1, titrant: 'mgoh2', titrantConcentration: .1, dropVolume: .02, indicator: 'universal' }
-    ],
-    passos: ['Goteje 1 mL em cada tubo (+1 mL).', 'Compare: o Al(OH)₃ para perto de pH 4; o Mg(OH)₂ passa de 9.'],
-    extra: medir => [['Depois de 1 mL', `Al(OH)₃ ${medir('HCl + Al(OH)₃', 50)} · Mg(OH)₂ ${medir('HCl + Mg(OH)₂', 50)}`]]
-  },
-  {
-    id: 'diluicao', titulo: 'Diluição de um ácido', nivel: 'medir', ver: 'grafico',
-    objetivo: 'Acrescentar água aproxima o pH de 7 sem passar dele.',
-    tubos: [{ name: 'HCl + água', solution: 'hcl', concentration: .01, initialVolume: 1, titrant: 'water', dropVolume: .1, indicator: 'universal' }],
-    passos: ['Goteje água até 5 mL.', 'Veja no gráfico o pH subir cada vez mais devagar.'],
-    extra: medir => [['Com 4 mL de água (5 mL no tubo)', medir('HCl + água', 40)]]
-  },
-  {
-    id: 'cotidiano', titulo: 'Cotidiano com repolho roxo', nivel: 'explorar', ver: 'particulas',
-    objetivo: 'Classificar amostras do dia a dia pela cor do indicador natural.',
-    tubos: [
-      { name: 'Limão', solution: 'lemon', titrant: 'water', indicator: 'cabbage' },
-      { name: 'Vinagre', solution: 'vinegar', titrant: 'water', indicator: 'cabbage' },
-      { name: 'Água', solution: 'water', titrant: 'water', indicator: 'cabbage' },
-      { name: 'Bicarbonato', solution: 'bicarbonate', titrant: 'water', indicator: 'cabbage' },
-      { name: 'Sabão', solution: 'soap', titrant: 'water', indicator: 'cabbage' }
-    ],
-    passos: ['Oculte o pH e classifique cada amostra pela cor.', 'Depois mostre o pH e confira.']
-  },
-  {
-    id: 'chuva', titulo: 'Chuva ácida e correção', nivel: 'medir', ver: 'grafico',
-    objetivo: 'Comparar chuva limpa e ácida e corrigir um lago com água de cal.',
-    tubos: [
-      { name: 'Chuva limpa', solution: 'cleanRain', initialVolume: 2, titrant: 'water', indicator: 'universal' },
-      { name: 'Chuva ácida', solution: 'acidRain', initialVolume: 2, titrant: 'water', indicator: 'universal' },
-      { name: 'Lago', solution: 'acidRain', initialVolume: 2, titrant: 'limewater', titrantConcentration: .0005, dropVolume: .01, indicator: 'universal' }
-    ],
-    passos: ['Compare o pH das duas chuvas.', 'No tubo Lago, goteje água de cal até o pH ficar entre 6 e 8.'],
-    extra: medir => [['Lago depois de 11 gotas', medir('Lago', 11)]]
-  }
-];
+  return {
+    categories,
+    topics,
+    aliases,
+    resolve,
+    category: (id) => categoryMap.get(id),
+    search,
+    normalize,
+    index,
+  };
+})();
+// Compatibility for integrations that inspect the list; rendering uses the registry.
+SIAB.manual = SIAB.manualContent.topics;
