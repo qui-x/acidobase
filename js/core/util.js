@@ -33,10 +33,11 @@ SIAB.phFormat = (result) =>
 // Mensagem curta visível (toast) e anúncio para leitores de tela.
 SIAB.notice = (() => {
   let timer = null;
-  return (message) => {
+  return (message, { contexto = "" } = {}) => {
     const toast = SIAB.$("toast");
     if (!toast) return;
     toast.textContent = message;
+    toast.dataset.contexto = contexto;
     toast.hidden = false;
     clearTimeout(timer);
     timer = setTimeout(() => {

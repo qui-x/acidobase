@@ -58,8 +58,10 @@ SIAB.contaGotas = {
     botao.addEventListener("contextmenu", (evento) => evento.preventDefault());
     // Clique vindo do teclado (Enter) ou de tecnologia assistiva. O clique que
     // o navegador gera depois de um toque ou do mouse é ignorado: a gota já caiu.
-    botao.addEventListener("click", () => {
-      if (cliqueDoToque) {
+    botao.addEventListener("click", (evento) => {
+      // Alguns cliques de toque têm detail = 0 e chegam após a marca expirar.
+      // pointerType os distingue de Enter e da ativação por tecnologia assistiva.
+      if (cliqueDoToque || evento.detail > 0 || evento.pointerType) {
         cliqueDoToque = false;
         return;
       }

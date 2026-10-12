@@ -1,5 +1,14 @@
 # Histórico de versões
 
+## 1.0.0-rc.6
+
+- Corrige a região central do Tubo em foco no mobile, com nome compacto e vidraria independente do crescimento dos textos científicos.
+- Reutiliza o aviso existente para pH efetivamente medido (fita ou pHmetro) e para o volume real adicionado, consolidado ao final de cada sequência.
+- Estabiliza a informação do conta-gotas ao alternar reagentes e preserva a rolagem por toque, inclusive em paisagem baixa.
+- Evita a segunda sequência causada pelo clique de toque após pointerup, mantendo Enter e Espaço.
+- Atualiza identificador de versão e cache, guias de distribuição e manifestos de integridade.
+- Validação focal em Chromium: ver VALIDACAO.md e o relatório externo. Os testes históricos abaixo não foram reexecutados integralmente nesta correção.
+
 ## 1.0.0
 
 - Consolida a linha 1.0.x e promove a RC.5 aprovada para a versão estável oficial.
