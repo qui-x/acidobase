@@ -1,6 +1,6 @@
-# SIAB 1.0.0 — guia de uso
+# SIAB 1.0.0-rc.6 — guia de uso
 
-Abra o arquivo separado **SIAB-1.0.0-standalone.html** para usar o núcleo do programa offline, sem instalação. Para a PWA, use a pasta modular em localhost ou HTTPS. A versão 1.0.0 preserva o comportamento da RC.5 aprovada.
+Extraia **SIAB-1.0.0-rc.6.zip** e sirva a pasta **SIAB/** em localhost ou HTTPS. Abra conectado uma vez para preparar o uso offline. Esta entrega contém o programa modular completo.
 
 ## Começar uma investigação
 
@@ -10,7 +10,7 @@ Abra o arquivo separado **SIAB-1.0.0-standalone.html** para usar o núcleo do pr
 4. Goteje, agite e compare leituras. Uma medição pontual feita antes da alteração permanece identificada como anterior.
 5. Consulte Dados → Tabela ou Relatório. Partículas, espécies e distribuição são representações do modelo; não substituem medições.
 
-No celular, Montagem, Ver e Dados abrem painéis inferiores. Fechar ou Esc recolhe o painel; Voltar retorna ao nível anterior. Em 320×568, a cena pode exigir rolagem vertical interna para revelar o recipiente.
+No celular, Montagem, Ver e Dados abrem painéis inferiores. Fechar ou Esc recolhe o painel; Voltar retorna ao nível anterior. No Tubo em foco, o pH aparece como aviso após uma medição concluída; as leituras continuam nos instrumentos, Dados e relatórios. Em telas baixas, a rolagem interna dá acesso aos controles; em paisagem estreita, as ações rolam ao lado da vidraria.
 
 ## Escolher um caminho
 

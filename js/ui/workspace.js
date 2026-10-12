@@ -277,6 +277,8 @@ SIAB.workspace = (() => {
     const raw = current ? S.instrumentos.raw(current) : [];
     const latest = raw.at(-1);
     const readingKey = `${state.scope}:${current?.id}`;
+    if (mobile.matches && lastReading?.key !== readingKey && $("toast").dataset.contexto === "bancada" && !$("toast").childElementCount)
+      $("toast").hidden = true;
     if (
       latest &&
       lastReading?.key === readingKey &&
@@ -292,6 +294,17 @@ SIAB.workspace = (() => {
       S.announce(
         `${current.name}: ${names[latest.tecnica] || latest.tecnica}, ${typeof latest.valor === "number" ? S.format(latest.valor, latest.tecnica === "fita" ? 0 : 2) : latest.valor} ${latest.unidade || ""}.`,
       );
+      // Só leituras novas, já registradas pelo instrumento. Trocar de tubo,
+      // restaurar uma sessão ou recalcular a solução não produz uma medição.
+      const ph = raw.slice(lastReading.count).filter((m) =>
+        ["fita", "phmetro"].includes(m.tecnica),
+      ).at(-1);
+      if (mobile.matches && ph) {
+        S.notice(
+          `pH medido: ${ph.tecnica === "fita" ? "≈ " : ""}${S.format(ph.valor, ph.tecnica === "fita" ? 0 : 2)}${ph.tecnica === "fita" ? " (fita)" : ""}`,
+          { contexto: "bancada" },
+        );
+      }
     }
     lastReading = { key: readingKey, count: raw.length };
     summary();

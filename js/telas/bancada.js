@@ -104,6 +104,7 @@ SIAB.bancada = (() => {
     if (!sequencia) iniciarSequencia();
     const limite = limiteDaGota(fracao);
     if (limite) {
+      sequencia.limite = true;
       SIAB.notice(
         `${limite.name} não comporta mais esta dose. Capacidade: ${SIAB.format(SIAB.capacidade(limite), 0)} mL.${SIAB.current().group ? " Nenhum tubo do grupo recebeu a dose." : ""}`,
       );
@@ -164,6 +165,16 @@ SIAB.bancada = (() => {
     const texto = `${feita.n} ${feita.n === 1 ? "gota" : "gotas"}${t.group ? " em cada tubo vinculado" : ""}. Total ${agora.r.drops}. Cor ${cor.name}. ${SIAB.instrumentos.leitura(t).texto}.${feita.viragem ? ` Viragem: ${feita.viragem}. A cor ficou: ponto final com ${SIAB.format(agora.r.added)} mL.` : ""}`;
     SIAB.announce(texto);
     SIAB.loja.avisar();
+    // Um aviso por sequência concluída, com o volume que realmente entrou
+    // (inclusive meia gota ou lote interrompido pela capacidade).
+    if (mobile.matches) {
+      const volume = SIAB.format(agora.r.added - feita.r.added, 3).replace(/0$/, "");
+      const material = SIAB.solutions[t.titrant];
+      SIAB.notice(
+        `Adicionado: ${volume} mL de ${material.formula || material.name}${t.group ? " no tubo em foco" : ""}.${feita.limite ? " Próxima dose não cabe." : ""}`,
+        { contexto: "bancada" },
+      );
+    }
   }
   let emLote = false;
   function gotejar(n) {
