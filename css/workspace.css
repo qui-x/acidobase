@@ -882,9 +882,12 @@
   display: none !important;
 }
 
-/* RC.6 — apenas a cena mobile. A vidraria ocupa o espaço real do flex;
+/* 1.0.0 — correção da cena mobile. A vidraria ocupa o espaço real do flex;
    textos científicos continuam renderizados nas docas e nos registros. */
 #mobile-bench-notice-space { display: none; }
+/* A região de anúncios para leitores de tela ficava 1 px abaixo da tela:
+   ao dar foco ao conta-gotas, a página inteira rolava 1 px. */
+#announcer { top: 0; left: 0; }
 @media screen and (max-width: 900px) {
   :root[data-workspace="rc3"] body:has(.workspace:not([hidden])) {
     /* A própria bancada já reserva a navegação. A reserva duplicada no body

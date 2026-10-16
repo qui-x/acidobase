@@ -4817,6 +4817,169 @@ button:disabled {
 .workspace.vazia .workspace-actions {
   display: none !important;
 }
+
+/* 1.0.0 — correção da cena mobile. A vidraria ocupa o espaço real do flex;
+   textos científicos continuam renderizados nas docas e nos registros. */
+#mobile-bench-notice-space { display: none; }
+/* A região de anúncios para leitores de tela ficava 1 px abaixo da tela:
+   ao dar foco ao conta-gotas, a página inteira rolava 1 px. */
+#announcer { top: 0; left: 0; }
+@media screen and (max-width: 900px) {
+  :root[data-workspace="rc3"] body:has(.workspace:not([hidden])) {
+    /* A própria bancada já reserva a navegação. A reserva duplicada no body
+       fazia o navegador rolar a página ao dar foco aos controles. */
+    padding-bottom: 0;
+  }
+  :root[data-workspace="rc3"] .workspace,
+  :root[data-workspace="rc3"] body[data-restrita="true"] .workspace {
+    height: var(--mobile-workspace-height, calc(var(--mobile-visible-height, 100dvh) - var(--header-h) - var(--activity-height, 0px)));
+    padding-bottom: var(--mobile-launchers-height, calc(60px + env(safe-area-inset-bottom))) !important;
+  }
+  :root[data-workspace="rc3"] .workspace:not(.vazia) .focus-view {
+    display: flex;
+    flex-direction: column;
+    /* Limite de leitura do desenho, comum a todas as telas. Se faltar
+       altura, a rolagem nativa revela o restante da bancada. */
+    min-height: calc(8rem + 44px + 26px);
+    overflow-y: auto;
+    /* A rolagem por gesto permanece; atualizações de texto não escolhem
+       uma nova âncora de rolagem dentro da cena. */
+    overflow-anchor: none;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-stage {
+    overflow-y: auto;
+    scroll-padding: 0;
+    overflow-anchor: none;
+  }
+  :root[data-workspace="rc3"] .workspace .focus-heading > div {
+    width: 100%;
+  }
+  :root[data-workspace="rc3"] .workspace .name-row h1 {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  /* O resumo fica sempre na segunda linha: trocar a fórmula do reagente
+     não alterna a barra entre uma e duas linhas nem redimensiona o palco. */
+  :root[data-workspace="rc3"] .workspace .dose-info {
+    display: grid;
+    grid-template-columns: minmax(0, max-content) 44px;
+  }
+  :root[data-workspace="rc3"] .workspace #titrant-label {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  :root[data-workspace="rc3"] .workspace #dose-summary {
+    grid-column: 1 / -1;
+    text-align: center;
+    white-space: nowrap;
+  }
+  :root[data-workspace="rc3"] .workspace .focus-view :is(
+    .resumo-linha, .stage-stats, .volume-readout, .color-reading,
+    #vidro-nota, #equivalence-note, #group-notice
+  ) { display: none; }
+  :root[data-workspace="rc3"] .workspace .focus-view .tube-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr);
+    flex: 1 0 0;
+    min-height: 0;
+    gap: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .focus-view .large-tube {
+    grid-column: 1;
+    grid-row: 1;
+    min-height: 0;
+    height: auto;
+  }
+  :root[data-mobile-focus="on"] #mobile-bench-notice-space {
+    display: block;
+    flex: 0 0 calc(2 * 1.35 * .875rem + 16px);
+  }
+  :root[data-mobile-focus="on"] body:not(.sheet-open) #toast[data-contexto="bancada"]:not(:has(button)) {
+    top: var(--bench-notice-top);
+    max-height: var(--bench-notice-height);
+    padding: 6px 12px;
+    line-height: 1.35;
+    overflow: auto;
+    overflow-wrap: anywhere;
+  }
+  :root[data-mobile-focus="on"][data-mobile-notice="side"] #mobile-bench-notice-space {
+    display: none;
+  }
+  :root[data-mobile-focus="on"][data-mobile-notice="side"] body:not(.sheet-open) #toast[data-contexto="bancada"]:not(:has(button)) {
+    left: var(--bench-notice-left);
+    width: var(--bench-notice-width);
+    max-width: var(--bench-notice-width);
+    transform: none;
+    padding: 6px 8px;
+    font-size: .8rem;
+  }
+  /* O convite inicial continua acessível, após a observação. */
+  :root[data-workspace="rc3"] .workspace:not(.vazia) #boas-vindas {
+    order: 2;
+  }
+  :root[data-workspace="rc3"] .workspace .focus-view:has(#boas-vindas:not([hidden])) .tube-stage {
+    flex-basis: 8rem;
+  }
+}
+@media screen and (max-width: 900px) and (max-height: 500px) and (min-width: 600px) {
+  /* A orientação compacta já usa colunas. Como as ações são irmãs da cena
+     desde a RC.5, as colunas precisam pertencer ao contêiner compartilhado. */
+  :root[data-workspace="rc3"] .workspace:not(.vazia):not(.overview) .workspace-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-toolbar {
+    grid-column: 1 / -1;
+  }
+  :root[data-workspace="rc3"] .workspace:not(.vazia) .focus-view {
+    grid-column: 1;
+    grid-row: 2;
+    min-height: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  :root[data-workspace="rc3"] .workspace .tube-strip {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+}
+@media screen and (max-width: 599px) and (max-height: 500px) and (orientation: landscape) {
+  /* Na paisagem mais baixa, as ações rolam ao lado da observação. */
+  :root[data-workspace="rc3"] .workspace:not(.vazia):not(.overview) .workspace-stage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr) auto;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-toolbar {
+    grid-column: 1 / -1;
+  }
+  :root[data-workspace="rc3"] .workspace:not(.vazia) .focus-view {
+    grid-column: 1;
+    grid-row: 2 / 4;
+    min-height: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions {
+    grid-column: 2;
+    grid-row: 2;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  :root[data-workspace="rc3"] .workspace .tube-strip {
+    grid-column: 2;
+    grid-row: 3;
+    min-width: 0;
+  }
+}
 @media screen and (min-width: 901px) {
   :root[data-workspace="rc3"] .workspace .dock {
     align-self: normal;
@@ -6626,89 +6789,7 @@ details[open] > summary > .disclosure-icon,
 }
 
 </style>
-  <style>
-/* Cena compacta do arquivo único: o desenho ocupa o espaço real entre barras. */
-@media screen and (max-width: 900px) {
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view {
-    overflow: hidden;
-    padding: 6px 12px;
-    min-height: 0;
-    gap: 4px;
-  }
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-heading {
-    flex: 0 0 auto;
-    margin: 0;
-  }
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-heading .resumo-linha,
-  :root[data-siab-standalone] .workspace:not(.vazia) #boas-vindas,
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .stage-stats,
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .volume-readout,
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .color-reading,
-  :root[data-siab-standalone] .workspace:not(.vazia) #vidro-nota,
-  :root[data-siab-standalone] .workspace:not(.vazia) #equivalence-note {
-    display: none !important;
-  }
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .tube-stage {
-    display: flex;
-    flex: 1 1 0;
-    min-height: 0;
-    min-width: 0;
-    margin: 0;
-    gap: 0;
-  }
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .large-tube {
-    display: block;
-    flex: 1 1 0;
-    min-height: 0;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-  }
-  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .large-tube .tube-svg.vidro-foco {
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    max-height: 100%;
-  }
-  :root[data-siab-standalone] .workspace .focus-heading .name-row { margin: 0; }
-  :root[data-siab-standalone] .workspace .focus-heading h1 { margin: 0; overflow-wrap: anywhere; }
-}
-@media screen and (max-width: 900px) {
-  :root[data-siab-standalone] .workspace .workspace-actions { position: relative; }
-  :root[data-siab-standalone][data-mobile-doses="on"] .workspace .workspace-actions .dose-shortcuts {
-    position: absolute;
-    bottom: calc(100% + 6px);
-    left: 8px;
-    right: 8px;
-    width: auto;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 6px;
-    padding: 8px;
-    margin: 0;
-    max-height: min(45dvh, 240px);
-    overflow: auto;
-    z-index: 12;
-    background: var(--panel);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    box-shadow: 0 -4px 18px #0003;
-  }
-}
-@media screen and (max-width: 900px) {
-  :root[data-siab-standalone] .workspace:not(.vazia) #dose-area.workspace-actions { position: relative; }
-  :root[data-siab-standalone] .workspace:not(.vazia) .dose-info { display: none; }
-  :root[data-siab-standalone] .workspace .tube-strip .tube-list small { display: none; }
-  :root[data-siab-standalone] .workspace .name-row h1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-}
-@media screen and (max-width: 900px) {
-  :root[data-siab-standalone] .workspace:not(.vazia) #dose-area.workspace-actions { inset: auto; }
-  :root[data-siab-standalone]:has(.workspace:not([hidden])),
-  :root[data-siab-standalone] body:has(.workspace:not([hidden])) { height: 100%; overflow: hidden; }
-}
-
-</style>
-</head>
+  </head>
   <body>
     <noscript
       ><p class="falha-abertura">
@@ -10067,10 +10148,11 @@ SIAB.phFormat = (result) =>
 // Mensagem curta visível (toast) e anúncio para leitores de tela.
 SIAB.notice = (() => {
   let timer = null;
-  return (message) => {
+  return (message, { contexto = "" } = {}) => {
     const toast = SIAB.$("toast");
     if (!toast) return;
     toast.textContent = message;
+    toast.dataset.contexto = contexto;
     toast.hidden = false;
     clearTimeout(timer);
     timer = setTimeout(() => {
@@ -21033,8 +21115,10 @@ SIAB.contaGotas = {
     botao.addEventListener("contextmenu", (evento) => evento.preventDefault());
     // Clique vindo do teclado (Enter) ou de tecnologia assistiva. O clique que
     // o navegador gera depois de um toque ou do mouse é ignorado: a gota já caiu.
-    botao.addEventListener("click", () => {
-      if (cliqueDoToque) {
+    botao.addEventListener("click", (evento) => {
+      // Alguns cliques de toque têm detail = 0 e chegam após a marca expirar.
+      // pointerType os distingue de Enter e da ativação por tecnologia assistiva.
+      if (cliqueDoToque || evento.detail > 0 || evento.pointerType) {
         cliqueDoToque = false;
         return;
       }
@@ -23459,6 +23543,8 @@ SIAB.workspace = (() => {
     const raw = current ? S.instrumentos.raw(current) : [];
     const latest = raw.at(-1);
     const readingKey = `${state.scope}:${current?.id}`;
+    if (mobile.matches && lastReading?.key !== readingKey && $("toast").dataset.contexto === "bancada" && !$("toast").childElementCount)
+      $("toast").hidden = true;
     if (
       latest &&
       lastReading?.key === readingKey &&
@@ -23474,6 +23560,17 @@ SIAB.workspace = (() => {
       S.announce(
         `${current.name}: ${names[latest.tecnica] || latest.tecnica}, ${typeof latest.valor === "number" ? S.format(latest.valor, latest.tecnica === "fita" ? 0 : 2) : latest.valor} ${latest.unidade || ""}.`,
       );
+      // Só leituras novas, já registradas pelo instrumento. Trocar de tubo,
+      // restaurar uma sessão ou recalcular a solução não produz uma medição.
+      const ph = raw.slice(lastReading.count).filter((m) =>
+        ["fita", "phmetro"].includes(m.tecnica),
+      ).at(-1);
+      if (mobile.matches && ph) {
+        S.notice(
+          `pH medido: ${ph.tecnica === "fita" ? "≈ " : ""}${S.format(ph.valor, ph.tecnica === "fita" ? 0 : 2)}${ph.tecnica === "fita" ? " (fita)" : ""}`,
+          { contexto: "bancada" },
+        );
+      }
     }
     lastReading = { key: readingKey, count: raw.length };
     summary();
@@ -24713,6 +24810,7 @@ SIAB.bancada = (() => {
     if (!sequencia) iniciarSequencia();
     const limite = limiteDaGota(fracao);
     if (limite) {
+      sequencia.limite = true;
       SIAB.notice(
         `${limite.name} não comporta mais esta dose. Capacidade: ${SIAB.format(SIAB.capacidade(limite), 0)} mL.${SIAB.current().group ? " Nenhum tubo do grupo recebeu a dose." : ""}`,
       );
@@ -24773,6 +24871,16 @@ SIAB.bancada = (() => {
     const texto = `${feita.n} ${feita.n === 1 ? "gota" : "gotas"}${t.group ? " em cada tubo vinculado" : ""}. Total ${agora.r.drops}. Cor ${cor.name}. ${SIAB.instrumentos.leitura(t).texto}.${feita.viragem ? ` Viragem: ${feita.viragem}. A cor ficou: ponto final com ${SIAB.format(agora.r.added)} mL.` : ""}`;
     SIAB.announce(texto);
     SIAB.loja.avisar();
+    // Um aviso por sequência concluída, com o volume que realmente entrou
+    // (inclusive meia gota ou lote interrompido pela capacidade).
+    if (mobile.matches) {
+      const volume = SIAB.format(agora.r.added - feita.r.added, 3).replace(/0$/, "");
+      const material = SIAB.solutions[t.titrant];
+      SIAB.notice(
+        `Adicionado: ${volume} mL de ${material.formula || material.name}${t.group ? " no tubo em foco" : ""}.${feita.limite ? " Próxima dose não cabe." : ""}`,
+        { contexto: "bancada" },
+      );
+    }
   }
   let emLote = false;
   function gotejar(n) {
@@ -29091,9 +29199,15 @@ SIAB.iniciarInvestigacao = () => {
     $ = S.$,
     root = document.documentElement;
   const mobile = matchMedia("(max-width: 900px)");
+  const shortViewport = matchMedia("(max-height: 650px)");
   let frame = 0;
   root.dataset.mobileStudy = "on";
   root.dataset.mobileCards = "lista";
+  // Espaço constante para o toast existente, fora da região rolável do SVG.
+  // Aparecer, trocar de texto ou expirar nunca muda a altura da cena.
+  const noticeSpace = document.createElement("div");
+  noticeSpace.id = "mobile-bench-notice-space";
+  $("dose-area").before(noticeSpace);
   function button(id, label, cls = "secondary-btn") {
     const el = document.createElement("button");
     el.id = id;
@@ -29131,38 +29245,42 @@ SIAB.iniciarInvestigacao = () => {
     );
     $("focus-tab").firstChild.textContent = "Tubo em foco";
     cards.hidden = $("overview-grid").classList.contains("selecting");
-    if (!mobile.matches || $("workspace").hidden || $("focus-view").hidden)
+    const focus = mobile.matches && !$("workspace").hidden &&
+      !$("workspace").classList.contains("vazia") && !$("focus-view").hidden;
+    root.dataset.mobileFocus = focus ? "on" : "off";
+    if (!focus) {
+      if (mobile.matches && $("toast").dataset.contexto === "bancada" && !$("toast").childElementCount) $("toast").hidden = true;
       return;
-    const stage = document.querySelector(".tube-stage");
-    const h = (el) =>
-      el?.getClientRects().length ? el.getBoundingClientRect().height : 0;
-    const fixed = [...$("focus-view").children]
-      .filter((el) => el !== stage)
-      .reduce((n, el) => n + h(el), 0);
-    const remaining =
-      (vv?.height || innerHeight) -
-      h(document.querySelector(".app-header")) -
-      h($("activity-banner")) -
-      h($("workspace-toolbar")) -
-      h($("workspace-launchers")) -
-      h(document.querySelector(".tube-strip")) -
-      h($("dose-area")) -
-      fixed -
-      Math.max(
-        h(document.querySelector(".stage-stats")),
-        h(document.querySelector(".volume-readout")),
-      ) -
-      44;
-    stage.style.setProperty(
-      "--mobile-glass-height",
-      `${Math.round(Math.max(130, Math.min(480, remaining)))}px`,
-    );
+    }
+    root.dataset.mobileNotice = shortViewport.matches ? "side" : "footer";
+    const header = document.querySelector(".app-header").getBoundingClientRect();
+    const banner = $("activity-banner");
+    const bannerHeight = banner?.getClientRects().length ? banner.getBoundingClientRect().height : 0;
+    root.style.setProperty("--mobile-workspace-height", `${(vv?.height || innerHeight) - header.height - bannerHeight}px`);
+    root.style.setProperty("--mobile-launchers-height", `${$("workspace-launchers").getBoundingClientRect().height}px`);
+    let rect = noticeSpace.getBoundingClientRect();
+    if (shortViewport.matches) {
+      // Em pouca altura, o espaço vazio ao lado do SVG recebe o mesmo toast.
+      // O retângulo do desenho é calculado pelo viewBox, sem mudar sua escala.
+      const glass = $("large-tube"), box = glass.getBoundingClientRect();
+      const view = glass.querySelector("svg")?.viewBox.baseVal;
+      const drawnWidth = view?.height ? Math.min(box.width, box.height * view.width / view.height) : box.width;
+      rect = { top: box.top, height: box.height };
+      root.style.setProperty("--bench-notice-left", `${box.left}px`);
+      root.style.setProperty("--bench-notice-width", `${Math.max(0, (box.width - drawnWidth) / 2 - 8)}px`);
+    }
+    root.style.setProperty("--bench-notice-top", `${rect.top}px`);
+    root.style.setProperty("--bench-notice-height", `${rect.height}px`);
+    $("tube-name").title = $("tube-name").textContent;
+    $("titrant-label").title = $("titrant-label").textContent;
   }
   function schedule() {
     if (!frame) frame = requestAnimationFrame(update);
   }
   window.addEventListener("resize", schedule);
   window.visualViewport?.addEventListener("resize", schedule);
+  window.visualViewport?.addEventListener("scroll", schedule);
+  document.addEventListener("scroll", schedule, { passive: true, capture: true });
   document.addEventListener("click", schedule);
   S.loja.assinar(schedule);
   new MutationObserver(schedule).observe($("workspace"), {
@@ -29175,6 +29293,8 @@ SIAB.iniciarInvestigacao = () => {
       document.querySelector(".app-header"),
       $("dose-area"),
       document.querySelector(".focus-heading"),
+      $("focus-view"),
+      noticeSpace,
     ])
       observer.observe(el);
     const banner = document.querySelector(".activity-banner");
@@ -29201,53 +29321,5 @@ SIAB.iniciarInvestigacao = () => {
     <script>
       if (window.SIABCompat) window.SIABCompat.concluir();
     </script>
-  <script>
-"use strict";
-/* Apresentação apenas. O instrumento e seus registros continuam no motor original. */
-(() => {
-  if (!document.documentElement.hasAttribute("data-siab-standalone")) return;
-  const root = document.documentElement;
-  const doses = SIAB.$("mobile-doses-toggle");
-  const shortcuts = SIAB.$("dose-shortcuts");
-  shortcuts.setAttribute("role", "group");
-  shortcuts.setAttribute("aria-label", "Doses predefinidas");
-  function closeDoses(restoreFocus = false) {
-    if (root.dataset.mobileDoses !== "on") return;
-    root.dataset.mobileDoses = "off";
-    doses.setAttribute("aria-expanded", "false");
-    if (restoreFocus) doses.focus();
-  }
-  document.addEventListener("click", (event) => {
-    if (event.target.closest("#dose-shortcuts button")) closeDoses(true);
-    else if (!event.target.closest("#dose-shortcuts, #mobile-doses-toggle")) closeDoses();
-  });
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") closeDoses(true);
-  });
-  const seen = new WeakMap();
-  const added = new WeakMap();
-  const mobile = matchMedia("(max-width: 900px)");
-  for (const t of SIAB.state.tubes) seen.set(t, SIAB.instrumentos.dados(t).ph);
-  SIAB.loja.assinar(() => {
-    for (const t of SIAB.state.tubes) {
-      const drops = t.additions.length;
-      const previousDrops = added.get(t);
-      added.set(t, drops);
-      if (mobile.matches && t === SIAB.current() && previousDrops !== undefined && drops > previousDrops) {
-        const reagent = SIAB.solutions[t.titrant]?.name || "Reagente";
-        SIAB.notice(`${t.name}: ${drops - previousDrops} ${drops - previousDrops === 1 ? "gota adicionada" : "gotas adicionadas"} de ${reagent}.`);
-      }
-      const measurement = SIAB.instrumentos.dados(t).ph;
-      const previous = seen.get(t);
-      seen.set(t, measurement);
-      if (!mobile.matches || t !== SIAB.current() || !measurement ||
-          measurement === previous || SIAB.$("workspace").hidden) continue;
-      const reading = SIAB.instrumentos.leitura(t);
-      if (reading.valida) SIAB.notice(`${t.name}: ${reading.texto}.`);
-    }
-  });
-})();
-
-</script>
-</body>
+  </body>
 </html>
