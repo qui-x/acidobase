@@ -4,16 +4,18 @@
 
 # SIAB · Simulador Interativo de Ácidos e Bases
 
-### A química das cores 🧪🌈
+### A química das cores
 
 **Observe. Meça. Interprete. Investigue.**
 
-![Versão 1.0.0](https://img.shields.io/badge/vers%C3%A3o-1.0.0-c026d3?style=for-the-badge)
-![140 substâncias](https://img.shields.io/badge/subst%C3%A2ncias-140-db2777?style=for-the-badge)
-![Funciona offline](https://img.shields.io/badge/funciona-offline-7c3aed?style=for-the-badge)
-![Licença GPL-3.0](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-dc2626?style=for-the-badge)
+<img src="midia/escala-ph.svg" width="720" alt="Escala de pH de 0 a 14 com as cores do indicador universal do SIAB: vermelho no ácido, verde no neutro e roxo no básico">
 
-### [▶ Abrir o SIAB no navegador](https://qui-x.github.io/acidobase/)
+![Versão 1.0.0](https://img.shields.io/badge/vers%C3%A3o-1.0.0-c026d3)
+![140 substâncias](https://img.shields.io/badge/subst%C3%A2ncias-140-db2777)
+![Funciona offline](https://img.shields.io/badge/funciona-offline-7c3aed)
+![Licença GPL-3.0](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-dc2626)
+
+### [Abrir o SIAB no navegador <img src="midia/icones/next.svg" width="20" height="20" alt="">](https://qui-x.github.io/acidobase/)
 
 <sub>Sem cadastro, sem instalar nada, no computador ou no celular.</sub>
 
@@ -25,7 +27,7 @@
 
 ---
 
-## 🤔 O que é o SIAB?
+## <img src="midia/icones/lab.svg" width="22" height="22" alt=""> O que é o SIAB?
 
 O SIAB é um **laboratório de ácidos e bases que cabe no navegador**. Você monta a bancada, escolhe uma solução e um indicador, pinga gota a gota e acompanha o que acontece:
 
@@ -44,7 +46,7 @@ O SIAB traduz esse conteúdo para o mundo digital **sem abrir mão da ciência**
 
 ---
 
-## ⏱️ Comece em 30 segundos
+## <img src="midia/icones/tour.svg" width="22" height="22" alt=""> Comece em 30 segundos
 
 1. Abra o **[SIAB](https://qui-x.github.io/acidobase/)** e entre no **Laboratório**.
 2. Em **Montagem**, escolha uma solução (que tal *Suco de limão*?) e um indicador (*Extrato de repolho roxo*).
@@ -52,13 +54,13 @@ O SIAB traduz esse conteúdo para o mundo digital **sem abrir mão da ciência**
 4. Em **Ver → Medir**, mergulhe uma fita de pH ou ligue o pHmetro.
 5. Em **Ver → Analisar**, acompanhe o gráfico. Em **Dados**, ficam a tabela e o relatório.
 
-> 💡 Quer ir direto ao ponto? Em **Montagens prontas** há 11 bancadas montadas, como *Ácido forte × base forte* e o *Arco-íris do pH*.
+> **Dica:** quer ir direto ao ponto? Em **Montagens prontas** há 11 bancadas montadas, como *Ácido forte × base forte* e o *Arco-íris do pH*.
 
 ---
 
-## 🎬 Um passeio pelo laboratório
+## <img src="midia/icones/eye.svg" width="22" height="22" alt=""> Um passeio pelo laboratório
 
-### 🎨 Pingue e veja a cor virar
+### Pingue e veja a cor virar
 
 <img src="midia/titulacao.gif" width="800" alt="Titulação de ácido clorídrico com hidróxido de sódio usando azul de bromotimol: o tubo passa de amarelo a verde e a azul, enquanto o gráfico de pH por volume desenha uma curva em S com um salto perto de 1 mL">
 
@@ -66,7 +68,7 @@ O SIAB traduz esse conteúdo para o mundo digital **sem abrir mão da ciência**
 
 Repare na estratégia: **+5 gotas** enquanto o pH quase não muda e **gota a gota perto da equivalência**, como numa titulação de verdade. Entre a 19ª e a 21ª gota o pH salta de cerca de 3,6 para 10,4!
 
-### 🌀 Cada gota cai em um lugar
+### Cada gota cai em um lugar
 
 <div align="center">
 <img src="midia/agitar.gif" width="530" alt="Gotas de hidróxido de sódio caem no tubo amarelo e formam uma mancha azul onde caem; ao tocar em Agitar a cor se espalha, e o tubo fica verde e depois azul">
@@ -74,7 +76,7 @@ Repare na estratégia: **+5 gotas** enquanto o pH quase não muda e **gota a got
 
 A gota não muda o tubo inteiro de uma vez: ela colore **só onde cai**. Toque em **Agitar** e a mistura fica homogênea, com a cor que corresponde ao pH da solução toda. É o mesmo que acontece no béquer quando você esquece de mexer!
 
-### 🔬 Veja o invisível
+### Veja o invisível
 
 <div align="center">
 <img src="midia/particulas.gif" width="623" alt="Ao lado do tubo, uma caixa de partículas mostra íons H3O+ vermelhos sendo consumidos pelos OH- que chegam, com o aviso H3O+ + OH- formam 2 H2O; depois da equivalência sobram Na+, Cl- e OH-">
@@ -82,13 +84,13 @@ A gota não muda o tubo inteiro de uma vez: ela colore **só onde cai**. Toque e
 
 Em **Ver → Observar → Partículas**, cada OH⁻ que chega encontra um H₃O⁺ e os dois viram água: **H₃O⁺ + OH⁻ → 2 H₂O**. O Cl⁻ e o Na⁺ só assistem: são **íons espectadores**. Depois da equivalência, os OH⁻ começam a sobrar, e é por isso que o pH dispara.
 
-### 🌈 O arco-íris do pH
+### O arco-íris do pH
 
 <img src="midia/arco-iris.gif" width="800" alt="Sete tubos com indicador universal aparecem na bancada, do vermelho ao roxo; cada um é mostrado em foco e depois todos juntos na visão geral">
 
 Sete soluções, um indicador universal, todas as cores da escala: ácido clorídrico, ácido clorídrico diluído, cloreto de amônio, água pura, acetato de sódio, amônia e hidróxido de sódio. De **vermelho** a **roxo**, passando pelo verde da água pura. Sais também mudam o pH!
 
-### 📱 No celular também
+### No celular também
 
 <table>
 <tr>
@@ -110,7 +112,7 @@ Aqui, ácido clorídrico com **fenolftaleína**: incolor no ácido, rosa assim q
 
 ---
 
-## 🧰 Tem muito mais
+## <img src="midia/icones/mount.svg" width="22" height="22" alt=""> Tem muito mais
 
 <table>
 <tr>
@@ -125,18 +127,18 @@ Aqui, ácido clorídrico com **fenolftaleína**: incolor no ácido, rosa assim q
 
 | | O que tem |
 |---|---|
-| 🧴 **140 substâncias** | 5 ácidos fortes, 13 ácidos fracos, 5 bases fortes, 12 bases fracas, 35 sais, 12 ácidos polipróticos e aminoácidos (ácido fosfórico, ácido cítrico, glicina…), 2 suspensões, água e **55 amostras do cotidiano**: suco de limão, vinagre, refrigerante, leite, café, água sanitária, saliva, água do mar… |
-| 🎨 **11 indicadores** | Fenolftaleína, azul de bromotimol, alaranjado de metila, vermelho de metila, verde de bromocresol, vermelho de fenol, timolftaleína, tornassol, indicador universal e dois naturais: **repolho roxo** e **cúrcuma** |
-| ⚗️ **3 vidrarias** | Tubo de ensaio, béquer e erlenmeyer |
-| 📏 **Instrumentos** | Fita de pH, pHmetro com calibração de dois pontos, termômetro e condutivímetro |
-| 📈 **Gráficos e dados** | pH × volume, ΔpH/ΔV, distribuição de espécies, tabela de medições e histórico |
-| 🧭 **Três módulos** | **Explorar** (observar a cor mudar), **Medir** (controlar quantidades e registrar leituras) e **Calcular** (concentrações, [H₃O⁺], [OH⁻], Ka, Kb e α) |
-| 🗺️ **Para aprender** | 14 temas, 19 missões, 35 roteiros experimentais e 11 montagens prontas |
-| 📓 **Caderno e relatório** | O Caderno guarda notas e práticas. O relatório sai completo, para preencher à mão ou como atividade de análise, e pode ser impresso ou salvo em PDF |
+| <img src="midia/icones/prepare.svg" width="18" height="18" alt=""> **140 substâncias** | 5 ácidos fortes, 13 ácidos fracos, 5 bases fortes, 12 bases fracas, 35 sais, 12 ácidos polipróticos e aminoácidos (ácido fosfórico, ácido cítrico, glicina…), 2 suspensões, água e **55 amostras do cotidiano**: suco de limão, vinagre, refrigerante, leite, café, água sanitária, saliva, água do mar… |
+| <img src="midia/icones/lab.svg" width="18" height="18" alt=""> **11 indicadores** | Fenolftaleína, azul de bromotimol, alaranjado de metila, vermelho de metila, verde de bromocresol, vermelho de fenol, timolftaleína, tornassol, indicador universal e dois naturais: **repolho roxo** e **cúrcuma** |
+| <img src="midia/icones/mount.svg" width="18" height="18" alt=""> **3 vidrarias** | Tubo de ensaio, béquer e erlenmeyer |
+| <img src="midia/icones/meter.svg" width="18" height="18" alt=""> **Instrumentos** | Fita de pH, pHmetro com calibração de dois pontos, termômetro e condutivímetro |
+| <img src="midia/icones/chart.svg" width="18" height="18" alt=""> **Gráficos e dados** | pH × volume, ΔpH/ΔV, distribuição de espécies, tabela de medições e histórico |
+| <img src="midia/icones/explore.svg" width="18" height="18" alt=""> **Três módulos** | **Explorar** (observar a cor mudar), **Medir** (controlar quantidades e registrar leituras) e **Calcular** (concentrações, [H₃O⁺], [OH⁻], Ka, Kb e α) |
+| <img src="midia/icones/mission.svg" width="18" height="18" alt=""> **Para aprender** | 14 temas, 19 missões, 35 roteiros experimentais e 11 montagens prontas |
+| <img src="midia/icones/notebook.svg" width="18" height="18" alt=""> **Caderno e relatório** | O Caderno guarda notas e práticas. O relatório sai completo, para preencher à mão ou como atividade de análise, e pode ser impresso ou salvo em PDF |
 
 ---
 
-## 🧠 A ciência por trás das cores
+## <img src="midia/icones/learn.svg" width="22" height="22" alt=""> A ciência por trás das cores
 
 O SIAB não "chuta" o pH. Para cada tubo ele resolve o equilíbrio químico de verdade:
 
@@ -152,18 +154,18 @@ E os limites são assumidos às claras. É um modelo didático: solução ideal,
 
 ---
 
-## 👩‍🏫 Para professores
+## <img src="midia/icones/professor.svg" width="22" height="22" alt=""> Para professores
 
 - **Prepare em três passos:** escolha uma missão, um roteiro ou uma montagem; defina instrumentos, temperatura e navegação; gere o link e **abra como aluno** para conferir.
 - **Modo projetor** para mostrar a bancada para a turma toda.
 - **Relatórios** separam condições iniciais, medições, representações, interpretação e condições finais. A versão **para preencher à mão** mantém os dados e deixa em branco só os campos de autoria do aluno.
 - As respostas de referência ficam na área do professor, e cada link carrega a própria configuração.
 
-## ♿ Acessível de verdade
+## <img src="midia/icones/accessibility.svg" width="22" height="22" alt=""> Acessível de verdade
 
 Modo escuro e claro, **alto contraste**, tamanho do texto, espaçamento de letras, **reduzir animações**, leitura simples e **simulação de daltonismo**. A cor de cada tubo também é descrita em texto. O **som do pH** fica mais agudo quanto maior o pH, e o celular pode **vibrar na viragem**. O VLibras é opcional e precisa de internet.
 
-## 📴 Funciona sem internet
+## <img src="midia/icones/install.svg" width="22" height="22" alt=""> Funciona sem internet
 
 - **Como aplicativo:** abra o SIAB conectado uma vez e use **Instalar** no navegador. Depois ele abre mesmo offline.
 - **Arquivo único:** baixe o [`SIAB-1.0.0-standalone.html`](../SIAB-1.0.0-standalone.html) (botão de download na página do arquivo) e abra direto no navegador, sem servidor e sem instalar nada.
@@ -171,7 +173,7 @@ Modo escuro e claro, **alto contraste**, tamanho do texto, espaçamento de letra
 
 ---
 
-## 💻 Rodar no seu computador
+## <img src="midia/icones/projector.svg" width="22" height="22" alt=""> Rodar no seu computador
 
 ```bash
 git clone https://github.com/qui-x/acidobase.git
@@ -195,16 +197,22 @@ Abra `http://localhost:8080`. Não precisa de Node, npm nem compilação: é HTM
 
 ---
 
-## 📜 Licença
+## <img src="midia/icones/report.svg" width="22" height="22" alt=""> Licença
 
 SIAB é software livre sob a licença [GPL-3.0](../LICENSE): use, estude, modifique e compartilhe. O [dialog-polyfill](../vendor/dialog-polyfill/LICENSE) incluído segue a licença BSD-3-Clause.
+
+---
+
+## <img src="midia/icones/about.svg" width="22" height="22" alt=""> Créditos
+
+Desenvolvido por **Thiago Weslei** no **IFBA**, o Instituto Federal de Educação, Ciência e Tecnologia da Bahia.
 
 <div align="center">
 
 <br>
 
-**Feito com 💜 para quem ensina e aprende química.**
+**Feito para quem ensina e aprende química.**
 
-<sub>Gostou? Deixe uma ⭐ no repositório e mostre o SIAB para sua turma!</sub>
+<sub>Gostou? Deixe uma estrela no repositório e mostre o SIAB para sua turma.</sub>
 
 </div>
