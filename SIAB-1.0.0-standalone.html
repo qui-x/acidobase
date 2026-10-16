@@ -1,7 +1,8 @@
 <!doctype html>
-<html lang="pt-BR" data-theme="dark">
+<html data-siab-standalone="true" lang="pt-BR" data-theme="dark">
   <head>
     <meta charset="utf-8" />
+    <meta name="application-version" content="1.0.0" />
     <meta
       name="viewport"
       content="width=device-width,initial-scale=1,viewport-fit=cover"
@@ -2131,7 +2132,7 @@ dialog.tour + .backdrop { background: transparent; }
   // apontando pro favicon.svg da raiz (com o mesmo número de "../").
   function atualizarFavicon(tema) {
     var link = document.querySelector('link[rel="icon"][type="image/svg+xml"]');
-    if (link && (link.getAttribute('href') || '').startsWith('data:')) return;
+    if (link && (link.getAttribute('href') || '').startsWith('data:')) {link.setAttribute('href', tema === 'light' ? "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHJvbGU9ImltZyIgYXJpYS1sYWJlbGxlZGJ5PSJzaWFiLWljb24tdGl0bGUgc2lhYi1pY29uLWRlc2MiPgogIDx0aXRsZSBpZD0ic2lhYi1pY29uLXRpdGxlIj5TSUFCIOKAlCBBIHF1w61taWNhIGRhcyBjb3JlczwvdGl0bGU+CiAgPGRlc2MgaWQ9InNpYWItaWNvbi1kZXNjIj5VbWEgZ290YSBzb2JyZSB1bSB0dWJvIGRlIGVuc2FpbyBjb20gbMOtcXVpZG8gZW0gZGVncmFkw6ogZG8gdmVybWVsaG8gYW8gcm94by48L2Rlc2M+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItb3V0bGluZSIgeDE9IjkiIHkxPSIxMCIgeDI9IjIzIiB5Mj0iMjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4zNCIgc3RvcC1jb2xvcj0iI0RCMjc3NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii42NSIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItbGlxdWlkIiB4MT0iMTIiIHkxPSIxOCIgeDI9IjIwIiB5Mj0iMjYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii40OCIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItZHJvcCIgeDE9IjEzLjMiIHkxPSIyIiB4Mj0iMTguNyIgeTI9IjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQjI3NzciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGQ9Ik0xNiAyQzE1LjIgMy41IDEzLjMgNS42IDEzLjMgN2EyLjcgMi43IDAgMCAwIDUuNCAwYzAtMS40LTEuOS0zLjUtMi43LTVaIiBmaWxsPSJ1cmwoI3NpYWItZHJvcCkiLz4KICA8cGF0aCBkPSJNMTAgMTF2MTJhNiA2IDAgMCAwIDEyIDBWMTFNOC41IDExaDE1IiBzdHJva2U9InVybCgjc2lhYi1vdXRsaW5lKSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xMiAxOGMyLjUtMS41IDUuNSAxLjUgOCAwdjVhNCA0IDAgMCAxLTggMFoiIGZpbGw9InVybCgjc2lhYi1saXF1aWQpIi8+Cjwvc3ZnPgo=" : "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHJvbGU9ImltZyIgYXJpYS1sYWJlbGxlZGJ5PSJzaWFiLWljb24tdGl0bGUgc2lhYi1pY29uLWRlc2MiPgogIDx0aXRsZSBpZD0ic2lhYi1pY29uLXRpdGxlIj5TSUFCIOKAlCBBIHF1w61taWNhIGRhcyBjb3JlczwvdGl0bGU+CiAgPGRlc2MgaWQ9InNpYWItaWNvbi1kZXNjIj5VbWEgZ290YSBzb2JyZSB1bSB0dWJvIGRlIGVuc2FpbyBjb20gbMOtcXVpZG8gZW0gZGVncmFkw6ogZG8gdmVybWVsaG8gYW8gcm94by48L2Rlc2M+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItb3V0bGluZSIgeDE9IjkiIHkxPSIxMCIgeDI9IjIzIiB5Mj0iMjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4zNCIgc3RvcC1jb2xvcj0iI0RCMjc3NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii42NSIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItbGlxdWlkIiB4MT0iMTIiIHkxPSIxOCIgeDI9IjIwIiB5Mj0iMjYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii40OCIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItZHJvcCIgeDE9IjEzLjMiIHkxPSIyIiB4Mj0iMTguNyIgeTI9IjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQjI3NzciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGQ9Ik0xNiAyQzE1LjIgMy41IDEzLjMgNS42IDEzLjMgN2EyLjcgMi43IDAgMCAwIDUuNCAwYzAtMS40LTEuOS0zLjUtMi43LTVaIiBmaWxsPSJ1cmwoI3NpYWItZHJvcCkiLz4KICA8cGF0aCBkPSJNMTAgMTF2MTJhNiA2IDAgMCAwIDEyIDBWMTFNOC41IDExaDE1IiBzdHJva2U9InVybCgjc2lhYi1vdXRsaW5lKSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xMiAxOGMyLjUtMS41IDUuNSAxLjUgOCAwdjVhNCA0IDAgMCAxLTggMFoiIGZpbGw9InVybCgjc2lhYi1saXF1aWQpIi8+Cjwvc3ZnPgo="); return; }
     if (!link) return; // página sem favicon declarado: nada a fazer
     var arquivo = tema === 'light' ? 'favicon-light.svg' : 'favicon-dark.svg';
     link.setAttribute('href', PREFIXO_RAIZ + arquivo);
@@ -6625,7 +6626,89 @@ details[open] > summary > .disclosure-icon,
 }
 
 </style>
-  </head>
+  <style>
+/* Cena compacta do arquivo único: o desenho ocupa o espaço real entre barras. */
+@media screen and (max-width: 900px) {
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view {
+    overflow: hidden;
+    padding: 6px 12px;
+    min-height: 0;
+    gap: 4px;
+  }
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-heading {
+    flex: 0 0 auto;
+    margin: 0;
+  }
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-heading .resumo-linha,
+  :root[data-siab-standalone] .workspace:not(.vazia) #boas-vindas,
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .stage-stats,
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .volume-readout,
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .color-reading,
+  :root[data-siab-standalone] .workspace:not(.vazia) #vidro-nota,
+  :root[data-siab-standalone] .workspace:not(.vazia) #equivalence-note {
+    display: none !important;
+  }
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .tube-stage {
+    display: flex;
+    flex: 1 1 0;
+    min-height: 0;
+    min-width: 0;
+    margin: 0;
+    gap: 0;
+  }
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .large-tube {
+    display: block;
+    flex: 1 1 0;
+    min-height: 0;
+    height: 100%;
+    width: 100%;
+    margin: 0;
+  }
+  :root[data-siab-standalone] .workspace:not(.vazia) .focus-view .large-tube .tube-svg.vidro-foco {
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    max-height: 100%;
+  }
+  :root[data-siab-standalone] .workspace .focus-heading .name-row { margin: 0; }
+  :root[data-siab-standalone] .workspace .focus-heading h1 { margin: 0; overflow-wrap: anywhere; }
+}
+@media screen and (max-width: 900px) {
+  :root[data-siab-standalone] .workspace .workspace-actions { position: relative; }
+  :root[data-siab-standalone][data-mobile-doses="on"] .workspace .workspace-actions .dose-shortcuts {
+    position: absolute;
+    bottom: calc(100% + 6px);
+    left: 8px;
+    right: 8px;
+    width: auto;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 6px;
+    padding: 8px;
+    margin: 0;
+    max-height: min(45dvh, 240px);
+    overflow: auto;
+    z-index: 12;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: 0 -4px 18px #0003;
+  }
+}
+@media screen and (max-width: 900px) {
+  :root[data-siab-standalone] .workspace:not(.vazia) #dose-area.workspace-actions { position: relative; }
+  :root[data-siab-standalone] .workspace:not(.vazia) .dose-info { display: none; }
+  :root[data-siab-standalone] .workspace .tube-strip .tube-list small { display: none; }
+  :root[data-siab-standalone] .workspace .name-row h1 { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+}
+@media screen and (max-width: 900px) {
+  :root[data-siab-standalone] .workspace:not(.vazia) #dose-area.workspace-actions { inset: auto; }
+  :root[data-siab-standalone]:has(.workspace:not([hidden])),
+  :root[data-siab-standalone] body:has(.workspace:not([hidden])) { height: 100%; overflow: hidden; }
+}
+
+</style>
+</head>
   <body>
     <noscript
       ><p class="falha-abertura">
@@ -28425,6 +28508,7 @@ SIAB.pwa = (() => {
 
   function podeUsarServiceWorker() {
     return (
+      !document.documentElement.hasAttribute("data-siab-standalone") &&
       "serviceWorker" in navigator &&
       (location.protocol === "https:" ||
         location.hostname === "localhost" ||
@@ -29117,5 +29201,53 @@ SIAB.iniciarInvestigacao = () => {
     <script>
       if (window.SIABCompat) window.SIABCompat.concluir();
     </script>
-  </body>
+  <script>
+"use strict";
+/* Apresentação apenas. O instrumento e seus registros continuam no motor original. */
+(() => {
+  if (!document.documentElement.hasAttribute("data-siab-standalone")) return;
+  const root = document.documentElement;
+  const doses = SIAB.$("mobile-doses-toggle");
+  const shortcuts = SIAB.$("dose-shortcuts");
+  shortcuts.setAttribute("role", "group");
+  shortcuts.setAttribute("aria-label", "Doses predefinidas");
+  function closeDoses(restoreFocus = false) {
+    if (root.dataset.mobileDoses !== "on") return;
+    root.dataset.mobileDoses = "off";
+    doses.setAttribute("aria-expanded", "false");
+    if (restoreFocus) doses.focus();
+  }
+  document.addEventListener("click", (event) => {
+    if (event.target.closest("#dose-shortcuts button")) closeDoses(true);
+    else if (!event.target.closest("#dose-shortcuts, #mobile-doses-toggle")) closeDoses();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") closeDoses(true);
+  });
+  const seen = new WeakMap();
+  const added = new WeakMap();
+  const mobile = matchMedia("(max-width: 900px)");
+  for (const t of SIAB.state.tubes) seen.set(t, SIAB.instrumentos.dados(t).ph);
+  SIAB.loja.assinar(() => {
+    for (const t of SIAB.state.tubes) {
+      const drops = t.additions.length;
+      const previousDrops = added.get(t);
+      added.set(t, drops);
+      if (mobile.matches && t === SIAB.current() && previousDrops !== undefined && drops > previousDrops) {
+        const reagent = SIAB.solutions[t.titrant]?.name || "Reagente";
+        SIAB.notice(`${t.name}: ${drops - previousDrops} ${drops - previousDrops === 1 ? "gota adicionada" : "gotas adicionadas"} de ${reagent}.`);
+      }
+      const measurement = SIAB.instrumentos.dados(t).ph;
+      const previous = seen.get(t);
+      seen.set(t, measurement);
+      if (!mobile.matches || t !== SIAB.current() || !measurement ||
+          measurement === previous || SIAB.$("workspace").hidden) continue;
+      const reading = SIAB.instrumentos.leitura(t);
+      if (reading.valida) SIAB.notice(`${t.name}: ${reading.texto}.`);
+    }
+  });
+})();
+
+</script>
+</body>
 </html>
