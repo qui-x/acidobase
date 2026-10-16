@@ -205,7 +205,7 @@ SIAB é software livre sob a licença [GPL-3.0](../LICENSE): use, estude, modifi
 
 ## <img src="midia/icones/about.svg" width="22" height="22" alt=""> Créditos
 
-Desenvolvido por **Thiago Weslei** no **IFBA**, o Instituto Federal de Educação, Ciência e Tecnologia da Bahia.
+Desenvolvido por **Thiago Weslei** no **IFBA**, o Instituto Federal de Educação, Ciência e Tecnologia da Bahia - Campus Vitória da Conquista.
 
 <div align="center">
 
