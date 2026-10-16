@@ -1,4 +1,4 @@
-# Validação da correção — SIAB 1.0.0-rc.6
+# Validação da correção — SIAB 1.0.0
 
 Validação focal realizada em 11/10/2026, com Chromium 143.0.7499.0 e Playwright 1.62.1 em Linux.
 
@@ -8,13 +8,27 @@ Validação focal realizada em 11/10/2026, com Chromium 143.0.7499.0 e Playwrigh
 - Paisagem 844×390 e 568×320: vidraria dentro da área visível, sem invadir seleção/navegação, estável ao gotejar e medir. Na paisagem estreita, os controles têm rolagem própria.
 - Tema escuro, texto a 150%, preferência por movimento reduzido e atributos do anúncio acessível. Isso não equivale a auditoria WCAG ou teste com leitor de tela real.
 - Desktop 1440×1000: geometria e captura idênticas à base no cenário comparado, com mesmo resultado químico.
-- Atualização 1.0.0 → RC.6, ativação do novo service worker, remoção do cache anterior, retenção das medições e reabertura offline.
+- Atualização da publicação 1.0.0 anterior para a corrigida, ativação do novo service worker, remoção do cache anterior, retenção das medições e reabertura offline.
 
 Firefox/Gecko e Safari/WebKit não estavam disponíveis nesta rodada. Aparelhos físicos, instalação pelo sistema, leitores de tela e impressão não foram homologados. A suíte histórica de 795 cenários não foi reexecutada; os arquivos científicos, de armazenamento e de relatórios foram preservados por comparação de bytes. O relatório externo contém causa, arquivos, capturas reais e SHA-512 do ZIP.
 
+## Revalidação na publicação oficial — 16/10/2026
+
+Chromium 141.0.7390.37 com Playwright 1.56.1 em Linux, viewports emulados com toque. Roteiro aplicado à versão modular e ao `SIAB-1.0.0-standalone.html`, com o mesmo resultado.
+
+- Retrato 320×568, 360×800, 375×667, 390×844 e 414×896; paisagem 844×390 e 568×320. Um toque goteja uma gota. Segurar produz uma única sequência, e o clique atrasado do toque não acrescenta gota. Enter goteja uma gota e Espaço segurado goteja continuamente.
+- O aviso "Adicionado" consolida a sequência e fica fora do desenho. A vidraria (tubo, béquer, erlenmeyer) fica dentro da área visível e não muda de tamanho ao gotejar, medir, trocar o reagente ou mostrar o aviso. Nome longo aparece com reticências, e Visão geral esconde o aviso.
+- A página não rola ao tocar no conta-gotas: corrigida a rolagem de 1 px causada pela região de anúncios para leitores de tela.
+- Computador 1440×1000, 1360×900 e 1024×768: o clique goteja uma gota e o duplo clique, duas. Enter e a ativação programática gotejam uma gota cada, sem aviso mobile.
+- Atualização real no mesmo endereço, da publicação 1.0.0 anterior (cache `siab-1.0.0`) para esta (`siab-1.0.0+20261012`). O aviso Recarregar aparece e o cache anterior é removido. As 7 gotas e as 3 medições foram preservadas, e a reabertura offline usa o código corrigido.
+- Standalone aberto como arquivo e por HTTP: versão 1.0.0 e 140 substâncias. Sem manifesto, service worker, pedidos externos ou erros.
+- Todas as telas em 1360×900 e 390×844 abrem sem erros de console.
+
+Firefox e WebKit não estavam disponíveis nesta rodada. Isso não substitui aparelhos físicos.
+
 ## Registro histórico fornecido com a base 1.0.0
 
-O conteúdo abaixo veio no pacote original e documenta a validação daquela versão, não a RC.6.
+O conteúdo abaixo veio no pacote original e documenta a validação daquela versão, antes da correção da bancada mobile.
 
 **STATUS: APROVADO**  
 **VERSÃO: 1.0.0**  

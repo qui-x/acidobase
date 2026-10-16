@@ -1,6 +1,6 @@
-# SIAB 1.0.0-rc.6 — guia de uso
+# SIAB 1.0.0 — guia de uso
 
-Extraia **SIAB-1.0.0-rc.6.zip** e sirva a pasta **SIAB/** em localhost ou HTTPS. Abra conectado uma vez para preparar o uso offline. Esta entrega contém o programa modular completo.
+Extraia **SIAB-1.0.0.zip** e sirva a pasta **SIAB/** em localhost ou HTTPS. Abra conectado uma vez para preparar o uso offline. Esta entrega contém o programa modular completo.
 
 ## Começar uma investigação
 
