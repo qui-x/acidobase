@@ -16,7 +16,7 @@
 ![Licença GPL-3.0](https://img.shields.io/badge/licen%C3%A7a-GPL--3.0-dc2626)
 
 ### [Abrir o SIAB no navegador <img src="midia/icones/next.svg" width="20" height="20" alt="">](https://qui-x.github.io/acidobase/)
-
+### [Pacotes de Instalação <img src="midia/icones/next.svg" width="20" height="20" alt="">](https://drive.google.com/drive/u/1/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK)
 <sub>Sem cadastro, sem instalar nada, no computador ou no celular.</sub>
 
 <br>
