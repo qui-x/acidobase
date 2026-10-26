@@ -1,0 +1,82 @@
+name: Publicar abertura SIAB Blender no GitHub Pages
+on:
+  push:
+    branches: [acidosebases1.0.0]
+    paths:
+      - '.github/workflows/publicar-siab-blender.yml'
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Baixar vídeo Blender final e obter script de integração
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/siab3d
+          gh run download 40406464358 -R "${GITHUB_REPOSITORY}" --name "siab-abertura-blender-3d-21" --dir /tmp/siab3d
+          test -s /tmp/siab3d/dist/siab3d/SIAB_abertura_Blender.mp4
+          test -s /tmp/siab3d/dist/siab3d/poster.png
+          git fetch origin "feature/siab-abertura-blender-completa:refs/remotes/origin/feature/siab-abertura-blender-completa"
+          git show "refs/remotes/origin/feature/siab-abertura-blender-completa:estudos/abertura-blender-completa/publish_to_worktree.py" > /tmp/siab-publish.py
+          git show "refs/remotes/origin/feature/siab-abertura-blender-completa:estudos/abertura-blender-completa/smoke_release.mjs" > siab-smoke-release.mjs
+          python3 -m py_compile /tmp/siab-publish.py
+          node --check siab-smoke-release.mjs
+      - name: Preparar a abertura Blender na versão completa do SIAB
+        run: |
+          python3 /tmp/siab-publish.py "$PWD" /tmp/siab3d/dist/siab3d
+          node --check js/ui/abertura.js
+          node --check sw.js
+          test -s assets/abertura/siab-blender-intro.mp4
+      - name: Instalar navegadores e dependências para a homologação
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Testar a abertura 3D no SIAB completo
+        run: |
+          python3 -m http.server 8777 --bind 127.0.0.1 > /tmp/siab-video-test.log 2>&1 &
+          for i in $(seq 1 25); do
+            if curl -fsS http://127.0.0.1:8777/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node siab-smoke-release.mjs
+      - name: Confirmar e publicar na main e na origem do Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add css/abertura-v5.css js/ui/abertura.js index.html sw.js assets/abertura
+          git commit -m "feat(siab): publicar abertura integral renderizada pelo Blender"
+          git push origin HEAD:refs/heads/main
+          DEFAULT_BRANCH="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.default_branch')"
+          PAGE_SOURCE="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.source.branch // ""' 2>/dev/null || true)"
+          echo "GitHub Pages branch: ${PAGE_SOURCE:-não informada} ; default: $DEFAULT_BRANCH"
+          declare -A targets=()
+          targets["$DEFAULT_BRANCH"]=1
+          if [ -n "$PAGE_SOURCE" ]; then targets["$PAGE_SOURCE"]=1; fi
+          for target in "${!targets[@]}"; do
+            [ "$target" = main ] && continue
+            [[ "$target" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "::error::Branch inválida"; exit 1; }
+            git fetch origin "$target:refs/remotes/origin/$target"
+            dest="/tmp/siab-site-$(echo "$target" | tr '/' '-')"
+            git worktree add --detach "$dest" "refs/remotes/origin/$target"
+            python3 /tmp/siab-publish.py "$dest" /tmp/siab3d/dist/siab3d
+            git -C "$dest" add css/abertura-v5.css js/ui/abertura.js index.html sw.js assets/abertura
+            git -C "$dest" commit -m "feat(siab): atualizar GitHub Pages com abertura Blender"
+            git -C "$dest" push origin "HEAD:refs/heads/$target"
+            echo "Atualizado: $target"
+          done
+          rm -f siab-smoke-release.mjs
