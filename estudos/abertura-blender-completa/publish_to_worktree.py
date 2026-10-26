@@ -111,13 +111,13 @@ index=dest/"index.html"
 html=index.read_text(encoding="utf8")
 assert 'js/ui/abertura.js?v=' in html,"Script da abertura não encontrado"
 assert 'css/abertura-v5.css?v=' in html,"CSS da abertura não encontrado"
-html=re.sub(r'(js/ui/abertura\.js\?v=)[^"]+',r'\g<1>1.0.0+20261026-blender',html)
-html=re.sub(r'(css/abertura-v5\.css\?v=)[^"]+',r'\g<1>1.0.0+20261026-blender',html)
+html=re.sub(r'(js/ui/abertura\.js\?v=)[^"]+',r'\g<1>1.0.0+20261026-blender-cores-r1',html)
+html=re.sub(r'(css/abertura-v5\.css\?v=)[^"]+',r'\g<1>1.0.0+20261026-blender-cores-r1',html)
 index.write_text(html,encoding="utf8")
 
 sw=dest/"sw.js"
 cache=sw.read_text(encoding="utf8")
-cache,n=re.subn(r'(const VERSAO = ")[^"]+(";)',r'\g<1>siab-1.0.0+20261026-blender\2',cache,count=1)
+cache,n=re.subn(r'(const VERSAO = ")[^"]+(";)',r'\g<1>siab-1.0.0+20261026-blender-cores-r1\2',cache,count=1)
 assert n==1
 for line in (
     '  "./assets/abertura/siab-blender-intro.mp4",',
