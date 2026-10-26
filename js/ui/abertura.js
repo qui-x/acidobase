@@ -99,7 +99,13 @@ SIAB.abertura = (() => {
     const tubos = TUBOS.map((t, n) => {
       const x = X(n);
       return `<g class="ab-tubo" data-n="${n}">
-        <text class="ab-indicador" x="${x}" y="16">${SIAB.escape(t.nome)}</text>
+        <text class="ab-indicador" x="${x}" y="185">${SIAB.escape(t.nome)}</text>
+        <g class="ab-contagotas" transform="translate(${x} 0)">
+          <ellipse class="ab-pipeta-bulbo" cx="0" cy="-31" rx="9" ry="9"/>
+          <path class="ab-pipeta-vidro" d="M-5 -25 Q-4 -13 -1 4 L1 4 Q4 -13 5 -25 Z"/>
+          <path class="ab-pipeta-brilho" d="M-3 -21 Q-2 -12 -1 -3"/>
+          <path class="ab-pipeta-ponta" d="M-1 4 L1 4 L0 17 Z"/>
+        </g>
         <clipPath id="ab-clip-${n}"><path d="M${x - 15} 34v112a15 15 0 0 0 30 0V34Z"/></clipPath>
         <g clip-path="url(#ab-clip-${n})">
           <rect class="ab-liquido" x="${x - 16}" y="32" width="32" height="130"/>
@@ -108,49 +114,40 @@ SIAB.abertura = (() => {
         <path class="ab-vidro" d="M${x - 17} 30v116a17 17 0 0 0 34 0V30M${x - 21} 30h42"/>
         <path class="ab-brilho" d="M${x - 10} 42v96"/>
         <path class="ab-gota" d="M${x} 22c2.4 4 4 6.3 4 8.3a4 4 0 0 1-8 0c0-2 1.6-4.3 4-8.3Z"/>
-        <text class="ab-formula" x="${x}" y="190"></text>
-        <text class="ab-ph" x="${x}" y="207"></text>
+        <text class="ab-formula" x="${x}" y="-54"></text>
+        <text class="ab-ph" x="${x}" y="203"></text>
       </g>`;
     }).join("");
     caixa.querySelector(".abertura-tubos").innerHTML =
-      `<path class="ab-suporte" d="M14 104h372"/>${tubos}<path class="ab-suporte" d="M14 124h372"/>`;
+      `<defs><linearGradient id="ab-pipeta-metal" x1="0" x2="1"><stop stop-color="#d0f2ff" stop-opacity=".8"/><stop offset=".5" stop-color="#6291b1" stop-opacity=".25"/><stop offset="1" stop-color="#e6faff" stop-opacity=".85"/></linearGradient></defs><path class="ab-suporte" d="M14 104h372"/>${tubos}<path class="ab-suporte" d="M14 124h372"/>`;
   }
 
   function etapa(caixa, k) {
     caixa.querySelectorAll(".ab-tubo").forEach((g) => {
-      const t = TUBOS[g.dataset.n];
+      const t = TUBOS[Number(g.dataset.n)];
       const [solucao, rotulo] = t.etapas[k];
       const l = leitura(solucao, t.indicador);
       const liquido = g.querySelector(".ab-liquido");
+      const formula = g.querySelector(".ab-formula");
+      const ph = g.querySelector(".ab-ph");
       const altura = 62 + k * 16;
-      g.querySelector(".ab-gota").style.animationDelay =
-        `${g.dataset.n * 50}ms`;
-      if (k > 0) {
-        g.classList.remove("pingando");
-        void g.getBoundingClientRect();
-        g.classList.add("pingando");
-      }
-      // A cor muda quando a gota chega ao líquido.
-      timers.push(
-        setTimeout(
-          () => {
-            liquido.style.transform = `scaleY(${altura / 130})`;
-            liquido.style.fill = l.cor;
-            g.dataset.cor = l.nome;
-            const formula = g.querySelector(".ab-formula"),
-              ph = g.querySelector(".ab-ph");
-            formula.classList.add("trocando");
-            timers.push(
-              setTimeout(() => {
-                formula.textContent = rotulo;
-                ph.textContent = `pH ${SIAB.format(l.pH, 1)}`;
-                formula.classList.remove("trocando");
-              }, 140),
-            );
-          },
-          k > 0 ? 260 + g.dataset.n * 50 : 0,
-        ),
-      );
+      formula.textContent = rotulo;
+      const atraso = Number(g.dataset.n) * 50;
+      g.querySelector(".ab-gota").style.animationDelay = `${atraso}ms`;
+      g.querySelector(".ab-contagotas").style.animationDelay = `${atraso}ms`;
+      g.classList.remove("pingando");
+      void g.getBoundingClientRect();
+      g.classList.add("pingando");
+      timers.push(setTimeout(() => {
+        liquido.style.transform = `scaleY(${altura / 130})`;
+        liquido.style.fill = l.cor;
+        g.dataset.cor = l.nome;
+        ph.classList.add("trocando");
+        timers.push(setTimeout(() => {
+          ph.textContent = `pH ≈ ${SIAB.format(l.pH, 1)}`;
+          ph.classList.remove("trocando");
+        }, 140));
+      }, 260 + atraso));
     });
   }
 
