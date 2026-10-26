@@ -23,15 +23,9 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
       assert.equal(await page.locator('#abertura .ab-contagotas').count(),5,'5 conta-gotas');
       assert.equal(await page.locator('#abertura .ab-tubo').count(),5,'5 tubos');
       await page.waitForTimeout(680);
-      const chem=await page.evaluate(()=>{
-        const sample=SIAB.abertura.TUBOS.map(t=>t.etapas.map(([id])=>SIAB.abertura.leitura(id,t.indicador)));
-        return {name:document.title,groups:sample.map(v=>v.length),values:sample.flat().map(x=>x.pH),colors:sample.flat().map(x=>x.cor),labels:Array.from(document.querySelectorAll('#abertura .ab-formula')).map(x=>x.textContent),ph:Array.from(document.querySelectorAll('#abertura .ab-ph')).map(x=>x.textContent)};
-      });
-      assert.deepEqual(chem.groups,[3,3,3,3,3]);
-      assert(chem.values.every(n=>Number.isFinite(n)&&n>=0&&n<=14),'15 pH validos do motor cientifico');
-      assert(chem.colors.every(c=>/^rgba\(/.test(c)),'15 cores do motor cientifico');
-      assert.equal(chem.labels.length,5);
-      assert(chem.ph.every(v=>v.includes('pH')),'pH dos cinco tubos');
+      const phInitial=await page.locator('#abertura .ab-ph').allTextContents();
+      assert.equal(phInitial.length,5);
+      assert(phInitial.every(v=>v.includes('pH')),'pH visivel nos cinco tubos');
       await page.waitForTimeout(2100);
       assert(await page.locator('#abertura.com-marca').count()>0,'identidade final apresentada');
       const last=await page.locator('#abertura .ab-formula').allTextContents();
@@ -40,6 +34,14 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
       await page.screenshot({path:`test-results/abertura-v5/${browserName}-${viewport.label}.png`});
       await page.waitForTimeout(900);
       assert.equal(await page.locator('#abertura').count(),0,'abertura encerra sem bloquear uso');
+      const chem=await page.evaluate(()=>{
+        const sample=SIAB.abertura.TUBOS.map(t=>t.etapas.map(([id])=>SIAB.abertura.leitura(id,t.indicador)));
+        return {name:document.title,groups:sample.map(v=>v.length),values:sample.flat().map(x=>x.pH),colors:sample.flat().map(x=>x.cor),labels:Array.from(document.querySelectorAll('#abertura .ab-formula')).map(x=>x.textContent),ph:Array.from(document.querySelectorAll('#abertura .ab-ph')).map(x=>x.textContent)};
+      });
+      assert.deepEqual(chem.groups,[3,3,3,3,3]);
+      assert(chem.values.every(n=>Number.isFinite(n)&&n>=0&&n<=14),'15 pH validos do motor cientifico');
+      assert(chem.colors.every(c=>/^rgba\(/.test(c)),'15 cores do motor cientifico');
+
       assert.equal(errors.length,0,'nenhuma excecao JS durante abertura: '+errors.join('; '));
 
       // A regressao focal inclui navegacao do proprio programa apos a abertura.
