@@ -178,23 +178,41 @@ def build(readings):
             end=(STAGES[j+1]+.24+i*.043) if j<2 else None
             staged_visibility(formula,start,end)
             staged_visibility(ph,start+.12,end)
-        # Pipeta volumetrica: borracha, ombro do tubo, vidro e ponta capilar.
-        bulb=sph(f'CONTA_GOTAS_BULBO_{i+1}',(x,0,3.48),(.172,.151,.172),rubber,32)
+        # ÚNICA alteração estética desta revisão: conta-gotas totalmente 3D.
+        # O restante da cena (tubos, líquidos, cores, luzes e câmera)
+        # permanece idêntico à versão dinâmica publicada anteriormente.
+        bulb=lathe(f'CONTA_GOTAS_BULBO_{i+1}',[
+            (0,-.220),(.047,-.214),(.072,-.187),(.106,-.142),
+            (.140,-.080),(.151,-.016),(.149,.052),(.132,.118),
+            (.094,.168),(.035,.203),(0,.211)],rubber,x,steps=64)
+        # Origem no meio do bulbo: sua compressão não desloca o conta-gotas.
+        bulb.location=(x,0,3.49)
+        collar=lathe(f'CONTA_GOTAS_ENCAIXE_{i+1}',[
+            (.064,3.345),(.079,3.332),(.080,3.293),
+            (.073,3.266),(.064,3.270)],rubber,x,steps=48)
+        # Parede externa cilíndrica + canal interno verdadeiro:
+        # ponta capilar e haste contínuas, em vez de um cone pontiagudo.
         shaft=lathe(f'CONTA_GOTAS_VIDRO_{i+1}',[
-            (.067,3.37),(.075,3.33),(.068,3.10),(.046,2.94),
-            (.026,2.81),(.017,2.62),(.012,2.60),(.007,2.81),
-            (.030,2.95),(.052,3.10),(.051,3.34)],glass,x)
+            (.065,3.318),(.070,3.280),(.066,3.220),
+            (.060,3.055),(.058,2.820),(.056,2.580),
+            (.052,2.455),(.040,2.360),(.025,2.266),
+            (.014,2.170),(.010,2.166),(.009,2.225),
+            (.024,2.378),(.039,2.493),(.044,2.740),
+            (.047,3.060),(.051,3.310)],glass,x,steps=64)
         reagent_col=lathe(f'CONTA_GOTAS_CONTEUDO_{i+1}',[
-            (.038,3.29),(.040,3.10),(.026,2.94),(.01,2.76),(0,2.76),(0,3.29)],reagent,x)
-        for ob in (bulb,shaft,reagent_col):staged_visibility(ob,.08+i*.04)
+            (.036,3.267),(.037,3.035),(.035,2.810),
+            (.030,2.560),(.018,2.390),(.010,2.290),
+            (0,2.290),(0,3.267)],reagent,x,steps=48)
+        for ob in (bulb,collar,shaft,reagent_col):
+            staged_visibility(ob,.08+i*.04)
         for j,start in enumerate(STAGES):
             s=start+i*.048
-            for offset,v in ((-.035,1.0),(.065,.81),(.18,1.0)):
-                k(bulb,max(0,s+offset),scale=(.172,.151,.172*v))
+            # Compressão só da borracha, nunca do vidro.
+            for offset,v in ((-.035,1.0),(.065,.84),(.18,1.0)):
+                k(bulb,max(0,s+offset),scale=(1,1,v))
             drop=lathe(f'GOTA_3D_{i+1}_{j+1}',profile_drop(),dropmat,x,-.02,32)
-            # Perfil criado em Z local; atravessa fisicamente ponta e boca do tubo.
-            for tt,z,factor in [(0,2.52,.0001),(max(0,s-.01),2.52,.0001),
-                                (s+.06,2.52,1),(s+.25,LEVELS[j]+.21,1),
+            for tt,z,factor in [(0,2.10,.0001),(max(0,s-.01),2.10,.0001),
+                                (s+.06,2.10,1),(s+.25,LEVELS[j]+.21,1),
                                 (s+.34,LEVELS[j]+.035,.0001)]:
                 k(drop,tt,location=(x,-.02,z),scale=(factor,factor,factor))
         for j in range(3):
