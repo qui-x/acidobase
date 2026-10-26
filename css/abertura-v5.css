@@ -1,0 +1,35 @@
+/* Abertura SIAB V5 — somente apresentação, lógica científica no SIAB.chem. */
+.abertura .abertura-palco{width:min(640px,100%);gap:7px}
+.abertura .abertura-tubos{width:100%;height:auto;overflow:visible}
+.abertura .ab-contagotas{transform-origin:center -30px}
+.abertura .ab-pipeta-bulbo{fill:#15324c;stroke:#b0e4ff;stroke-width:1.3;filter:drop-shadow(0 2px 3px #0005)}
+.abertura .ab-pipeta-vidro{fill:url(#ab-pipeta-metal);stroke:#b5dff2;stroke-opacity:.8;stroke-width:1.2}
+.abertura .ab-pipeta-brilho{fill:none;stroke:#effaff;stroke-width:1.2;opacity:.65;stroke-linecap:round}
+.abertura .ab-pipeta-ponta{fill:#c5edff;fill-opacity:.17;stroke:#ddf6ff;stroke-width:1}
+.abertura .ab-vidro{stroke:#c1e7f8;stroke-width:2.8;filter:drop-shadow(1px 2px 2px #0008)}
+.abertura .ab-brilho{stroke:#fff;stroke-width:2.7;opacity:.35}
+.abertura .ab-liquido{filter:drop-shadow(0 0 4px #fff2);transition:transform .56s cubic-bezier(.22,.82,.34,1),fill .55s ease}
+.abertura .ab-indicador{font-size:9px;fill:currentColor;opacity:.87}
+.abertura .ab-formula{font-size:12px;font-weight:760;fill:#e9f3fc;transition:opacity .14s ease}
+.abertura .ab-ph{font-size:11.7px;font-weight:650;fill:#c9e6fc;opacity:.88;transition:opacity .2s ease}
+.abertura .ab-ph.trocando{opacity:.15}
+.abertura .ab-gota{fill:#d7effb;filter:drop-shadow(0 0 3px #d6f5ff88)}
+.abertura .ab-bolha{stroke:#f4faff;fill:none;stroke-width:1}
+.abertura .ab-suporte{opacity:.22}
+.abertura .pingando .ab-contagotas{animation:ab-comprimir .36s cubic-bezier(.2,.7,.3,1) both}
+@keyframes ab-comprimir{
+  0%,100%{transform:translateY(0) scaleY(1)}
+  40%{transform:translateY(1px) scaleY(.93)}
+}
+:root[data-theme=light] .abertura .ab-formula{fill:#283b56}
+:root[data-theme=light] .abertura .ab-ph{fill:#304c67}
+:root[data-contrast=on] .abertura .ab-formula,
+:root[data-contrast=on] .abertura .ab-ph{fill:#fff;opacity:1}
+@media(max-width:560px){
+ .abertura .abertura-palco{width:min(100%,440px);gap:4px}
+ .abertura .ab-indicador{font-size:8.5px}
+ .abertura .ab-ph{font-size:11px}
+ .abertura .abertura-marca span{font-size:.86rem}
+ .abertura .abertura-marca strong{font-size:1.5rem}
+}
+@media(prefers-reduced-motion:reduce){.abertura .ab-contagotas,.abertura .ab-liquido{animation:none!important;transition:none!important}}
