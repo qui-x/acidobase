@@ -31,12 +31,15 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
           new MutationObserver(check).observe(el,{attributes:true,attributeFilter:['class']});
           return true;
         };
-        if(document.documentElement){
+        const install=()=>{
+          if(!document.documentElement)return;
           if(!observe()){
             const watcher=new MutationObserver(()=>{if(observe())watcher.disconnect()});
             watcher.observe(document.documentElement,{subtree:true,childList:true});
           }
-        }
+        };
+        if(document.documentElement)install();
+        else document.addEventListener('readystatechange',install,{once:true});
       });
       const errors=[];
       page.on('pageerror',e=>errors.push(e.message));
