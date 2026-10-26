@@ -119,8 +119,11 @@ sw=dest/"sw.js"
 cache=sw.read_text(encoding="utf8")
 cache,n=re.subn(r'(const VERSAO = ")[^"]+(";)',r'\g<1>siab-1.0.0+20261026-blender\2',cache,count=1)
 assert n==1
-for line in ('  "./assets/abertura/siab-blender-intro.mp4",','  "./assets/abertura/siab-blender-poster.png",
-  "./assets/abertura/siab-blender-intro.webm",'):
+for line in (
+    '  "./assets/abertura/siab-blender-intro.mp4",',
+    '  "./assets/abertura/siab-blender-poster.png",',
+    '  "./assets/abertura/siab-blender-intro.webm",',
+):
     if line not in cache:cache=cache.replace('  "./index.html",','  "./index.html",\n'+line)
 sw.write_text(cache,encoding="utf8")
 
