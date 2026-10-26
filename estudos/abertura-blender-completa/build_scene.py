@@ -113,16 +113,17 @@ def build(readings):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene=bpy.context.scene
     scene.frame_start=1;scene.frame_end=FRAMES;scene.render.fps=FPS
-    scene.render.resolution_x=960;scene.render.resolution_y=540
+    scene.render.resolution_x=840;scene.render.resolution_y=472
     scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
     scene.render.film_transparent=False
-    try:scene.render.engine='BLENDER_EEVEE_NEXT'
-    except Exception:
-        try:scene.render.engine='BLENDER_EEVEE'
-        except Exception:
-            scene.render.engine='CYCLES'
-            scene.cycles.samples=12
+    # Cycles CPU suporta render headless; Eevee aborta sem GPU/EGL no runner.
+    scene.render.engine='CYCLES'
+    scene.cycles.device='CPU'
+    scene.cycles.samples=10
+    scene.cycles.use_denoising=True
+    scene.render.threads_mode='FIXED'
+    scene.render.threads=2
     if scene.world is None:scene.world=bpy.data.worlds.new('SIAB dark studio')
     scene.world.use_nodes=True
     scene.world.node_tree.nodes['Background'].inputs['Color'].default_value=COLOR_DARK
