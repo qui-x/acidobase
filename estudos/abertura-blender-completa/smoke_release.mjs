@@ -15,7 +15,8 @@ for (const [name, engine] of Object.entries({chromium,firefox,webkit})) {
       await video.waitFor({state:'attached',timeout:12000});
       assert.equal(await video.count(),1,name+': tem filme do Blender');
       assert.equal(await page.locator('#abertura .ab-tubo').count(),0,name+': nenhum SVG substituto');
-      assert.equal(await video.getAttribute('src'),'assets/abertura/siab-blender-intro.mp4');
+      assert.equal(await page.locator('#abertura video source[type="video/webm"]').count(),1);
+      assert.equal(await page.locator('#abertura video source[type="video/mp4"]').count(),1);
       await page.waitForFunction(()=>{
         const v=document.querySelector('video.abertura-3d-video');
         return v && (v.readyState>1 || v.error);
