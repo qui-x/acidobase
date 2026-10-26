@@ -66,8 +66,15 @@ def cyl(name,pos,r,depth,material,vertices=32):
     bevel=o.modifiers.new('Rounded edges','BEVEL');bevel.width=.018;bevel.segments=3
     o.modifiers.new('Weighted normals','WEIGHTED_NORMAL')
     return o
+BLENDER_FONT=None
 def curve_label(name,message,pos,size,material):
+    global BLENDER_FONT
     cu=bpy.data.curves.new(name,'FONT')
+    if BLENDER_FONT is None:
+        fp=Path('/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf')
+        if fp.is_file():
+            BLENDER_FONT=bpy.data.fonts.load(str(fp))
+    if BLENDER_FONT is not None: cu.font=BLENDER_FONT
     cu.body=str(message);cu.size=size;cu.align_x='CENTER';cu.align_y='CENTER'
     cu.extrude=.0025;cu.bevel_depth=.00045
     o=bpy.data.objects.new(name,cu);bpy.context.collection.objects.link(o)
@@ -81,14 +88,17 @@ def k(obj,t,scale=None,location=None):
         obj.location=location;obj.keyframe_insert('location',frame=frame(t))
     if scale is not None:
         obj.scale=scale;obj.keyframe_insert('scale',frame=frame(t))
-def staged_visibility(ob,appearance,exit_at=None,scale=(1,1,1),rise=.08):
-    initial=tuple(.0001 for _ in scale)
+def staged_visibility(ob,appearance,exit_at=None,scale=None,rise=.08):
+    # Preservar as dimensoes tridimensionais originais de esferas e bulbos.
+    # Antes, scale=(1,1,1) aumentava meniscos de 17 cm para 1 m.
+    base=tuple(scale if scale is not None else ob.scale)
+    initial=tuple(v*.0001 for v in base)
     k(ob,0,scale=initial)
     if appearance>0:
         k(ob,max(.001,appearance-.06),scale=initial)
-    k(ob,appearance+.12,scale=scale)
+    k(ob,appearance+.12,scale=base)
     if exit_at is not None:
-        k(ob,max(appearance+.13,exit_at-.07),scale=scale)
+        k(ob,max(appearance+.13,exit_at-.07),scale=base)
         k(ob,exit_at+.06,scale=initial)
 def profile_tube():
     outer=.214;inner=.191;bottom=.28
