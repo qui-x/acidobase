@@ -1,0 +1,142 @@
+name: SIAB - Render e publicacao dos conta-gotas e cores
+on:
+  push:
+    branches: [feature/siab-contagotas-tons-publicacao]
+    paths:
+      - 'estudos/abertura-blender-completa/**'
+      - '.github/workflows/siab-publicar-contagotas-cores.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  blender-and-pages:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Blender, FFmpeg e tres navegadores
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender python3-numpy ffmpeg
+          blender --version | head -2
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium firefox webkit
+          python3 -m py_compile estudos/abertura-blender-completa/build_scene.py
+          python3 -m py_compile estudos/abertura-blender-completa/publish_to_worktree.py
+          node --check estudos/abertura-blender-completa/extrair_leituras.mjs
+          node --check estudos/abertura-blender-completa/smoke_release.mjs
+      - name: Carregar dados reais do SIAB
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/siab-chem.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node estudos/abertura-blender-completa/extrair_leituras.mjs
+      - name: Verificar dinamica dos tubos originais e refinamento restrito
+        run: |
+          git fetch --depth=1 origin feature/siab-abertura-blender-completa
+          git show FETCH_HEAD:estudos/abertura-blender-completa/build_scene.py > /tmp/siab-base.py
+          python3 - <<'PY'
+          from pathlib import Path
+          old=Path('/tmp/siab-base.py').read_text()
+          current=Path('estudos/abertura-blender-completa/build_scene.py').read_text()
+          header='        # Pipeta volumetrica:'
+          revised='        # ÚNICA alteração estética desta revisão:'
+          end='        for j in range(3):\n            b=sph('
+          # Compositor + amostragem podem mudar; geometria dos tubos e sequencia de cores não.
+          earlier=old.split('    # Suportes construidos como cilindros reais',1)[1].split(header,1)[0]
+          present=current.split('    # Suportes construidos como cilindros reais',1)[1].split(revised,1)[0]
+          assert earlier==present, 'Tubos, cores e animacoes inesperadamente alterados'
+          assert old.split(end,1)[1]==current.split(end,1)[1], 'Cena depois das pipetas modificada'
+          assert 'CONTA_GOTAS_ENCAIXE_' in current
+          assert 'CompositorNodeHueSat' in current
+          print('PASS: tubos, dinamica e cores cientificas intactos; só pipetas e pós-cor')
+          PY
+      - name: Construir e renderizar 110 quadros com Blender
+        run: |
+          blender -b --factory-startup -t 2 \
+            --python estudos/abertura-blender-completa/build_scene.py -- \
+            --values estudos/abertura-blender-completa/data/leituras.json \
+            --out dist/siab3d --render-frames
+      - name: Exportar MP4 e WebM derivados do mesmo render
+        run: |
+          ffmpeg -hide_banner -loglevel error -y -framerate 30 \
+            -i dist/siab3d/frames/siab_%04d.png \
+            -c:v libx264 -crf 18 -pix_fmt yuv420p -movflags +faststart \
+            dist/siab3d/SIAB_abertura_Blender.mp4
+          ffmpeg -hide_banner -loglevel error -y \
+            -i dist/siab3d/SIAB_abertura_Blender.mp4 \
+            -an -c:v libvpx-vp9 -b:v 0 -crf 29 -deadline realtime -cpu-used 8 \
+            dist/siab3d/SIAB_abertura_Blender.webm
+          cp dist/siab3d/quadros/siab_2860.png dist/siab3d/poster.png
+          test -s dist/siab3d/SIAB_abertura_completa.blend
+          test -s dist/siab3d/SIAB_abertura_completa.glb
+          test -s dist/siab3d/SIAB_abertura_Blender.mp4
+          test -s dist/siab3d/SIAB_abertura_Blender.webm
+          ffprobe -v error -select_streams v:0 -show_entries stream=width,height,nb_frames -of csv=p=0 dist/siab3d/SIAB_abertura_Blender.mp4
+      - name: Preparar aplicacao atual sem substituir outros modulos
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git worktree add --detach /tmp/siab-release refs/remotes/origin/main
+          python3 estudos/abertura-blender-completa/publish_to_worktree.py /tmp/siab-release dist/siab3d
+          node --check /tmp/siab-release/js/ui/abertura.js
+          node --check /tmp/siab-release/sw.js
+          grep -Fq '20261026-blender-cores-r1' /tmp/siab-release/sw.js
+          python3 -m http.server 8777 --bind 127.0.0.1 --directory /tmp/siab-release >/tmp/siab-test.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8777/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+      - name: Homologar Chromium Firefox WebKit em computador e celular
+        run: node estudos/abertura-blender-completa/smoke_release.mjs
+      - name: Publicar na main e na origem do Pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C /tmp/siab-release add -A js/ui/abertura.js css/abertura-v5.css index.html sw.js assets/abertura
+          git -C /tmp/siab-release commit -m "feat(siab): publicar conta-gotas Blender e tons corrigidos"
+          git -C /tmp/siab-release push origin HEAD:refs/heads/main
+          default_branch="$(gh api "repos/${GITHUB_REPOSITORY}" --jq .default_branch)"
+          pages_branch="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.source.branch // ""' 2>/dev/null || true)"
+          echo "default=${default_branch} pages=${pages_branch}"
+          declare -A targets=()
+          targets["$default_branch"]=1
+          if [ -n "$pages_branch" ]; then targets["$pages_branch"]=1; fi
+          for target in "${!targets[@]}"; do
+            [ "$target" = main ] && continue
+            [[ "$target" =~ ^[A-Za-z0-9._/-]+$ ]] || exit 1
+            git fetch origin "$target:refs/remotes/origin/$target"
+            dest="/tmp/siab-pages-$(echo "$target" | tr '/' '-')"
+            git worktree add --detach "$dest" "refs/remotes/origin/$target"
+            python3 estudos/abertura-blender-completa/publish_to_worktree.py "$dest" dist/siab3d
+            git -C "$dest" add -A js/ui/abertura.js css/abertura-v5.css index.html sw.js assets/abertura
+            git -C "$dest" commit -m "feat(siab): atualizar abertura Blender no GitHub Pages"
+            git -C "$dest" push origin "HEAD:refs/heads/$target"
+          done
+          echo "PUBLICACAO_SIAB_COMPLETA"
+      - name: Preservar vídeo, cena Blender e quadro final
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: siab-contagotas-cores-${{ github.run_number }}
+          path: |
+            dist/siab3d/SIAB_abertura_Blender.mp4
+            dist/siab3d/SIAB_abertura_Blender.webm
+            dist/siab3d/SIAB_abertura_completa.blend
+            dist/siab3d/SIAB_abertura_completa.glb
+            dist/siab3d/poster.png
+            dist/siab3d/quadros/*.png
+            estudos/abertura-blender-completa/data/leituras.json
+          if-no-files-found: warn
+          retention-days: 21
