@@ -42,6 +42,34 @@ def mat(name,c,alpha=1.0,metal=0.0,rough=.25,transmission=0):
             try:m.blend_method='BLEND'
             except Exception:pass
     return m
+def optical_glass(name):
+    # Vidro 3D: 92-98% transparência frontal + reflexão Fresnel nas bordas.
+    # Evita ruído de refração em dezenas de superfícies ao renderizar em CPU,
+    # sem abdicar de geometria real/curvatura/reflexos angulares.
+    m=bpy.data.materials.new(name)
+    m.use_nodes=True
+    tree=m.node_tree
+    tree.nodes.clear()
+    out=tree.nodes.new('ShaderNodeOutputMaterial')
+    out.location=(440,0)
+    mix=tree.nodes.new('ShaderNodeMixShader')
+    mix.location=(210,0)
+    trans=tree.nodes.new('ShaderNodeBsdfTransparent')
+    trans.location=(-140,100)
+    trans.inputs['Color'].default_value=(.92,.97,1.0,1)
+    reflective=tree.nodes.new('ShaderNodeBsdfPrincipled')
+    reflective.location=(-140,-130)
+    reflective.inputs['Base Color'].default_value=(.67,.82,.94,1)
+    reflective.inputs['Roughness'].default_value=.17
+    fresnel=tree.nodes.new('ShaderNodeFresnel')
+    fresnel.location=(-140,270)
+    fresnel.inputs['IOR'].default_value=1.42
+    tree.links.new(fresnel.outputs['Fac'],mix.inputs[0])
+    tree.links.new(trans.outputs['BSDF'],mix.inputs[1])
+    tree.links.new(reflective.outputs['BSDF'],mix.inputs[2])
+    tree.links.new(mix.outputs[0],out.inputs['Surface'])
+    return m
+
 def lathe(name,coords,material,x=0,y=0,steps=48):
     verts=[(r*math.cos(2*math.pi*k/steps),r*math.sin(2*math.pi*k/steps),z)
         for r,z in coords for k in range(steps)]
@@ -147,7 +175,7 @@ def build(readings):
     scene.world.use_nodes=True
     scene.world.node_tree.nodes['Background'].inputs['Color'].default_value=COLOR_DARK
     scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value=.80
-    glass=mat('Vidro transparente - paredes reais',(.92,.97,1.0),alpha=1.0,rough=.065,transmission=.93)
+    glass=optical_glass('Vidro 3D limpo com reflexo Fresnel nas curvas')
     rubber=mat('Bulbo de borracha azul ardósia',(.075,.17,.26),rough=.47)
     reagent=mat('Reagente incolor em cada pipeta',(.80,.94,1),alpha=1.0,rough=.10,transmission=.85)
     support=mat('Suporte aço azulado',(.13,.22,.32),metal=.50,rough=.42)
@@ -170,7 +198,7 @@ def build(readings):
         # Cada nivel/cor e um volume real, nao um rectangulo SVG.
         for j,item in enumerate(measurements):
             c=hexcolor(item['color'])
-            liquid_mat=mat(f'INDICADOR_COR_{i+1}_{j+1}',c,alpha=1.0,rough=.19,transmission=.06)
+            liquid_mat=mat(f'INDICADOR_COR_{i+1}_{j+1}',c,alpha=1.0,rough=.35,transmission=.02)
             level=LEVELS[j]
             body=lathe(f'LIQUIDO_VOLUMETRICO_{i+1}_{j+1}',profile_liquid(level),liquid_mat,x,0,48)
             meniscus=sph(f'MENISCO_ELIPSOIDAL_{i+1}_{j+1}',(x,-.002,level),(.177,.177,.013),liquid_mat,32)
@@ -188,16 +216,16 @@ def build(readings):
         # Pipeta volumetrica: borracha, ombro do tubo, vidro e ponta capilar.
         bulb=sph(f'CONTA_GOTAS_BULBO_{i+1}',(x,0,3.44),(.154,.148,.208),rubber,48)
         shaft=lathe(f'CONTA_GOTAS_VIDRO_{i+1}',[
-            (.068,3.32),(.071,3.28),(.066,3.24),(.063,3.12),
-            (.058,2.72),(.050,2.47),(.032,2.36),(.018,2.23),
-            (.014,2.20),(.009,2.20),(.019,2.39),(.036,2.49),
-            (.043,2.72),(.049,3.12),(.052,3.30)],glass,x)
+            (.083,3.32),(.090,3.28),(.084,3.24),(.082,3.12),
+            (.079,2.72),(.069,2.47),(.043,2.36),(.019,2.23),
+            (.014,2.20),(.009,2.20),(.028,2.39),(.051,2.49),
+            (.058,2.72),(.063,3.12),(.065,3.30)],glass,x)
         collar=lathe(f'CONTA_GOTAS_ANEIS_BORRACHA_{i+1}',[
-            (.071,3.34),(.076,3.32),(.075,3.24),(.065,3.23)],rubber,x)
+            (.084,3.34),(.092,3.32),(.091,3.24),(.079,3.23)],rubber,x)
         staged_visibility(collar,.08+i*.04)
         reagent_col=lathe(f'CONTA_GOTAS_CONTEUDO_{i+1}',[
-            (.037,3.26),(.036,3.10),(.034,2.73),(.024,2.51),
-            (.012,2.42),(0,2.42),(0,3.26)],reagent,x)
+            (.049,3.26),(.048,3.10),(.047,2.73),(.034,2.51),
+            (.014,2.42),(0,2.42),(0,3.26)],reagent,x)
         for ob in (bulb,shaft,reagent_col):staged_visibility(ob,.08+i*.04)
         for j,start in enumerate(STAGES):
             s=start+i*.048
