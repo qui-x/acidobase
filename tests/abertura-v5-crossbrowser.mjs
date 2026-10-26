@@ -47,7 +47,7 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
       await page.locator('#abertura .ab-contagotas').first().waitFor({timeout:10000});
       assert.equal(await page.locator('#abertura .ab-contagotas').count(),5,'5 conta-gotas');
       assert.equal(await page.locator('#abertura .ab-tubo').count(),5,'5 tubos');
-      await page.waitForTimeout(680);
+      await page.waitForTimeout(1180);
       const dropperX=await page.locator('#abertura .ab-contagotas').evaluateAll(
         nodes=>nodes.map(el=>Math.round(el.getBoundingClientRect().x)));
       assert.equal(new Set(dropperX).size,5,'conta-gotas em cinco posicoes distintas: '+dropperX.join(','));
