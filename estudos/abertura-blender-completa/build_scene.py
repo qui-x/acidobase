@@ -130,7 +130,24 @@ def build(readings):
     # Cycles CPU suporta render headless; Eevee aborta sem GPU/EGL no runner.
     scene.render.engine='CYCLES'
     scene.cycles.device='CPU'
-    scene.cycles.samples=10
+    scene.cycles.samples=24
+    # Ajuste óptico sutil da reprodução, sem reescrever os valores RGB do SIAB.
+    # Mantém tubos, meniscos, materiais e movimentação da versão aprovada.
+    scene.use_nodes=True
+    compositor=scene.node_tree
+    compositor.nodes.clear()
+    source=compositor.nodes.new('CompositorNodeRLayers')
+    tone=compositor.nodes.new('CompositorNodeHueSat')
+    for socket in tone.inputs:
+        if socket.name.lower() in ('saturation','sat'):
+            socket.default_value=1.11
+    contrast=compositor.nodes.new('CompositorNodeBrightContrast')
+    if contrast.inputs.get('Contrast'):
+        contrast.inputs['Contrast'].default_value=1.6
+    output=compositor.nodes.new('CompositorNodeComposite')
+    compositor.links.new(source.outputs['Image'],tone.inputs['Image'])
+    compositor.links.new(tone.outputs['Image'],contrast.inputs['Image'])
+    compositor.links.new(contrast.outputs['Image'],output.inputs['Image'])
     scene.cycles.use_denoising=False
     for layer in scene.view_layers:
         if hasattr(layer, "cycles"): layer.cycles.use_denoising=False
