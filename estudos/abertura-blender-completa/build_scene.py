@@ -121,7 +121,9 @@ def build(readings):
     scene.render.engine='CYCLES'
     scene.cycles.device='CPU'
     scene.cycles.samples=10
-    scene.cycles.use_denoising=True
+    scene.cycles.use_denoising=False
+    for layer in scene.view_layers:
+        if hasattr(layer, "cycles"): layer.cycles.use_denoising=False
     scene.render.threads_mode='FIXED'
     scene.render.threads=2
     if scene.world is None:scene.world=bpy.data.worlds.new('SIAB dark studio')
