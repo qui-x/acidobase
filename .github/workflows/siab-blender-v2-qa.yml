@@ -1,0 +1,75 @@
+name: SIAB - Homologacao visual Blender V2
+on:
+  push:
+    branches: [feature/siab-blender-v2-acabamento]
+    paths:
+      - 'estudos/abertura-blender-completa/**'
+      - '.github/workflows/siab-blender-v2-qa.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  quality-stills:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Preparar Blender Cycles e navegador
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender python3-numpy
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+          python3 -m py_compile estudos/abertura-blender-completa/build_scene.py
+      - name: Ler as quinze amostras quimicas com o SIAB
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/siab-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node estudos/abertura-blender-completa/extrair_leituras.mjs
+      - name: Renderizar os quatro quadros revisados em Cycles
+        run: |
+          blender -b -t 2 --factory-startup \
+            --python estudos/abertura-blender-completa/build_scene.py -- \
+            --values estudos/abertura-blender-completa/data/leituras.json \
+            --out dist/siab3d
+          test -s dist/siab3d/quadros/siab_2860.png
+      - name: Validar a geometria real e animacao
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct,json
+          p=Path('dist/siab3d/SIAB_abertura_completa.glb')
+          b=p.read_bytes()
+          assert b[:4]==b'glTF' and len(b)==struct.unpack_from('<I',b,8)[0]
+          length,kind=struct.unpack_from('<I4s',b,12)
+          assert kind==b'JSON'
+          doc=json.loads(b[20:20+length])
+          names=[n.get('name','') for n in doc['nodes']]
+          for prefix,count in [('TUBO_DE_VIDRO_3D_',5),('CONTA_GOTAS_BULBO_',5),('CONTA_GOTAS_ANEIS_BORRACHA_',5),('CONTA_GOTAS_VIDRO_',5),('PH_MEDIDO_',15)]:
+              found=sum(x.startswith(prefix) for x in names)
+              assert found==count,(prefix,found,count)
+          assert doc.get('animations'),'Sem animacoes'
+          for im in Path('dist/siab3d/quadros').glob('*.png'):
+              assert im.stat().st_size>10000,im
+          print('PASS: 5 vidrarias, 5 conta-gotas 3D contínuos, 15 leituras e quadros Cycles')
+          PY
+      - name: Evidencias para inspecao (sem publicar em producao)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: siab-v2-refinamento-${{ github.run_number }}
+          path: |
+            dist/siab3d/quadros/*.png
+            dist/siab3d/SIAB_abertura_completa.blend
+            dist/siab3d/SIAB_abertura_completa.glb
+            estudos/abertura-blender-completa/data/leituras.json
+          if-no-files-found: warn
+          retention-days: 21
