@@ -166,25 +166,46 @@ SIAB.abertura = (() => {
   function iniciar() {
     const caixa = document.getElementById("abertura");
     if (!caixa) return;
-    // Desligada ou com movimento reduzido: some sem tocar.
-    const reduzir =
-      window.A11Y?.estado?.motion ||
+    const reduzir = window.A11Y?.estado?.motion ||
       window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
     if (!ligada() || reduzir || getComputedStyle(caixa).display === "none") {
       caixa.remove();
+      document.documentElement.dataset.abertura = "fim";
       return;
     }
     ativa = true;
-    desenhar(caixa);
-    TEMPOS.etapas.forEach((ms, k) =>
-      timers.push(setTimeout(() => etapa(caixa, k), ms)),
-    );
-    timers.push(
-      setTimeout(() => caixa.classList.add("com-marca"), TEMPOS.marca),
-    );
-    timers.push(setTimeout(encerrar, TEMPOS.sair));
+    caixa.classList.add("abertura-blender");
+    // A cena é inteiramente modelada e renderizada pelo Blender.
+    // O navegador apenas reproduz o filme; não desenha objetos SVG.
+    const palco = caixa.querySelector(".abertura-palco");
+    const filme = document.createElement("video");
+    filme.className = "abertura-3d-video";
+    const webmSource = document.createElement("source");
+    webmSource.src = "assets/abertura/siab-blender-intro.webm";
+    webmSource.type = "video/webm";
+    const mp4Source = document.createElement("source");
+    mp4Source.src = "assets/abertura/siab-blender-intro.mp4";
+    mp4Source.type = "video/mp4";
+    filme.append(webmSource, mp4Source);
+    filme.poster = "assets/abertura/siab-blender-poster.png";
+    filme.autoplay = true;
+    filme.muted = true;
+    filme.defaultMuted = true;
+    filme.playsInline = true;
+    filme.preload = "auto";
+    filme.controls = false;
+    filme.setAttribute("aria-hidden","true");
+    palco.replaceChildren(filme);
+    filme.load();
+    // Nenhum SVG/gradiente CSS é usado na cena 3D.
+    filme.addEventListener("ended", encerrar, { once: true });
+    filme.addEventListener("error", encerrar, { once: true });
     caixa.addEventListener("pointerdown", encerrar);
     document.addEventListener("keydown", encerrar, true);
+    // Video corrompido, autoplay negado ou mídia indisponível não bloqueiam o SIAB.
+    timers.push(setTimeout(encerrar, 8000));
+    const play = filme.play();
+    if (play?.catch) play.catch(encerrar);
   }
 
   function definir(ligar) {
