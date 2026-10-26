@@ -6,6 +6,7 @@ on:
       - '.github/workflows/publicar-siab-blender.yml'
 permissions:
   contents: write
+  actions: read
 
 jobs:
   deploy:
