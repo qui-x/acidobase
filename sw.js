@@ -5,7 +5,7 @@
    página. */
 // 1.0.0 com a correção da bancada mobile. O "+20261012" só renova o cache de
 // quem abriu a publicação 1.0.0 anterior (SIAB.version continua 1.0.0).
-const VERSAO = "siab-1.0.0+20261026-v5";
+const VERSAO = "siab-1.0.0+20261026-blender";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
@@ -15,6 +15,9 @@ const NOME_CACHE = PREFIXO_CACHE + VERSAO;
 const ARQUIVOS = [
   "./",
   "./index.html",
+  "./assets/abertura/siab-blender-intro.webm",
+  "./assets/abertura/siab-blender-poster.png",
+  "./assets/abertura/siab-blender-intro.mp4",
   "./manifest.webmanifest",
   "./assets/siab-icone.svg",
   "./assets/icones/apple-touch-icon.png",
