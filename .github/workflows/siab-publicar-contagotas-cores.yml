@@ -5,6 +5,11 @@ on:
     paths:
       - 'estudos/abertura-blender-completa/**'
       - '.github/workflows/siab-publicar-contagotas-cores.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'estudos/abertura-blender-completa/**'
+      - '.github/workflows/siab-publicar-contagotas-cores.yml'
   workflow_dispatch:
 permissions:
   contents: write
