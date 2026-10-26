@@ -1,0 +1,94 @@
+name: SIAB - Comparativo apenas conta-gotas Blender
+on:
+  push:
+    branches: [feature/siab-refino-exclusivo-contagotas]
+    paths:
+      - 'estudos/abertura-blender-completa/**'
+      - '.github/workflows/siab-contagotas-comparativo.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  comparar:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Blender e ferramentas de avaliação
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender python3-numpy python3-pil
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Comprovar que só os conta-gotas mudaram
+        run: |
+          git fetch --depth=1 origin feature/siab-abertura-blender-completa
+          git show FETCH_HEAD:estudos/abertura-blender-completa/build_scene.py > /tmp/siab-abertura-original.py
+          python3 - <<'PY'
+          from pathlib import Path
+          old=Path('/tmp/siab-abertura-original.py').read_text()
+          new=Path('estudos/abertura-blender-completa/build_scene.py').read_text()
+          a='        # Pipeta volumetrica:'
+          b='        for j in range(3):\n            b=sph('
+          assert old.partition(a)[0]==new.partition('        # ÚNICA alteração estética desta revisão:')[0]
+          assert old.split(b,1)[1]==new.split(b,1)[1]
+          assert new.count('CONTA_GOTAS_ENCAIXE_')==1
+          assert new.count('staged_visibility(ob,.08+i*.04)')==1
+          print('PASS: iluminação, tubos, cores, meniscos, animações, marca e câmera 100% originais.')
+          PY
+      - name: Ler dados de pH reais do motor químico
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/siab-http.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node estudos/abertura-blender-completa/extrair_leituras.mjs
+      - name: Renderizar tubos originais e nova pipeta em Blender real
+        run: |
+          blender -b -t 2 --factory-startup \
+            --python /tmp/siab-abertura-original.py -- \
+            --values estudos/abertura-blender-completa/data/leituras.json \
+            --out dist/original
+          blender -b -t 2 --factory-startup \
+            --python estudos/abertura-blender-completa/build_scene.py -- \
+            --values estudos/abertura-blender-completa/data/leituras.json \
+            --out dist/refinado
+      - name: Criar comparação visual sem alterar a renderização
+        run: |
+          python3 - <<'PY'
+          from PIL import Image,ImageDraw,ImageFont
+          from pathlib import Path
+          dst=Path('dist/comparacao');dst.mkdir(parents=True,exist_ok=True)
+          for f in sorted(Path('dist/original/quadros').glob('*.png')):
+              a=Image.open(f).convert('RGB')
+              b=Image.open(Path('dist/refinado/quadros')/f.name).convert('RGB')
+              assert a.size==b.size
+              w,h=a.size
+              out=Image.new('RGB',(w*2,h+36),(17,29,47))
+              out.paste(a,(0,36));out.paste(b,(w,36))
+              draw=ImageDraw.Draw(out)
+              draw.text((18,12),'ANTES - TUBOS ORIGINAIS',fill=(232,237,250))
+              draw.text((w+18,12),'DEPOIS - SOMENTE CONTA-GOTAS',fill=(232,237,250))
+              out.save(dst/f.name)
+              print(f.name,out.size)
+          PY
+      - name: Publicar evidências de revisão, sem afetar GitHub Pages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: siab-contagotas-apenas-${{ github.run_number }}
+          path: |
+            dist/comparacao/*.png
+            dist/original/quadros/*.png
+            dist/refinado/quadros/*.png
+            dist/refinado/SIAB_abertura_completa.blend
+            dist/refinado/SIAB_abertura_completa.glb
+            estudos/abertura-blender-completa/data/leituras.json
+          if-no-files-found: warn
+          retention-days: 21
