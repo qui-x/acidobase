@@ -5,6 +5,8 @@ on:
     paths:
       - 'estudos/abertura-blender-completa/**'
       - '.github/workflows/siab-blender-v2-qa.yml'
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 permissions:
   contents: read
