@@ -5,6 +5,8 @@ on:
     paths:
       - 'estudos/abertura-blender-completa/**'
       - '.github/workflows/siab-contagotas-comparativo.yml'
+  pull_request:
+    branches: [feature/siab-abertura-blender-completa]
   workflow_dispatch:
 permissions:
   contents: read
