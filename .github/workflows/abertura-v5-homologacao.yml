@@ -1,0 +1,55 @@
+name: Homologacao SIAB Abertura V5 (Chromium Firefox WebKit)
+on:
+  push:
+    branches: [feature/siab-abertura-v5-homologacao]
+  pull_request:
+    branches: [acidosebases1.0.0]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  crossbrowser-regression:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar bibliotecas e os 3 navegadores
+        run: |
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Checar sintaxe do codigo de abertura
+        run: |
+          node --check js/ui/abertura.js
+          node --check tests/abertura-v5-crossbrowser.mjs
+      - name: Regressao historica (caso os testes existam na distribuicao)
+        run: |
+          if [ -f tests/ciencia.test.cjs ] && [ -f tests/fluxos.test.cjs ]; then
+            npm test
+          else
+            echo 'NOT_RUN: Os testes historicos referenciados no package.json nao estao nesta distribuicao.'
+            echo 'A suite V5 abaixo nao substitui a regressao completa.'
+          fi
+      - name: Servir SIAB estatico
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/siab-http.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          exit 1
+      - name: Testar 3 motores e 3 formatos de tela
+        run: node tests/abertura-v5-crossbrowser.mjs
+      - name: Guardar evidencias
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: siad-v5-crossbrowser-results
+          path: |
+            test-results/abertura-v5/**
+            /tmp/siab-http.log
+          if-no-files-found: warn

@@ -5,7 +5,7 @@
    página. */
 // 1.0.0 com a correção da bancada mobile. O "+20261012" só renova o cache de
 // quem abriu a publicação 1.0.0 anterior (SIAB.version continua 1.0.0).
-const VERSAO = "siab-1.0.0+20261012";
+const VERSAO = "siab-1.0.0+20261026-v5";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
@@ -20,6 +20,7 @@ const ARQUIVOS = [
   "./assets/icones/apple-touch-icon.png",
   "./vendor/dialog-polyfill/dialog-polyfill.css",
   "./css/stylesiab.css",
+  "./css/abertura-v5.css",
   "./css/mobile-study.css",
   "./js/core/compatibilidade.js",
   "./a11y.js",
