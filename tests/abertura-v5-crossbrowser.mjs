@@ -14,7 +14,7 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
   const browser=await browserType.launch({headless:true});
   try {
     for (const viewport of ROWS) {
-      const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},isMobile:!!viewport.isMobile,hasTouch:!!viewport.hasTouch,serviceWorkers:'allow'});
+      const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},...(browserName==='firefox'?{}:{isMobile:!!viewport.isMobile}),hasTouch:!!viewport.hasTouch,serviceWorkers:'allow'});
       const page=await context.newPage();
       const errors=[];
       page.on('pageerror',e=>errors.push(e.message));
