@@ -23,6 +23,10 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
       assert.equal(await page.locator('#abertura .ab-contagotas').count(),5,'5 conta-gotas');
       assert.equal(await page.locator('#abertura .ab-tubo').count(),5,'5 tubos');
       await page.waitForTimeout(680);
+      const dropperX=await page.locator('#abertura .ab-contagotas').evaluateAll(
+        nodes=>nodes.map(el=>Math.round(el.getBoundingClientRect().x)));
+      assert.equal(new Set(dropperX).size,5,'conta-gotas em cinco posicoes distintas: '+dropperX.join(','));
+      assert.equal(await page.locator('#abertura').isVisible(),true,'abertura visivel antes de sua conclusao');
       const phInitial=await page.locator('#abertura .ab-ph').allTextContents();
       assert.equal(phInitial.length,5);
       assert(phInitial.every(v=>v.includes('pH')),'pH visivel nos cinco tubos');
