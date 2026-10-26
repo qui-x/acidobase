@@ -21,7 +21,9 @@ COLOR_DARK=(.022,.044,.079,1)
 def frame(t): return max(1,round(t*FPS)+1)
 def hexcolor(h):
     s=h.removeprefix('#')
-    return tuple(int(s[i:i+2],16)/255.0 for i in (0,2,4))
+    # sRGB do SIAB precisa ser convertido para valores lineares do shader Blender.
+    vals=(int(s[i:i+2],16)/255.0 for i in (0,2,4))
+    return tuple(v/12.92 if v<=0.04045 else ((v+0.055)/1.055)**2.4 for v in vals)
 def mat(name,c,alpha=1.0,metal=0.0,rough=.25,transmission=0):
     m=bpy.data.materials.new(name);m.use_nodes=True
     p=m.node_tree.nodes.get('Principled BSDF')
@@ -127,10 +129,12 @@ def build(readings):
     scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
     scene.render.film_transparent=False
+    scene.view_settings.view_transform='Standard'
+    scene.view_settings.exposure=-0.15
     # Cycles CPU suporta render headless; Eevee aborta sem GPU/EGL no runner.
     scene.render.engine='CYCLES'
     scene.cycles.device='CPU'
-    scene.cycles.samples=48
+    scene.cycles.samples=56
     scene.cycles.max_bounces=6
     scene.cycles.transparent_max_bounces=4
     scene.cycles.sample_clamp_indirect=2.0
@@ -143,14 +147,14 @@ def build(readings):
     scene.world.use_nodes=True
     scene.world.node_tree.nodes['Background'].inputs['Color'].default_value=COLOR_DARK
     scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value=.80
-    glass=mat('Vidro transparente - paredes reais',(.77,.91,.98),alpha=.52,rough=.12,transmission=.34)
+    glass=mat('Vidro transparente - paredes reais',(.92,.97,1.0),alpha=1.0,rough=.065,transmission=.93)
     rubber=mat('Bulbo de borracha azul ardósia',(.075,.17,.26),rough=.47)
-    reagent=mat('Reagente incolor em cada pipeta',(.80,.94,1),alpha=.22,rough=.10,transmission=.35)
+    reagent=mat('Reagente incolor em cada pipeta',(.80,.94,1),alpha=1.0,rough=.10,transmission=.85)
     support=mat('Suporte aço azulado',(.13,.22,.32),metal=.50,rough=.42)
     bright=mat('Letras creme azulado',(.93,.97,1),rough=.70)
     secondary=mat('Letras auxiliares',(.80,.89,.97),rough=.70)
     pink=mat('Marca rosa do SIAB',(.86,.23,.56),metal=.17,rough=.28)
-    dropmat=mat('Gotas incolores tridimensionais',(.80,.96,1),alpha=.56,rough=.12,transmission=.40)
+    dropmat=mat('Gotas incolores tridimensionais',(.80,.96,1),alpha=1.0,rough=.07,transmission=.87)
     # Suportes construidos como cilindros reais com profundidade, atras dos tubos.
     for n,z in enumerate((.93,1.38)):
         rail=cyl(f'SUPORTE_TRIDIMENSIONAL_{n+1}',(0,.62,z),.018,5.65,support)
@@ -166,7 +170,7 @@ def build(readings):
         # Cada nivel/cor e um volume real, nao um rectangulo SVG.
         for j,item in enumerate(measurements):
             c=hexcolor(item['color'])
-            liquid_mat=mat(f'INDICADOR_COR_{i+1}_{j+1}',c,alpha=.78,rough=.14,transmission=.22)
+            liquid_mat=mat(f'INDICADOR_COR_{i+1}_{j+1}',c,alpha=1.0,rough=.19,transmission=.06)
             level=LEVELS[j]
             body=lathe(f'LIQUIDO_VOLUMETRICO_{i+1}_{j+1}',profile_liquid(level),liquid_mat,x,0,48)
             meniscus=sph(f'MENISCO_ELIPSOIDAL_{i+1}_{j+1}',(x,-.002,level),(.177,.177,.013),liquid_mat,32)
