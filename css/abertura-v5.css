@@ -16,7 +16,7 @@
 .abertura .ab-gota{fill:#d7effb;filter:drop-shadow(0 0 3px #d6f5ff88)}
 .abertura .ab-bolha{stroke:#f4faff;fill:none;stroke-width:1}
 .abertura .ab-suporte{opacity:.22}
-.abertura .pingando .ab-contagotas{animation:ab-comprimir .36s cubic-bezier(.2,.7,.3,1) both}
+.abertura .pingando .ab-pipeta-bulbo{animation:ab-comprimir .36s cubic-bezier(.2,.7,.3,1) both}
 @keyframes ab-comprimir{
   0%,100%{transform:translateY(0) scaleY(1)}
   40%{transform:translateY(1px) scaleY(.93)}
