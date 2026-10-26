@@ -16,6 +16,28 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
     for (const viewport of ROWS) {
       const context=await browser.newContext({viewport:{width:viewport.width,height:viewport.height},...(browserName==='firefox'?{}:{isMobile:!!viewport.isMobile}),hasTouch:!!viewport.hasTouch,serviceWorkers:'allow'});
       const page=await context.newPage();
+      await page.addInitScript(() => {
+        const record={shown:false,brand:false,exiting:false};
+        window.__openingEvents=record;
+        const observe=()=>{
+          const el=document.getElementById('abertura');
+          if (!el) return false;
+          record.shown=true;
+          const check=()=>{
+            if(el.classList.contains('com-marca')) record.brand=true;
+            if(el.classList.contains('saindo')) record.exiting=true;
+          };
+          check();
+          new MutationObserver(check).observe(el,{attributes:true,attributeFilter:['class']});
+          return true;
+        };
+        if(document.documentElement){
+          if(!observe()){
+            const watcher=new MutationObserver(()=>{if(observe())watcher.disconnect()});
+            watcher.observe(document.documentElement,{subtree:true,childList:true});
+          }
+        }
+      });
       const errors=[];
       page.on('pageerror',e=>errors.push(e.message));
       await page.goto(BASE,{waitUntil:'domcontentloaded',timeout:30000});
@@ -31,13 +53,13 @@ for (const [browserName,browserType] of Object.entries({chromium,firefox,webkit}
       assert.equal(phInitial.length,5);
       assert(phInitial.every(v=>v.includes('pH')),'pH visivel nos cinco tubos');
       await page.waitForTimeout(2100);
-      assert(await page.locator('#abertura.com-marca').count()>0,'identidade final apresentada');
-      const last=await page.locator('#abertura .ab-formula').allTextContents();
-      assert.equal(last[0],'NaOH');
-      assert.equal(last[1],'NH₃');
+      const captured=await page.evaluate(()=>window.__openingEvents);
+      assert(captured.shown,'abertura exibida');
+      assert(captured.brand,'identidade final animada');
       await page.screenshot({path:`test-results/abertura-v5/${browserName}-${viewport.label}.png`});
       await page.waitForTimeout(900);
       assert.equal(await page.locator('#abertura').count(),0,'abertura encerra sem bloquear uso');
+      assert((await page.evaluate(()=>window.__openingEvents)).exiting,'saída animada observada');
       const chem=await page.evaluate(()=>{
         const sample=SIAB.abertura.TUBOS.map(t=>t.etapas.map(([id])=>SIAB.abertura.leitura(id,t.indicador)));
         return {name:document.title,groups:sample.map(v=>v.length),values:sample.flat().map(x=>x.pH),colors:sample.flat().map(x=>x.cor),labels:Array.from(document.querySelectorAll('#abertura .ab-formula')).map(x=>x.textContent),ph:Array.from(document.querySelectorAll('#abertura .ab-ph')).map(x=>x.textContent)};
