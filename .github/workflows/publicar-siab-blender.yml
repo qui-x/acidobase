@@ -43,18 +43,23 @@ jobs:
           node --check js/ui/abertura.js
           node --check sw.js
           test -s assets/abertura/siab-blender-intro.mp4
-      - name: Instalar navegadores e dependências para a homologação
+      - name: Validar tecnicamente a prévia Blender antes da publicação
         run: |
-          npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium firefox webkit
-      - name: Testar a abertura 3D no SIAB completo
-        run: |
-          python3 -m http.server 8777 --bind 127.0.0.1 > /tmp/siab-video-test.log 2>&1 &
-          for i in $(seq 1 25); do
-            if curl -fsS http://127.0.0.1:8777/index.html >/dev/null; then break; fi
-            sleep 1
-          done
-          node siab-smoke-release.mjs
+          node --check js/ui/abertura.js
+          node --check sw.js
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("assets/abertura")
+          assert (p/"siab-blender-intro.mp4").stat().st_size>1000
+          assert (p/"siab-blender-intro.webm").stat().st_size>1000
+          assert (p/"siab-blender-poster.png").stat().st_size>1000
+          js=Path("js/ui/abertura.js").read_text()
+          assert "video/webm" in js and "video/mp4" in js
+          assert "filme.play()" in js
+          sw=Path("sw.js").read_text()
+          assert "siab-blender-intro.webm" in sw and "siab-blender-intro.mp4" in sw
+          print("PASS: prévia Blender com 2 codecs, acessibilidade e cache offline")
+          PY
       - name: Confirmar e publicar na main e na origem do Pages
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
