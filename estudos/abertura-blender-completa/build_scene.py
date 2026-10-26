@@ -123,14 +123,17 @@ def build(readings):
     bpy.ops.wm.read_factory_settings(use_empty=True)
     scene=bpy.context.scene
     scene.frame_start=1;scene.frame_end=FRAMES;scene.render.fps=FPS
-    scene.render.resolution_x=840;scene.render.resolution_y=472
+    scene.render.resolution_x=960;scene.render.resolution_y=540
     scene.render.resolution_percentage=100
     scene.render.image_settings.file_format='PNG'
     scene.render.film_transparent=False
     # Cycles CPU suporta render headless; Eevee aborta sem GPU/EGL no runner.
     scene.render.engine='CYCLES'
     scene.cycles.device='CPU'
-    scene.cycles.samples=10
+    scene.cycles.samples=48
+    scene.cycles.max_bounces=6
+    scene.cycles.transparent_max_bounces=4
+    scene.cycles.sample_clamp_indirect=2.0
     scene.cycles.use_denoising=False
     for layer in scene.view_layers:
         if hasattr(layer, "cycles"): layer.cycles.use_denoising=False
@@ -140,17 +143,17 @@ def build(readings):
     scene.world.use_nodes=True
     scene.world.node_tree.nodes['Background'].inputs['Color'].default_value=COLOR_DARK
     scene.world.node_tree.nodes['Background'].inputs['Strength'].default_value=.80
-    glass=mat('Vidro transparente - paredes reais',(.78,.90,1),alpha=.30,rough=.055,transmission=.62)
-    rubber=mat('Bulbo de borracha azul ardósia',(.085,.20,.30),rough=.42)
-    reagent=mat('Reagente incolor em cada pipeta',(.80,.94,1),alpha=.35,rough=.065,transmission=.72)
-    support=mat('Suporte aço azulado',(.24,.36,.49),metal=.66,rough=.30)
-    bright=mat('Letras creme azulado',(.81,.91,1),rough=.70)
-    secondary=mat('Letras auxiliares',(.64,.75,.85),rough=.70)
+    glass=mat('Vidro transparente - paredes reais',(.77,.91,.98),alpha=.52,rough=.12,transmission=.34)
+    rubber=mat('Bulbo de borracha azul ardósia',(.075,.17,.26),rough=.47)
+    reagent=mat('Reagente incolor em cada pipeta',(.80,.94,1),alpha=.22,rough=.10,transmission=.35)
+    support=mat('Suporte aço azulado',(.13,.22,.32),metal=.50,rough=.42)
+    bright=mat('Letras creme azulado',(.93,.97,1),rough=.70)
+    secondary=mat('Letras auxiliares',(.80,.89,.97),rough=.70)
     pink=mat('Marca rosa do SIAB',(.86,.23,.56),metal=.17,rough=.28)
-    dropmat=mat('Gotas incolores tridimensionais',(.76,.93,1),alpha=.76,rough=.07,transmission=.55)
+    dropmat=mat('Gotas incolores tridimensionais',(.80,.96,1),alpha=.56,rough=.12,transmission=.40)
     # Suportes construidos como cilindros reais com profundidade, atras dos tubos.
     for n,z in enumerate((.93,1.38)):
-        rail=cyl(f'SUPORTE_TRIDIMENSIONAL_{n+1}',(0,.32,z),.035,5.60,support)
+        rail=cyl(f'SUPORTE_TRIDIMENSIONAL_{n+1}',(0,.62,z),.018,5.65,support)
         rail.rotation_euler=(0,math.pi/2,0)
     for i,(label,measurements) in enumerate(zip(INDICATORS,readings)):
         x=(i-2)*SPACING
@@ -159,7 +162,7 @@ def build(readings):
         lip=lathe(f'BORDA_VIDRO_3D_{i+1}',[(.21,2.045),(.226,2.04),(.225,2.011),(.191,2.010)],glass,x)
         for ob in (wall,lip):
             staged_visibility(ob,.04+i*.045)
-        curve_label(f'INDICADOR_{i+1}',label,(x,-.29,-.08),.115,bright)
+        curve_label(f'INDICADOR_{i+1}',label,(x,-.36,-.06),.155,bright)
         # Cada nivel/cor e um volume real, nao um rectangulo SVG.
         for j,item in enumerate(measurements):
             c=hexcolor(item['color'])
@@ -172,29 +175,34 @@ def build(readings):
             staged_visibility(body,appear,disappear)
             staged_visibility(meniscus,appear,disappear)
             # Etiquetas cientificas sao malhas 3D, animadas junto com a cena.
-            formula=curve_label(f'SUBSTANCIA_{i+1}_{j+1}',item['formula'],(x,-.28,3.92),.129,bright)
-            ph=curve_label(f'PH_MEDIDO_{i+1}_{j+1}',f"pH {item['ph']:.1f}",(x,-.29,-.30),.114,secondary)
+            formula=curve_label(f'SUBSTANCIA_{i+1}_{j+1}',item['formula'],(x,-.36,3.88),.175,bright)
+            ph=curve_label(f'PH_MEDIDO_{i+1}_{j+1}',f"pH {item['ph']:.1f}",(x,-.36,-.34),.145,secondary)
             start=(0 if j==0 else STAGES[j]+.22+i*.043)
             end=(STAGES[j+1]+.24+i*.043) if j<2 else None
             staged_visibility(formula,start,end)
             staged_visibility(ph,start+.12,end)
         # Pipeta volumetrica: borracha, ombro do tubo, vidro e ponta capilar.
-        bulb=sph(f'CONTA_GOTAS_BULBO_{i+1}',(x,0,3.48),(.172,.151,.172),rubber,32)
+        bulb=sph(f'CONTA_GOTAS_BULBO_{i+1}',(x,0,3.44),(.154,.148,.208),rubber,48)
         shaft=lathe(f'CONTA_GOTAS_VIDRO_{i+1}',[
-            (.067,3.37),(.075,3.33),(.068,3.10),(.046,2.94),
-            (.026,2.81),(.017,2.62),(.012,2.60),(.007,2.81),
-            (.030,2.95),(.052,3.10),(.051,3.34)],glass,x)
+            (.068,3.32),(.071,3.28),(.066,3.24),(.063,3.12),
+            (.058,2.72),(.050,2.47),(.032,2.36),(.018,2.23),
+            (.014,2.20),(.009,2.20),(.019,2.39),(.036,2.49),
+            (.043,2.72),(.049,3.12),(.052,3.30)],glass,x)
+        collar=lathe(f'CONTA_GOTAS_ANEIS_BORRACHA_{i+1}',[
+            (.071,3.34),(.076,3.32),(.075,3.24),(.065,3.23)],rubber,x)
+        staged_visibility(collar,.08+i*.04)
         reagent_col=lathe(f'CONTA_GOTAS_CONTEUDO_{i+1}',[
-            (.038,3.29),(.040,3.10),(.026,2.94),(.01,2.76),(0,2.76),(0,3.29)],reagent,x)
+            (.037,3.26),(.036,3.10),(.034,2.73),(.024,2.51),
+            (.012,2.42),(0,2.42),(0,3.26)],reagent,x)
         for ob in (bulb,shaft,reagent_col):staged_visibility(ob,.08+i*.04)
         for j,start in enumerate(STAGES):
             s=start+i*.048
             for offset,v in ((-.035,1.0),(.065,.81),(.18,1.0)):
-                k(bulb,max(0,s+offset),scale=(.172,.151,.172*v))
+                k(bulb,max(0,s+offset),scale=(.154,.148,.208*v))
             drop=lathe(f'GOTA_3D_{i+1}_{j+1}',profile_drop(),dropmat,x,-.02,32)
             # Perfil criado em Z local; atravessa fisicamente ponta e boca do tubo.
-            for tt,z,factor in [(0,2.52,.0001),(max(0,s-.01),2.52,.0001),
-                                (s+.06,2.52,1),(s+.25,LEVELS[j]+.21,1),
+            for tt,z,factor in [(0,2.13,.0001),(max(0,s-.01),2.13,.0001),
+                                (s+.06,2.13,1),(s+.25,LEVELS[j]+.21,1),
                                 (s+.34,LEVELS[j]+.035,.0001)]:
                 k(drop,tt,location=(x,-.02,z),scale=(factor,factor,factor))
         for j in range(3):
@@ -204,10 +212,10 @@ def build(readings):
                               (base+.22,.56,.026),(base+.7,1.11,.0001)]:
                 k(b,time,location=(x+(-.07+j*.065),-.05,z),scale=(sz,sz,sz))
     # Marca institucional, tambem em geometria 3D, nao CSS nem SVG.
-    brand=curve_label('SIAB_LOGOTIPO_TRIDIMENSIONAL','SIAB',(0,-.12,-.69),.365,pink)
+    brand=curve_label('SIAB_LOGOTIPO_TRIDIMENSIONAL','SIAB',(0,-.22,-.67),.46,pink)
     full=curve_label('SIAB_SUBTITULO_TRIDIMENSIONAL','Simulador Interativo de Ácidos e Bases',
-                     (0,-.12,-.93),.145,bright)
-    motto=curve_label('SIAB_LEMA_TRIDIMENSIONAL','A química das cores',(0,-.12,-1.12),.12,secondary)
+                     (0,-.22,-.93),.167,bright)
+    motto=curve_label('SIAB_LEMA_TRIDIMENSIONAL','A química das cores',(0,-.22,-1.15),.141,secondary)
     for obj in (brand,full,motto):staged_visibility(obj,2.34)
     # Camera fisica, luzes e volume real.
     target=Vector((0,0,1.38))
@@ -216,9 +224,9 @@ def build(readings):
     cam.rotation_euler=(target-cam.location).to_track_quat('-Z','Y').to_euler()
     cam.data.type='ORTHO';cam.data.ortho_scale=9.5;scene.camera=cam
     for name,pos,energy,color,size in (
-        ('Key light glass',(-3.1,-4.8,5.2),930,(.77,.90,1),5.0),
-        ('Pink accent',(3.5,-3.8,4.6),700,(1,.72,.92),4.8),
-        ('Rim light',(0,3.1,5.3),1300,(.65,.84,1),4.0)):
+        ('Key light glass',(-3.1,-4.8,5.2),580,(.77,.90,1),5.0),
+        ('Pink accent',(3.5,-3.8,4.6),460,(1,.72,.92),4.8),
+        ('Rim light',(0,3.1,5.3),650,(.65,.84,1),4.0)):
         lamp=bpy.data.lights.new(name,'AREA')
         lamp.energy=energy;lamp.color=color;lamp.shape='DISK';lamp.size=size
         ob=bpy.data.objects.new(name,lamp)
