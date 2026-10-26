@@ -17,7 +17,7 @@ const results=await page.evaluate(()=>{
     if(nums.length<3)throw new Error('Cor ausente de '+id+': '+reading.cor);
     const color='#'+nums.slice(0,3).map(n=>Math.max(0,Math.min(255,Math.round(n))).toString(16).padStart(2,'0')).join('');
     return {formula,ph:reading.pH,color,sample:id,indicator:t.indicador};
-  })));
+  }));
 });
 assert.equal(results.length,5);
 assert(results.every(row=>row.length===3));
