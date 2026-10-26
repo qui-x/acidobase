@@ -13,7 +13,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   blender3d:
@@ -30,7 +30,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends blender ffmpeg python3-numpy
           blender --version | head -2
           npm install --no-audit --no-fund
-          npx playwright install --with-deps chromium
+          npx playwright install --with-deps chromium firefox webkit
       - name: Checagens estaticas
         run: |
           python3 -m py_compile estudos/abertura-blender-completa/build_scene.py
@@ -70,6 +70,50 @@ jobs:
           assert data.get('animations'), 'Sem animacao exportada'
           print('PASS: .blend, .glb animado, MP4 REAL, 5 pipetas, 5 tubos, 15 fases quimicas')
           PY
+      - name: Preparar versão 3D destinada à main
+        if: github.event_name == 'push'
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git worktree add --detach /tmp/siab-ready refs/remotes/origin/main
+          python3 estudos/abertura-blender-completa/publish_to_worktree.py /tmp/siab-ready dist/siab3d
+          python3 -m http.server 8777 --bind 127.0.0.1 --directory /tmp/siab-ready > /tmp/siab-release.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8777/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          test "$(curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:8777/assets/abertura/siab-blender-intro.mp4)" = 200
+      - name: Homologação integrada Chromium Firefox WebKit
+        if: github.event_name == 'push'
+        run: node estudos/abertura-blender-completa/smoke_release.mjs
+      - name: Publicar somente após todos os testes na main e na branch do Pages
+        if: github.event_name == 'push'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C /tmp/siab-ready add -A css/abertura-v5.css js/ui/abertura.js index.html sw.js assets/abertura
+          git -C /tmp/siab-ready commit -m "feat(siab): abertura integral Blender 3D renderizada e homologada"
+          git -C /tmp/siab-ready push origin HEAD:refs/heads/main
+          DEFAULT_BRANCH="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.default_branch')"
+          PAGE_SOURCE="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.source.branch // ""' 2>/dev/null || true)"
+          echo "main publicada; default=$DEFAULT_BRANCH; pages-source=$PAGE_SOURCE"
+          declare -A targets=()
+          targets["$DEFAULT_BRANCH"]=1
+          if [ -n "$PAGE_SOURCE" ]; then targets["$PAGE_SOURCE"]=1; fi
+          for target in "${!targets[@]}"; do
+            [ "$target" = "main" ] && continue
+            [[ "$target" =~ ^[A-Za-z0-9._/-]+$ ]] || { echo "::error::branch inválida"; exit 1; }
+            git fetch origin "$target:refs/remotes/origin/$target"
+            dir="/tmp/siab-release-$(echo "$target" | tr '/' '-')"
+            git worktree add --detach "$dir" "refs/remotes/origin/$target"
+            python3 estudos/abertura-blender-completa/publish_to_worktree.py "$dir" dist/siab3d
+            git -C "$dir" add -A css/abertura-v5.css js/ui/abertura.js index.html sw.js assets/abertura
+            git -C "$dir" commit -m "feat(siab): publicar abertura Blender 3D no GitHub Pages"
+            git -C "$dir" push origin "HEAD:refs/heads/$target"
+            echo "Publicado também em $target"
+          done
       - name: Publicar somente artefatos de homologacao
         uses: actions/upload-artifact@v4
         if: always()
