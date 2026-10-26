@@ -10,13 +10,16 @@ dest=Path(sys.argv[1]).resolve()
 render=Path(sys.argv[2]).resolve()
 mp4=render/"SIAB_abertura_Blender.mp4"
 poster=render/"poster.png"
+webm=render/"SIAB_abertura_Blender.webm"
 assert mp4.is_file() and mp4.stat().st_size>1024, "Faltou vídeo renderizado"
 assert poster.is_file() and poster.stat().st_size>1024, "Faltou poster real Blender"
+assert webm.is_file() and webm.stat().st_size>1024, "Faltou WebM do Blender"
 assert mp4.read_bytes()[4:8]==b"ftyp","O vídeo não é MP4 válido"
 assert poster.read_bytes()[:8]==b"\x89PNG\r\n\x1a\n","Poster não é PNG válido"
 assets=dest/"assets/abertura"
 assets.mkdir(parents=True,exist_ok=True)
 shutil.copyfile(mp4,assets/"siab-blender-intro.mp4")
+shutil.copyfile(webm,assets/"siab-blender-intro.webm")
 shutil.copyfile(poster,assets/"siab-blender-poster.png")
 
 script=dest/"js/ui/abertura.js"
@@ -40,7 +43,13 @@ new=r'''  function iniciar() {
     const palco = caixa.querySelector(".abertura-palco");
     const filme = document.createElement("video");
     filme.className = "abertura-3d-video";
-    filme.src = "assets/abertura/siab-blender-intro.mp4";
+    const webmSource = document.createElement("source");
+    webmSource.src = "assets/abertura/siab-blender-intro.webm";
+    webmSource.type = "video/webm";
+    const mp4Source = document.createElement("source");
+    mp4Source.src = "assets/abertura/siab-blender-intro.mp4";
+    mp4Source.type = "video/mp4";
+    filme.append(webmSource, mp4Source);
     filme.poster = "assets/abertura/siab-blender-poster.png";
     filme.autoplay = true;
     filme.muted = true;
@@ -50,6 +59,7 @@ new=r'''  function iniciar() {
     filme.controls = false;
     filme.setAttribute("aria-hidden","true");
     palco.replaceChildren(filme);
+    filme.load();
     // Nenhum SVG/gradiente CSS é usado na cena 3D.
     filme.addEventListener("ended", encerrar, { once: true });
     filme.addEventListener("error", encerrar, { once: true });
@@ -109,7 +119,8 @@ sw=dest/"sw.js"
 cache=sw.read_text(encoding="utf8")
 cache,n=re.subn(r'(const VERSAO = ")[^"]+(";)',r'\g<1>siab-1.0.0+20261026-blender\2',cache,count=1)
 assert n==1
-for line in ('  "./assets/abertura/siab-blender-intro.mp4",','  "./assets/abertura/siab-blender-poster.png",'):
+for line in ('  "./assets/abertura/siab-blender-intro.mp4",','  "./assets/abertura/siab-blender-poster.png",
+  "./assets/abertura/siab-blender-intro.webm",'):
     if line not in cache:cache=cache.replace('  "./index.html",','  "./index.html",\n'+line)
 sw.write_text(cache,encoding="utf8")
 
