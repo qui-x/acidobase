@@ -1,0 +1,51 @@
+name: SIAB Blender - quatro quadros reais
+on:
+  push:
+    branches: [feature/siab-abertura-blender-completa]
+    paths:
+      - 'estudos/abertura-blender-completa/**'
+      - '.github/workflows/siab-blender-quadros.yml'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  render-stills:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar ferramentas reais
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends blender python3-numpy
+          npm install --no-audit --no-fund
+          npx playwright install --with-deps chromium
+      - name: Dados químicos oficiais
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/siab.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl -fsS http://127.0.0.1:8765/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node estudos/abertura-blender-completa/extrair_leituras.mjs
+      - name: Renderizar quatro instantes em Cycles CPU
+        run: |
+          blender -b -t 2 --factory-startup --python estudos/abertura-blender-completa/build_scene.py -- --values estudos/abertura-blender-completa/data/leituras.json --out dist/siab3d
+          test -s dist/siab3d/quadros/siab_2860.png
+      - name: Publicar quatro quadros e fontes
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: siad-blender-quadros-${{ github.run_number }}
+          path: |
+            dist/siab3d/quadros/*.png
+            dist/siab3d/SIAB_abertura_completa.glb
+            dist/siab3d/SIAB_abertura_completa.blend
+            estudos/abertura-blender-completa/data/leituras.json
+          retention-days: 21
+          if-no-files-found: warn
