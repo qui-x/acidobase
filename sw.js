@@ -5,7 +5,7 @@
    página. */
 // Abertura SIAB em Blender 3D com conta-gotas e tons revisados.
 // A revisão do cache distribui MP4/WebM e poster sem alterar SIAB.version (1.0.0).
-const VERSAO = "siab-1.0.0+20261026-webgl1";
+const VERSAO = "siab-1.0.0+20261026-webgl2";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
