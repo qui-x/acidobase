@@ -1,0 +1,247 @@
+{
+  "resolution": "1920x1080",
+  "theme": "light",
+  "count": 20,
+  "screenshots": [
+    {
+      "file": "01-inicio.png",
+      "theme": "light",
+      "route": "inicio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Início · SIAB",
+      "size": "1920x1080",
+      "bytes": 197823
+    },
+    {
+      "file": "02-aprender.png",
+      "theme": "light",
+      "route": "aprender",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Temas · SIAB",
+      "size": "1920x1080",
+      "bytes": 134063
+    },
+    {
+      "file": "03-tema.png",
+      "theme": "light",
+      "route": "tema",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Ácidos e bases · SIAB",
+      "size": "1920x1080",
+      "bytes": 68755
+    },
+    {
+      "file": "04-missoes.png",
+      "theme": "light",
+      "route": "missoes",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Missões · SIAB",
+      "size": "1920x1080",
+      "bytes": 126358
+    },
+    {
+      "file": "05-missao-repolho.png",
+      "theme": "light",
+      "route": "missao",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "O que o repolho roxo revela · SIAB",
+      "size": "1920x1080",
+      "bytes": 531671
+    },
+    {
+      "file": "06-roteiros.png",
+      "theme": "light",
+      "route": "roteiros",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Roteiros Experimentais · SIAB",
+      "size": "1920x1080",
+      "bytes": 124526
+    },
+    {
+      "file": "07-roteiro-titulacao.png",
+      "theme": "light",
+      "route": "roteiro",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Uma gota faz a diferença · SIAB",
+      "size": "1920x1080",
+      "bytes": 120597
+    },
+    {
+      "file": "08-montagens.png",
+      "theme": "light",
+      "route": "montagens",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Montagens prontas · SIAB",
+      "size": "1920x1080",
+      "bytes": 126437
+    },
+    {
+      "file": "09-professor.png",
+      "theme": "light",
+      "route": "professor",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Área do Professor · SIAB",
+      "size": "1920x1080",
+      "bytes": 79993
+    },
+    {
+      "file": "10-manual.png",
+      "theme": "light",
+      "route": "manual",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Manual · SIAB",
+      "size": "1920x1080",
+      "bytes": 217334
+    },
+    {
+      "file": "11-manual-indicadores.png",
+      "theme": "light",
+      "route": "manual",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Indicadores ácido-base · SIAB",
+      "size": "1920x1080",
+      "bytes": 143927
+    },
+    {
+      "file": "12-caderno.png",
+      "theme": "light",
+      "route": "caderno",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Caderno · SIAB",
+      "size": "1920x1080",
+      "bytes": 61025
+    },
+    {
+      "file": "13-bancada-experimento.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 553088
+    },
+    {
+      "file": "14-bancada-comparacao.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 160176
+    },
+    {
+      "file": "15-montagem.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 578236
+    },
+    {
+      "file": "16-preparo.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 578239
+    },
+    {
+      "file": "17-modulos.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 545605
+    },
+    {
+      "file": "18-ver-investigacao.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 419805
+    },
+    {
+      "file": "19-dados-investigacao.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 415730
+    },
+    {
+      "file": "20-medicao-ph.png",
+      "theme": "light",
+      "route": "laboratorio",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Bancada · SIAB",
+      "size": "1920x1080",
+      "bytes": 420322
+    }
+  ]
+}
