@@ -1,4 +1,4 @@
-name: Capturas em modo claro para o manual SIAB
+name: Capturas Full HD em modo claro para o manual SIAB
 on:
   push:
     branches:
@@ -11,7 +11,7 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -33,44 +33,91 @@ jobs:
           sleep 2
           mkdir -p docs/manual-capturas-claro
           cat > /tmp/siab-manual-capture.cjs <<'JS'
-          const { chromium } = require(process.cwd() + '/node_modules/playwright');
-          (async () => {
-            const browser = await chromium.launch({ headless: true });
-            const context = await browser.newContext({
-              viewport: { width: 1360, height: 860 }, deviceScaleFactor: 1,
-              reducedMotion: 'reduce', colorScheme: 'light'
-            });
-            const routes = [
-              ['manual', 'manual'],
-              ['missoes', 'missoes'],
-              ['professor', 'professor'],
-              ['laboratorio', 'laboratorio']
-            ];
-            for (const [name, route] of routes) {
-              const page = await context.newPage();
-              page.on('pageerror', error => console.log('PAGEERROR', name, error.message));
-              await page.goto('http://127.0.0.1:8123/?theme=light&motion=reduce#/' + route,
-                 { waitUntil: 'domcontentloaded', timeout: 30000 });
-              await page.waitForTimeout(1800);
-              await page.evaluate(() => {
-                 window.A11Y?.definir?.('theme','light');
-                 document.querySelector('.abertura')?.remove();
-                 const overlay = document.querySelector('[data-abertura]');
-                 if (overlay) overlay.remove();
-              });
-              await page.waitForTimeout(600);
-              const theme = await page.evaluate(() => ({
-                 theme: document.documentElement.dataset.theme,
-                 body: document.body.className,
-                 route: document.body.dataset.rota
-              }));
-              console.log(name, JSON.stringify(theme));
-              if (theme.theme !== 'light') throw new Error('Tema não é claro em '+name);
-              await page.screenshot({path:'docs/manual-capturas-claro/'+name+'.png',fullPage:false});
-              await page.close();
-            }
-            await browser.close();
+          const {chromium}=require(process.cwd()+'/node_modules/playwright');
+          const fs=require('fs');
+          const out='docs/manual-capturas-claro';
+          const base='http://127.0.0.1:8123/?theme=light&motion=reduce#/';
+          let failures=[];
+          (async()=>{
+          const browser=await chromium.launch({headless:true});
+          const context=await browser.newContext({viewport:{width:1920,height:1080},deviceScaleFactor:1,reducedMotion:'reduce',colorScheme:'light'});
+          const log=[];
+          async function open(route){
+           const page=await context.newPage();
+           page.on('pageerror',e=>console.log('PAGEERROR',route,e.message));
+           await page.goto(base+route,{waitUntil:'domcontentloaded',timeout:35000});
+           await page.waitForTimeout(1250);
+           await page.evaluate(()=>{
+              window.A11Y?.definir?.('theme','light');
+              document.querySelector('.abertura')?.remove();
+              document.querySelector('[data-abertura]')?.remove();
+              const welcome=document.getElementById('boas-vindas');
+              if(welcome)welcome.hidden=true;
+           });
+           await page.waitForTimeout(300);
+           return page;
+          }
+          async function snap(page,file,expected){
+           await page.waitForTimeout(250);
+           const state=await page.evaluate(()=>({theme:document.documentElement.dataset.theme,route:window.SIAB?.rota?.nome,viewport:[innerWidth,innerHeight],title:document.title}));
+           if(state.theme!=='light'||state.viewport.join('x')!=='1920x1080')throw new Error(file+' theme/viewport '+JSON.stringify(state));
+           if(expected&&!state.route?.startsWith(expected))throw new Error(file+' wrong route '+JSON.stringify(state));
+           await page.screenshot({path:out+'/'+file+'.png',fullPage:false,animations:'disabled'});
+           const data=fs.readFileSync(out+'/'+file+'.png');
+           const wh=[data.readUInt32BE(16),data.readUInt32BE(20)].join('x');
+           if(wh!=='1920x1080')throw new Error(file+' actual PNG size '+wh);
+           log.push({file:file+'.png',...state,size:wh,bytes:data.length});
+           console.log('CAPTURE',file,wh,state.route,state.theme);
+          }
+          async function simple(file,route,fn){
+           const page=await open(route);
+           if(fn)await fn(page);
+           await snap(page,file,route.split('/')[0]);
+           await page.close();
+          }
+          await simple('01-inicio','inicio');
+          await simple('02-aprender','aprender');
+          await simple('03-tema','tema/'+(await (async()=>{const p=await open('aprender');const id=await p.evaluate(()=>window.SIAB?.temas?.[0]?.id);await p.close();return id;})()));
+          await simple('04-missoes','missoes');
+          await simple('05-missao-repolho','missao/repolho-roxo');
+          await simple('06-roteiros','roteiros');
+          await simple('07-roteiro-titulacao','roteiro/titulacao-forte');
+          await simple('08-montagens','montagens');
+          await simple('09-professor','professor');
+          await simple('10-manual','manual');
+          await simple('11-manual-indicadores','manual/indicadores');
+          await simple('12-caderno','caderno');
+          const page=await open('laboratorio');
+          await page.evaluate(()=>window.SIAB.montarMontagem('tres-indicadores'));
+          await page.waitForTimeout(900);
+          await page.evaluate(()=>{const w=document.querySelector('#boas-vindas');if(w)w.hidden=true;});
+          await snap(page,'13-bancada-experimento','laboratorio');
+          await page.locator('#overview-tab').click({timeout:5000});
+          await snap(page,'14-bancada-comparacao','laboratorio');
+          await page.locator('#focus-tab').click({timeout:5000});
+          await page.locator('#workspace-montagem').click({timeout:5000});
+          await snap(page,'15-montagem','laboratorio');
+          const pre=page.locator('[data-dock-group="preparo"]');
+          if(await pre.count())await pre.first().click();
+          await snap(page,'16-preparo','laboratorio');
+          const mod=page.locator('[data-dock-group="modulo"]');
+          if(await mod.count())await mod.first().click();
+          await snap(page,'17-modulos','laboratorio');
+          await page.locator('#workspace-ver').click({timeout:5000});
+          await snap(page,'18-ver-investigacao','laboratorio');
+          await page.locator('#workspace-dados').click({timeout:5000});
+          await snap(page,'19-dados-investigacao','laboratorio');
+          await page.locator('#workspace-dados').click({timeout:5000});
+          await page.locator('#workspace-quick-measure').click({timeout:5000});
+          await page.waitForTimeout(950);
+          await page.locator('#workspace-ver').click({timeout:5000});
+          await snap(page,'20-medicao-ph','laboratorio');
+          await page.close();
+          await browser.close();
+          fs.writeFileSync(out+'/capturas-1920x1080.json',JSON.stringify({resolution:'1920x1080',theme:'light',count:log.length,screenshots:log},null,2));
+          if(log.length<13)throw new Error('Only '+log.length+' screenshots');
           })().catch(e=>{console.error(e);process.exit(1)});
+          
           JS
           node /tmp/siab-manual-capture.cjs
       - name: Publicar somente as capturas, sem alterar o programa
