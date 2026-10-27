@@ -3,9 +3,9 @@
    manter SIAB.version): o navegador baixa tudo de novo, a versão nova assume e o app
    avisa "Recarregar". A lista ARQUIVOS precisa conter todo arquivo usado pela
    página. */
-// Abertura SIAB em Blender 3D com conta-gotas e tons revisados.
-// A revisão do cache distribui MP4/WebM e poster sem alterar SIAB.version (1.0.0).
-const VERSAO = "siab-1.0.0+20261026-webgl2";
+// Abertura visual original restaurada. Nova versão do cache elimina modelos,
+// player de vídeo e bibliotecas de abertura 3D das cópias offline.
+const VERSAO = "siab-1.0.0+20261027-restauracao-original";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
@@ -15,17 +15,11 @@ const NOME_CACHE = PREFIXO_CACHE + VERSAO;
 const ARQUIVOS = [
   "./",
   "./index.html",
-  "./css/abertura-webgl.css",
-  "./vendor/babylon/babylonjs.loaders.min.js",
-  "./vendor/babylon/babylon.js",
-  "./assets/abertura/siab-abertura.glb",
-  "./assets/abertura/siab-blender-poster.png",
   "./manifest.webmanifest",
   "./assets/siab-icone.svg",
   "./assets/icones/apple-touch-icon.png",
   "./vendor/dialog-polyfill/dialog-polyfill.css",
   "./css/stylesiab.css",
-  "./css/abertura-v5.css",
   "./css/mobile-study.css",
   "./js/core/compatibilidade.js",
   "./a11y.js",
