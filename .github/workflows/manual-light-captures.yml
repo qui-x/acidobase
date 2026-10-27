@@ -1,0 +1,86 @@
+name: Capturas em modo claro para o manual SIAB
+on:
+  push:
+    branches:
+      - docs/siab-manual-light-captures
+    paths:
+      - .github/workflows/manual-light-captures.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  capture:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar navegador para captura fiel
+        run: |
+          npm install --no-save playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Capturar telas reais no tema claro
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m http.server 8123 --bind 127.0.0.1 > /tmp/siab-manual-server.log 2>&1 &
+          server_pid=$!
+          trap 'kill $server_pid || true' EXIT
+          sleep 2
+          mkdir -p docs/manual-capturas-claro
+          cat > /tmp/siab-manual-capture.cjs <<'JS'
+          const { chromium } = require(process.cwd() + '/node_modules/playwright');
+          (async () => {
+            const browser = await chromium.launch({ headless: true });
+            const context = await browser.newContext({
+              viewport: { width: 1360, height: 860 }, deviceScaleFactor: 1,
+              reducedMotion: 'reduce', colorScheme: 'light'
+            });
+            const routes = [
+              ['manual', 'manual'],
+              ['missoes', 'missoes'],
+              ['professor', 'professor'],
+              ['laboratorio', 'laboratorio']
+            ];
+            for (const [name, route] of routes) {
+              const page = await context.newPage();
+              page.on('pageerror', error => console.log('PAGEERROR', name, error.message));
+              await page.goto('http://127.0.0.1:8123/?theme=light&motion=reduce#/' + route,
+                 { waitUntil: 'domcontentloaded', timeout: 30000 });
+              await page.waitForTimeout(1800);
+              await page.evaluate(() => {
+                 window.A11Y?.definir?.('theme','light');
+                 document.querySelector('.abertura')?.remove();
+                 const overlay = document.querySelector('[data-abertura]');
+                 if (overlay) overlay.remove();
+              });
+              await page.waitForTimeout(600);
+              const theme = await page.evaluate(() => ({
+                 theme: document.documentElement.dataset.theme,
+                 body: document.body.className,
+                 route: document.body.dataset.rota
+              }));
+              console.log(name, JSON.stringify(theme));
+              if (theme.theme !== 'light') throw new Error('Tema não é claro em '+name);
+              await page.screenshot({path:'docs/manual-capturas-claro/'+name+'.png',fullPage:false});
+              await page.close();
+            }
+            await browser.close();
+          })().catch(e=>{console.error(e);process.exit(1)});
+          JS
+          node /tmp/siab-manual-capture.cjs
+      - name: Publicar somente as capturas, sem alterar o programa
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/manual-capturas-claro/
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(siab): registrar capturas reais no tema claro"
+            git push origin HEAD:refs/heads/docs/siab-manual-light-captures
+          fi
