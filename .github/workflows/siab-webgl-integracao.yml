@@ -1,0 +1,113 @@
+name: SIAB abertura Blender integrada via Babylon.js
+on:
+  push:
+    branches: [feature/siab-abertura-babylon-integrada]
+    paths:
+      - 'js/ui/abertura-webgl.js'
+      - 'css/abertura-webgl.css'
+      - 'estudos/abertura-blender-completa/instalar_abertura_webgl.py'
+      - 'tests/abertura-babylon-crossbrowser.mjs'
+      - '.github/workflows/siab-webgl-integracao.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  integrar-webgl:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Instalar Babylon.js local para funcionamento offline
+        run: |
+          npm install --no-save --no-audit --no-fund 'babylonjs@7' 'babylonjs-loaders@7'
+          test -s node_modules/babylonjs/babylon.js
+          test -s node_modules/babylonjs-loaders/babylonjs.loaders.min.js
+          node --check js/ui/abertura-webgl.js
+          node --check tests/abertura-babylon-crossbrowser.mjs
+          python3 -m py_compile estudos/abertura-blender-completa/instalar_abertura_webgl.py
+      - name: Baixar GLB real do Blender usado pelo SIAB
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/blender-3d
+          gh run download 40423176418 -R "${GITHUB_REPOSITORY}" --name 'siab-contagotas-cores-3' --dir /tmp/blender-3d
+          test -s /tmp/blender-3d/dist/siab3d/SIAB_abertura_completa.glb
+          python3 - <<'PY'
+          import json,struct
+          b=open('/tmp/blender-3d/dist/siab3d/SIAB_abertura_completa.glb','rb').read()
+          assert b[:4]==b'glTF' and struct.unpack_from('<I',b,8)[0]==len(b)
+          n,t=struct.unpack_from('<I4s',b,12)
+          assert t==b'JSON'
+          doc=json.loads(b[20:20+n])
+          assert len(doc.get('meshes',[]))>=120
+          assert len(doc.get('animations',[]))>=120
+          print('GLB VALIDADO:',len(doc['meshes']),'malhas',len(doc['animations']),'animações')
+          PY
+      - name: Integrar no SIAB oficial em cópia isolada
+        run: |
+          git fetch origin main:refs/remotes/origin/main
+          git worktree add --detach /tmp/siab-nativo refs/remotes/origin/main
+          python3 estudos/abertura-blender-completa/instalar_abertura_webgl.py /tmp/siab-nativo /tmp/blender-3d/dist/siab3d/SIAB_abertura_completa.glb
+          node --check /tmp/siab-nativo/js/ui/abertura.js
+          node --check /tmp/siab-nativo/sw.js
+          grep -Fq 'siab-abertura.glb' /tmp/siab-nativo/sw.js
+          ! grep -Fq 'siab-blender-intro.mp4' /tmp/siab-nativo/sw.js
+      - name: Instalar tres navegadores reais
+        run: |
+          npx playwright install --with-deps chromium firefox webkit
+      - name: Servir aplicação completa e testar WebGL
+        run: |
+          python3 -m http.server 8777 --bind 127.0.0.1 --directory /tmp/siab-nativo >/tmp/siab-webgl.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8777/index.html >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/abertura-babylon-crossbrowser.mjs
+      - name: Publicar na main e branch do GitHub Pages somente apos passar os testes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git -C /tmp/siab-nativo add -A index.html sw.js js/ui/abertura.js css/abertura-webgl.css assets/abertura vendor/babylon
+          git -C /tmp/siab-nativo commit -m "feat(siab): abertura Blender como cena WebGL nativa em Babylon.js"
+          git -C /tmp/siab-nativo push origin HEAD:refs/heads/main
+          DEFAULT_BRANCH="$(gh api "repos/${GITHUB_REPOSITORY}" --jq '.default_branch')"
+          PAGE_SOURCE="$(gh api "repos/${GITHUB_REPOSITORY}/pages" --jq '.source.branch // ""' 2>/dev/null || true)"
+          echo "Branches main / default: $DEFAULT_BRANCH / pages: $PAGE_SOURCE"
+          declare -A targets=()
+          targets["$DEFAULT_BRANCH"]=1
+          if [ -n "$PAGE_SOURCE" ]; then targets["$PAGE_SOURCE"]=1; fi
+          for branch in "${!targets[@]}"; do
+            [ "$branch" = main ] && continue
+            [[ "$branch" =~ ^[A-Za-z0-9._/-]+$ ]] || exit 1
+            git fetch origin "$branch:refs/remotes/origin/$branch"
+            dest="/tmp/siab-webgl-$(echo "$branch" | tr '/' '-')"
+            git worktree add --detach "$dest" "refs/remotes/origin/$branch"
+            python3 estudos/abertura-blender-completa/instalar_abertura_webgl.py "$dest" /tmp/blender-3d/dist/siab3d/SIAB_abertura_completa.glb
+            git -C "$dest" add -A index.html sw.js js/ui/abertura.js css/abertura-webgl.css assets/abertura vendor/babylon
+            git -C "$dest" commit -m "feat(siab): atualizar Pages com abertura Blender em tempo real"
+            git -C "$dest" push origin "HEAD:refs/heads/$branch"
+            echo "PAGES_ATUALIZADO $branch"
+          done
+          echo "SIAB_WEBGL_PUBLICADO"
+      - name: Evidencias de testes
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: siab-webgl-crossbrowser-${{ github.run_number }}
+          path: |
+            test-results/siab-webgl/*.png
+            /tmp/siab-webgl.log
+          if-no-files-found: warn
+          retention-days: 15
