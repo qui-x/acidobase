@@ -1,221 +1,120 @@
 "use strict";
-/* Animação de abertura: toca ao abrir o aplicativo ou recarregar a página.
-   Cinco tubos de ensaio, cada um com um indicador, recebem gotas e trocam de
-   composto (ácido → neutro → básico). As cores e os valores de pH vêm do
-   próprio motor químico (SIAB.chem), os mesmos da bancada.
-   Pula com um toque, clique ou tecla. Não aparece com "Reduzir animações",
-   com a preferência do sistema de reduzir movimento, nem quando o usuário
-   desliga em Menu ☰ → Acessibilidade → Animação de abertura. */
-SIAB.abertura = (() => {
-  const CHAVE = "siab_abertura";
-  // [frasco, rótulo] em cada etapa. Todos a 0,01 mol/L (amostras como preparadas).
-  const TUBOS = [
-    {
-      indicador: "phenol",
-      nome: "Fenolftaleína",
-      etapas: [
-        ["hcl", "HCl"],
-        ["water", "H₂O"],
-        ["naoh", "NaOH"],
-      ],
-    },
-    {
-      indicador: "btb",
-      nome: "Bromotimol",
-      etapas: [
-        ["acetic", "CH₃COOH"],
-        ["nacl", "NaCl"],
-        ["ammonia", "NH₃"],
-      ],
-    },
-    {
-      indicador: "cabbage",
-      nome: "Repolho",
-      etapas: [
-        ["lemon", "Limão"],
-        ["water", "H₂O"],
-        ["bicarbonate", "NaHCO₃"],
-      ],
-    },
-    {
-      indicador: "methyl",
-      nome: "Metilorange",
-      etapas: [
-        ["hcl", "HCl"],
-        ["acetic", "CH₃COOH"],
-        ["na2co3", "Na₂CO₃"],
-      ],
-    },
-    {
-      indicador: "universal",
-      nome: "Universal",
-      etapas: [
-        ["hcl", "HCl"],
-        ["nacl", "NaCl"],
-        ["naoh", "NaOH"],
-      ],
-    },
-  ];
-  // Momento (ms) em que cada etapa começa; depois vem a marca e a saída.
-  const TEMPOS = {
-    encher: 150,
-    etapas: [150, 1000, 1750],
-    marca: 2350,
-    sair: 3200,
-    fim: 3650,
-  };
-  const timers = [];
-  let ativa = false;
-
-  // Texto simples ('on'/'off'): o index.html lê a mesma chave antes de desenhar a página.
-  const ligada = () => {
-    try {
-      return localStorage.getItem(CHAVE) !== "off";
-    } catch (erro) {
-      return true;
-    }
-  };
-
-  // Cor e pH que a bancada mostraria para esse frasco com esse indicador.
-  function leitura(solucao, indicador) {
-    const tubo = {
-      ...SIAB.TUBE_DEFAULTS,
-      solution: solucao,
-      indicator: indicador,
-      concentration: 0.01,
-      additions: [],
-    };
-    const r = SIAB.chem.solve(tubo);
-    const cor = SIAB.chem.liquid(tubo, false, r);
-    return {
-      pH: r.pH,
-      cor: `rgba(${cor.rgb.map(Math.round).join(",")},${Math.round(Math.max(cor.opacity, 0.22) * 100) / 100})`,
-      nome: cor.name,
-    };
+/* SIAB: modelos, tipografia e animações Blender/GLB em WebGL real.
+   O navegador NÃO reproduz vídeos para apresentar a abertura. */
+SIAB.abertura=(()=>{
+ const CHAVE="siab_abertura",REV="babylon-r1";
+ const TUBOS=[
+  {indicador:"phenol",nome:"Fenolftaleína",etapas:[["hcl","HCl"],["water","H₂O"],["naoh","NaOH"]]},
+  {indicador:"btb",nome:"Bromotimol",etapas:[["acetic","CH₃COOH"],["nacl","NaCl"],["ammonia","NH₃"]]},
+  {indicador:"cabbage",nome:"Repolho",etapas:[["lemon","Limão"],["water","H₂O"],["bicarbonate","NaHCO₃"]]},
+  {indicador:"methyl",nome:"Metilorange",etapas:[["hcl","HCl"],["acetic","CH₃COOH"],["na2co3","Na₂CO₃"]]},
+  {indicador:"universal",nome:"Universal",etapas:[["hcl","HCl"],["nacl","NaCl"],["naoh","NaOH"]]}
+ ];
+ const TEMPOS={etapas:[150,1000,1750],marca:2350,sair:3650,fim:3650};
+ const scripts=new Map();
+ let ativa=false,cena=null,motor=null,canvas=null,timer=null,limite=null,onResize=null,stage="idle",grupoCount=0,meshCount=0;
+ const ligada=()=>{try{return localStorage.getItem(CHAVE)!=="off";}catch{return true}};
+ const status=()=>({ativo:ativa,fase:stage,backend:motor?"Babylon.js/WebGL":null,objetos:meshCount,grupos:grupoCount,versao:REV});
+ function leitura(solucao,indicador){
+  const tubo={...SIAB.TUBE_DEFAULTS,solution:solucao,indicator:indicador,concentration:0.01,additions:[]};
+  const resultado=SIAB.chem.solve(tubo),cor=SIAB.chem.liquid(tubo,false,resultado);
+  return {pH:resultado.pH,cor:"rgba("+cor.rgb.map(Math.round).join(",")+","+Math.round(Math.max(cor.opacity,.22)*100)/100+")",nome:cor.name};
+ }
+ function obterScript(url){
+  if(scripts.has(url))return scripts.get(url);
+  const promise=new Promise((resolve,reject)=>{
+   const s=document.createElement("script");
+   s.src=url;s.async=true;s.onload=resolve;s.onerror=()=>reject(new Error("Biblioteca 3D indisponível"));document.head.append(s);
+  });
+  scripts.set(url,promise);return promise;
+ }
+ function descartar(){
+  if(timer!==null){clearTimeout(timer);timer=null}
+  if(limite!==null){clearTimeout(limite);limite=null}
+  if(onResize){window.removeEventListener("resize",onResize);onResize=null}
+  if(motor){try{motor.stopRenderLoop()}catch{}}
+  if(cena){try{cena.dispose()}catch{}cena=null}
+  if(motor){try{motor.dispose()}catch{}motor=null}
+  canvas=null;
+ }
+ function encerrar(){
+  if(!ativa)return;
+  ativa=false;descartar();document.removeEventListener("keydown",encerrar,true);
+  const caixa=document.getElementById("abertura");
+  if(caixa){caixa.classList.add("saindo");setTimeout(()=>caixa.remove(),250)}
+  document.documentElement.dataset.abertura="fim";stage="closed";
+ }
+ function fallback(){
+  if(!ativa)return;
+  stage="unsupported";
+  const palco=document.querySelector("#abertura .abertura-palco");
+  if(palco){const img=new Image();img.src="assets/abertura/siab-blender-poster.png";
+   img.alt="Cinco tubos e conta-gotas da abertura tridimensional";img.className="abertura-3d-poster";palco.replaceChildren(img)}
+  limite=setTimeout(encerrar,700);
+ }
+ function atualizarCores(scene,B){
+  // As quinze cores vêm do motor químico, não de uma tabela inventada.
+  TUBOS.forEach((t,i)=>t.etapas.forEach(([amostra],j)=>{
+   const dado=leitura(amostra,t.indicador);
+   const rgba=dado.cor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+   if(!rgba)return;
+   const material=scene.getMaterialByName("INDICADOR_COR_"+(i+1)+"_"+(j+1));
+   if(material&&material.albedoColor){material.albedoColor=B.Color3.FromInts(+rgba[1],+rgba[2],+rgba[3])}
+  }));
+ }
+ async function montar3D(){
+  try{
+   await obterScript("vendor/babylon/babylon.js?v="+REV);
+   if(!ativa)return;
+   await obterScript("vendor/babylon/babylonjs.loaders.min.js?v="+REV);
+   if(!ativa)return;
+   const B=window.BABYLON;
+   if(!B||!B.Engine.isSupported()){fallback();return}
+   motor=new B.Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true},true);
+   cena=new B.Scene(motor);cena.clearColor=new B.Color4(.021,.043,.076,1);
+   const camera=new B.FreeCamera("SIAB-câmera",new B.Vector3(0,1.7,-11.5),cena);
+   camera.setTarget(new B.Vector3(0,1.36,0));camera.mode=B.Camera.ORTHOGRAPHIC_CAMERA;cena.activeCamera=camera;
+   onResize=()=>{
+    if(!ativa||!motor)return;
+    const ratio=Math.max(.6,canvas.clientWidth/Math.max(1,canvas.clientHeight)),half=2.86;
+    camera.orthoTop=half;camera.orthoBottom=-half;camera.orthoLeft=-half*ratio;camera.orthoRight=half*ratio;motor.resize();
+   };
+   window.addEventListener("resize",onResize,{passive:true});onResize();
+   const light=new B.HemisphericLight("SIAB-luz-suave",new B.Vector3(0,1,0),cena);
+   light.intensity=.96;light.diffuse=new B.Color3(.83,.91,1);
+   const fill=new B.PointLight("SIAB-luz-vidro",new B.Vector3(-2.2,4.2,-4.4),cena);
+   fill.intensity=125;fill.diffuse=new B.Color3(.82,.89,1);
+   const accent=new B.PointLight("SIAB-luz-rosa",new B.Vector3(2.6,3.8,-3.8),cena);
+   accent.intensity=57;accent.diffuse=new B.Color3(1,.7,.88);
+   const data=await B.SceneLoader.ImportMeshAsync(null,"assets/abertura/","siab-abertura.glb",cena);
+   if(!ativa)return;
+   meshCount=data.meshes.filter(m=>m.name!=="__root__").length;
+   grupoCount=data.animationGroups.length;
+   if(meshCount<100||grupoCount<100)throw new Error("GLB incompleto: "+meshCount+" objetos, "+grupoCount+" animações");
+   atualizarCores(cena,B);
+   data.animationGroups.forEach(g=>{g.stop();g.reset()});
+   motor.runRenderLoop(()=>{if(ativa&&cena)cena.render()});
+   // As marcações de tempo exportadas do Blender são preservadas.
+   data.animationGroups.forEach(g=>g.start(false,1,g.from,g.to));
+   stage="running";timer=setTimeout(encerrar,TEMPOS.fim+320);
+  }catch(error){console.warn("SIAB: cena WebGL indisponível",error);descartar();fallback()}
+ }
+ function iniciar(){
+  const caixa=document.getElementById("abertura");if(!caixa)return;
+  const reduzir=window.A11Y?.estado?.motion||window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+  if(!ligada()||reduzir||getComputedStyle(caixa).display==="none"){
+   caixa.remove();document.documentElement.dataset.abertura="fim";stage="skipped";return;
   }
-
-  const X = (n) => 50 + n * 75;
-  function desenhar(caixa) {
-    const tubos = TUBOS.map((t, n) => {
-      const x = X(n);
-      return `<g class="ab-tubo" data-n="${n}">
-        <text class="ab-indicador" x="${x}" y="185">${SIAB.escape(t.nome)}</text>
-        <g class="ab-contagotas" transform="translate(${x} 0)">
-          <ellipse class="ab-pipeta-bulbo" cx="0" cy="-31" rx="9" ry="9"/>
-          <path class="ab-pipeta-vidro" d="M-5 -25 Q-4 -13 -1 4 L1 4 Q4 -13 5 -25 Z"/>
-          <path class="ab-pipeta-brilho" d="M-3 -21 Q-2 -12 -1 -3"/>
-          <path class="ab-pipeta-ponta" d="M-1 4 L1 4 L0 17 Z"/>
-        </g>
-        <clipPath id="ab-clip-${n}"><path d="M${x - 15} 34v112a15 15 0 0 0 30 0V34Z"/></clipPath>
-        <g clip-path="url(#ab-clip-${n})">
-          <rect class="ab-liquido" x="${x - 16}" y="32" width="32" height="130"/>
-          <circle class="ab-bolha" cx="${x - 5}" cy="150" r="2.2"/><circle class="ab-bolha" cx="${x + 6}" cy="156" r="1.6"/>
-        </g>
-        <path class="ab-vidro" d="M${x - 17} 30v116a17 17 0 0 0 34 0V30M${x - 21} 30h42"/>
-        <path class="ab-brilho" d="M${x - 10} 42v96"/>
-        <path class="ab-gota" d="M${x} 22c2.4 4 4 6.3 4 8.3a4 4 0 0 1-8 0c0-2 1.6-4.3 4-8.3Z"/>
-        <text class="ab-formula" x="${x}" y="-54"></text>
-        <text class="ab-ph" x="${x}" y="203"></text>
-      </g>`;
-    }).join("");
-    caixa.querySelector(".abertura-tubos").innerHTML =
-      `<defs><linearGradient id="ab-pipeta-metal" x1="0" x2="1"><stop stop-color="#d0f2ff" stop-opacity=".8"/><stop offset=".5" stop-color="#6291b1" stop-opacity=".25"/><stop offset="1" stop-color="#e6faff" stop-opacity=".85"/></linearGradient></defs><path class="ab-suporte" d="M14 104h372"/>${tubos}<path class="ab-suporte" d="M14 124h372"/>`;
-  }
-
-  function etapa(caixa, k) {
-    caixa.querySelectorAll(".ab-tubo").forEach((g) => {
-      const t = TUBOS[Number(g.dataset.n)];
-      const [solucao, rotulo] = t.etapas[k];
-      const l = leitura(solucao, t.indicador);
-      const liquido = g.querySelector(".ab-liquido");
-      const formula = g.querySelector(".ab-formula");
-      const ph = g.querySelector(".ab-ph");
-      const altura = 62 + k * 16;
-      formula.textContent = rotulo;
-      const atraso = Number(g.dataset.n) * 50;
-      g.querySelector(".ab-gota").style.animationDelay = `${atraso}ms`;
-      g.querySelector(".ab-contagotas").style.animationDelay = `${atraso}ms`;
-      g.classList.remove("pingando");
-      void g.getBoundingClientRect();
-      g.classList.add("pingando");
-      timers.push(setTimeout(() => {
-        liquido.style.transform = `scaleY(${altura / 130})`;
-        liquido.style.fill = l.cor;
-        g.dataset.cor = l.nome;
-        ph.classList.add("trocando");
-        timers.push(setTimeout(() => {
-          ph.textContent = `pH ≈ ${SIAB.format(l.pH, 1)}`;
-          ph.classList.remove("trocando");
-        }, 140));
-      }, 260 + atraso));
-    });
-  }
-
-  function encerrar() {
-    if (!ativa) return;
-    ativa = false;
-    timers.splice(0).forEach(clearTimeout);
-    const caixa = document.getElementById("abertura");
-    document.removeEventListener("keydown", encerrar, true);
-    if (!caixa) return;
-    caixa.classList.add("saindo");
-    setTimeout(() => caixa.remove(), 350);
-    document.documentElement.dataset.abertura = "fim";
-  }
-
-  function iniciar() {
-    const caixa = document.getElementById("abertura");
-    if (!caixa) return;
-    const reduzir = window.A11Y?.estado?.motion ||
-      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
-    if (!ligada() || reduzir || getComputedStyle(caixa).display === "none") {
-      caixa.remove();
-      document.documentElement.dataset.abertura = "fim";
-      return;
-    }
-    ativa = true;
-    caixa.classList.add("abertura-blender");
-    // A cena é inteiramente modelada e renderizada pelo Blender.
-    // O navegador apenas reproduz o filme; não desenha objetos SVG.
-    const palco = caixa.querySelector(".abertura-palco");
-    const filme = document.createElement("video");
-    filme.className = "abertura-3d-video";
-    const webmSource = document.createElement("source");
-    webmSource.src = "assets/abertura/siab-blender-intro.webm";
-    webmSource.type = "video/webm";
-    const mp4Source = document.createElement("source");
-    mp4Source.src = "assets/abertura/siab-blender-intro.mp4";
-    mp4Source.type = "video/mp4";
-    filme.append(webmSource, mp4Source);
-    filme.poster = "assets/abertura/siab-blender-poster.png";
-    filme.autoplay = true;
-    filme.muted = true;
-    filme.defaultMuted = true;
-    filme.playsInline = true;
-    filme.preload = "auto";
-    filme.controls = false;
-    filme.setAttribute("aria-hidden","true");
-    palco.replaceChildren(filme);
-    filme.load();
-    // Nenhum SVG/gradiente CSS é usado na cena 3D.
-    filme.addEventListener("ended", encerrar, { once: true });
-    filme.addEventListener("error", encerrar, { once: true });
-    caixa.addEventListener("pointerdown", encerrar);
-    document.addEventListener("keydown", encerrar, true);
-    // Video corrompido, autoplay negado ou mídia indisponível não bloqueiam o SIAB.
-    timers.push(setTimeout(encerrar, 8000));
-    const play = filme.play();
-    if (play?.catch) play.catch(encerrar);
-  }
-
-  function definir(ligar) {
-    try {
-      localStorage.setItem(CHAVE, ligar ? "on" : "off");
-    } catch (erro) {
-      /* vale só nesta visita */
-    }
-  }
-
-  return { iniciar, encerrar, definir, ligada, leitura, TUBOS, TEMPOS };
+  ativa=true;stage="loading";caixa.classList.add("abertura-webgl");
+  const palco=caixa.querySelector(".abertura-palco");if(!palco){encerrar();return}
+  canvas=document.createElement("canvas");canvas.className="abertura-3d-canvas";
+  canvas.setAttribute("aria-label","Animação tridimensional dos cinco indicadores ácido-base");
+  canvas.setAttribute("role","img");palco.replaceChildren(canvas);
+  caixa.addEventListener("pointerdown",encerrar,{once:true});
+  document.addEventListener("keydown",encerrar,true);
+  limite=setTimeout(encerrar,12000);montar3D();
+ }
+ function definir(ligar){try{localStorage.setItem(CHAVE,ligar?"on":"off")}catch{}}
+ return {iniciar,encerrar,definir,ligada,leitura,TUBOS,TEMPOS,status};
 })();
 SIAB.abertura.iniciar();
