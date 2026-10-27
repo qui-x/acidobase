@@ -59,7 +59,7 @@ SIAB.abertura=(()=>{
    const rgba=dado.cor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
    if(!rgba)return;
    const material=scene.getMaterialByName("INDICADOR_COR_"+(i+1)+"_"+(j+1));
-   if(material&&material.albedoColor){material.albedoColor=B.Color3.FromInts(+rgba[1],+rgba[2],+rgba[3])}
+   if(material&&material.albedoColor){material.albedoColor=B.Color3.FromInts(+rgba[1],+rgba[2],+rgba[3]);material.alpha=.93}
   }));
  }
  async function montar3D(){
@@ -72,19 +72,19 @@ SIAB.abertura=(()=>{
    if(!B||!B.Engine.isSupported()){fallback();return}
    motor=new B.Engine(canvas,true,{preserveDrawingBuffer:false,stencil:true},true);
    cena=new B.Scene(motor);cena.clearColor=new B.Color4(.021,.043,.076,1);
-   const camera=new B.FreeCamera("SIAB-câmera",new B.Vector3(0,1.7,-11.5),cena);
+   const camera=new B.FreeCamera("SIAB-câmera",new B.Vector3(0,1.7,11.5),cena);
    camera.setTarget(new B.Vector3(0,1.36,0));camera.mode=B.Camera.ORTHOGRAPHIC_CAMERA;cena.activeCamera=camera;
    onResize=()=>{
     if(!ativa||!motor)return;
-    const ratio=Math.max(.6,canvas.clientWidth/Math.max(1,canvas.clientHeight)),half=2.86;
+    const ratio=Math.max(.6,canvas.clientWidth/Math.max(1,canvas.clientHeight)),half=Math.max(2.86,3.15/ratio);
     camera.orthoTop=half;camera.orthoBottom=-half;camera.orthoLeft=-half*ratio;camera.orthoRight=half*ratio;motor.resize();
    };
    window.addEventListener("resize",onResize,{passive:true});onResize();
    const light=new B.HemisphericLight("SIAB-luz-suave",new B.Vector3(0,1,0),cena);
    light.intensity=.96;light.diffuse=new B.Color3(.83,.91,1);
-   const fill=new B.PointLight("SIAB-luz-vidro",new B.Vector3(-2.2,4.2,-4.4),cena);
+   const fill=new B.PointLight("SIAB-luz-vidro",new B.Vector3(-2.2,4.2,4.4),cena);
    fill.intensity=125;fill.diffuse=new B.Color3(.82,.89,1);
-   const accent=new B.PointLight("SIAB-luz-rosa",new B.Vector3(2.6,3.8,-3.8),cena);
+   const accent=new B.PointLight("SIAB-luz-rosa",new B.Vector3(2.6,3.8,3.8),cena);
    accent.intensity=57;accent.diffuse=new B.Color3(1,.7,.88);
    const data=await B.SceneLoader.ImportMeshAsync(null,"assets/abertura/","siab-abertura.glb",cena);
    if(!ativa)return;
