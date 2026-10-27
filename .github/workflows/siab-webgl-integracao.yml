@@ -8,6 +8,14 @@ on:
       - 'estudos/abertura-blender-completa/instalar_abertura_webgl.py'
       - 'tests/abertura-babylon-crossbrowser.mjs'
       - '.github/workflows/siab-webgl-integracao.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'js/ui/abertura-webgl.js'
+      - 'css/abertura-webgl.css'
+      - 'estudos/abertura-blender-completa/instalar_abertura_webgl.py'
+      - 'tests/abertura-babylon-crossbrowser.mjs'
+      - '.github/workflows/siab-webgl-integracao.yml'
   workflow_dispatch:
 
 permissions:
