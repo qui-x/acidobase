@@ -1,0 +1,34 @@
+name: SHA-512 completo — A Química das Cores
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  gerar-hashes:
+    name: Verificar cada arquivo e selar ZIP integral
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Obter revisão imutável do código
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Gerar ZIP, SHA-512 por arquivo e SHA-512 único do pacote
+        run: |
+          python3 scripts/gerar_integridade_registro.py --destino "$RUNNER_TEMP/integridade-siab"
+      - name: Publicar SHA-512 e dados da revisão no resumo da execução
+        run: |
+          cat "$RUNNER_TEMP/integridade-siab/RELATORIO-INTEGRIDADE.md" >> "$GITHUB_STEP_SUMMARY"
+      - name: Preservar ZIP e laudos como artefato do GitHub Actions
+        uses: actions/upload-artifact@v4
+        with:
+          name: siab-sha512-completo-${{ github.sha }}
+          path: ${{ runner.temp }}/integridade-siab/
+          compression-level: 0
+          if-no-files-found: error
