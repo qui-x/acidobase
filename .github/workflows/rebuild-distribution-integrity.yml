@@ -15,6 +15,12 @@ on:
       - "build_manual_docs.cjs"
       - "build_icon_inventory.cjs"
       - "FILES.txt"
+      - "js/**"
+      - "css/**"
+      - "assets/**"
+      - "a11y.js"
+      - "favicon-dark.svg"
+      - "favicon-light.svg"
   workflow_dispatch:
 
 permissions:
@@ -57,6 +63,7 @@ jobs:
               "README.md",
               ".github/README.md",
               "package.json",
+              "js/ui/impressao.js",
               "SIAB-1.0.0-standalone.html",
           )
           for nome in arquivos:
