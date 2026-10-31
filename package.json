@@ -2,7 +2,7 @@
   "name": "siab-acidobase",
   "version": "1.0.0",
   "private": true,
-  "description": "SIAB — investigação em ácidos e bases: temas, missões, roteiros, relatórios e PWA.",
+  "description": "SIAB — Simulador de Indicadores Ácido-Base: temas, missões, roteiros, relatórios e PWA para investigação de ácidos e bases.",
   "license": "GPL-3.0-only",
   "scripts": {
     "start": "python3 -m http.server 8080",

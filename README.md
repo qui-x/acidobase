@@ -1,6 +1,6 @@
 # SIAB 1.0.0
 
-Simulador Interativo de Ácidos e Bases. Aplicação educacional estática com 140 substâncias, módulos Explorar, Medir e Calcular, instrumentos, atividades, Manual, relatórios e Caderno local.
+Simulador de Indicadores Ácido-Base. Aplicação educacional estática com 140 substâncias, módulos Explorar, Medir e Calcular, instrumentos, atividades, Manual, relatórios e Caderno local.
 
 Versão estável oficial, com a correção da bancada mobile encontrada nos testes finais: vidraria estável, identificação compacta e avisos contextuais de adição e de medição concluída. O motor científico e os módulos existentes foram preservados.
 

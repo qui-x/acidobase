@@ -2,7 +2,7 @@
 
 <img src="../assets/siab-icone.svg" width="96" alt="Ícone do SIAB: uma gota caindo em um tubo de ensaio com líquido em degradê do vermelho ao roxo">
 
-# SIAB · Simulador Interativo de Ácidos e Bases
+# SIAB · Simulador de Indicadores Ácido-Base
 
 ### A química das cores
 
