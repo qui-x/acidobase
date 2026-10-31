@@ -1,4 +1,4 @@
-name: Capturas Full HD em modo claro para o manual SIAB
+name: Capturas Full HD atuais para o manual SIAB
 on:
   push:
     branches:
@@ -11,116 +11,181 @@ permissions:
 jobs:
   capture:
     runs-on: ubuntu-24.04
-    timeout-minutes: 25
+    timeout-minutes: 30
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout da documentação
+        uses: actions/checkout@v4
         with:
+          ref: docs/siab-manual-light-captures
+          fetch-depth: 1
+      - name: Checkout da versão atual do programa
+        uses: actions/checkout@v4
+        with:
+          repository: qui-x/acidobase
+          ref: acidosebases1.0.0
+          path: app-source
           fetch-depth: 1
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Instalar navegador para captura fiel
+      - name: Instalar Chromium e Playwright
         run: |
           npm install --no-save playwright@1.56.1
           npx playwright install --with-deps chromium
-      - name: Capturar telas reais no tema claro
+      - name: Capturar telas reais do programa atualizado
         shell: bash
         run: |
           set -euo pipefail
-          python3 -m http.server 8123 --bind 127.0.0.1 > /tmp/siab-manual-server.log 2>&1 &
+          python3 -m http.server 8123 --bind 127.0.0.1 --directory app-source > /tmp/siab-manual-server.log 2>&1 &
           server_pid=$!
           trap 'kill $server_pid || true' EXIT
           sleep 2
           mkdir -p docs/manual-capturas-claro
+          export SIAB_SOURCE_SHA="$(git -C app-source rev-parse HEAD)"
           cat > /tmp/siab-manual-capture.cjs <<'JS'
           const {chromium}=require(process.cwd()+'/node_modules/playwright');
           const fs=require('fs');
           const out='docs/manual-capturas-claro';
-          const base='http://127.0.0.1:8123/?theme=light&motion=reduce#/';
-          let failures=[];
-          (async()=>{
-          const browser=await chromium.launch({headless:true});
-          const context=await browser.newContext({viewport:{width:1920,height:1080},deviceScaleFactor:1,reducedMotion:'reduce',colorScheme:'light'});
+          const base='http://127.0.0.1:8123/';
           const log=[];
-          async function open(route){
-           const page=await context.newPage();
-           page.on('pageerror',e=>console.log('PAGEERROR',route,e.message));
-           await page.goto(base+route,{waitUntil:'domcontentloaded',timeout:35000});
-           await page.waitForTimeout(1250);
-           await page.evaluate(()=>{
-              window.A11Y?.definir?.('theme','light');
-              document.querySelector('.abertura')?.remove();
-              document.querySelector('[data-abertura]')?.remove();
-              const welcome=document.getElementById('boas-vindas');
-              if(welcome)welcome.hidden=true;
-           });
-           await page.waitForTimeout(300);
-           return page;
-          }
-          async function snap(page,file,expected){
-           await page.waitForTimeout(250);
-           const state=await page.evaluate(()=>({theme:document.documentElement.dataset.theme,route:window.SIAB?.rota?.nome,viewport:[innerWidth,innerHeight],title:document.title}));
-           if(state.theme!=='light'||state.viewport.join('x')!=='1920x1080')throw new Error(file+' theme/viewport '+JSON.stringify(state));
-           if(expected&&!state.route?.startsWith(expected))throw new Error(file+' wrong route '+JSON.stringify(state));
-           await page.screenshot({path:out+'/'+file+'.png',fullPage:false,animations:'disabled'});
-           const data=fs.readFileSync(out+'/'+file+'.png');
-           const wh=[data.readUInt32BE(16),data.readUInt32BE(20)].join('x');
-           if(wh!=='1920x1080')throw new Error(file+' actual PNG size '+wh);
-           log.push({file:file+'.png',...state,size:wh,bytes:data.length});
-           console.log('CAPTURE',file,wh,state.route,state.theme);
-          }
-          async function simple(file,route,fn){
-           const page=await open(route);
-           if(fn)await fn(page);
-           await snap(page,file,route.split('/')[0]);
-           await page.close();
-          }
-          await simple('01-inicio','inicio');
-          await simple('02-aprender','aprender');
-          await simple('03-tema','tema/'+(await (async()=>{const p=await open('aprender');const id=await p.evaluate(()=>window.SIAB?.temas?.[0]?.id);await p.close();return id;})()));
-          await simple('04-missoes','missoes');
-          await simple('05-missao-repolho','missao/repolho-roxo');
-          await simple('06-roteiros','roteiros');
-          await simple('07-roteiro-titulacao','roteiro/titulacao-forte');
-          await simple('08-montagens','montagens');
-          await simple('09-professor','professor');
-          await simple('10-manual','manual');
-          await simple('11-manual-indicadores','manual/indicadores');
-          await simple('12-caderno','caderno');
-          const page=await open('laboratorio');
-          await page.evaluate(()=>window.SIAB.montarMontagem('tres-indicadores'));
-          await page.waitForTimeout(900);
-          await page.evaluate(()=>{const w=document.querySelector('#boas-vindas');if(w)w.hidden=true;});
-          await snap(page,'13-bancada-experimento','laboratorio');
-          await page.locator('#overview-tab').click({timeout:5000});
-          await snap(page,'14-bancada-comparacao','laboratorio');
-          await page.locator('#focus-tab').click({timeout:5000});
-          await page.locator('#workspace-montagem').click({timeout:5000});
-          await snap(page,'15-montagem','laboratorio');
-          const pre=page.locator('[data-dock-group="preparo"]');
-          if(await pre.count())await pre.first().click();
-          await snap(page,'16-preparo','laboratorio');
-          const mod=page.locator('[data-dock-group="modulo"]');
-          if(await mod.count())await mod.first().click();
-          await snap(page,'17-modulos','laboratorio');
-          await page.locator('#workspace-ver').click({timeout:5000});
-          await snap(page,'18-ver-investigacao','laboratorio');
-          await page.locator('#workspace-dados').click({timeout:5000});
-          await snap(page,'19-dados-investigacao','laboratorio');
-          await page.locator('#workspace-dados').click({timeout:5000});
-          await page.locator('#workspace-quick-measure').click({timeout:5000});
-          await page.waitForTimeout(950);
-          await page.locator('#workspace-ver').click({timeout:5000});
-          await snap(page,'20-medicao-ph','laboratorio');
-          await page.close();
-          await browser.close();
-          fs.writeFileSync(out+'/capturas-1920x1080.json',JSON.stringify({resolution:'1920x1080',theme:'light',count:log.length,screenshots:log},null,2));
-          if(log.length<13)throw new Error('Only '+log.length+' screenshots');
+          const errors=[];
+          (async()=>{
+            const browser=await chromium.launch({headless:true});
+            const context=await browser.newContext({
+              viewport:{width:1920,height:1080},
+              deviceScaleFactor:1,
+              reducedMotion:'reduce',
+              colorScheme:'light'
+            });
+            await context.addInitScript(()=>{
+              try { localStorage.setItem('siab_abertura','off'); } catch(e) {}
+              try { localStorage.setItem('siab_inicializacao','inicio'); } catch(e) {}
+            });
+            async function open(route){
+              const page=await context.newPage();
+              page.on('pageerror',e=>errors.push(route+': '+e.message));
+              await page.goto(base+'#/'+route,{waitUntil:'domcontentloaded',timeout:45000});
+              await page.waitForFunction(()=>window.SIAB&&window.SIAB.rota&&window.SIAB.rota.nome, null, {timeout:30000});
+              await page.evaluate(()=>{
+                window.A11Y?.definir?.('theme','light');
+                document.querySelector('.abertura')?.remove();
+                document.querySelector('[data-abertura]')?.remove();
+                const w=document.getElementById('boas-vindas');
+                if(w)w.hidden=true;
+                const d=document.getElementById('startup-dialog');
+                if(d?.open)d.close();
+              });
+              await page.waitForTimeout(700);
+              return page;
+            }
+            async function snap(page,file,expected,requiredText){
+              await page.waitForTimeout(250);
+              const state=await page.evaluate(()=>({
+                theme:document.documentElement.dataset.theme,
+                route:window.SIAB?.rota?.nome,
+                parameter:window.SIAB?.rota?.parametro,
+                viewport:[innerWidth,innerHeight],
+                title:document.title,
+                dialogs:[...document.querySelectorAll('dialog[open]')].map(x=>x.id)
+              }));
+              if(state.theme!=='light'||state.viewport.join('x')!=='1920x1080')
+                throw new Error(file+' theme/viewport '+JSON.stringify(state));
+              if(expected&&state.route!==expected)
+                throw new Error(file+' expected route '+expected+' got '+JSON.stringify(state));
+              if(state.dialogs.length && file!=='01-marca-inicial')
+                throw new Error(file+' unexpected open dialog '+JSON.stringify(state.dialogs));
+              if(requiredText){
+                const text=await page.locator('body').innerText();
+                if(!text.includes(requiredText))throw new Error(file+' missing text: '+requiredText);
+              }
+              await page.screenshot({path:out+'/'+file+'.png',fullPage:false,animations:'disabled'});
+              const data=fs.readFileSync(out+'/'+file+'.png');
+              const size=[data.readUInt32BE(16),data.readUInt32BE(20)].join('x');
+              if(size!=='1920x1080')throw new Error(file+' invalid PNG size '+size);
+              log.push({file:file+'.png',...state,size,bytes:data.length});
+              console.log('CAPTURE',file,size,state.route,state.parameter,state.theme);
+            }
+            async function simple(file,route,expected,requiredText){
+              const page=await open(route);
+              await snap(page,file,expected,requiredText);
+              await page.close();
+            }
+            // First-use screen: capture the new full name beneath the icon.
+            const first=await context.newPage();
+            first.on('pageerror',e=>errors.push('startup: '+e.message));
+            await first.addInitScript(()=>{try{localStorage.setItem('siab_abertura','off')}catch(e){}});
+            await first.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
+            await first.waitForFunction(()=>document.querySelector('#startup-dialog')?.open===true,null,{timeout:30000});
+            await first.evaluate(()=>window.A11Y?.definir?.('theme','light'));
+            await first.waitForTimeout(350);
+            await snap(first,'01-marca-inicial',null,'Simulador de Indicadores Ácido-Base');
+            await first.close();
+            await simple('02-inicio','inicio','inicio','Página inicial');
+            await simple('03-aprender','aprender','aprender','Temas');
+            const themeId=await context.newPage();
+            await themeId.goto(base+'#/aprender',{waitUntil:'domcontentloaded'});
+            await themeId.waitForFunction(()=>window.SIAB?.temas?.length>0);
+            const firstTheme=await themeId.evaluate(()=>window.SIAB.temas[0].id);
+            await themeId.close();
+            await simple('04-tema','tema/'+firstTheme,'tema');
+            await simple('05-missoes','missoes','missoes','Missões');
+            await simple('06-missao-repolho','missao/repolho-roxo','missao','O que o repolho roxo revela');
+            await simple('07-roteiros','roteiros','roteiros','Roteiros Experimentais');
+            await simple('08-roteiro-titulacao','roteiro/titulacao-forte','roteiro','Uma gota faz a diferença');
+            await simple('09-montagens','montagens','montagens','Montagens prontas');
+            await simple('10-professor','professor','professor','Área do Professor');
+            await simple('11-manual','manual','manual','Manual');
+            await simple('12-manual-indicadores','manual/indicadores','manual','Indicadores ácido-base');
+            await simple('13-caderno','caderno','caderno','Caderno');
+            const lab=await open('laboratorio');
+            await lab.evaluate(()=>window.SIAB.montarMontagem('tres-indicadores'));
+            await lab.waitForTimeout(900);
+            await lab.evaluate(()=>{const w=document.getElementById('boas-vindas');if(w)w.hidden=true;});
+            await snap(lab,'14-bancada-experimento','laboratorio','Bancada');
+            const overview=lab.locator('#overview-tab');
+            if(await overview.count())await overview.click();
+            await snap(lab,'15-bancada-comparacao','laboratorio');
+            await lab.evaluate(()=>window.SIAB.workspace.open('left','preparo'));
+            await lab.waitForTimeout(400);
+            await snap(lab,'16-montagem-preparo','laboratorio','Preparo');
+            await lab.evaluate(()=>window.SIAB.workspace.open('left','objetos'));
+            await lab.waitForTimeout(400);
+            await snap(lab,'17-montagem-objetos','laboratorio','Objetos');
+            await lab.evaluate(()=>window.SIAB.workspace.open('left','modulo'));
+            await lab.waitForTimeout(400);
+            await snap(lab,'18-modulos','laboratorio','Módulo');
+            await lab.evaluate(()=>window.SIAB.workspace.open('right','ver'));
+            await lab.waitForTimeout(400);
+            await snap(lab,'19-ver-investigacao','laboratorio','Investigar');
+            await lab.evaluate(()=>window.SIAB.workspace.open('right','dados'));
+            await lab.waitForTimeout(400);
+            await snap(lab,'20-dados-investigacao','laboratorio','Dados da investigação');
+            await lab.evaluate(()=>window.SIAB.workspace.close('left',false));
+            await lab.evaluate(()=>window.SIAB.workspace.open('right','ver'));
+            await lab.waitForTimeout(350);
+            const measure=lab.locator('#workspace-quick-measure');
+            if(await measure.count() && await measure.isVisible()) {
+              await measure.click();
+              await lab.waitForTimeout(900);
+            }
+            await snap(lab,'21-medicao-ph','laboratorio');
+            await lab.close();
+            await browser.close();
+            if(errors.length)throw new Error('JavaScript page errors: '+errors.join(' | '));
+            if(log.length!==21)throw new Error('Expected 21 screenshots; generated '+log.length);
+            fs.writeFileSync(out+'/capturas-1920x1080.json',JSON.stringify({
+              resolution:'1920x1080',
+              theme:'light',
+              count:log.length,
+              sourceBranch:'acidosebases1.0.0',
+              sourceCommit:process.env.SIAB_SOURCE_SHA,
+              captureDate:new Date().toISOString(),
+              screenshots:log
+            },null,2));
           })().catch(e=>{console.error(e);process.exit(1)});
-          
           JS
           node /tmp/siab-manual-capture.cjs
-      - name: Publicar somente as capturas, sem alterar o programa
+      - name: Publicar capturas e manifesto na branch de documentação
         shell: bash
         run: |
           set -euo pipefail
@@ -128,6 +193,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add docs/manual-capturas-claro/
           if ! git diff --cached --quiet; then
-            git commit -m "docs(siab): registrar capturas reais no tema claro"
+            git commit -m "docs(siab): refazer capturas para Simulador de Indicadores Ácido-Base"
             git push origin HEAD:refs/heads/docs/siab-manual-light-captures
           fi
