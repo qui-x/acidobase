@@ -8,8 +8,10 @@ on:
       - "index.html"
       - "manifest.webmanifest"
       - "README.md"
+      - "CHANGELOG.md"
       - ".github/README.md"
       - "package.json"
+      - "sw.js"
       - "package-lock.json"
       - "build_standalone.py"
       - "build_manual_docs.cjs"
@@ -61,6 +63,7 @@ jobs:
               "index.html",
               "manifest.webmanifest",
               "README.md",
+              "CHANGELOG.md",
               ".github/README.md",
               "package.json",
               "js/ui/impressao.js",
@@ -72,6 +75,10 @@ jobs:
               assert titulo in texto, f"Denominação nova ausente em {nome}"
               for antigo in antigos:
                   assert antigo not in texto, f"Denominação anterior ainda aparece em {nome}"
+          versao_cache = "siab-1.0.0+20261031-nome-indicadores"
+          service_worker = Path("sw.js").read_text(encoding="utf-8")
+          assert f'const VERSAO = "{versao_cache}";' in service_worker
+          assert f'`{versao_cache}`' in Path("README.md").read_text(encoding="utf-8")
           print("PASS: nome padronizado na aplicação, no PWA, nos documentos e no HTML independente")
           PY
 

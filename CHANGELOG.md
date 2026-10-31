@@ -4,6 +4,12 @@
 
 Versão estável oficial. Consolida a linha 1.0.x a partir da RC.5 aprovada e incorpora a correção da bancada mobile encontrada nos testes finais. Não introduz novas funcionalidades.
 
+### Padronização da denominação e atualização offline (31/10/2026)
+
+- Padroniza o nome público como **Simulador de Indicadores Ácido-Base** na interface, nos relatórios impressos, nos documentos e nos metadados do PWA.
+- Atualiza o identificador do cache para `siab-1.0.0+20261031-nome-indicadores`, mantendo a versão do programa em 1.0.0 e fazendo instalações existentes baixarem o manifesto e os arquivos atualizados.
+- Reconstrói o HTML independente e recalcula os manifestos SHA-256 e SHA-512, com verificação de integridade dos arquivos listados em FILES.txt.
+
 ### Correção da bancada mobile
 
 - Corrige a região central do Tubo em foco no mobile, com nome compacto e vidraria independente do crescimento dos textos científicos.
