@@ -19,7 +19,7 @@ Monte um experimento, observe as mudanças e escolha como registrar suas descobe
 
 **Exemplo:** Comece com uma solução e um indicador. Adicione uma gota, observe a cor e faça uma leitura de pH.
 
-**Veja também:** [Usar a bancada](../index.html#/manual/bancada) · [O que o pH informa](../index.html#/manual/ph) · [Página inicial e navegação](../index.html#/manual/menu) · [Instalação e uso offline](../index.html#/manual/app).
+**Veja também:** [Usar a bancada](../SIAB-standalone.html#/manual/bancada) · [O que o pH informa](../SIAB-standalone.html#/manual/ph) · [Página inicial e navegação](../SIAB-standalone.html#/manual/menu) · [Instalação e uso offline](../SIAB-standalone.html#/manual/app).
 
 ### Página inicial e navegação
 
@@ -33,7 +33,7 @@ A Página inicial reúne os caminhos principais do SIAB.
 2. No Menu, entre em Preferências → Inicialização para escolher a tela de entrada.
 3. Use Manual para consulta e Área do Professor para preparar atividades.
 
-**Veja também:** [Primeiros passos](../index.html#/manual/comecar) · [Temas e Missões](../index.html#/manual/aprender) · [Roteiros Experimentais](../index.html#/manual/roteiros).
+**Veja também:** [Primeiros passos](../SIAB-standalone.html#/manual/comecar) · [Temas e Missões](../SIAB-standalone.html#/manual/aprender) · [Roteiros Experimentais](../SIAB-standalone.html#/manual/roteiros).
 
 ### Escolher um módulo
 
@@ -47,7 +47,7 @@ Explorar, Medir e Calcular são três modos independentes de investigar.
 2. Escolha Explorar, Medir ou Calcular pelo objetivo da investigação.
 3. Ative o módulo desejado. Em atividades, a escolha pode estar definida pelo professor.
 
-**Veja também:** [Explorar: observar e manipular](../index.html#/manual/explorar) · [Medir: coletar evidências](../index.html#/manual/medir) · [Calcular: interpretar quantidades](../index.html#/manual/calcular).
+**Veja também:** [Explorar: observar e manipular](../SIAB-standalone.html#/manual/explorar) · [Medir: coletar evidências](../SIAB-standalone.html#/manual/medir) · [Calcular: interpretar quantidades](../SIAB-standalone.html#/manual/calcular).
 
 ### Instalação e uso offline
 
@@ -66,7 +66,7 @@ O Manual essencial acompanha o aplicativo e pode ser consultado sem conexão ap�
 
 **Instalação disponível:** A opção de instalar depende do navegador e da forma como o aplicativo foi disponibilizado. Abrir o HTML como arquivo local não instala a PWA.
 
-**Veja também:** [Guardar e recuperar registros](../index.html#/manual/persistencia) · [Ajustar a experiência de uso](../index.html#/manual/acessibilidade).
+**Veja também:** [Guardar e recuperar registros](../SIAB-standalone.html#/manual/persistencia) · [Ajustar a experiência de uso](../SIAB-standalone.html#/manual/acessibilidade).
 
 ### Guardar e recuperar registros
 
@@ -83,7 +83,7 @@ O SIAB guarda preferências, Caderno e relatórios no navegador utilizado.
 
 **Mesmo navegador:** Limpar os dados do site ou usar outro navegador pode impedir a retomada dos registros locais. Uma exportação é a forma de manter uma cópia independente.
 
-**Veja também:** [Caderno de investigação](../index.html#/manual/caderno) · [Relatórios](../index.html#/manual/relatorios) · [Instalação e uso offline](../index.html#/manual/app).
+**Veja também:** [Caderno de investigação](../SIAB-standalone.html#/manual/caderno) · [Relatórios](../SIAB-standalone.html#/manual/relatorios) · [Instalação e uso offline](../SIAB-standalone.html#/manual/app).
 
 ## Bancada
 
@@ -102,9 +102,9 @@ O recipiente fica em foco; Montagem, Ver e Dados abrem as ferramentas de que voc
 
 **Exemplo:** Abra a Tabela e use Expandir quando precisar de mais espaço. Feche o painel para voltar ao recipiente.
 
-**Bancada livre e atividade:** Na bancada livre você escolhe a montagem. Em uma atividade, só aparecem as opções disponibilizadas pelo professor. Consulte [Atividades por link](../index.html#/manual/atividades).
+**Bancada livre e atividade:** Na bancada livre você escolhe a montagem. Em uma atividade, só aparecem as opções disponibilizadas pelo professor. Consulte [Atividades por link](../SIAB-standalone.html#/manual/atividades).
 
-**Veja também:** [Escolher soluções e reagentes](../index.html#/manual/prateleira) · [Vidrarias e capacidade](../index.html#/manual/vidraria) · [Gotejar, adicionar volume e agitar](../index.html#/manual/conta-gotas) · [Selecionar e comparar recipientes](../index.html#/manual/tubos).
+**Veja também:** [Escolher soluções e reagentes](../SIAB-standalone.html#/manual/prateleira) · [Vidrarias e capacidade](../SIAB-standalone.html#/manual/vidraria) · [Gotejar, adicionar volume e agitar](../SIAB-standalone.html#/manual/conta-gotas) · [Selecionar e comparar recipientes](../SIAB-standalone.html#/manual/tubos).
 
 ### Escolher soluções e reagentes
 
@@ -123,7 +123,7 @@ Em Montagem → Preparo, escolha qual solução vai para o recipiente e qual vai
 
 **Troca de solução:** Trocar o preparo altera o experimento. Confira o recipiente em foco antes de modificar a solução. Uma medição anterior não representa automaticamente o novo preparo.
 
-**Veja também:** [Gotejar, adicionar volume e agitar](../index.html#/manual/conta-gotas) · [Volumes, diluição e concentração](../index.html#/manual/medidas) · [Biblioteca de substâncias](../index.html#/manual/frascos).
+**Veja também:** [Gotejar, adicionar volume e agitar](../SIAB-standalone.html#/manual/conta-gotas) · [Volumes, diluição e concentração](../SIAB-standalone.html#/manual/medidas) · [Biblioteca de substâncias](../SIAB-standalone.html#/manual/frascos).
 
 ### Vidrarias e capacidade
 
@@ -141,7 +141,7 @@ Tubo de ensaio, béquer e erlenmeyer oferecem formatos e capacidades diferentes.
 
 **Limites do desenho:** As marcas são representações didáticas, não vidrarias volumétricas certificadas. Em um grupo vinculado, a adição respeita o recipiente com menor espaço livre.
 
-**Veja também:** [Volumes, diluição e concentração](../index.html#/manual/medidas) · [Selecionar e comparar recipientes](../index.html#/manual/tubos).
+**Veja também:** [Volumes, diluição e concentração](../SIAB-standalone.html#/manual/medidas) · [Selecionar e comparar recipientes](../SIAB-standalone.html#/manual/tubos).
 
 ### Volumes, diluição e concentração
 
@@ -159,7 +159,7 @@ Os ajustes de preparo definem as quantidades usadas no experimento.
 
 **Hipóteses do modelo:** O modelo considera volumes aditivos. Não faz média de pH: calcula novamente o equilíbrio a partir da composição.
 
-**Veja também:** [Medir: coletar evidências](../index.html#/manual/medir) · [Calcular: interpretar quantidades](../index.html#/manual/calcular) · [Gotejar, adicionar volume e agitar](../index.html#/manual/conta-gotas).
+**Veja também:** [Medir: coletar evidências](../SIAB-standalone.html#/manual/medir) · [Calcular: interpretar quantidades](../SIAB-standalone.html#/manual/calcular) · [Gotejar, adicionar volume e agitar](../SIAB-standalone.html#/manual/conta-gotas).
 
 ### Gotejar, adicionar volume e agitar
 
@@ -180,7 +180,7 @@ As ações próximas ao recipiente permitem intervir e observar o que mudou.
 
 **Meia gota:** O erlenmeyer oferece a ação de meia gota. Use apenas os controles apresentados para a vidraria atual.
 
-**Veja também:** [Titulação ácido-base](../index.html#/manual/titulacao) · [Prever e gotejar](../index.html#/manual/prever) · [O que o pH informa](../index.html#/manual/ph).
+**Veja também:** [Titulação ácido-base](../SIAB-standalone.html#/manual/titulacao) · [Prever e gotejar](../SIAB-standalone.html#/manual/prever) · [O que o pH informa](../SIAB-standalone.html#/manual/ph).
 
 ### Selecionar e comparar recipientes
 
@@ -201,7 +201,7 @@ Alterne o recipiente em foco ou abra Visão geral para trabalhar com várias amo
 
 **Mistura transfere conteúdo:** Misturar reúne todo o conteúdo no destino e esvazia as origens. A temperatura final usa média ponderada por volume para soluções aquosas; não há aquecimento de reação no modelo.
 
-**Veja também:** [Usar a bancada](../index.html#/manual/bancada) · [Vidrarias e capacidade](../index.html#/manual/vidraria) · [Gotejar, adicionar volume e agitar](../index.html#/manual/conta-gotas).
+**Veja também:** [Usar a bancada](../SIAB-standalone.html#/manual/bancada) · [Vidrarias e capacidade](../SIAB-standalone.html#/manual/vidraria) · [Gotejar, adicionar volume e agitar](../SIAB-standalone.html#/manual/conta-gotas).
 
 ### Prever e gotejar
 
@@ -218,7 +218,7 @@ Compare sua previsão com as evidências observadas após uma intervenção.
 
 **Registro:** A explicação é opcional na bancada livre. Uma atividade pode solicitá-la como parte da investigação.
 
-**Veja também:** [Gotejar, adicionar volume e agitar](../index.html#/manual/conta-gotas) · [Caderno de investigação](../index.html#/manual/caderno).
+**Veja também:** [Gotejar, adicionar volume e agitar](../SIAB-standalone.html#/manual/conta-gotas) · [Caderno de investigação](../SIAB-standalone.html#/manual/caderno).
 
 ### Biblioteca de substâncias
 
@@ -232,9 +232,9 @@ Consulte as substâncias disponíveis e sua classificação no modelo.
 2. Interprete amostras representativas como aproximações de composição.
 3. Abra a bancada para preparar a solução nas condições que deseja investigar.
 
-A tabela de referência é gerada a partir do catálogo no [tópico interativo](../index.html#/manual/frascos).
+A tabela de referência é gerada a partir do catálogo no [tópico interativo](../SIAB-standalone.html#/manual/frascos).
 
-**Veja também:** [Escolher soluções e reagentes](../index.html#/manual/prateleira) · [O que o modelo representa](../index.html#/manual/limites).
+**Veja também:** [Escolher soluções e reagentes](../SIAB-standalone.html#/manual/prateleira) · [O que o modelo representa](../SIAB-standalone.html#/manual/limites).
 
 ## Explorar
 
@@ -253,7 +253,7 @@ Compare cores, indicadores e transformações visíveis antes de aprofundar os n
 
 **Exemplo:** Compare a mesma solução com dois indicadores. Uma diferença de cor não significa que a solução mudou de pH.
 
-**Veja também:** [Indicadores ácido-base](../index.html#/manual/indicadores) · [Usar Ver → Observar](../index.html#/manual/observar) · [Selecionar e comparar recipientes](../index.html#/manual/tubos).
+**Veja também:** [Indicadores ácido-base](../SIAB-standalone.html#/manual/indicadores) · [Usar Ver → Observar](../SIAB-standalone.html#/manual/observar) · [Selecionar e comparar recipientes](../SIAB-standalone.html#/manual/tubos).
 
 ### Usar Ver → Observar
 
@@ -268,7 +268,7 @@ Partículas, Espécies, Equações e Transferência de próton mostram perspecti
 3. Consulte a legenda e selecione uma espécie quando o controle existir.
 4. Compare a mesma espécie em outra representação.
 
-**Veja também:** [Partículas](../index.html#/manual/particulas) · [Espécies em solução](../index.html#/manual/especies) · [Equações](../index.html#/manual/equacao) · [Transferência de próton](../index.html#/manual/proton).
+**Veja também:** [Partículas](../SIAB-standalone.html#/manual/particulas) · [Espécies em solução](../SIAB-standalone.html#/manual/especies) · [Equações](../SIAB-standalone.html#/manual/equacao) · [Transferência de próton](../SIAB-standalone.html#/manual/proton).
 
 ### Partículas
 
@@ -284,7 +284,7 @@ A visão de partículas representa moléculas e íons de forma proporcional e si
 
 **Escala:** O número de desenhos não é uma contagem literal de partículas. A escala logarítmica amplia espécies raras para que possam ser vistas.
 
-**Veja também:** [Espécies em solução](../index.html#/manual/especies) · [Equações](../index.html#/manual/equacao) · [Distribuição de espécies](../index.html#/manual/distribuicao).
+**Veja também:** [Espécies em solução](../SIAB-standalone.html#/manual/especies) · [Equações](../SIAB-standalone.html#/manual/equacao) · [Distribuição de espécies](../SIAB-standalone.html#/manual/distribuicao).
 
 ### Espécies em solução
 
@@ -300,7 +300,7 @@ A tabela de espécies mostra concentrações calculadas pelo modelo químico.
 
 **Cálculo não é medição:** Esses valores resultam do modelo. Uma leitura instrumental só existe depois de usar a técnica correspondente.
 
-**Veja também:** [Partículas](../index.html#/manual/particulas) · [Distribuição de espécies](../index.html#/manual/distribuicao) · [Calcular: interpretar quantidades](../index.html#/manual/calcular).
+**Veja também:** [Partículas](../SIAB-standalone.html#/manual/particulas) · [Distribuição de espécies](../SIAB-standalone.html#/manual/distribuicao) · [Calcular: interpretar quantidades](../SIAB-standalone.html#/manual/calcular).
 
 ### Equações
 
@@ -316,7 +316,7 @@ As equações descrevem simbolicamente o equilíbrio e as espécies envolvidas.
 
 **Interpretação:** Uma equação é uma representação do sistema químico. Ela não é um registro instrumental nem comprova que uma medição foi feita.
 
-**Veja também:** [Transferência de próton](../index.html#/manual/proton) · [Calcular: interpretar quantidades](../index.html#/manual/calcular) · [Espécies em solução](../index.html#/manual/especies).
+**Veja também:** [Transferência de próton](../SIAB-standalone.html#/manual/proton) · [Calcular: interpretar quantidades](../SIAB-standalone.html#/manual/calcular) · [Espécies em solução](../SIAB-standalone.html#/manual/especies).
 
 ### Transferência de próton
 
@@ -332,7 +332,7 @@ Na descrição de Brønsted, o ácido doa H⁺ e a base recebe H⁺.
 
 **Em água:** A água pode receber o próton e formar H₃O⁺. Na neutralização, H₃O⁺ doa o próton e OH⁻ o recebe, formando água.
 
-**Veja também:** [Equações](../index.html#/manual/equacao) · [Espécies em solução](../index.html#/manual/especies).
+**Veja também:** [Equações](../SIAB-standalone.html#/manual/equacao) · [Espécies em solução](../SIAB-standalone.html#/manual/especies).
 
 ## Medir
 
@@ -351,13 +351,13 @@ Controle volumes e diluições e obtenha leituras com os instrumentos disponíve
 
 **Exemplo:** Faça uma leitura de pH, adicione uma dose e meça novamente. Compare as duas evidências na Tabela.
 
-**Veja também:** [Usar Ver → Medir](../index.html#/manual/painel-medir) · [pHmetro](../index.html#/manual/phmetro) · [Fita de pH](../index.html#/manual/fita) · [Titulação ácido-base](../index.html#/manual/titulacao).
+**Veja também:** [Usar Ver → Medir](../SIAB-standalone.html#/manual/painel-medir) · [pHmetro](../SIAB-standalone.html#/manual/phmetro) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [Titulação ácido-base](../SIAB-standalone.html#/manual/titulacao).
 
 ### O que o pH informa
 
 O pH indica a condição ácido-base da solução e precisa ser interpretado junto à temperatura e à técnica de leitura.
 
-**Para que serve:** Use uma técnica disponível para obter evidência: [indicador](../index.html#/manual/indicadores), [fita de pH](../index.html#/manual/fita) ou [pHmetro](../index.html#/manual/phmetro).
+**Para que serve:** Use uma técnica disponível para obter evidência: [indicador](../SIAB-standalone.html#/manual/indicadores), [fita de pH](../SIAB-standalone.html#/manual/fita) ou [pHmetro](../SIAB-standalone.html#/manual/phmetro).
 
 **Como usar**
 
@@ -372,7 +372,7 @@ O pH indica a condição ácido-base da solução e precisa ser interpretado jun
 
 **Leitura anterior:** Uma intervenção pode invalidar a medida pontual. “Leitura anterior” preserva a informação histórica e pede uma nova medição, sem atualizar o valor por conta própria.
 
-**Veja também:** [Usar Ver → Medir](../index.html#/manual/painel-medir) · [Fita de pH](../index.html#/manual/fita) · [pHmetro](../index.html#/manual/phmetro) · [Temperatura da solução](../index.html#/manual/temperatura).
+**Veja também:** [Usar Ver → Medir](../SIAB-standalone.html#/manual/painel-medir) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [pHmetro](../SIAB-standalone.html#/manual/phmetro) · [Temperatura da solução](../SIAB-standalone.html#/manual/temperatura).
 
 ### Usar Ver → Medir
 
@@ -387,7 +387,7 @@ A família Medir reúne pH, Temperatura e Condutividade.
 3. Acione o botão de medição da ferramenta.
 4. Consulte as medições em Dados → Tabela.
 
-**Veja também:** [pHmetro](../index.html#/manual/phmetro) · [Fita de pH](../index.html#/manual/fita) · [Condutivímetro](../index.html#/manual/condutividade) · [Temperatura da solução](../index.html#/manual/temperatura).
+**Veja também:** [pHmetro](../SIAB-standalone.html#/manual/phmetro) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [Condutivímetro](../SIAB-standalone.html#/manual/condutividade) · [Temperatura da solução](../SIAB-standalone.html#/manual/temperatura).
 
 ### Titulação ácido-base
 
@@ -402,11 +402,11 @@ Uma titulação acompanha a resposta da solução à adição gradual de um reag
 3. Adicione uma dose conhecida e meça novamente; repita em passos menores perto de uma mudança rápida.
 4. Interprete a Tabela, o Gráfico e, quando disponível, ΔpH/ΔV.
 
-**Exemplo:** Use um [Roteiro Experimental](../index.html#/manual/roteiros) para uma investigação orientada, ou uma [Montagem pronta](../index.html#/manual/montagens) para iniciar a exploração.
+**Exemplo:** Use um [Roteiro Experimental](../SIAB-standalone.html#/manual/roteiros) para uma investigação orientada, ou uma [Montagem pronta](../SIAB-standalone.html#/manual/montagens) para iniciar a exploração.
 
 **Cor e equivalência:** O ponto de viragem depende do indicador. A interpretação da equivalência depende do sistema e das evidências; não presuma que toda equivalência tem pH 7.
 
-**Veja também:** [Gotejar, adicionar volume e agitar](../index.html#/manual/conta-gotas) · [pHmetro](../index.html#/manual/phmetro) · [Gráfico de pH por volume](../index.html#/manual/grafico) · [ΔpH/ΔV: mudança por volume](../index.html#/manual/derivada).
+**Veja também:** [Gotejar, adicionar volume e agitar](../SIAB-standalone.html#/manual/conta-gotas) · [pHmetro](../SIAB-standalone.html#/manual/phmetro) · [Gráfico de pH por volume](../SIAB-standalone.html#/manual/grafico) · [ΔpH/ΔV: mudança por volume](../SIAB-standalone.html#/manual/derivada).
 
 ## Calcular
 
@@ -425,7 +425,7 @@ Relacione concentrações e equilíbrio químico às observações e medições.
 
 **Exemplo:** Compare uma leitura de pH com as concentrações de H₃O⁺ e OH⁻ mostradas pelo modelo.
 
-**Veja também:** [Espécies em solução](../index.html#/manual/especies) · [Equações](../index.html#/manual/equacao) · [Usar Ver → Analisar](../index.html#/manual/analisar) · [O que o modelo representa](../index.html#/manual/limites).
+**Veja também:** [Espécies em solução](../SIAB-standalone.html#/manual/especies) · [Equações](../SIAB-standalone.html#/manual/equacao) · [Usar Ver → Analisar](../SIAB-standalone.html#/manual/analisar) · [O que o modelo representa](../SIAB-standalone.html#/manual/limites).
 
 ### Usar Ver → Analisar
 
@@ -439,7 +439,7 @@ Gráfico, ΔpH/ΔV, Distribuição de espécies, Histórico e Tabela ajudam a in
 2. Confira a origem dos dados antes de interpretar.
 3. Use Expandir quando a tabela ou o gráfico precisar de mais espaço.
 
-**Veja também:** [Gráfico de pH por volume](../index.html#/manual/grafico) · [ΔpH/ΔV: mudança por volume](../index.html#/manual/derivada) · [Distribuição de espécies](../index.html#/manual/distribuicao) · [Histórico da sessão](../index.html#/manual/historico) · [Tabela de medições](../index.html#/manual/tabela).
+**Veja também:** [Gráfico de pH por volume](../SIAB-standalone.html#/manual/grafico) · [ΔpH/ΔV: mudança por volume](../SIAB-standalone.html#/manual/derivada) · [Distribuição de espécies](../SIAB-standalone.html#/manual/distribuicao) · [Histórico da sessão](../SIAB-standalone.html#/manual/historico) · [Tabela de medições](../SIAB-standalone.html#/manual/tabela).
 
 ### Gráfico de pH por volume
 
@@ -458,7 +458,7 @@ O gráfico conecta medições de pH ao volume de reagente adicionado.
 
 **Origem dos pontos:** Sem leituras suficientes, o gráfico informa o que falta. As linhas apenas conectam registros. Mudanças de preparo e de técnica separam séries.
 
-**Veja também:** [Titulação ácido-base](../index.html#/manual/titulacao) · [ΔpH/ΔV: mudança por volume](../index.html#/manual/derivada) · [Tabela de medições](../index.html#/manual/tabela).
+**Veja também:** [Titulação ácido-base](../SIAB-standalone.html#/manual/titulacao) · [ΔpH/ΔV: mudança por volume](../SIAB-standalone.html#/manual/derivada) · [Tabela de medições](../SIAB-standalone.html#/manual/tabela).
 
 ### ΔpH/ΔV: mudança por volume
 
@@ -476,7 +476,7 @@ O gráfico conecta medições de pH ao volume de reagente adicionado.
 
 **Resolução importa:** Intervalos de volume nulo não produzem essa razão. A derivada usa dados brutos sucessivos da mesma técnica; a resolução da fita pode gerar degraus. Um pico isolado exige interpretação, não identifica sozinho uma equivalência exata.
 
-**Veja também:** [Gráfico de pH por volume](../index.html#/manual/grafico) · [Titulação ácido-base](../index.html#/manual/titulacao) · [Tabela compacta e completa](../index.html#/manual/compactacao).
+**Veja também:** [Gráfico de pH por volume](../SIAB-standalone.html#/manual/grafico) · [Titulação ácido-base](../SIAB-standalone.html#/manual/titulacao) · [Tabela compacta e completa](../SIAB-standalone.html#/manual/compactacao).
 
 ### Distribuição de espécies
 
@@ -492,7 +492,7 @@ A distribuição compara frações de espécies de um mesmo sistema químico.
 
 **Disponibilidade:** A representação depende da presença de uma família química apropriada na solução. Os percentuais vêm do equilíbrio calculado, não de medições instrumentais.
 
-**Veja também:** [Espécies em solução](../index.html#/manual/especies) · [Equações](../index.html#/manual/equacao) · [O que o modelo representa](../index.html#/manual/limites).
+**Veja também:** [Espécies em solução](../SIAB-standalone.html#/manual/especies) · [Equações](../SIAB-standalone.html#/manual/equacao) · [O que o modelo representa](../SIAB-standalone.html#/manual/limites).
 
 ### Histórico da sessão
 
@@ -506,9 +506,9 @@ O Histórico mostra a sequência cronológica de ações e eventos.
 2. Leia os eventos em ordem e relacione-os às intervenções.
 3. Use a Tabela para consultar medições de forma estruturada.
 
-**Histórico não é Caderno:** O Histórico não é compactado e não é copiado automaticamente para o Caderno. O [Caderno](../index.html#/manual/caderno) reúne registros que você escolhe guardar.
+**Histórico não é Caderno:** O Histórico não é compactado e não é copiado automaticamente para o Caderno. O [Caderno](../SIAB-standalone.html#/manual/caderno) reúne registros que você escolhe guardar.
 
-**Veja também:** [Tabela de medições](../index.html#/manual/tabela) · [Caderno de investigação](../index.html#/manual/caderno) · [Relatórios](../index.html#/manual/relatorios).
+**Veja também:** [Tabela de medições](../SIAB-standalone.html#/manual/tabela) · [Caderno de investigação](../SIAB-standalone.html#/manual/caderno) · [Relatórios](../SIAB-standalone.html#/manual/relatorios).
 
 ### Tabela de medições
 
@@ -523,7 +523,7 @@ A Tabela organiza as leituras registradas com técnica, valor e contexto.
 3. Use Ver medições para expandir um grupo e Expandir para ampliar o painel.
 4. Quando necessário, exporte CSV com os dados brutos.
 
-**Veja também:** [Tabela compacta e completa](../index.html#/manual/compactacao) · [Histórico da sessão](../index.html#/manual/historico) · [Relatórios](../index.html#/manual/relatorios).
+**Veja também:** [Tabela compacta e completa](../SIAB-standalone.html#/manual/compactacao) · [Histórico da sessão](../SIAB-standalone.html#/manual/historico) · [Relatórios](../SIAB-standalone.html#/manual/relatorios).
 
 ### Tabela compacta e completa
 
@@ -544,7 +544,7 @@ A tabela compacta reúne medições semelhantes sem apagar os dados originais.
 
 **Dados preservados:** Os dados brutos não são apagados. Cálculos, derivada e exportação CSV continuam usando os registros originais.
 
-**Veja também:** [Tabela de medições](../index.html#/manual/tabela) · [ΔpH/ΔV: mudança por volume](../index.html#/manual/derivada) · [Fita de pH](../index.html#/manual/fita) · [pHmetro](../index.html#/manual/phmetro).
+**Veja também:** [Tabela de medições](../SIAB-standalone.html#/manual/tabela) · [ΔpH/ΔV: mudança por volume](../SIAB-standalone.html#/manual/derivada) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [pHmetro](../SIAB-standalone.html#/manual/phmetro).
 
 ### O que o modelo representa
 
@@ -562,7 +562,7 @@ O SIAB é um modelo didático de soluções aquosas e equilíbrio ácido-base.
 
 **Não representado:** O modelo não inclui atividades químicas, cinética, aquecimento de reação ou troca gasosa aberta. Amostras representativas têm composição parcial.
 
-**Veja também:** [Calcular: interpretar quantidades](../index.html#/manual/calcular) · [Biblioteca de substâncias](../index.html#/manual/frascos) · [Precipitação e redissolução](../index.html#/manual/precipitacao).
+**Veja também:** [Calcular: interpretar quantidades](../SIAB-standalone.html#/manual/calcular) · [Biblioteca de substâncias](../SIAB-standalone.html#/manual/frascos) · [Precipitação e redissolução](../SIAB-standalone.html#/manual/precipitacao).
 
 ### Precipitação e redissolução
 
@@ -578,7 +578,7 @@ Algumas suspensões de hidróxidos podem apresentar sólido e mudanças de solub
 
 **Limite do recurso:** O modelo representa sistemas específicos com produto de solubilidade. Não há um banco geral de precipitados para todas as combinações de frascos.
 
-**Veja também:** [O que o modelo representa](../index.html#/manual/limites) · [Biblioteca de substâncias](../index.html#/manual/frascos) · [Usar Ver → Observar](../index.html#/manual/observar).
+**Veja também:** [O que o modelo representa](../SIAB-standalone.html#/manual/limites) · [Biblioteca de substâncias](../SIAB-standalone.html#/manual/frascos) · [Usar Ver → Observar](../SIAB-standalone.html#/manual/observar).
 
 ### Referências e créditos
 
@@ -593,7 +593,7 @@ Fontes do modelo químico e créditos das dependências do aplicativo.
 
 **Licenças:** SIAB: GNU GPL v3. dialog-polyfill 0.5.6: BSD-3-Clause; contribuição do projeto GoogleChrome/dialog-polyfill. Os avisos completos acompanham o pacote em LICENSE e vendor/dialog-polyfill/LICENSE.
 
-**Veja também:** [O que o modelo representa](../index.html#/manual/limites) · [Biblioteca de indicadores](../index.html#/manual/tabela-indicadores).
+**Veja também:** [O que o modelo representa](../SIAB-standalone.html#/manual/limites) · [Biblioteca de indicadores](../SIAB-standalone.html#/manual/tabela-indicadores).
 
 ## Instrumentos
 
@@ -609,7 +609,7 @@ Indicador, fita, pHmetro, termômetro e condutivímetro oferecem evidências dif
 2. Leia como usar e quais limites a técnica apresenta.
 3. Meça no recipiente em foco e identifique a técnica ao comparar resultados.
 
-**Veja também:** [Indicadores ácido-base](../index.html#/manual/indicadores) · [Fita de pH](../index.html#/manual/fita) · [pHmetro](../index.html#/manual/phmetro) · [Condutivímetro](../index.html#/manual/condutividade) · [Temperatura da solução](../index.html#/manual/temperatura).
+**Veja também:** [Indicadores ácido-base](../SIAB-standalone.html#/manual/indicadores) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [pHmetro](../SIAB-standalone.html#/manual/phmetro) · [Condutivímetro](../SIAB-standalone.html#/manual/condutividade) · [Temperatura da solução](../SIAB-standalone.html#/manual/temperatura).
 
 ### Indicadores ácido-base
 
@@ -629,7 +629,7 @@ Um indicador adicionado à solução muda de cor em uma faixa de pH.
 
 **Limitação:** A carta é didática e as cores aproximadas. Um indicador informa uma faixa; não substitui uma análise física de uma amostra real.
 
-**Veja também:** [Biblioteca de indicadores](../index.html#/manual/tabela-indicadores) · [Fita de pH](../index.html#/manual/fita) · [O que o pH informa](../index.html#/manual/ph).
+**Veja também:** [Biblioteca de indicadores](../SIAB-standalone.html#/manual/tabela-indicadores) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [O que o pH informa](../SIAB-standalone.html#/manual/ph).
 
 ### Fita de pH
 
@@ -648,15 +648,15 @@ A fita de pH fornece uma estimativa aproximada pela comparação de cor.
 
 **Resolução e extremos:** A resolução didática é de 1 unidade. Valores nos extremos da escala não descrevem com precisão soluções fora dessa faixa.
 
-**Comparar técnicas:** Diferencie a estimativa da fita da resolução de 0,01 do [pHmetro](../index.html#/manual/phmetro). Mais casas na exibição não eliminam os limites do modelo.
+**Comparar técnicas:** Diferencie a estimativa da fita da resolução de 0,01 do [pHmetro](../SIAB-standalone.html#/manual/phmetro). Mais casas na exibição não eliminam os limites do modelo.
 
-**Veja também:** [pHmetro](../index.html#/manual/phmetro) · [Indicadores ácido-base](../index.html#/manual/indicadores) · [Tabela compacta e completa](../index.html#/manual/compactacao).
+**Veja também:** [pHmetro](../SIAB-standalone.html#/manual/phmetro) · [Indicadores ácido-base](../SIAB-standalone.html#/manual/indicadores) · [Tabela compacta e completa](../SIAB-standalone.html#/manual/compactacao).
 
 ### pHmetro
 
 O pHmetro fornece uma leitura numérica de pH após a estabilização.
 
-**Para que serve:** Use-o para acompanhar variações menores do que as distinguidas pela [fita de pH](../index.html#/manual/fita).
+**Para que serve:** Use-o para acompanhar variações menores do que as distinguidas pela [fita de pH](../SIAB-standalone.html#/manual/fita).
 
 **Como usar**
 
@@ -673,7 +673,7 @@ O pHmetro fornece uma leitura numérica de pH após a estabilização.
 
 **Leitura anterior:** Depois de mudar o preparo ou adicionar reagente, repita a leitura pontual. No modo contínuo, novas leituras são registradas após as mudanças.
 
-**Veja também:** [O que o pH informa](../index.html#/manual/ph) · [Fita de pH](../index.html#/manual/fita) · [Titulação ácido-base](../index.html#/manual/titulacao) · [Tabela de medições](../index.html#/manual/tabela).
+**Veja também:** [O que o pH informa](../SIAB-standalone.html#/manual/ph) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [Titulação ácido-base](../SIAB-standalone.html#/manual/titulacao) · [Tabela de medições](../SIAB-standalone.html#/manual/tabela).
 
 ### Condutivímetro
 
@@ -692,7 +692,7 @@ O condutivímetro estima a condução elétrica da solução a partir de suas es
 
 **Limites:** A estimativa ideal soma contribuições iônicas e usa mobilidades de referência a 25 °C. Algumas mobilidades são estimadas. Não se aplica uma correção térmica arbitrária.
 
-**Veja também:** [Espécies em solução](../index.html#/manual/especies) · [Temperatura da solução](../index.html#/manual/temperatura) · [O que o modelo representa](../index.html#/manual/limites).
+**Veja também:** [Espécies em solução](../SIAB-standalone.html#/manual/especies) · [Temperatura da solução](../SIAB-standalone.html#/manual/temperatura) · [O que o modelo representa](../SIAB-standalone.html#/manual/limites).
 
 ### Temperatura da solução
 
@@ -713,7 +713,7 @@ O termômetro registra a temperatura usada para o recipiente em foco.
 
 **Limites térmicos:** O modelo ajusta a autoionização da água. Ka, pKIn, Kps e mobilidades mantêm valores de referência; não há dependências térmicas inventadas.
 
-**Veja também:** [O que o pH informa](../index.html#/manual/ph) · [Condutivímetro](../index.html#/manual/condutividade) · [Atividades por link e modo restrito](../index.html#/manual/atividades).
+**Veja também:** [O que o pH informa](../SIAB-standalone.html#/manual/ph) · [Condutivímetro](../SIAB-standalone.html#/manual/condutividade) · [Atividades por link e modo restrito](../SIAB-standalone.html#/manual/atividades).
 
 ### Biblioteca de indicadores
 
@@ -729,9 +729,9 @@ Compare nomes, faixas de viragem e cores dos indicadores presentes no SIAB.
 
 **Carta didática:** Cores e faixas são referências de interpretação no simulador. Não use esta carta como instrumento físico de análise.
 
-A tabela de referência é gerada a partir do catálogo no [tópico interativo](../index.html#/manual/tabela-indicadores).
+A tabela de referência é gerada a partir do catálogo no [tópico interativo](../SIAB-standalone.html#/manual/tabela-indicadores).
 
-**Veja também:** [Indicadores ácido-base](../index.html#/manual/indicadores) · [Fita de pH](../index.html#/manual/fita) · [Titulação ácido-base](../index.html#/manual/titulacao).
+**Veja também:** [Indicadores ácido-base](../SIAB-standalone.html#/manual/indicadores) · [Fita de pH](../SIAB-standalone.html#/manual/fita) · [Titulação ácido-base](../SIAB-standalone.html#/manual/titulacao).
 
 ## Montagens prontas
 
@@ -739,7 +739,7 @@ A tabela de referência é gerada a partir do catálogo no [tópico interativo](
 
 Uma Montagem pronta é uma bancada pré-configurada para exploração.
 
-**Para que serve:** Use-a para começar rapidamente e comparar condições. Ela não exige a estrutura de identificação e relatório de um [Roteiro Experimental](../index.html#/manual/roteiros).
+**Para que serve:** Use-a para começar rapidamente e comparar condições. Ela não exige a estrutura de identificação e relatório de um [Roteiro Experimental](../SIAB-standalone.html#/manual/roteiros).
 
 **Como usar**
 
@@ -750,7 +750,7 @@ Uma Montagem pronta é uma bancada pré-configurada para exploração.
 
 **Exemplo:** Uma montagem com indicadores diferentes permite comparar as cores em condições preparadas.
 
-**Veja também:** [Roteiros Experimentais](../index.html#/manual/roteiros) · [Usar a bancada](../index.html#/manual/bancada).
+**Veja também:** [Roteiros Experimentais](../SIAB-standalone.html#/manual/roteiros) · [Usar a bancada](../SIAB-standalone.html#/manual/bancada).
 
 ## Roteiros Experimentais
 
@@ -771,7 +771,7 @@ Um Roteiro Experimental é uma atividade estruturada com objetivo e tarefas de i
 
 **Montagem ou Roteiro?:** Montagem pronta configura a bancada para explorar. Roteiro acrescenta objetivo, tarefas e registro da experiência. Esta página explica o recurso; o catálogo é aberto pelo botão acima.
 
-**Veja também:** [Montagens prontas](../index.html#/manual/montagens) · [Relatórios](../index.html#/manual/relatorios) · [Atividades por link e modo restrito](../index.html#/manual/atividades).
+**Veja também:** [Montagens prontas](../SIAB-standalone.html#/manual/montagens) · [Relatórios](../SIAB-standalone.html#/manual/relatorios) · [Atividades por link e modo restrito](../SIAB-standalone.html#/manual/atividades).
 
 ### Temas e Missões
 
@@ -785,7 +785,7 @@ Temas apresentam conceitos; Missões propõem problemas e objetivos de investiga
 2. Em Missões, leia o problema e os objetivos.
 3. Investigue e registre evidências. Uma missão concluída pode ser refeita.
 
-**Veja também:** [Primeiros passos](../index.html#/manual/comecar) · [Prever e gotejar](../index.html#/manual/prever) · [Caderno de investigação](../index.html#/manual/caderno).
+**Veja também:** [Primeiros passos](../SIAB-standalone.html#/manual/comecar) · [Prever e gotejar](../SIAB-standalone.html#/manual/prever) · [Caderno de investigação](../SIAB-standalone.html#/manual/caderno).
 
 ## Relatórios
 
@@ -810,7 +810,7 @@ O relatório reúne a montagem, os dados obtidos e a interpretação escrita da 
 
 **Imprimir ou salvar PDF:** A impressão usa um formato próprio para papel. Na janela de impressão do navegador, escolha uma impressora ou Salvar como PDF, se essa opção estiver disponível.
 
-**Veja também:** [Roteiros Experimentais](../index.html#/manual/roteiros) · [Tabela de medições](../index.html#/manual/tabela) · [Caderno de investigação](../index.html#/manual/caderno).
+**Veja também:** [Roteiros Experimentais](../SIAB-standalone.html#/manual/roteiros) · [Tabela de medições](../SIAB-standalone.html#/manual/tabela) · [Caderno de investigação](../SIAB-standalone.html#/manual/caderno).
 
 ## Caderno
 
@@ -831,7 +831,7 @@ Registros pessoais de investigações, hipóteses, descobertas e práticas.
 
 **Quatro recursos diferentes:** Histórico é a sequência de eventos. Tabela organiza medições. Relatório reúne evidências e interpretação de uma experiência; o Caderno guarda notas pessoais e práticas realizadas, sem copiar o relatório inteiro como texto.
 
-**Veja também:** [Histórico da sessão](../index.html#/manual/historico) · [Relatórios](../index.html#/manual/relatorios) · [Guardar e recuperar registros](../index.html#/manual/persistencia).
+**Veja também:** [Histórico da sessão](../SIAB-standalone.html#/manual/historico) · [Relatórios](../SIAB-standalone.html#/manual/relatorios) · [Guardar e recuperar registros](../SIAB-standalone.html#/manual/persistencia).
 
 ## Acessibilidade
 
@@ -846,11 +846,11 @@ Tema, contraste, texto, cores e movimento podem ser adaptados no painel Acessibi
 1. Abra Acessibilidade no cabeçalho ou no Menu.
 2. Ajuste tema claro ou escuro, contraste, tamanho e espaçamento do texto.
 3. Confira os filtros de cor e a opção de reduzir movimento.
-4. Use Tab para percorrer os controles e veja [Navegação por teclado](../index.html#/manual/atalhos).
+4. Use Tab para percorrer os controles e veja [Navegação por teclado](../SIAB-standalone.html#/manual/atalhos).
 
 **Libras e internet:** O tradutor VLibras é opcional e depende da internet. O restante da consulta essencial do Manual funciona offline junto ao aplicativo.
 
-**Veja também:** [Navegação por teclado](../index.html#/manual/atalhos) · [Instalação e uso offline](../index.html#/manual/app).
+**Veja também:** [Navegação por teclado](../SIAB-standalone.html#/manual/atalhos) · [Instalação e uso offline](../SIAB-standalone.html#/manual/app).
 
 ### Navegação por teclado
 
@@ -865,7 +865,7 @@ Use as teclas de navegação dos controles para percorrer o SIAB sem depender do
 3. Use as setas nas abas da família Ver.
 4. Use Esc para fechar diálogos e painéis contextuais; no Manual, Esc fecha o índice móvel aberto.
 
-**Veja também:** [Ajustar a experiência de uso](../index.html#/manual/acessibilidade) · [Usar a bancada](../index.html#/manual/bancada).
+**Veja também:** [Ajustar a experiência de uso](../SIAB-standalone.html#/manual/acessibilidade) · [Usar a bancada](../SIAB-standalone.html#/manual/bancada).
 
 ## Ajuda e solução de problemas
 
@@ -887,13 +887,13 @@ Encontre o motivo de uma opção ausente ou de um resultado que ainda não apare
 
 **Não consigo abrir outro Roteiro:** Uma atividade restrita mantém você na investigação atual. Para sair, use Encerrar atividade e confirme, quando for o momento apropriado.
 
-**O gráfico ainda não apareceu:** Faça ao menos duas leituras com uma técnica de pH disponível. Para acompanhar volume e calcular ΔpH/ΔV, adicione reagente entre as leituras. Veja [Gráfico de pH por volume](../index.html#/manual/grafico).
+**O gráfico ainda não apareceu:** Faça ao menos duas leituras com uma técnica de pH disponível. Para acompanhar volume e calcular ΔpH/ΔV, adicione reagente entre as leituras. Veja [Gráfico de pH por volume](../SIAB-standalone.html#/manual/grafico).
 
-**Minha tabela está compactada:** Isso é uma forma de apresentar leituras semelhantes. Use Completa ou Ver medições; os dados originais foram preservados. Veja [Tabela compacta e completa](../index.html#/manual/compactacao).
+**Minha tabela está compactada:** Isso é uma forma de apresentar leituras semelhantes. Use Completa ou Ver medições; os dados originais foram preservados. Veja [Tabela compacta e completa](../SIAB-standalone.html#/manual/compactacao).
 
 **Vejo uma leitura anterior:** O valor foi registrado antes da última intervenção. Faça nova medição pontual ou use a medição contínua do pHmetro, quando disponível.
 
-**Veja também:** [Atividades por link e modo restrito](../index.html#/manual/atividades) · [Gráfico de pH por volume](../index.html#/manual/grafico) · [Tabela compacta e completa](../index.html#/manual/compactacao) · [Guardar e recuperar registros](../index.html#/manual/persistencia).
+**Veja também:** [Atividades por link e modo restrito](../SIAB-standalone.html#/manual/atividades) · [Gráfico de pH por volume](../SIAB-standalone.html#/manual/grafico) · [Tabela compacta e completa](../SIAB-standalone.html#/manual/compactacao) · [Guardar e recuperar registros](../SIAB-standalone.html#/manual/persistencia).
 
 ### Atividades por link e modo restrito
 
@@ -914,7 +914,7 @@ Em atividades enviadas pelo professor, algumas opções ficam indisponíveis por
 
 **Ajuda durante a atividade:** Em modo restrito, a ajuda contextual continua disponível, mas não oferece acesso ao Manual completo nem a outras áreas. As opções só reaparecem quando você sai da atividade pela ação própria.
 
-**Veja também:** [Ajuda e solução de problemas](../index.html#/manual/problemas) · [Roteiros Experimentais](../index.html#/manual/roteiros) · [Relatórios](../index.html#/manual/relatorios).
+**Veja também:** [Ajuda e solução de problemas](../SIAB-standalone.html#/manual/problemas) · [Roteiros Experimentais](../SIAB-standalone.html#/manual/roteiros) · [Relatórios](../SIAB-standalone.html#/manual/relatorios).
 
 ## Área do Professor
 
@@ -935,7 +935,7 @@ A Área do Professor reúne configuração, link do aluno e orientações para c
 
 **Orientações do professor:** Referências de resposta e orientações específicas ficam na Área do Professor. Esta página explica o fluxo de preparação e não reproduz resultados esperados para o estudante.
 
-**Veja também:** [Atividades por link e modo restrito](../index.html#/manual/atividades) · [Roteiros Experimentais](../index.html#/manual/roteiros) · [Modo projetor](../index.html#/manual/projetor).
+**Veja também:** [Atividades por link e modo restrito](../SIAB-standalone.html#/manual/atividades) · [Roteiros Experimentais](../SIAB-standalone.html#/manual/roteiros) · [Modo projetor](../SIAB-standalone.html#/manual/projetor).
 
 ### Modo projetor
 
@@ -949,5 +949,5 @@ O modo projetor amplia a apresentação da mesma bancada para uso coletivo.
 2. Abra apenas Montagem, Ver ou Dados conforme a explicação.
 3. Desative o modo ao voltar ao uso individual.
 
-**Veja também:** [Usar a bancada](../index.html#/manual/bancada) · [Ajustar a experiência de uso](../index.html#/manual/acessibilidade).
+**Veja também:** [Usar a bancada](../SIAB-standalone.html#/manual/bancada) · [Ajustar a experiência de uso](../SIAB-standalone.html#/manual/acessibilidade).
 
