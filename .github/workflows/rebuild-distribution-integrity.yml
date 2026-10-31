@@ -64,6 +64,7 @@ jobs:
               ".github/README.md",
               "package.json",
               "js/ui/impressao.js",
+              "css/stylesiab.css",
               "SIAB-1.0.0-standalone.html",
           )
           for nome in arquivos:
