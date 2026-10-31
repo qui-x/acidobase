@@ -2565,20 +2565,22 @@ dialog.tour + .backdrop { background: transparent; }
   height: 208px;
   filter: drop-shadow(0 8px 40px #c026d345);
 }
-.startup-brand strong {
+.startup-brand .startup-nome {
   display: block;
-  margin-top: 6px;
+  max-width: 24ch;
+  margin-top: 10px;
   color: #f3e8fa;
-  font-size: 3.3rem;
-  letter-spacing: 0.16em;
-  line-height: 1.3;
-  padding-left: 0.16em;
+  font-size: clamp(1.05rem, 1.45vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.25;
+  text-wrap: balance;
 }
-.startup-brand span {
+.startup-brand em {
   display: block;
   margin-top: 8px;
   color: #d5c9e4;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
+  font-style: normal;
 }
 .startup-panel {
   position: relative;
@@ -2746,8 +2748,8 @@ dialog.tour + .backdrop { background: transparent; }
   background: var(--panel);
   border-color: var(--border);
 }
-:root[data-contrast="on"] .startup-brand strong,
-:root[data-contrast="on"] .startup-brand span {
+:root[data-contrast="on"] .startup-brand .startup-nome,
+:root[data-contrast="on"] .startup-brand em {
   color: #fff;
 }
 @media (max-width: 960px) {
@@ -2884,24 +2886,26 @@ dialog.tour + .backdrop { background: transparent; }
     gap: 20px;
   }
   .startup-brand {
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
-    gap: 12px;
+    align-items: center;
+    gap: 0;
     padding: 0;
-    text-align: left;
+    text-align: center;
   }
   .startup-brand img {
     width: 76px;
     height: 76px;
   }
-  .startup-brand strong {
-    font-size: 2rem;
-    padding: 0;
-    margin: 0;
+  .startup-brand .startup-nome {
+    max-width: 26ch;
+    margin-top: 6px;
+    font-size: 0.95rem;
+    line-height: 1.25;
   }
-  .startup-brand span {
-    margin-top: 2px;
-    font-size: 0.8rem;
+  .startup-brand em {
+    margin-top: 4px;
+    font-size: 0.75rem;
   }
   .startup-panel {
     padding: 20px;
@@ -8922,7 +8926,10 @@ details[open] > summary > .disclosure-icon,
     >
       <div class="startup-brand" aria-hidden="true">
         <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiB2aWV3Qm94PSIwIDAgMzIgMzIiIGZpbGw9Im5vbmUiIHJvbGU9ImltZyIgYXJpYS1sYWJlbGxlZGJ5PSJzaWFiLWljb24tdGl0bGUgc2lhYi1pY29uLWRlc2MiPgogIDx0aXRsZSBpZD0ic2lhYi1pY29uLXRpdGxlIj5TSUFCIOKAlCBBIHF1w61taWNhIGRhcyBjb3JlczwvdGl0bGU+CiAgPGRlc2MgaWQ9InNpYWItaWNvbi1kZXNjIj5VbWEgZ290YSBzb2JyZSB1bSB0dWJvIGRlIGVuc2FpbyBjb20gbMOtcXVpZG8gZW0gZGVncmFkw6ogZG8gdmVybWVsaG8gYW8gcm94by48L2Rlc2M+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItb3V0bGluZSIgeDE9IjkiIHkxPSIxMCIgeDI9IjIzIiB5Mj0iMjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii4zNCIgc3RvcC1jb2xvcj0iI0RCMjc3NyIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii42NSIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItbGlxdWlkIiB4MT0iMTIiIHkxPSIxOCIgeDI9IjIwIiB5Mj0iMjYiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9Ii40OCIgc3RvcC1jb2xvcj0iI0MwMjZEMyIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiM3QzNBRUQiLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InNpYWItZHJvcCIgeDE9IjEzLjMiIHkxPSIyIiB4Mj0iMTguNyIgeTI9IjkiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iI0RDMjYyNiIvPgogICAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNEQjI3NzciLz4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgPC9kZWZzPgogIDxwYXRoIGQ9Ik0xNiAyQzE1LjIgMy41IDEzLjMgNS42IDEzLjMgN2EyLjcgMi43IDAgMCAwIDUuNCAwYzAtMS40LTEuOS0zLjUtMi43LTVaIiBmaWxsPSJ1cmwoI3NpYWItZHJvcCkiLz4KICA8cGF0aCBkPSJNMTAgMTF2MTJhNiA2IDAgMCAwIDEyIDBWMTFNOC41IDExaDE1IiBzdHJva2U9InVybCgjc2lhYi1vdXRsaW5lKSIgc3Ryb2tlLXdpZHRoPSIxLjgiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgogIDxwYXRoIGQ9Ik0xMiAxOGMyLjUtMS41IDUuNSAxLjUgOCAwdjVhNCA0IDAgMCAxLTggMFoiIGZpbGw9InVybCgjc2lhYi1saXF1aWQpIi8+Cjwvc3ZnPgo=" alt="" width="208" height="208" />
-        <div><strong>SIAB</strong><span>A química das cores</span></div>
+        <div>
+          <span class="startup-nome">Simulador de Indicadores Ácido-Base</span>
+          <em>A química das cores</em>
+        </div>
       </div>
       <div class="startup-panel">
         <div class="startup-topo">
