@@ -53,6 +53,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           titulo = "Simulador de Indicadores Ácido-Base"
           antigos = (
@@ -75,7 +76,17 @@ jobs:
               assert titulo in texto, f"Denominação nova ausente em {nome}"
               for antigo in antigos:
                   assert antigo not in texto, f"Denominação anterior ainda aparece em {nome}"
-          versao_cache = "siab-1.0.0+20261031-nome-indicadores"
+          marca = re.search(
+              r'<div class="startup-brand" aria-hidden="true">(.*?)</div>\\s*</div>',
+              Path("index.html").read_text(encoding="utf-8"),
+              re.S,
+          )
+          assert marca, "Bloco da marca na escolha inicial não encontrado"
+          assert "SIAB" not in marca.group(1), "A sigla SIAB voltou à marca da escolha inicial"
+          assert 'class="startup-nome">Simulador de Indicadores Ácido-Base</span>' in marca.group(1)
+          assert "<em>A química das cores</em>" in marca.group(1)
+
+          versao_cache = "siab-1.0.0+20261031-nome-abaixo-do-icone"
           service_worker = Path("sw.js").read_text(encoding="utf-8")
           assert f'const VERSAO = "{versao_cache}";' in service_worker
           assert f'`{versao_cache}`' in Path("README.md").read_text(encoding="utf-8")

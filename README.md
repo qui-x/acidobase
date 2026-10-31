@@ -15,7 +15,7 @@ Requisitos: navegador moderno com JavaScript. Node, npm e ferramentas de teste n
 
 Laboratório, Manual, Montagens, Relatório e Caderno são locais. Open-Meteo e VLibras são opcionais e precisam de internet. As fontes são do sistema.
 
-Ao substituir os arquivos da versão anterior no mesmo endereço, o service worker prepara o cache `siab-1.0.0+20261031-nome-indicadores` e oferece **Recarregar**. O sufixo identifica esta revisão da 1.0.0, que atualiza a denominação exibida, o manifesto de instalação e os arquivos offline. A limpeza afeta apenas caches antigos desta publicação. Caderno, sessões, práticas, relatórios e preferências permanecem armazenados no navegador.
+Ao substituir os arquivos da versão anterior no mesmo endereço, o service worker prepara o cache `siab-1.0.0+20261031-nome-abaixo-do-icone` e oferece **Recarregar**. O sufixo identifica esta revisão da 1.0.0, que atualiza a denominação exibida, o manifesto de instalação e os arquivos offline. A limpeza afeta apenas caches antigos desta publicação. Caderno, sessões, práticas, relatórios e preferências permanecem armazenados no navegador.
 
 Mantenha a mesma origem, caminho e perfil para conservar os dados. Trocar domínio, aparelho ou perfil não transfere registros automaticamente. Exporte o Caderno e salve os relatórios antes de limpar dados do navegador.
 

@@ -10,6 +10,13 @@ Versão estável oficial. Consolida a linha 1.0.x a partir da RC.5 aprovada e in
 - Atualiza o identificador do cache para `siab-1.0.0+20261031-nome-indicadores`, mantendo a versão do programa em 1.0.0 e fazendo instalações existentes baixarem o manifesto e os arquivos atualizados.
 - Reconstrói o HTML independente e recalcula os manifestos SHA-256 e SHA-512, com verificação de integridade dos arquivos listados em FILES.txt.
 
+### Marca da escolha inicial (31/10/2026)
+
+- Remove a sigla SIAB da composição visual à esquerda do diálogo “Como deseja iniciar?”.
+- Apresenta **Simulador de Indicadores Ácido-Base** abaixo do ícone e mantém o lema “A química das cores”.
+- Mantém o empilhamento vertical da marca também em telas pequenas.
+- Atualiza o cache offline para `siab-1.0.0+20261031-nome-abaixo-do-icone`, sem alterar a versão do programa (1.0.0).
+
 ### Correção da bancada mobile
 
 - Corrige a região central do Tubo em foco no mobile, com nome compacto e vidraria independente do crescimento dos textos científicos.
