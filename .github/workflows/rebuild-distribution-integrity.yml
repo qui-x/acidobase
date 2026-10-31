@@ -77,7 +77,7 @@ jobs:
               for antigo in antigos:
                   assert antigo not in texto, f"Denominação anterior ainda aparece em {nome}"
           marca = re.search(
-              r'<div class="startup-brand" aria-hidden="true">(.*?)</div>\\s*</div>',
+              r'<div class="startup-brand" aria-hidden="true">(.*?)</div>\s*</div>',
               Path("index.html").read_text(encoding="utf-8"),
               re.S,
           )
