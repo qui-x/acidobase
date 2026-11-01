@@ -171,15 +171,19 @@ jobs:
             await lab.evaluate(()=>window.SIAB.workspace.open('right','dados'));
             await lab.waitForTimeout(400);
             await snap(lab,'20-dados-investigacao','laboratorio','Dados da investigação');
+            await lab.evaluate(()=>window.SIAB.montarMontagem('titulacao-forte'));
+            await lab.waitForTimeout(700);
+            await lab.locator('#focus-tab').click();
+            await lab.waitForTimeout(300);
             await lab.evaluate(()=>window.SIAB.workspace.close('left',false));
             await lab.evaluate(()=>window.SIAB.workspace.open('right','ver'));
-            await lab.waitForTimeout(350);
+            await lab.waitForTimeout(400);
             const measure=lab.locator('#workspace-quick-measure');
-            if(await measure.count() && await measure.isVisible()) {
-              await measure.click();
-              await lab.waitForTimeout(900);
-            }
-            await snap(lab,'21-medicao-ph','laboratorio');
+            if(!(await measure.count()) || !(await measure.isVisible()))
+              throw new Error('pH measurement control is not visible');
+            await measure.click();
+            await lab.waitForTimeout(900);
+            await snap(lab,'21-medicao-ph','laboratorio','Medir pH');
             await lab.close();
             await browser.close();
             if(errors.length)throw new Error('JavaScript page errors: '+errors.join(' | '));
