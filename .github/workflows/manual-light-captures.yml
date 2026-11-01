@@ -81,7 +81,7 @@ jobs:
             async function snap(page,file,expected,requiredText){
               await page.waitForTimeout(250);
               const state=await page.evaluate(()=>({
-                theme:document.documentElement.dataset.theme,
+                theme:document.documentElement?.getAttribute('data-theme') || document.querySelector('html')?.getAttribute('data-theme') || 'missing',
                 route:window.SIAB?.rota?.nome,
                 parameter:window.SIAB?.rota?.parametro,
                 viewport:[innerWidth,innerHeight],
