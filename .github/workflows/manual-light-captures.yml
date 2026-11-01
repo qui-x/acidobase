@@ -148,10 +148,10 @@ jobs:
             await lab.evaluate(()=>window.SIAB.montarMontagem('tres-indicadores'));
             await lab.waitForTimeout(900);
             await lab.evaluate(()=>{const w=document.getElementById('boas-vindas');if(w)w.hidden=true;});
-            await snap(lab,'14-bancada-experimento','laboratorio','Bancada');
+            await snap(lab,'14-bancada-experimento','laboratorio','Tubo em foco');
             const overview=lab.locator('#overview-tab');
             if(await overview.count())await overview.click();
-            await snap(lab,'15-bancada-comparacao','laboratorio');
+            await snap(lab,'15-bancada-comparacao','laboratorio','Visão geral');
             await lab.evaluate(()=>window.SIAB.workspace.open('left','preparo'));
             await lab.waitForTimeout(400);
             await snap(lab,'16-montagem-preparo','laboratorio','Preparo');
