@@ -1,247 +1,306 @@
 {
   "resolution": "1920x1080",
   "theme": "light",
-  "count": 20,
+  "count": 21,
+  "sourceBranch": "acidosebases1.0.0",
+  "sourceCommit": "ef279550969ff2682f458dd9b9818487ca1642be",
+  "captureDate": "2026-11-01T00:19:25.952Z",
   "screenshots": [
     {
-      "file": "01-inicio.png",
+      "file": "01-marca-inicial.png",
       "theme": "light",
       "route": "inicio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Início · SIAB",
+      "dialogs": [
+        "startup-dialog"
+      ],
       "size": "1920x1080",
-      "bytes": 197823
+      "bytes": 177074
     },
     {
-      "file": "02-aprender.png",
+      "file": "02-inicio.png",
+      "theme": "light",
+      "route": "inicio",
+      "parameter": "",
+      "viewport": [
+        1920,
+        1080
+      ],
+      "title": "Início · SIAB",
+      "dialogs": [],
+      "size": "1920x1080",
+      "bytes": 197551
+    },
+    {
+      "file": "03-aprender.png",
       "theme": "light",
       "route": "aprender",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Temas · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 134063
+      "bytes": 134353
     },
     {
-      "file": "03-tema.png",
+      "file": "04-tema.png",
       "theme": "light",
       "route": "tema",
+      "parameter": "acidos-bases",
       "viewport": [
         1920,
         1080
       ],
       "title": "Ácidos e bases · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 68755
+      "bytes": 69020
     },
     {
-      "file": "04-missoes.png",
+      "file": "05-missoes.png",
       "theme": "light",
       "route": "missoes",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Missões · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 126358
+      "bytes": 126338
     },
     {
-      "file": "05-missao-repolho.png",
+      "file": "06-missao-repolho.png",
       "theme": "light",
       "route": "missao",
+      "parameter": "repolho-roxo",
       "viewport": [
         1920,
         1080
       ],
       "title": "O que o repolho roxo revela · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 531671
+      "bytes": 531670
     },
     {
-      "file": "06-roteiros.png",
+      "file": "07-roteiros.png",
       "theme": "light",
       "route": "roteiros",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Roteiros Experimentais · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 124526
+      "bytes": 124547
     },
     {
-      "file": "07-roteiro-titulacao.png",
+      "file": "08-roteiro-titulacao.png",
       "theme": "light",
       "route": "roteiro",
+      "parameter": "titulacao-forte",
       "viewport": [
         1920,
         1080
       ],
       "title": "Uma gota faz a diferença · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 120597
+      "bytes": 120560
     },
     {
-      "file": "08-montagens.png",
+      "file": "09-montagens.png",
       "theme": "light",
       "route": "montagens",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Montagens prontas · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 126437
+      "bytes": 126532
     },
     {
-      "file": "09-professor.png",
+      "file": "10-professor.png",
       "theme": "light",
       "route": "professor",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Área do Professor · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 79993
+      "bytes": 80007
     },
     {
-      "file": "10-manual.png",
+      "file": "11-manual.png",
       "theme": "light",
       "route": "manual",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Manual · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 217334
+      "bytes": 217533
     },
     {
-      "file": "11-manual-indicadores.png",
+      "file": "12-manual-indicadores.png",
       "theme": "light",
       "route": "manual",
+      "parameter": "indicadores",
       "viewport": [
         1920,
         1080
       ],
       "title": "Indicadores ácido-base · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 143927
+      "bytes": 144128
     },
     {
-      "file": "12-caderno.png",
+      "file": "13-caderno.png",
       "theme": "light",
       "route": "caderno",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Caderno · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 61025
+      "bytes": 61261
     },
     {
-      "file": "13-bancada-experimento.png",
+      "file": "14-bancada-experimento.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 553088
+      "bytes": 553502
     },
     {
-      "file": "14-bancada-comparacao.png",
+      "file": "15-bancada-comparacao.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 160176
+      "bytes": 160493
     },
     {
-      "file": "15-montagem.png",
+      "file": "16-montagem-preparo.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 578236
+      "bytes": 243060
     },
     {
-      "file": "16-preparo.png",
+      "file": "17-montagem-objetos.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 578239
+      "bytes": 221096
     },
     {
-      "file": "17-modulos.png",
+      "file": "18-modulos.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 545605
+      "bytes": 196870
     },
     {
-      "file": "18-ver-investigacao.png",
+      "file": "19-ver-investigacao.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 419805
+      "bytes": 177496
     },
     {
-      "file": "19-dados-investigacao.png",
+      "file": "20-dados-investigacao.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 415730
+      "bytes": 174962
     },
     {
-      "file": "20-medicao-ph.png",
+      "file": "21-medicao-ph.png",
       "theme": "light",
       "route": "laboratorio",
+      "parameter": "",
       "viewport": [
         1920,
         1080
       ],
       "title": "Bancada · SIAB",
+      "dialogs": [],
       "size": "1920x1080",
-      "bytes": 420322
+      "bytes": 177743
     }
   ]
 }
