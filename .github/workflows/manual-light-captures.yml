@@ -98,8 +98,8 @@ jobs:
               if(expected&&state.route!==expected)
                 throw new Error(file+' expected route '+expected+' got '+JSON.stringify(state));
               if(file==='01-marca-inicial' && !state.dialogs.includes('startup-dialog'))
-      throw new Error('startup brand dialog not open: '+JSON.stringify(state));
-    if(state.dialogs.length && file!=='01-marca-inicial')
+                throw new Error('startup brand dialog not open: '+JSON.stringify(state));
+              if(state.dialogs.length && file!=='01-marca-inicial')
                 throw new Error(file+' unexpected open dialog '+JSON.stringify(state.dialogs));
               if(requiredText){
                 const text=await page.locator('body').innerText();
