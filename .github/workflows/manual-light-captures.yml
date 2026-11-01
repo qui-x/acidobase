@@ -34,7 +34,7 @@ jobs:
       - name: Instalar Chromium e Playwright
         run: |
           npm install --no-save playwright@1.56.1
-          npx playwright install --with-deps chromium
+          npx playwright install chromium
       - name: Capturar telas reais do programa atualizado
         shell: bash
         run: |
