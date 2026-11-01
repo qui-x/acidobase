@@ -1,4 +1,7 @@
 name: Capturas Full HD atuais para o manual SIAB
+concurrency:
+  group: manual-captures-${{ github.ref }}
+  cancel-in-progress: true
 on:
   push:
     branches:
@@ -41,6 +44,7 @@ jobs:
           trap 'kill $server_pid || true' EXIT
           sleep 2
           mkdir -p docs/manual-capturas-claro
+          find docs/manual-capturas-claro -maxdepth 1 -type f \\( -name '*.png' -o -name 'capturas-1920x1080.json' \\) -delete
           export SIAB_SOURCE_SHA="$(git -C app-source rev-parse HEAD)"
           cat > /tmp/siab-manual-capture.cjs <<'JS'
           const {chromium}=require(process.cwd()+'/node_modules/playwright');
