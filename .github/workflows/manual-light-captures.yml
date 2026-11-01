@@ -71,7 +71,7 @@ jobs:
                 if(root){root.setAttribute('data-theme','light');root.setAttribute('data-contrast','off');}
                 document.body?.classList.add('light-mode');
                 document.querySelector('.abertura')?.remove();
-                document.querySelector('[data-abertura]')?.remove();
+                document.documentElement?.removeAttribute('data-abertura');
                 const w=document.getElementById('boas-vindas');
                 if(w)w.hidden=true;
                 const d=document.getElementById('startup-dialog');
