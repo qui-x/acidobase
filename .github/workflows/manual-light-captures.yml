@@ -46,7 +46,7 @@ jobs:
           const {chromium}=require(process.cwd()+'/node_modules/playwright');
           const fs=require('fs');
           const out='docs/manual-capturas-claro';
-          const base='http://127.0.0.1:8123/';
+          const base='http://127.0.0.1:8123/?theme=light&motion=reduce';
           const log=[];
           const errors=[];
           (async()=>{
@@ -65,7 +65,7 @@ jobs:
               const page=await context.newPage();
               page.on('pageerror',e=>errors.push(route+': '+e.message));
               await page.goto(base+'#/'+route,{waitUntil:'domcontentloaded',timeout:45000});
-              await page.waitForFunction(()=>window.SIAB&&window.SIAB.rota&&window.SIAB.rota.nome, null, {timeout:30000});
+              await page.waitForFunction(()=>window.SIAB&&window.SIAB.rota&&window.SIAB.rota.nome&&document.title.includes('· SIAB'), null, {timeout:30000});
               await page.evaluate(()=>{
                 window.A11Y?.definir?.('theme','light');
                 document.querySelector('.abertura')?.remove();
