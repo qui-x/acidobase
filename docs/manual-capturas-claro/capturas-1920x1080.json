@@ -4,7 +4,7 @@
   "count": 21,
   "sourceBranch": "acidosebases1.0.0",
   "sourceCommit": "ef279550969ff2682f458dd9b9818487ca1642be",
-  "captureDate": "2026-11-01T00:19:25.952Z",
+  "captureDate": "2026-11-01T00:22:33.848Z",
   "screenshots": [
     {
       "file": "01-marca-inicial.png",
@@ -300,7 +300,7 @@
       "title": "Bancada · SIAB",
       "dialogs": [],
       "size": "1920x1080",
-      "bytes": 177743
+      "bytes": 411036
     }
   ]
 }
