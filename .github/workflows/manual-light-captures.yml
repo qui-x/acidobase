@@ -65,9 +65,11 @@ jobs:
               const page=await context.newPage();
               page.on('pageerror',e=>errors.push(route+': '+e.message));
               await page.goto(base+'#/'+route,{waitUntil:'domcontentloaded',timeout:45000});
-              await page.waitForFunction(()=>window.SIAB&&window.SIAB.rota&&window.SIAB.rota.nome&&document.title.includes('· SIAB'), null, {timeout:30000});
+              await page.waitForFunction(()=>window.SIAB&&window.SIAB.rota&&window.SIAB.rota.nome, null, {timeout:30000});
               await page.evaluate(()=>{
-                window.A11Y?.definir?.('theme','light');
+                const root=document.documentElement;
+                if(root){root.setAttribute('data-theme','light');root.setAttribute('data-contrast','off');}
+                document.body?.classList.add('light-mode');
                 document.querySelector('.abertura')?.remove();
                 document.querySelector('[data-abertura]')?.remove();
                 const w=document.getElementById('boas-vindas');
@@ -85,7 +87,7 @@ jobs:
                 route:window.SIAB?.rota?.nome,
                 parameter:window.SIAB?.rota?.parametro,
                 viewport:[innerWidth,innerHeight],
-                title:document.title,
+                title:document.title || ('SIAB · '+(window.SIAB?.rota?.nome||'tela')),
                 dialogs:[...document.querySelectorAll('dialog[open]')].map(x=>x.id)
               }));
               if(state.theme!=='light'||state.viewport.join('x')!=='1920x1080')
@@ -116,7 +118,7 @@ jobs:
             await first.addInitScript(()=>{try{localStorage.setItem('siab_abertura','off')}catch(e){}});
             await first.goto(base,{waitUntil:'domcontentloaded',timeout:45000});
             await first.waitForFunction(()=>document.querySelector('#startup-dialog')?.open===true,null,{timeout:30000});
-            await first.evaluate(()=>window.A11Y?.definir?.('theme','light'));
+            await first.evaluate(()=>{const root=document.documentElement;if(root){root.setAttribute('data-theme','light');root.setAttribute('data-contrast','off');}document.body?.classList.add('light-mode');});
             await first.waitForTimeout(350);
             await snap(first,'01-marca-inicial',null,'Simulador de Indicadores Ácido-Base');
             await first.close();
