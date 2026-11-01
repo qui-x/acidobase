@@ -172,7 +172,7 @@ jobs:
             await lab.waitForTimeout(400);
             await snap(lab,'20-dados-investigacao','laboratorio','Dados da investigação');
             await lab.evaluate(()=>window.SIAB.montarMontagem('titulacao-forte'));
-            await lab.waitForTimeout(700);
+            await lab.waitForTimeout(3500);
             await lab.locator('#focus-tab').click();
             await lab.waitForTimeout(300);
             await lab.evaluate(()=>window.SIAB.workspace.close('left',false));
