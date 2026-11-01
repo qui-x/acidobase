@@ -144,10 +144,10 @@ jobs:
             await simple('07-roteiros','roteiros','roteiros','Roteiros Experimentais');
             await simple('08-roteiro-titulacao','roteiro/titulacao-forte','roteiro','Uma gota faz a diferença');
             await simple('09-montagens','montagens','montagens','Montagens prontas');
-            await simple('10-professor','professor','professor','Área do Professor');
+            await simple('10-professor','professor','professor','Preparar atividade');
             await simple('11-manual','manual','manual','Manual');
             await simple('12-manual-indicadores','manual/indicadores','manual','Indicadores ácido-base');
-            await simple('13-caderno','caderno','caderno','Caderno');
+            await simple('13-caderno','caderno','caderno','Seu caderno');
             const lab=await open('laboratorio');
             await lab.evaluate(()=>window.SIAB.montarMontagem('tres-indicadores'));
             await lab.waitForTimeout(900);
