@@ -93,7 +93,7 @@ jobs:
                 throw new Error(file+' theme/viewport '+JSON.stringify(state));
               if(expected&&state.route!==expected)
                 throw new Error(file+' expected route '+expected+' got '+JSON.stringify(state));
-              if(state.dialogs.length && file!=='01-marca-inicial')
+              if(file==='01-marca-inicial' && !state.dialogs.includes('startup-dialog'))\n      throw new Error('startup brand dialog not open: '+JSON.stringify(state));\n    if(state.dialogs.length && file!=='01-marca-inicial')
                 throw new Error(file+' unexpected open dialog '+JSON.stringify(state.dialogs));
               if(requiredText){
                 const text=await page.locator('body').innerText();
@@ -121,7 +121,7 @@ jobs:
             await first.waitForTimeout(350);
             await snap(first,'01-marca-inicial',null,'Simulador de Indicadores Ácido-Base');
             await first.close();
-            await simple('02-inicio','inicio','inicio','Página inicial');
+            await simple('02-inicio','inicio','inicio','A química');
             await simple('03-aprender','aprender','aprender','Temas');
             const themeId=await context.newPage();
             await themeId.goto(base+'#/aprender',{waitUntil:'domcontentloaded'});
