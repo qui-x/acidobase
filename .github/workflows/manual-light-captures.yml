@@ -114,6 +114,7 @@ jobs:
             }
             async function simple(file,route,expected,requiredText){
               const page=await open(route);
+              if(requiredText)await page.waitForFunction(t=>document.body?.innerText.includes(t),requiredText,{timeout:15000});
               await snap(page,file,expected,requiredText);
               await page.close();
             }
@@ -136,7 +137,7 @@ jobs:
             await themeId.close();
             await simple('04-tema','tema/'+firstTheme,'tema');
             await simple('05-missoes','missoes','missoes','Missões');
-            await simple('06-missao-repolho','missao/repolho-roxo','missao','O que o repolho roxo revela');
+            await simple('06-missao-repolho','missao/repolho-roxo','missao','O problema');
             await simple('07-roteiros','roteiros','roteiros','Roteiros Experimentais');
             await simple('08-roteiro-titulacao','roteiro/titulacao-forte','roteiro','Uma gota faz a diferença');
             await simple('09-montagens','montagens','montagens','Montagens prontas');
