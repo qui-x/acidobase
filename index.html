@@ -26,6 +26,7 @@
       rel="stylesheet"
       href="vendor/dialog-polyfill/dialog-polyfill.css?v=1.0.0+20261012"
     />
+    <script src="js/core/plataforma.js?v=1.0.0+20261012"></script>
     <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0+20261012" />
     <link rel="stylesheet" href="css/mobile-study.css?v=1.0.0+20261012" />
     <script src="js/core/compatibilidade.js?v=1.0.0+20261012"></script>
@@ -42,6 +43,7 @@
     <link rel="stylesheet" href="css/manual.css?v=1.0.0+20261012" />
     <link rel="stylesheet" href="css/mobile-controls.css?v=1.0.0+20261012" />
     <link rel="stylesheet" href="css/refinements.css?v=1.0.0+20261012" />
+    <link rel="stylesheet" href="css/aplicativo.css?v=1.0.0+20261012" />
   </head>
   <body>
     <noscript
@@ -129,6 +131,7 @@
         ><a href="#/manual" data-nav="manual">Manual</a>
       </nav>
       <div class="header-actions">
+        <span id="selo-app" class="selo-app" hidden></span>
         <button id="install-btn" class="text-btn" type="button" hidden>
           Instalar app
         </button>
@@ -253,6 +256,9 @@
             <a href="#/manual">Manual de uso</a>
             <a href="#/professor">Área do Professor</a>
           </nav>
+          <button class="quiet-btn" data-abrir-atividade>
+            <span data-app-icon="professor"></span>Abrir atividade
+          </button>
           <button class="quiet-btn" data-startup-settings>
             <span data-app-icon="professor"></span>Configurações de inicialização
           </button>
@@ -293,6 +299,10 @@
         <div id="roteiro-conteudo" class="reading-column"></div>
       </section>
       <section data-tela="atividade" class="tela" hidden>
+        <p id="abrir-no-app" class="abrir-no-app" hidden>
+          <a class="primary-btn" href="#">Abrir no aplicativo SIAB</a>
+          <span>Já tem o aplicativo? Toque no botão. Se não tiver, continue aqui.</span>
+        </p>
         <div id="atividade-conteudo" class="reading-column"></div>
       </section>
       <section data-tela="professor" class="tela" hidden>
@@ -411,7 +421,7 @@
         </section>
         <h2>Atividades criadas</h2>
         <p class="field-hint">
-          Atividades ficam neste navegador. Editar ou excluir não altera links
+          Atividades ficam <span data-local>neste navegador</span>. Editar ou excluir não altera links
           de aluno já enviados: cada link guarda a sua própria configuração.
         </p>
         <div id="atividades-recentes"></div>
@@ -1967,11 +1977,51 @@
           <h3 class="drawer-section-title" id="drawer-app">Aplicativo</h3>
           <button class="drawer-link quiet-btn" id="drawer-install" hidden>
             <span data-app-icon="install"></span>Instalar app</button
+          ><button class="drawer-link quiet-btn" data-abrir-atividade>
+            <span data-app-icon="professor"></span>Abrir atividade</button
           ><button class="drawer-link quiet-btn" id="about-btn">
             <span data-app-icon="about"></span>Sobre o SIAB
           </button>
           <p class="drawer-versao">Versão <span id="drawer-versao"></span></p>
+          <p class="drawer-modo" id="drawer-modo" hidden></p>
         </section>
+      </div>
+    </dialog>
+
+    <dialog
+      id="abrir-atividade-dialog"
+      class="siab-dialog dialog-about"
+      aria-labelledby="abrir-atividade-titulo"
+    >
+      <div class="dialog-heading">
+        <h2 id="abrir-atividade-titulo">Abrir atividade</h2>
+        <button
+          type="button"
+          class="icon-btn"
+          data-close="abrir-atividade-dialog"
+          aria-label="Fechar"
+        >
+          ×
+        </button>
+      </div>
+      <p>Cole o link ou o código que o professor enviou.</p>
+      <label class="field"
+        >Link ou código<textarea
+          id="abrir-atividade-campo"
+          rows="4"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+        ></textarea
+      ></label>
+      <p id="abrir-atividade-estado" role="status"></p>
+      <div class="dialog-actions">
+        <button type="button" class="secondary-btn" id="abrir-atividade-colar">
+          Colar
+        </button>
+        <button type="button" class="primary-btn" id="abrir-atividade-confirmar">
+          Abrir
+        </button>
       </div>
     </dialog>
 
@@ -1997,6 +2047,7 @@
         interpretar evidências.
       </p>
       <p>Versão <span id="about-version"></span></p>
+      <p id="about-modo" hidden></p>
       <p>
         SIAB · GNU GPL v3. Interface de diálogos com dialog-polyfill,
         BSD-3-Clause.
@@ -2376,6 +2427,7 @@
     <script src="js/telas/aprender.js?v=1.0.0+20261012"></script>
     <script src="js/telas/roteiros.js?v=1.0.0+20261012"></script>
     <script src="js/telas/relatorios.js?v=1.0.0+20261012"></script>
+    <script src="js/core/atividade-v2.js?v=1.0.0+20261012"></script>
     <script src="js/core/atividades.js?v=1.0.0+20261012"></script>
     <script src="js/telas/professor.js?v=1.0.0+20261012"></script>
     <script src="js/telas/caderno.js?v=1.0.0+20261012"></script>
@@ -2383,6 +2435,7 @@
     <script src="js/a11y/preferencias.js?v=1.0.0+20261012"></script>
     <script src="js/init/pwa.js?v=1.0.0+20261012"></script>
     <script src="js/ui/activity-ui.js?v=1.0.0+20261012"></script>
+    <script src="js/ui/abrir-atividade.js?v=1.0.0+20261012"></script>
     <script src="js/init/integracao.js?v=1.0.0+20261012"></script>
     <script src="js/init/app.js?v=1.0.0+20261012"></script>
     <script src="js/ui/mobile-study.js?v=1.0.0+20261012"></script>

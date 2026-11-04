@@ -101,7 +101,7 @@ SIAB.professor = (() => {
           (r) =>
             `<article class="recent-activity" data-activity-id="${esc(r.id)}"><strong>${esc(r.config.titulo)}</strong><div class="actions"><a class="secondary-btn" href="${esc(SIAB.atividades.link(r.token))}">Abrir</a><button class="quiet-btn" data-copy-activity="${esc(r.id)}">Copiar link</button><button class="quiet-btn" data-edit-activity="${esc(r.id)}">Editar</button><button class="quiet-btn" data-duplicate-activity="${esc(r.id)}">Duplicar</button><button class="danger-btn" data-delete-activity="${esc(r.id)}">Excluir</button></div></article>`,
         )
-        .join("") || "<p>Nenhuma atividade criada neste navegador.</p>";
+        .join("") || `<p>Nenhuma atividade criada ${SIABPlataforma.local()}.</p>`;
   }
   async function copiar(token) {
     const link = SIAB.atividades.link(token);
@@ -129,7 +129,10 @@ SIAB.professor = (() => {
     );
     $("prof-resumo").textContent =
       `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
-    $("prof-abrir").href = SIAB.atividades.link(token);
+    $("prof-abrir").href =
+      window.SIABPlataforma && window.SIABPlataforma.empacotado
+        ? `#/atividade/${token}`
+        : SIAB.atividades.link(token);
   }
   async function criar(c, id = null) {
     if (SIAB.ActivityContext.restricted())
@@ -155,8 +158,12 @@ SIAB.professor = (() => {
     guia();
     SIAB.$("folha-impressao").innerHTML = $("teacher-guide").outerHTML;
     document.body.classList.add("imprimindo-roteiro", "imprimindo-folha");
-    window.print();
-    document.body.classList.remove("imprimindo-roteiro", "imprimindo-folha");
+    SIAB.impressao.imprimirPagina().then(() => {
+      document.body.classList.remove(
+        "imprimindo-roteiro",
+        "imprimindo-folha",
+      );
+    });
   }
   function ligar() {
     $("prof-tipo").onchange = opcoes;
@@ -235,7 +242,7 @@ SIAB.professor = (() => {
               $("prof-resultado").hidden = true;
             }
             renderRecentes();
-            SIAB.notice("Atividade excluída deste navegador.");
+            SIAB.notice(`Atividade excluída ${SIABPlataforma.deste()}.`);
           },
           "Excluir atividade",
           "danger",

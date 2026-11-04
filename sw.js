@@ -5,7 +5,7 @@
    página. */
 // Abertura visual original restaurada. Nova versão do cache elimina modelos,
 // player de vídeo e bibliotecas de abertura 3D das cópias offline.
-const VERSAO = "siab-1.0.0+20261031-nome-abaixo-do-icone";
+const VERSAO = "siab-1.0.0+20261104-links-e-aplicativo";
 // Projetos do mesmo usuario.github.io compartilham a origem. Cada publicação
 // precisa de seu próprio cache; atualizar uma cópia não deve apagar outra.
 const BASE = new URL(self.registration.scope);
@@ -21,6 +21,7 @@ const ARQUIVOS = [
   "./vendor/dialog-polyfill/dialog-polyfill.css",
   "./css/stylesiab.css",
   "./css/mobile-study.css",
+  "./js/core/plataforma.js",
   "./js/core/compatibilidade.js",
   "./a11y.js",
   "./css/investigacao.css",
@@ -28,6 +29,7 @@ const ARQUIVOS = [
   "./css/manual.css",
   "./css/mobile-controls.css",
   "./css/refinements.css",
+  "./css/aplicativo.css",
   "./vendor/dialog-polyfill/dialog-polyfill.js",
   "./js/core/namespace.js",
   "./js/core/util.js",
@@ -85,6 +87,7 @@ const ARQUIVOS = [
   "./js/telas/aprender.js",
   "./js/telas/roteiros.js",
   "./js/telas/relatorios.js",
+  "./js/core/atividade-v2.js",
   "./js/core/atividades.js",
   "./js/telas/professor.js",
   "./js/telas/caderno.js",
@@ -92,6 +95,7 @@ const ARQUIVOS = [
   "./js/a11y/preferencias.js",
   "./js/init/pwa.js",
   "./js/ui/activity-ui.js",
+  "./js/ui/abrir-atividade.js",
   "./js/init/integracao.js",
   "./js/init/app.js",
   "./js/ui/mobile-study.js",

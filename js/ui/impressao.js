@@ -90,9 +90,57 @@ SIAB.impressao = (() => {
     inserido = null;
   }
 
+  /* window.print() não faz nada no WebView do Android (aplicativo APK).
+     Lá, a impressão passa pelo plugin nativo SIABPrint, que abre a tela de
+     impressão do sistema (imprimir ou Salvar como PDF). A função devolve uma
+     Promise: no navegador resolve na hora; no Android, quando o trabalho termina. */
+  function imprimirPagina() {
+    const cap = window.Capacitor;
+    const nativo = Boolean(
+      cap && cap.isNativePlatform && cap.isNativePlatform(),
+    );
+    if (!nativo) {
+      window.print();
+      return Promise.resolve();
+    }
+    window.dispatchEvent(new Event("beforeprint"));
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const fim = () => {
+          window.dispatchEvent(new Event("afterprint"));
+          resolve();
+        };
+        const falha = (erro) => {
+          fim();
+          const msg =
+            "Não foi possível abrir a impressão: " +
+            ((erro && erro.message) || erro);
+          if (SIAB.notice) SIAB.notice(msg);
+          else alert(msg);
+        };
+        try {
+          const opcoes = { title: document.title || "SIAB" };
+          let chamada;
+          // O Capacitor do Android (native-bridge.js) oferece nativePromise;
+          // registerPlugin só existe quando o Capacitor vem empacotado.
+          if (typeof cap.nativePromise === "function")
+            chamada = cap.nativePromise("SIABPrint", "print", opcoes);
+          else if (cap.Plugins && cap.Plugins.SIABPrint)
+            chamada = cap.Plugins.SIABPrint.print(opcoes);
+          else if (typeof cap.registerPlugin === "function")
+            chamada = cap.registerPlugin("SIABPrint").print(opcoes);
+          else throw new Error("a ponte nativa do aplicativo não está disponível");
+          chamada.then(fim, falha);
+        } catch (erro) {
+          falha(erro);
+        }
+      }, 200);
+    });
+  }
+
   function imprimir() {
     preparar();
-    window.print();
+    return imprimirPagina();
   }
 
   function ligar() {
@@ -106,5 +154,5 @@ SIAB.impressao = (() => {
     );
   }
 
-  return { ligar, imprimir, preparar, limpar, cabecalho };
+  return { ligar, imprimir, imprimirPagina, preparar, limpar, cabecalho };
 })();

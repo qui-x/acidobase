@@ -14,6 +14,7 @@ assets/icones/icone-192.png
 assets/icones/icone-512.png
 assets/icones/icone-maskable-512.png
 assets/siab-icone.svg
+css/aplicativo.css
 css/investigacao.css
 css/manual.css
 css/mobile-controls.css
@@ -30,6 +31,7 @@ favicon-light.svg
 index.html
 js/a11y/preferencias.js
 js/core/activity-context.js
+js/core/atividade-v2.js
 js/core/atividades.js
 js/core/compatibilidade.js
 js/core/estado.js
@@ -37,6 +39,7 @@ js/core/loja.js
 js/core/migracoes.js
 js/core/namespace.js
 js/core/persistencia.js
+js/core/plataforma.js
 js/core/progresso.js
 js/core/roteador.js
 js/core/util.js
@@ -71,6 +74,7 @@ js/telas/professor.js
 js/telas/relatorios.js
 js/telas/roteiros.js
 js/ui/abertura.js
+js/ui/abrir-atividade.js
 js/ui/activity-ui.js
 js/ui/condutimetro.js
 js/ui/conta-gotas.js

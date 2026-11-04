@@ -70,6 +70,7 @@
 
   var concluido = false;
   var falhou = false;
+  var detalhes = [];
   function mostrarFalha() {
     if (!document.body || document.getElementById("falha-abertura")) return;
     var abertura = document.getElementById("abertura");
@@ -78,13 +79,24 @@
     aviso.id = "falha-abertura";
     aviso.className = "falha-abertura";
     aviso.setAttribute("role", "alert");
+    var noApp = window.SIABPlataforma && window.SIABPlataforma.empacotado;
     aviso.innerHTML =
       "<strong>Não foi possível concluir a abertura do SIAB.</strong>" +
-      "<p>Recarregue a página com internet. Se continuar, abra o endereço publicado no Safari, Chrome, Firefox ou Edge atualizado. No iPhone e iPad, atualize também o sistema e evite a prévia de arquivos ou de aplicativos de mensagens.</p>" +
+      (noApp
+        ? "<p>Feche o aplicativo e abra de novo. Se continuar, reinstale a versão mais recente do SIAB neste dispositivo.</p>"
+        : "<p>Recarregue a página com internet. Se continuar, abra o endereço publicado no Safari, Chrome, Firefox ou Edge atualizado. No iPhone e iPad, atualize também o sistema e evite a prévia de arquivos ou de aplicativos de mensagens.</p>") +
       '<button type="button" class="secondary-btn">Recarregar página</button>';
     aviso.querySelector("button").addEventListener("click", function () {
       window.location.reload();
     });
+    var motivo = document.createElement("p");
+    motivo.className = "falha-detalhe";
+    motivo.textContent =
+      "Detalhes técnicos: " +
+      (detalhes.length
+        ? detalhes.slice(0, 3).join(" | ")
+        : "o aplicativo não chegou a iniciar a rota inicial.");
+    aviso.insertBefore(motivo, aviso.querySelector("button"));
     document.body.appendChild(aviso);
   }
   window.addEventListener(
@@ -95,8 +107,22 @@
       if (
         evento.target === window ||
         (evento.target && evento.target.tagName === "SCRIPT")
-      )
+      ) {
         falhou = true;
+        if (evento.target && evento.target.tagName === "SCRIPT")
+          detalhes.push("script não carregou: " + evento.target.src);
+        else
+          detalhes.push(
+            (evento.message || "erro") +
+              (evento.filename
+                ? " (" +
+                  String(evento.filename).split("/").pop() +
+                  ":" +
+                  evento.lineno +
+                  ")"
+                : ""),
+          );
+      }
     },
     true,
   );
