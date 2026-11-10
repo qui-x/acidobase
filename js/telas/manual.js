@@ -24,11 +24,15 @@ SIAB.manualTela = (() => {
   }
   function actions(topic) {
     return (topic.actions || [])
-      .map((a) =>
-        a.route
+      .map((a) => {
+        if (a.url) {
+          if (!/^https:\/\//i.test(a.url)) return "";
+          return `<a class="secondary-btn" href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.label)} ${icon("arrow")}</a>`;
+        }
+        return a.route
           ? `<a class="secondary-btn" href="${esc(a.route)}">${esc(a.label)} ${icon("arrow")}</a>`
-          : `<button type="button" class="secondary-btn" data-manual-command="${esc(a.command)}">${esc(a.label)}</button>`,
-      )
+          : `<button type="button" class="secondary-btn" data-manual-command="${esc(a.command)}">${esc(a.label)}</button>`;
+      })
       .join("");
   }
   function topicLink(t, compact = false) {
@@ -135,7 +139,7 @@ SIAB.manualTela = (() => {
         t.id === cat.id
           ? R.topics.filter((x) => x.category === cat.id && x.id !== t.id)
           : [];
-    return `${!print ? `<nav class="manual-breadcrumb" aria-label="Caminho do Manual"><a href="#/manual">Manual</a>${t.id !== cat.id ? `<span aria-hidden="true">/</span><a href="${href(cat.id)}">${esc(cat.title)}</a>` : ""}<span aria-hidden="true">/</span><span aria-current="page">${esc(t.title)}</span></nav>` : ""}<article class="manual-article" data-manual-topic="${t.id}"><header><p class="eyebrow">${esc(cat.title)}</p><h1 ${!print ? 'id="manual-titulo" data-foco tabindex="-1"' : ""}>${esc(t.title)}</h1><p class="manual-lead">${rich(t.summary)}</p></header><section class="manual-purpose"><h2>Para que serve</h2><p>${rich(t.purpose)}</p></section>${t.diagram ? diagram(t.diagram) : ""}<section class="manual-how"><h2>Como usar</h2><ol class="manual-steps">${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></section>${t.example ? `<aside class="manual-example" aria-label="Exemplo"><strong>Exemplo</strong><p>${rich(t.example)}</p></aside>` : ""}${!print && t.actions?.length ? `<div class="manual-actions"><p>Use a função no programa</p>${actions(t)}</div>` : ""}${t.generated ? generated(t.generated) : ""}${t.details.length ? `<section class="manual-details"><h2>Detalhes importantes</h2>${accordion(t, print)}</section>` : ""}${!print && children.length ? `<section class="manual-more"><h2>Nesta categoria</h2><div class="manual-topic-list">${children.map((x) => topicLink(x, true)).join("")}</div></section>` : ""}${
+    return `${!print ? `<nav class="manual-breadcrumb" aria-label="Caminho do Manual"><a href="#/manual">Manual</a>${t.id !== cat.id ? `<span aria-hidden="true">/</span><a href="${href(cat.id)}">${esc(cat.title)}</a>` : ""}<span aria-hidden="true">/</span><span aria-current="page">${esc(t.title)}</span></nav>` : ""}<article class="manual-article" data-manual-topic="${t.id}"><header><p class="eyebrow">${esc(cat.title)}</p><h1 ${!print ? 'id="manual-titulo" data-foco tabindex="-1"' : ""}>${esc(t.title)}</h1><p class="manual-lead">${rich(t.summary)}</p></header><section class="manual-purpose"><h2>Para que serve</h2><p>${rich(t.purpose)}</p></section>${t.diagram ? diagram(t.diagram) : ""}<section class="manual-how"><h2>Como usar</h2><ol class="manual-steps">${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></section>${t.example ? `<aside class="manual-example" aria-label="Exemplo"><strong>Exemplo</strong><p>${rich(t.example)}</p></aside>` : ""}${!print && t.actions?.length ? `<div class="manual-actions"><p>${t.id === "app" ? "Arquivos para instalação" : "Use a função no programa"}</p>${actions(t)}</div>` : ""}${t.generated ? generated(t.generated) : ""}${t.details.length ? `<section class="manual-details"><h2>Detalhes importantes</h2>${accordion(t, print)}</section>` : ""}${!print && children.length ? `<section class="manual-more"><h2>Nesta categoria</h2><div class="manual-topic-list">${children.map((x) => topicLink(x, true)).join("")}</div></section>` : ""}${
       t.related.length
         ? `<nav class="manual-related" aria-label="Veja também"><h2>Veja também</h2><div>${t.related
             .map((id) => {
