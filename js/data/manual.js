@@ -1408,6 +1408,12 @@ SIAB.manualContent = {
         "O HTML independente pode ser aberto diretamente no navegador e também inclui este Manual.",
       ],
       example: "",
+      actions: [
+        {
+          label: "Acessar arquivos instaláveis",
+          url: "https://drive.google.com/drive/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK",
+        },
+      ],
       related: ["persistencia", "acessibilidade"],
       keywords: [
         "offline",
