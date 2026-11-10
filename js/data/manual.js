@@ -1,4 +1,5 @@
 "use strict";
+
 /* RC.4: registro central do Manual. Texto de uso, sem dados privados de atividades. */
 const SIAB_EMPACOTADO = Boolean(
   window.SIABPlataforma && window.SIABPlataforma.empacotado,
