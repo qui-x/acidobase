@@ -1421,9 +1421,14 @@ SIAB.manualContent = {
             "Use Instalar quando o navegador oferecer essa opção.",
             "Teste a abertura sem conexão antes da aula.",
             "O HTML independente pode ser aberto diretamente no navegador e também inclui este Manual.",
-            "Link para download de arquivos instalavéis: https://drive.google.com/drive/u/1/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK",
           ],
       example: "",
+      actions: SIAB_EMPACOTADO ? [] : [
+        {
+          label: "Acessar arquivos instaláveis",
+          url: "https://drive.google.com/drive/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK",
+        },
+      ],
       related: ["persistencia", "acessibilidade"],
       keywords: [
         "offline",
