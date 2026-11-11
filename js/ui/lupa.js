@@ -190,11 +190,13 @@ SIAB.lupa = (() => {
       <div class="lupa-barra"><button type="button" class="lupa-escala" data-acao="lupa-escala" aria-pressed="${log}">Escala logarítmica</button></div>
       ${destacada ? `<style>.lupa-svg.com-destaque .particula[data-f="${SIAB.escape(destacada)}"] { opacity: 1; }</style>` : ""}
       <svg class="lupa-svg${destacada ? " com-destaque" : ""}" viewBox="0 0 320 180" role="img" aria-label="Partículas dissolvidas nesta escala: ${SIAB.escape(descricao)}.${destacada ? ` Em destaque: ${SIAB.escape(destacada)}.` : ""}"${par ? ` data-par="${SIAB.escape(JSON.stringify(par))}"` : ""}>${desenho.join("")}<g class="lupa-eventos"></g></svg>
+      <div class="lupa-info">
       ${destacada ? `<p class="lupa-destacando">Em destaque: <strong>${SIAB.escape(destacada)}</strong>. Toque de novo no nome para ver todas.</p>` : ""}
       <p class="lupa-evento" aria-hidden="true"></p>
       ${destaque}
       <ul class="lupa-legenda">${legenda}</ul>
       <p class="field-hint">${escala} Contorno vazado: íon espectador. Toque num nome para destacar suas partículas. Moléculas de água não aparecem: há cerca de 55,5 mol/L delas, muito mais que o soluto.</p>
+      </div>
     </div>`;
   }
 

@@ -1094,3 +1094,245 @@
   height: 20px;
   flex: none;
 }
+
+/* RC.6 — Bancada desktop: nenhuma ação mobile participa do dimensionamento.
+   O controle Doses era um terceiro item do grid e fazia os atalhos ocuparem
+   duas alturas de linha, mesmo sem conteúdo adicional. */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace #mobile-doses-toggle {
+    display: none !important;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-barra {
+    align-items: center;
+    gap: 6px;
+    max-width: 1120px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-actions {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 6px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts {
+    align-items: center;
+    align-self: center;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions
+    :is(.dose-actions button, .dose-shortcuts button, .context-action-bar button) {
+    box-sizing: border-box;
+    min-height: 44px;
+    height: 44px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    line-height: 1.15;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions
+    :is(.dose-barra, .context-action-bar) .siab-icon {
+    flex: none;
+    width: 17px;
+    height: 17px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .context-action-bar {
+    margin-top: 5px;
+    gap: 6px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-info {
+    margin-bottom: 4px;
+  }
+}
+@media screen and (min-width: 1400px) {
+  /* Ações principais e ações contextuais passam a usar a mesma faixa. */
+  :root[data-workspace="rc3"] .workspace:not(.vazia) .workspace-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 3px;
+    align-items: center;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-info {
+    grid-column: 1 / -1;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-barra {
+    grid-column: 1;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .context-action-bar {
+    grid-column: 2;
+    margin: 0;
+    flex-wrap: nowrap;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts {
+    min-width: 0;
+    flex-wrap: nowrap;
+  }
+}
+
+/* Expandir é uma apresentação de todo o painel, com a navegação fixa.
+   A rolagem não é eliminada artificialmente: fica disponível apenas quando
+   houver excesso real (zoom de fonte, pouco espaço ou dados extensos). */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-source="ver"] #dock-right-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-height: 0;
+    overflow: hidden;
+    padding: clamp(10px, 1.8vh, 18px) clamp(14px, 3vw, 48px);
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-source="ver"] #ver-tabs {
+    flex: none;
+    margin-bottom: 8px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-source="ver"] #ver-conteudo {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding-inline: 2px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] #ver-conteudo {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: 8px;
+    overflow: hidden;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"]
+    #ver-conteudo > .field-hint {
+    margin: 0;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa {
+    display: grid;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    grid-template-columns: minmax(0, 1.7fr) minmax(255px, .8fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: clamp(12px, 2vw, 28px);
+    row-gap: 8px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa-barra {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: 0;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa-svg {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa-info {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="equacao"] .equacao {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+    align-items: start;
+    gap: 12px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"] #ver-conteudo
+    :is(.grafico-medido, .grafico-svg) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: min(61dvh, 600px);
+    margin-inline: auto;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="ph"] #ver-conteudo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+    gap: 12px 22px;
+    align-content: start;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="ph"] #ver-conteudo
+    > .instrument-reading {
+    grid-column: 1 / -1;
+  }
+}
+@media screen and (min-width: 901px) and (max-width: 1160px) {
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa {
+    grid-template-columns: minmax(0, 1.25fr) minmax(245px, 1fr);
+  }
+}
+
+/* Gráficos medidos: a altura é o espaço RESTANTE do painel, não uma
+   porcentagem da viewport (que ignorava cabeçalho e abas). */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="grafico"] #ver-conteudo {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
+    overflow: hidden;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="derivada"] #ver-conteudo {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 8px;
+    overflow: hidden;
+  }
+  :root[data-workspace="rc3"] .workspace
+    :is(.dock-right[data-presentation="fullscreen"][data-tool="grafico"],
+        .dock-right[data-presentation="fullscreen"][data-tool="derivada"])
+    #ver-conteudo > .grafico-medido {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  :root[data-workspace="rc3"] .workspace
+    :is(.dock-right[data-presentation="fullscreen"][data-tool="grafico"],
+        .dock-right[data-presentation="fullscreen"][data-tool="derivada"])
+    #ver-conteudo > .field-hint {
+    margin: 0;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="derivada"]
+    #ver-conteudo > details[open] {
+    min-height: 0;
+    max-height: 25dvh;
+    overflow: auto;
+  }
+}

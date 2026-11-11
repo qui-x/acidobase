@@ -1,0 +1,66 @@
+name: SIAB - layout responsivo da bancada e painel Ver
+
+on:
+  push:
+    branches:
+      - fix/siab-desktop-actions-fullscreen-layout-20261111
+      - acidosebases1.0.0
+      - main
+    paths:
+      - .github/workflows/siab-ver-layout.yml
+      - css/workspace.css
+      - js/ui/workspace.js
+      - js/ui/icons.js
+      - js/ui/render.js
+      - js/ui/lupa.js
+      - tests/ver-layout.test.cjs
+      - tests/ver-expand.test.cjs
+  pull_request:
+    branches: [acidosebases1.0.0, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  responsive:
+    name: Layout / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Dependencies
+        run: npm ci
+      - name: Browser
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: JS syntax
+        run: |
+          node --check js/ui/workspace.js
+          node --check js/ui/icons.js
+          node --check js/ui/render.js
+          node --check js/ui/lupa.js
+          node --check tests/ver-layout.test.cjs
+      - name: Local server
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/siab-http.log 2>&1 &
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/siab-http.log
+          exit 1
+      - name: Browser tests
+        env:
+          SIAB_BROWSER: ${{ matrix.browser }}
+          SIAB_TEST_URL: http://127.0.0.1:8765
+        run: node --test tests/ver-expand.test.cjs tests/ver-layout.test.cjs

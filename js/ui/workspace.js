@@ -265,13 +265,17 @@ SIAB.workspace = (() => {
         S.instrumentos.permitido,
       );
     const quick = $("workspace-quick-measure");
-    quick.textContent = S.instrumentos.permitido("phmetro")
+    const quickLabel = S.instrumentos.permitido("phmetro")
       ? "Medir pH"
       : S.instrumentos.permitido("fita")
         ? "Mergulhar fita"
         : S.instrumentos.permitido("temperatura")
           ? "Medir temperatura"
           : "Medir condução";
+    if (quick.dataset.label !== quickLabel) {
+      quick.dataset.label = quickLabel;
+      quick.innerHTML = icon("meter") + `<span>${quickLabel}</span>`;
+    }
     $("dose-area").classList.toggle(
       "dock-content-hidden",
       S.state.view === "overview",
@@ -342,6 +346,7 @@ SIAB.workspace = (() => {
     $("ver-panel").hidden =
       !S.verFamiliasDisponiveis().length && state.source !== "dados";
     $("ver-panel").dataset.presentation = state.presentation;
+    $("ver-panel").dataset.tool = state.activeTool || "";
     $("ver-panel").dataset.level = state.level;
     $("ver-panel").dataset.source = state.source;
     nodes.data.hidden = state.level !== "data";
@@ -669,9 +674,18 @@ SIAB.workspace = (() => {
     actions.setAttribute("role", "group");
     actions.setAttribute("aria-label", "Ações experimentais");
     actions.append($("agitar-btn"));
+    $("undo-btn").innerHTML = icon("undo") + "<span>Desfazer</span>";
+    for (const [id, glyph] of [
+      ["meia-gota-btn", "drop"],
+      ["drop5-btn", "drops"],
+      ["poe-btn", "predict"],
+    ]) {
+      const el = $(id);
+      if (!el.querySelector(".siab-icon")) el.insertAdjacentHTML("afterbegin", icon(glyph));
+    }
     actions.insertAdjacentHTML(
       "beforeend",
-      button("workspace-quick-measure", "Medir pH"),
+      button("workspace-quick-measure", icon("meter") + "<span>Medir pH</span>"),
     );
     $("dose-area").append(actions);
     document.querySelector(".tube-strip").before($("dose-area"));
