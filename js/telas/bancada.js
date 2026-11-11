@@ -759,23 +759,69 @@ SIAB.bancada = (() => {
     }
   }
 
-  /* ---------- Prever, observar, explicar (M1) ---------- */
-  let previsao = null;
-  function abrirPrevisao() {
-    const t = SIAB.current();
-    if (!t) return;
-    previsao = null;
+  /* ---------- Prever, observar, explicar (M1) ----------
+     Prever não é concluir: a segunda etapa pode ser fechada e retomada,
+     inclusive após medições no painel Ver. Cada tubo conserva seu ensaio
+     enquanto o laboratório estiver aberto, sem repetir o gotejamento. */
+  const previsoesPendentes = new Map();
+  const previsaoDoTubo = () => previsoesPendentes.get(SIAB.current()?.id);
+  function atualizarBotaoPrevisao() {
+    const botao = $("poe-btn");
+    const pendente = Boolean(previsaoDoTubo());
+    const rotulo = pendente ? "Retomar previsão" : "Prever e gotejar";
+    if (botao.dataset.previsaoPendente === String(pendente)) return;
+    botao.dataset.previsaoPendente = String(pendente);
+    botao.innerHTML = SIAB.icons.svg("predict") +
+      (pendente
+        ? "<span>Retomar previsão</span>"
+        : 'Prever<span class="poe-longo">&nbsp;e gotejar</span>');
+    botao.setAttribute("aria-label", rotulo);
+    botao.title = pendente
+      ? "Retomar previsão, conferir dados e registrar explicação"
+      : "Prever o resultado antes de adicionar as gotas";
+  }
+  function formularioPrevisao() {
     $("poe-form").reset();
     $("poe-form").hidden = false;
     $("poe-resultado").hidden = true;
-    $("poe-contexto").textContent = SIAB.resumoConteudo(t);
     $("poe-title").textContent = "Prever e gotejar";
+  }
+  function resultadoPrevisao(pendente, t) {
+    $("poe-form").hidden = true;
+    $("poe-resultado").hidden = false;
+    $("poe-title").textContent = "Comparar previsão e observação";
+    const linhas = [...pendente.registro.linhas];
+    if (SIAB.chem.solve(t).signature === pendente.assinaturaDepois) {
+      const leitura = SIAB.instrumentos.leitura(t);
+      if (!leitura.anterior && leitura.valor != null)
+        linhas.push(["Leitura após medir", leitura.texto]);
+    }
+    $("poe-comparacao").innerHTML =
+      linhas.map(([k, v]) =>
+        `<p><strong>${SIAB.escape(k)}:</strong> ${SIAB.escape(v)}</p>`
+      ).join("") +
+      "<p>A previsão não é classificada automaticamente como correta ou incorreta. Observe o recipiente e faça novas medições em Ver para construir a explicação.</p>";
+    $("poe-explicacao").required = Boolean(
+      SIAB.atividades?.ativa || SIAB.rota.nome === "missao",
+    );
+    $("poe-explicacao").value = pendente.explicacao;
+    $("poe-registrar").checked = pendente.registrar;
+  }
+  function abrirPrevisao() {
+    const t = SIAB.current();
+    if (!t) return;
+    $("poe-contexto").textContent = SIAB.resumoConteudo(t);
+    const pendente = previsoesPendentes.get(t.id);
+    if (pendente) resultadoPrevisao(pendente, t);
+    else formularioPrevisao();
     $("poe-dialog").showModal();
+    (pendente ? $("poe-observar") : $("poe-form").querySelector("select"))?.focus();
   }
   function conferirPrevisao(evento) {
     evento.preventDefault();
     const form = new FormData(evento.target),
       t = SIAB.current();
+    if (!t) return;
     const observar = () => {
       const r = SIAB.chem.solve(t);
       return {
@@ -787,52 +833,59 @@ SIAB.bancada = (() => {
     const antes = observar(),
       n = Math.max(1, Math.min(500, Number(form.get("gotas")) || 1)),
       feitas = gotejar(n);
-    previsao = {
-      tipo: "exploracao",
-      titulo: "Prever e gotejar · " + t.name,
-      linhas: [
-        ["Previsão", form.get("aberta")?.trim() || form.get("direcao")],
-        [
-          "Antes",
-          `${antes.cor}; ${SIAB.format(antes.volume)} mL; ${antes.leitura.texto}`,
-        ],
-        ["Gotas", String(feitas)],
-      ],
-    };
+    if (!feitas) {
+      SIAB.notice("Não foi possível adicionar gotas. Verifique a capacidade do recipiente.");
+      return;
+    }
     const depois = observar();
-    previsao.linhas.push([
-      "Depois",
-      `${depois.cor}; ${SIAB.format(depois.volume)} mL; ${depois.leitura.texto}`,
-    ]);
-    $("poe-comparacao").innerHTML =
-      previsao.linhas
-        .map(
-          ([k, v]) =>
-            `<p><strong>${SIAB.escape(k)}:</strong> ${SIAB.escape(v)}</p>`,
-        )
-        .join("") +
-      "<p>Se a leitura ficou anterior, meça novamente no VER antes de concluir. Uma previsão aberta não é classificada automaticamente como certa ou errada.</p>";
-    $("poe-form").hidden = true;
-    $("poe-resultado").hidden = false;
-    $("poe-explicacao").value = "";
-    $("poe-explicacao").required = Boolean(
-      SIAB.atividades?.ativa || SIAB.rota.nome === "missao",
-    );
-    $("poe-explicacao").focus();
+    const pendente = {
+      registro: {
+        tipo: "exploracao",
+        titulo: "Prever e gotejar · " + t.name,
+        linhas: [
+          ["Previsão", form.get("aberta")?.trim() || form.get("direcao")],
+          ["Antes", `${antes.cor}; ${SIAB.format(antes.volume)} mL; ${antes.leitura.texto}`],
+          ["Gotas", String(feitas)],
+          ["Depois", `${depois.cor}; ${SIAB.format(depois.volume)} mL; ${depois.leitura.texto}`],
+        ],
+      },
+      assinaturaDepois: SIAB.chem.solve(t).signature,
+      explicacao: "",
+      registrar: false,
+    };
+    previsoesPendentes.set(t.id, pendente);
+    atualizarBotaoPrevisao();
+    resultadoPrevisao(pendente, t);
+    $("poe-observar").focus();
   }
   function salvarExplicacao(evento) {
     evento.preventDefault();
-    if (previsao) {
-      previsao.linhas.push([
-        "Explicação",
-        $("poe-explicacao").value.trim() || "Não informada",
-      ]);
-      if ($("poe-registrar").checked) {
-        SIAB.progresso.anotar(previsao);
+    const t = SIAB.current(),
+      pendente = previsaoDoTubo();
+    if (t && pendente) {
+      pendente.explicacao = $("poe-explicacao").value.trim();
+      pendente.registrar = $("poe-registrar").checked;
+      if (pendente.registrar) {
+        SIAB.progresso.anotar({
+          ...pendente.registro,
+          linhas: [
+            ...pendente.registro.linhas,
+            ["Explicação", pendente.explicacao || "Não informada"],
+          ],
+        });
         SIAB.notice("Investigação registrada no Caderno.");
       }
+      previsoesPendentes.delete(t.id);
+      atualizarBotaoPrevisao();
     }
     $("poe-dialog").close();
+  }
+  function novaPrevisao() {
+    const t = SIAB.current();
+    if (t) previsoesPendentes.delete(t.id);
+    atualizarBotaoPrevisao();
+    formularioPrevisao();
+    $("poe-form").querySelector("select")?.focus();
   }
 
   /* ---------- Eventos ---------- */
@@ -864,6 +917,15 @@ SIAB.bancada = (() => {
     $("poe-btn").addEventListener("click", abrirPrevisao);
     $("poe-form").addEventListener("submit", conferirPrevisao);
     $("poe-resultado").addEventListener("submit", salvarExplicacao);
+    $("poe-nova").addEventListener("click", novaPrevisao);
+    $("poe-explicacao").addEventListener("input", (evento) => {
+      const p = previsaoDoTubo();
+      if (p) p.explicacao = evento.target.value;
+    });
+    $("poe-registrar").addEventListener("change", (evento) => {
+      const p = previsaoDoTubo();
+      if (p) p.registrar = evento.target.checked;
+    });
     $("undo-btn").addEventListener("click", desfazer);
     $("agitar-btn").addEventListener("click", agitar);
     // Altura da barra do conta-gotas (fixa no celular): a página reserva esse espaço.
@@ -1112,6 +1174,8 @@ SIAB.bancada = (() => {
     });
     mobile.addEventListener("change", responsive);
     SIAB.loja.assinar(() => SIAB.render());
+    SIAB.loja.assinar(atualizarBotaoPrevisao);
+    atualizarBotaoPrevisao();
     responsive();
   }
 

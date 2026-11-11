@@ -1466,3 +1466,22 @@ dialog.tour + .backdrop { background: transparent; }
 }
 .falha-abertura p { margin: 10px 0 16px; }
 @media print { .falha-abertura, .backdrop, ._dialog_overlay { display: none !important; } }
+
+/* POE: comparação e observação são etapas separadas. Em telas baixas,
+   a ação de voltar à bancada permanece visível sem exigir conclusão. */
+#poe-dialog .dialog-actions {
+  align-items: center;
+}
+#poe-dialog #poe-comparacao p {
+  margin: 7px 0;
+  overflow-wrap: anywhere;
+}
+#poe-dialog #poe-orientacao {
+  line-height: 1.45;
+}
+@media (max-width: 560px) {
+  #poe-dialog .dialog-actions > button {
+    flex: 1 1 145px;
+    min-height: 44px;
+  }
+}

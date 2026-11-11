@@ -1564,10 +1564,10 @@
       </div>
     </dialog>
 
-    <dialog id="poe-dialog" class="siab-dialog" aria-labelledby="poe-title">
+    <dialog id="poe-dialog" class="siab-dialog dialog-poe" aria-labelledby="poe-title">
       <div class="dialog-heading">
         <h2 id="poe-title">Prever e gotejar</h2>
-        <button class="icon-btn" data-close="poe-dialog" aria-label="Fechar">
+        <button type="button" class="icon-btn" data-close="poe-dialog" aria-label="Fechar e voltar à bancada" title="Voltar à bancada">
           ×
         </button>
       </div>
@@ -1593,12 +1593,15 @@
             max="500"
             value="1"
             required /></label
-        ><button class="primary-btn">Gotejar e observar</button>
+        ><div class="dialog-actions">
+          <button type="submit" class="primary-btn">Gotejar e observar</button>
+        </div>
       </form>
       <form id="poe-resultado" hidden>
-        <div id="poe-comparacao"></div>
+        <div id="poe-comparacao" aria-live="polite"></div>
+        <p class="field-hint" id="poe-orientacao">Observe as mudanças na bancada e consulte os instrumentos em Ver. A previsão continuará aqui para você retomar a comparação e registrar sua explicação.</p>
         <label class="field"
-          >Explicação<textarea
+          >Explicação após observar<textarea
             id="poe-explicacao"
             rows="4"
             maxlength="6000"
@@ -1606,7 +1609,11 @@
         ><label class="check-row"
           ><input id="poe-registrar" type="checkbox" />Registrar no
           Caderno</label
-        ><button class="primary-btn">Concluir</button>
+        ><div class="dialog-actions">
+          <button type="button" id="poe-observar" class="secondary-btn" data-close="poe-dialog">Observar na bancada</button>
+          <button type="button" id="poe-nova" class="quiet-btn" title="Descartar a previsão pendente e começar outra">Nova previsão</button>
+          <button type="submit" class="primary-btn">Concluir</button>
+        </div>
       </form>
     </dialog>
 
