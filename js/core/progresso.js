@@ -75,13 +75,15 @@ SIAB.notaCompacta = (tabela) =>
 
 // Fachada para os consumidores históricos; não mantém sistema de pontuação.
 SIAB.progresso = (() => {
-  const dados = SIAB.migrarDados();
+  let dados = { schema: 2, missoes: {}, temas: {}, caderno: [] };
+  const iniciar = () => { dados = SIAB.migrarDados(); return dados; };
   const salvar = () => SIAB.persistencia.salvar("siab_investigacao_v2", dados);
   const id = () =>
     globalThis.crypto?.randomUUID?.() ||
     `${Date.now()}-${Math.random().toString(36).slice(2)}`;
   return {
-    dados,
+    get dados() { return dados; },
+    iniciar,
     salvar,
     missao: (chave) => dados.missoes[chave] || null,
     concluirMissao(chave, respostas) {
