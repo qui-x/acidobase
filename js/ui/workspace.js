@@ -242,7 +242,10 @@ SIAB.workspace = (() => {
       null;
     if (state.activeTool !== selected?.id) {
       state.activeTool = selected?.id || null;
-      state.presentation = presentations[state.activeTool] || "standard";
+      // A expansão é uma escolha do usuário, independente da visualização.
+      // As dimensões automáticas só se aplicam quando não está expandido.
+      if (state.presentation !== "fullscreen")
+        state.presentation = presentations[state.activeTool] || "standard";
     }
     if (!groups.length && state.source !== "dados") state.right = "collapsed";
     const dataAllowed =
@@ -573,8 +576,9 @@ SIAB.workspace = (() => {
       inner.classList.add("dock-scroll");
       inner.id = `dock-${side}-content`;
     }
-    $("close-controls").className = "secondary-btn dock-close";
-    $("close-controls").textContent = "Fechar";
+    $("close-controls").className = "secondary-btn dock-close dock-icon-close";
+    $("close-controls").innerHTML = icon("close");
+    $("close-controls").setAttribute("title", "Fechar Montagem (Esc)");
     $("close-controls").setAttribute("aria-label", "Fechar Montagem");
     $("close-controls").setAttribute("aria-controls", "controls");
     const header = $("ver-panel").querySelector(".dock-header");
@@ -595,10 +599,11 @@ SIAB.workspace = (() => {
       ) +
         button(
           "dock-close-right",
-          "Fechar",
-          'aria-label="Fechar investigação" aria-controls="ver-panel"',
+          icon("close"),
+          'aria-label="Fechar painel Ver" title="Fechar painel Ver (Esc)" aria-controls="ver-panel"',
         ),
     );
+    $("dock-close-right").classList.add("dock-icon-close");
     nodes.expand = $("dock-expand");
     nodes.leftTabs = create("nav", "dock-left-tabs", "dock-tabs");
     nodes.leftTabs.setAttribute("aria-label", "Preparação da bancada");
