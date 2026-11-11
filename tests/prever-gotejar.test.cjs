@@ -52,6 +52,7 @@ test("Prever → gotejar → observar → medir → retomar → concluir sem got
       // nunca pode bloquear o retorno à observação científica.
       await page.locator("#poe-explicacao").evaluate(el => { el.required=true; });
       await page.locator("#poe-observar").click();
+      assert.match(await page.locator("#poe-btn").innerText(), /Retomar previsão/);
       assert.equal(await page.locator("#poe-dialog").evaluate(el=>el.open), false,
         "Observar na bancada não fechou o diálogo");
       await page.locator("#workspace-ver").click();
@@ -74,6 +75,7 @@ test("Prever → gotejar → observar → medir → retomar → concluir sem got
       await page.locator('#poe-resultado button[type="submit"]').click();
       assert.equal(await page.locator("#poe-dialog").evaluate(el=>el.open),false,
         "Concluir não fechou o diálogo");
+      assert.match(await page.locator("#poe-btn").innerText(), /Prever/);
       await page.locator("#poe-btn").click();
       assert.equal(await page.locator("#poe-form").isVisible(),true,
         "A previsão concluída permaneceu pendente");
