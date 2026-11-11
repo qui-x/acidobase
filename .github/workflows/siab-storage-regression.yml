@@ -1,0 +1,36 @@
+name: SIAB - armazenamento e historico sem perdas
+
+on:
+  push:
+    branches:
+      - fix/siab-armazenamento-historico-compacto-20261111
+      - acidosebases1.0.0
+      - main
+    paths:
+      - js/core/persistencia.js
+      - tests/persistencia-compacta.test.cjs
+      - tests/persistencia-browser.test.cjs
+      - .github/workflows/siab-storage-regression.yml
+  pull_request:
+    branches: [acidosebases1.0.0, main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  codec:
+    name: Integridade e simulacao de quota
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Conferir sintaxe
+        run: |
+          node --check js/core/persistencia.js
+          node --check tests/persistencia-compacta.test.cjs
+      - name: Validar restauracao, crescimento e falhas de quota
+        run: node --test tests/persistencia-compacta.test.cjs
