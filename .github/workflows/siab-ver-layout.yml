@@ -10,6 +10,9 @@ on:
     paths:
       - .github/workflows/siab-ver-layout.yml
       - css/workspace.css
+      - css/stylesiab.css
+      - index.html
+      - js/telas/bancada.js
       - js/ui/workspace.js
       - js/ui/icons.js
       - js/ui/render.js
