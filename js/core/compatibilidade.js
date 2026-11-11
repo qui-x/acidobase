@@ -71,6 +71,8 @@
   var concluido = false;
   var falhou = false;
   var detalhes = [];
+  var aguardandoInicializacao = false;
+  var temporizadorAbertura = null;
   function mostrarFalha() {
     if (!document.body || document.getElementById("falha-abertura")) return;
     var abertura = document.getElementById("abertura");
@@ -127,11 +129,30 @@
     true,
   );
   window.addEventListener("load", function () {
-    if (!concluido || falhou) mostrarFalha();
+    // A leitura do IndexedDB é assíncrona. O load pode acontecer antes de
+    // concluir a hidratação de dados e o roteamento inicial.
+    if ((!concluido && !aguardandoInicializacao) || falhou) mostrarFalha();
   });
 
   window.SIABCompat = {
     atualizarOpcoes: atualizarOpcoes,
+    adiarConclusao: function () {
+      aguardandoInicializacao = true;
+      if (temporizadorAbertura) clearTimeout(temporizadorAbertura);
+      temporizadorAbertura = setTimeout(function () {
+        if (!concluido) {
+          detalhes.push("inicialização excedeu 90 segundos");
+          mostrarFalha();
+        }
+      }, 90000);
+    },
+    falhar: function (erro) {
+      falhou = true;
+      aguardandoInicializacao = false;
+      if (temporizadorAbertura) clearTimeout(temporizadorAbertura);
+      detalhes.push("falha na inicialização: " + String(erro || "desconhecida"));
+      mostrarFalha();
+    },
     prepararDialogos: function () {
       var dialogos = document.querySelectorAll("dialog");
       for (var i = 0; i < dialogos.length; i++) {
@@ -157,6 +178,8 @@
       }
     },
     concluir: function () {
+      aguardandoInicializacao = false;
+      if (temporizadorAbertura) clearTimeout(temporizadorAbertura);
       atualizarOpcoes();
       concluido = Boolean(
         window.SIAB && window.SIAB.rota && window.SIAB.rota.nome,

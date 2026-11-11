@@ -24,6 +24,10 @@ on:
     branches: [acidosebases1.0.0, main]
   workflow_dispatch:
 
+concurrency:
+  group: siab-layout-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 

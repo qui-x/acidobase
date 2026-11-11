@@ -29,7 +29,7 @@
     <script src="js/core/plataforma.js?v=1.0.0+20261012"></script>
     <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0+20261012" />
     <link rel="stylesheet" href="css/mobile-study.css?v=1.0.0+20261012" />
-    <script src="js/core/compatibilidade.js?v=1.0.0+20261012"></script>
+    <script src="js/core/compatibilidade.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="a11y.js?v=1.0.0+20261012"></script>
     <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
     <script>
@@ -1989,6 +1989,12 @@
           ><button class="drawer-link quiet-btn" id="about-btn">
             <span data-app-icon="about"></span>Sobre o SIAB
           </button>
+          <button class="drawer-link quiet-btn" type="button" id="drawer-storage-protect" aria-describedby="drawer-storage-status">
+            <span data-app-icon="data"></span>Proteger dados offline
+          </button>
+          <p class="drawer-versao" id="drawer-storage-status" role="status">
+            Dados experimentais: meta de 100 MiB, conforme a quota do navegador.
+          </p>
           <p class="drawer-versao">Versão <span id="drawer-versao"></span></p>
           <p class="drawer-modo" id="drawer-modo" hidden></p>
         </section>
@@ -2393,9 +2399,9 @@
     <script src="js/core/estado.js?v=1.0.0+20261012"></script>
     <script src="js/ui/abertura.js?v=1.0.0+20261027-original-restaurado"></script>
     <script src="js/core/loja.js?v=1.0.0+20261012"></script>
-    <script src="js/core/persistencia.js?v=1.0.0+20261012"></script>
+    <script src="js/core/persistencia.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="js/core/migracoes.js?v=1.0.0+20261012"></script>
-    <script src="js/core/progresso.js?v=1.0.0+20261012"></script>
+    <script src="js/core/progresso.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="js/core/roteador.js?v=1.0.0+20261012"></script>
     <script src="js/data/missoes.js?v=1.0.0+20261012"></script>
     <script src="js/data/temas.js?v=1.0.0+20261012"></script>
@@ -2420,7 +2426,7 @@
     <script src="js/ui/render.js?v=1.0.0+20261012"></script>
     <script src="js/simulation/medicoes.js?v=1.0.0+20261012"></script>
     <script src="js/ui/ver-investigacao.js?v=1.0.0+20261012"></script>
-    <script src="js/ui/gaveta.js?v=1.0.0+20261012"></script>
+    <script src="js/ui/gaveta.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="js/ui/workspace.js?v=1.0.0+20261012"></script>
     <script src="js/ui/trilho.js?v=1.0.0+20261012"></script>
     <script src="js/ui/tour.js?v=1.0.0+20261012"></script>
@@ -2444,10 +2450,8 @@
     <script src="js/ui/activity-ui.js?v=1.0.0+20261012"></script>
     <script src="js/ui/abrir-atividade.js?v=1.0.0+20261012"></script>
     <script src="js/init/integracao.js?v=1.0.0+20261012"></script>
-    <script src="js/init/app.js?v=1.0.0+20261012"></script>
+    <script src="js/init/app.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="js/ui/mobile-study.js?v=1.0.0+20261012"></script>
-    <script>
-      if (window.SIABCompat) window.SIABCompat.concluir();
-    </script>
+    <!-- O verificador de abertura é concluído pelo bootstrap assíncrono. -->
   </body>
 </html>

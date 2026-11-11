@@ -1,6 +1,11 @@
 "use strict";
 /* Inicialização: liga os módulos, os diálogos e o roteador. */
-(() => {
+(async () => {
+  SIABCompat.adiarConclusao();
+  // Hidrata o IndexedDB antes de criar Caderno, relatórios, atividades e bancada.
+  // Caso indisponível, a persistência ativa o fallback local explicitamente.
+  await SIAB.persistencia.iniciar();
+  SIAB.progresso.iniciar();
   const $ = SIAB.$;
   SIABCompat.prepararDialogos();
 
@@ -60,4 +65,8 @@
 
   window.addEventListener("hashchange", SIAB.rotear);
   SIAB.rotear();
-})();
+  SIABCompat.concluir();
+})().catch((erro) => {
+  console.error("Falha na inicialização do SIAB", erro);
+  SIABCompat.falhar(erro?.message || erro);
+});
