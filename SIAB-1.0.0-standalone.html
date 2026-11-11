@@ -5150,6 +5150,248 @@ button:disabled {
   flex: none;
 }
 
+/* RC.6 — Bancada desktop: nenhuma ação mobile participa do dimensionamento.
+   O controle Doses era um terceiro item do grid e fazia os atalhos ocuparem
+   duas alturas de linha, mesmo sem conteúdo adicional. */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace #mobile-doses-toggle {
+    display: none !important;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-barra {
+    align-items: center;
+    gap: 6px;
+    max-width: 1120px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-actions {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 6px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts {
+    align-items: center;
+    align-self: center;
+    flex: 0 1 auto;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions
+    :is(.dose-actions button, .dose-shortcuts button, .context-action-bar button) {
+    box-sizing: border-box;
+    min-height: 44px;
+    height: 44px;
+    padding: 5px 10px;
+    white-space: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    line-height: 1.15;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions
+    :is(.dose-barra, .context-action-bar) .siab-icon {
+    flex: none;
+    width: 17px;
+    height: 17px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .context-action-bar {
+    margin-top: 5px;
+    gap: 6px;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-info {
+    margin-bottom: 4px;
+  }
+}
+@media screen and (min-width: 1400px) {
+  /* Ações principais e ações contextuais passam a usar a mesma faixa. */
+  :root[data-workspace="rc3"] .workspace:not(.vazia) .workspace-actions {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 12px;
+    row-gap: 3px;
+    align-items: center;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-info {
+    grid-column: 1 / -1;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-barra {
+    grid-column: 1;
+    justify-content: flex-end;
+    flex-wrap: nowrap;
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .context-action-bar {
+    grid-column: 2;
+    margin: 0;
+    flex-wrap: nowrap;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts {
+    min-width: 0;
+    flex-wrap: nowrap;
+  }
+}
+
+/* Expandir é uma apresentação de todo o painel, com a navegação fixa.
+   A rolagem não é eliminada artificialmente: fica disponível apenas quando
+   houver excesso real (zoom de fonte, pouco espaço ou dados extensos). */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-source="ver"] #dock-right-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    min-height: 0;
+    overflow: hidden;
+    padding: clamp(10px, 1.8vh, 18px) clamp(14px, 3vw, 48px);
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-source="ver"] #ver-tabs {
+    flex: none;
+    margin-bottom: 8px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-source="ver"] #ver-conteudo {
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    padding-inline: 2px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] #ver-conteudo {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    row-gap: 8px;
+    overflow: hidden;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"]
+    #ver-conteudo > .field-hint {
+    margin: 0;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa {
+    display: grid;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    grid-template-columns: minmax(0, 1.7fr) minmax(255px, .8fr);
+    grid-template-rows: auto minmax(0, 1fr);
+    column-gap: clamp(12px, 2vw, 28px);
+    row-gap: 8px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa-barra {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    margin-bottom: 0;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa-svg {
+    grid-column: 1;
+    grid-row: 2;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa-info {
+    grid-column: 2;
+    grid-row: 2;
+    min-width: 0;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="equacao"] .equacao {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+    align-items: start;
+    gap: 12px;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"] #ver-conteudo
+    :is(.grafico-medido, .grafico-svg) {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    max-height: min(61dvh, 600px);
+    margin-inline: auto;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="ph"] #ver-conteudo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 290px), 1fr));
+    gap: 12px 22px;
+    align-content: start;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="ph"] #ver-conteudo
+    > .instrument-reading {
+    grid-column: 1 / -1;
+  }
+}
+@media screen and (min-width: 901px) and (max-width: 1160px) {
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="particulas"] .lupa {
+    grid-template-columns: minmax(0, 1.25fr) minmax(245px, 1fr);
+  }
+}
+
+/* Gráficos medidos: a altura é o espaço RESTANTE do painel, não uma
+   porcentagem da viewport (que ignorava cabeçalho e abas). */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="grafico"] #ver-conteudo {
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    gap: 8px;
+    overflow: hidden;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="derivada"] #ver-conteudo {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto auto;
+    gap: 8px;
+    overflow: hidden;
+  }
+  :root[data-workspace="rc3"] .workspace
+    :is(.dock-right[data-presentation="fullscreen"][data-tool="grafico"],
+        .dock-right[data-presentation="fullscreen"][data-tool="derivada"])
+    #ver-conteudo > .grafico-medido {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+  :root[data-workspace="rc3"] .workspace
+    :is(.dock-right[data-presentation="fullscreen"][data-tool="grafico"],
+        .dock-right[data-presentation="fullscreen"][data-tool="derivada"])
+    #ver-conteudo > .field-hint {
+    margin: 0;
+  }
+  :root[data-workspace="rc3"] .workspace
+    .dock-right[data-presentation="fullscreen"][data-tool="derivada"]
+    #ver-conteudo > details[open] {
+    min-height: 0;
+    max-height: 25dvh;
+    overflow: auto;
+  }
+}
+
 </style>
     <style>
 /* RC.4 — consulta integrada aos tokens e controles do SIAB. */
@@ -10240,6 +10482,10 @@ SIAB.icons = (() => {
     next: "M6 12h11M11.5 5.5 18 12l-6.5 6.5",
     previous: "M18 12H7M12.5 5.5 6 12l6.5 6.5",
     history: "M4 8a9 9 0 1 1-1 7M3 3v6h6M12 7v6l4 2",
+    undo: "M9 14l-5-5 5-5M4 9h10a6 6 0 0 1 0 12h-3",
+    drop: "M12 2C9 7 5 11 5 15a7 7 0 0 0 14 0c0-4-4-8-7-13Z",
+    drops: "M9 3C7 6 4 9 4 12a5 5 0 0 0 10 0c0-3-3-6-5-9ZM18 11c-1 2-3 4-3 6a4 4 0 0 0 8 0c0-2-3-4-5-6Z",
+    predict: "M5 3h10l4 4v14H5ZM15 3v5h4M8 13l2 2 5-5M8 19h8",
     table: "M4 4h16v16H4ZM4 9h16M4 14h16M10 4v16",
     prepare:
       "M4 3h7M5 3v5l-3 7a3 3 0 0 0 3 4h5a3 3 0 0 0 3-4l-3-7V3M4 13h7M19 9c-1 2-3 4-3 6a3 3 0 0 0 6 0c0-2-2-4-3-6Z",
@@ -20489,11 +20735,13 @@ SIAB.lupa = (() => {
       <div class="lupa-barra"><button type="button" class="lupa-escala" data-acao="lupa-escala" aria-pressed="${log}">Escala logarítmica</button></div>
       ${destacada ? `<style>.lupa-svg.com-destaque .particula[data-f="${SIAB.escape(destacada)}"] { opacity: 1; }</style>` : ""}
       <svg class="lupa-svg${destacada ? " com-destaque" : ""}" viewBox="0 0 320 180" role="img" aria-label="Partículas dissolvidas nesta escala: ${SIAB.escape(descricao)}.${destacada ? ` Em destaque: ${SIAB.escape(destacada)}.` : ""}"${par ? ` data-par="${SIAB.escape(JSON.stringify(par))}"` : ""}>${desenho.join("")}<g class="lupa-eventos"></g></svg>
+      <div class="lupa-info">
       ${destacada ? `<p class="lupa-destacando">Em destaque: <strong>${SIAB.escape(destacada)}</strong>. Toque de novo no nome para ver todas.</p>` : ""}
       <p class="lupa-evento" aria-hidden="true"></p>
       ${destaque}
       <ul class="lupa-legenda">${legenda}</ul>
       <p class="field-hint">${escala} Contorno vazado: íon espectador. Toque num nome para destacar suas partículas. Moléculas de água não aparecem: há cerca de 55,5 mol/L delas, muito mais que o soluto.</p>
+      </div>
     </div>`;
   }
 
@@ -22425,6 +22673,14 @@ SIAB.resumoConteudo = (t) => {
   return `${conteudo} · ${SIAB.volumeTexto(t.initialVolume, cap)} mL iniciais`;
 };
 
+// Rótulos são preservados; o SVG apenas reforça visualmente a ação.
+// Este auxiliar evita perder o ícone nas atualizações científicas da bancada.
+const rotularDose = (botao, nome, icone) => {
+  if (botao.dataset.doseRotulo === nome && botao.querySelector(".siab-icon"))
+    return;
+  botao.innerHTML = SIAB.icons.svg(icone) + `<span>${SIAB.escape(nome)}</span>`;
+  botao.dataset.doseRotulo = nome;
+};
 SIAB.render = (syncForm = false) => {
   const $ = SIAB.$,
     s = SIAB.state,
@@ -22520,9 +22776,11 @@ SIAB.render = (syncForm = false) => {
   const nivelDose = cfg.modo === "missao" ? cfg.nivel : s.level;
   $("dose-summary").textContent =
     `${r.drops} ${r.drops === 1 ? "gota" : "gotas"} · ${SIAB.format(r.added)} mL${nivelDose !== "explorar" ? ` · gota de ${SIAB.format(t.dropVolume)} mL` : ""}${t.group ? ` · em cada um dos ${targets.length} tubos vinculados` : ""}`;
-  $("drop-btn").textContent = t.group
-    ? "+ Segure: gotas em cada tubo"
-    : "+ Segure para gotejar";
+  rotularDose(
+    $("drop-btn"),
+    t.group ? "Segure: gotas em cada tubo" : "Segure para gotejar",
+    "drop",
+  );
   $("drop-btn").disabled = cheio;
   $("drop5-btn").disabled = cheio;
   $("drop1ml-btn").disabled = cheio;
@@ -22530,7 +22788,7 @@ SIAB.render = (syncForm = false) => {
   const [atalho1, atalho2] = escala.atalhos;
   const rotuloMl = (ml) => `+${SIAB.format(ml, 0)} mL`;
   $("drop1ml-btn").dataset.ml = atalho1;
-  $("drop1ml-btn").textContent = rotuloMl(atalho1);
+  rotularDose($("drop1ml-btn"), rotuloMl(atalho1), "drops");
   $("poe-btn").disabled = cheio;
   $("dose-shortcuts").hidden = !pode("atalhos") && !pode("poe");
   $("drop5-btn").hidden = !pode("atalhos");
@@ -22545,7 +22803,7 @@ SIAB.render = (syncForm = false) => {
   $("drop5ml-btn").disabled = cheio;
   if (atalho2) {
     $("drop5ml-btn").dataset.ml = atalho2;
-    $("drop5ml-btn").textContent = rotuloMl(atalho2);
+    rotularDose($("drop5ml-btn"), rotuloMl(atalho2), "drops");
   }
   $("poe-btn").hidden = !pode("poe");
   const ultima = s.history.at(-1);
@@ -23812,13 +24070,17 @@ SIAB.workspace = (() => {
         S.instrumentos.permitido,
       );
     const quick = $("workspace-quick-measure");
-    quick.textContent = S.instrumentos.permitido("phmetro")
+    const quickLabel = S.instrumentos.permitido("phmetro")
       ? "Medir pH"
       : S.instrumentos.permitido("fita")
         ? "Mergulhar fita"
         : S.instrumentos.permitido("temperatura")
           ? "Medir temperatura"
           : "Medir condução";
+    if (quick.dataset.label !== quickLabel) {
+      quick.dataset.label = quickLabel;
+      quick.innerHTML = icon("meter") + `<span>${quickLabel}</span>`;
+    }
     $("dose-area").classList.toggle(
       "dock-content-hidden",
       S.state.view === "overview",
@@ -23889,6 +24151,7 @@ SIAB.workspace = (() => {
     $("ver-panel").hidden =
       !S.verFamiliasDisponiveis().length && state.source !== "dados";
     $("ver-panel").dataset.presentation = state.presentation;
+    $("ver-panel").dataset.tool = state.activeTool || "";
     $("ver-panel").dataset.level = state.level;
     $("ver-panel").dataset.source = state.source;
     nodes.data.hidden = state.level !== "data";
@@ -24216,9 +24479,18 @@ SIAB.workspace = (() => {
     actions.setAttribute("role", "group");
     actions.setAttribute("aria-label", "Ações experimentais");
     actions.append($("agitar-btn"));
+    $("undo-btn").innerHTML = icon("undo") + "<span>Desfazer</span>";
+    for (const [id, glyph] of [
+      ["meia-gota-btn", "drop"],
+      ["drop5-btn", "drops"],
+      ["poe-btn", "predict"],
+    ]) {
+      const el = $(id);
+      if (!el.querySelector(".siab-icon")) el.insertAdjacentHTML("afterbegin", icon(glyph));
+    }
     actions.insertAdjacentHTML(
       "beforeend",
-      button("workspace-quick-measure", "Medir pH"),
+      button("workspace-quick-measure", icon("meter") + "<span>Medir pH</span>"),
     );
     $("dose-area").append(actions);
     document.querySelector(".tube-strip").before($("dose-area"));
