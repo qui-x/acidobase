@@ -1076,3 +1076,21 @@
     min-height: 44px;
   }
 }
+
+/* Controles semânticos: fechar com X, alvo de toque acessível. */
+:root[data-workspace="rc3"] .workspace .dock-header .dock-icon-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+}
+:root[data-workspace="rc3"] .workspace .dock-header .dock-icon-close .siab-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
