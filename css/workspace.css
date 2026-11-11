@@ -1146,34 +1146,76 @@
     margin-bottom: 4px;
   }
 }
-@media screen and (min-width: 1400px) {
-  /* Ações principais e ações contextuais passam a usar a mesma faixa. */
+/* Os grupos de ações são um conjunto visual centralizado no espaço útil.
+   Em larguras intermediárias, a quebra ocorre por grupo; em telas grandes,
+   os dois grupos ficam na mesma linha, sem a coluna flexível que os empurrava
+   para a direita. Os painéis laterais ainda podem reservar seus insets. */
+@media screen and (min-width: 901px) {
+  :root[data-workspace="rc3"] .workspace:not(.vazia) .workspace-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-info {
+    justify-content: center;
+    width: 100%;
+    min-width: 0;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-barra {
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+    max-width: 1120px;
+    margin-inline: auto;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts {
+    min-width: 0;
+    max-width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts > button {
+    flex: 0 0 auto;
+  }
+  :root[data-workspace="rc3"] .workspace .workspace-actions .context-action-bar {
+    justify-content: center;
+    max-width: 100%;
+  }
+}
+@media screen and (min-width: 1500px) {
+  /* Largura suficiente: barra e ações de investigação na mesma faixa.
+     Ambas as colunas têm largura de conteúdo e o GRID INTEIRO é centralizado. */
   :root[data-workspace="rc3"] .workspace:not(.vazia) .workspace-actions {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-columns: max-content max-content;
+    justify-content: center;
+    align-items: center;
     column-gap: 12px;
     row-gap: 3px;
-    align-items: center;
   }
   :root[data-workspace="rc3"] .workspace .workspace-actions .dose-info {
     grid-column: 1 / -1;
+    grid-row: 1;
   }
   :root[data-workspace="rc3"] .workspace .workspace-actions .dose-barra {
     grid-column: 1;
-    justify-content: flex-end;
+    grid-row: 2;
+    justify-content: center;
     flex-wrap: nowrap;
-    min-width: 0;
-    width: 100%;
+    width: auto;
     max-width: none;
     margin: 0;
   }
   :root[data-workspace="rc3"] .workspace .workspace-actions .context-action-bar {
     grid-column: 2;
+    grid-row: 2;
     margin: 0;
     flex-wrap: nowrap;
   }
   :root[data-workspace="rc3"] .workspace .workspace-actions .dose-shortcuts {
-    min-width: 0;
+    flex: 0 0 auto;
     flex-wrap: nowrap;
   }
 }
