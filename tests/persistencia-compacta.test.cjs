@@ -149,7 +149,7 @@ test("mensagens diferenciam quota cheia de bloqueio e não repetem alertas", () 
 
   const blocked = harness(Infinity, "blocked");
   assert.equal(blocked.p.salvar(key, current), false);
-  assert.match(blocked.avisos[0], /bloqueou o armazenamento/i);
+  assert.match(blocked.avisos[0], /armazenamento do navegador está bloqueado/i);
 });
 
 test("nunca comprime nem altera chaves alheias ao armazenamento experimental", () => {
