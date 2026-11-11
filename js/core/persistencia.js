@@ -159,10 +159,46 @@ SIAB.persistencia = (() => {
       return memoria.get(chave) ?? padrao;
     }
   }
+  // Recupera espaço de sessões antigas quando uma gravação encontra a quota.
+  // Cada setItem substitui atomicamente APENAS a chave existente por uma
+  // representação reversível menor. Falhas individuais não apagam registros.
+  function otimizarLegados(excluir) {
+    let liberados = 0;
+    let keys;
+    try {
+      keys = Array.from({ length: localStorage.length },
+        (_, i) => localStorage.key(i));
+    } catch (_) { return 0; }
+    for (const chave of keys) {
+      if (!chave || chave === excluir || !chaveBancada(chave)) continue;
+      try {
+        const antiga = localStorage.getItem(chave);
+        if (!antiga || antiga.includes('"__siabHistoricoDeltaV1"')) continue;
+        const atual = decodificar(chave, JSON.parse(antiga));
+        const menor = JSON.stringify(codificar(chave, atual));
+        if (menor && menor.length < antiga.length) {
+          localStorage.setItem(chave, menor);
+          liberados += antiga.length - menor.length;
+        }
+      } catch (_) {
+        // Preserva a chave antiga, inclusive dados legados não reconhecidos.
+      }
+    }
+    return liberados;
+  }
+  const ehQuota = (erro) => erro?.name === "QuotaExceededError" ||
+    erro?.code === 22 || erro?.code === 1014;
   function salvar(chave, valor) {
     memoria.set(chave, valor);
     try {
-      localStorage.setItem(chave, JSON.stringify(codificar(chave, valor)));
+      const conteudo = JSON.stringify(codificar(chave, valor));
+      try {
+        localStorage.setItem(chave, conteudo);
+      } catch (erro) {
+        if (!ehQuota(erro) || otimizarLegados(chave) <= 0) throw erro;
+        // Repetir uma única vez, depois da migração não destrutiva.
+        localStorage.setItem(chave, conteudo);
+      }
       pendentes.delete(chave);
       avisos.delete(chave);
       return true;
@@ -170,8 +206,7 @@ SIAB.persistencia = (() => {
       pendentes.add(chave);
       if (!avisos.has(chave)) {
         avisos.add(chave);
-        const quota = erro?.name === "QuotaExceededError" ||
-          erro?.code === 22 || erro?.code === 1014;
+        const quota = ehQuota(erro);
         const bloqueado = erro?.name === "SecurityError";
         SIAB.notice(quota
           ? "O armazenamento local atingiu seu limite. Exporte seus registros antes de fechar; nada será apagado automaticamente."
