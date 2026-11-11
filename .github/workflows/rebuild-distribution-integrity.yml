@@ -25,6 +25,12 @@ on:
       - "favicon-light.svg"
   workflow_dispatch:
 
+# Evita que duas reconstruções tentem atualizar os mesmos checksums
+# e produzam rejeições de push (non-fast-forward).
+concurrency:
+  group: siab-distribution-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
