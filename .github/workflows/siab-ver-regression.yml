@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - fix/siab-ver-expansao-persistente-20261110
+      - acidosebases1.0.0
+      - main
     paths:
       - js/ui/workspace.js
       - css/workspace.css
