@@ -34,3 +34,34 @@ jobs:
           node --check tests/persistencia-compacta.test.cjs
       - name: Validar restauracao, crescimento e falhas de quota
         run: node --test tests/persistencia-compacta.test.cjs
+
+  browsers:
+    name: Armazenamento / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Servir arquivos do SIAB
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/siab-storage-http.log 2>&1 &
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/siab-storage-http.log
+          exit 1
+      - name: Verificar reload e desfazer
+        env:
+          SIAB_BROWSER: ${{ matrix.browser }}
+          SIAB_TEST_URL: http://127.0.0.1:8765
+        run: node --test tests/persistencia-browser.test.cjs
