@@ -38,6 +38,14 @@ SIAB.resumoConteudo = (t) => {
   return `${conteudo} · ${SIAB.volumeTexto(t.initialVolume, cap)} mL iniciais`;
 };
 
+// Rótulos são preservados; o SVG apenas reforça visualmente a ação.
+// Este auxiliar evita perder o ícone nas atualizações científicas da bancada.
+const rotularDose = (botao, nome, icone) => {
+  if (botao.dataset.doseRotulo === nome && botao.querySelector(".siab-icon"))
+    return;
+  botao.innerHTML = SIAB.icons.svg(icone) + `<span>${SIAB.escape(nome)}</span>`;
+  botao.dataset.doseRotulo = nome;
+};
 SIAB.render = (syncForm = false) => {
   const $ = SIAB.$,
     s = SIAB.state,
@@ -133,9 +141,11 @@ SIAB.render = (syncForm = false) => {
   const nivelDose = cfg.modo === "missao" ? cfg.nivel : s.level;
   $("dose-summary").textContent =
     `${r.drops} ${r.drops === 1 ? "gota" : "gotas"} · ${SIAB.format(r.added)} mL${nivelDose !== "explorar" ? ` · gota de ${SIAB.format(t.dropVolume)} mL` : ""}${t.group ? ` · em cada um dos ${targets.length} tubos vinculados` : ""}`;
-  $("drop-btn").textContent = t.group
-    ? "+ Segure: gotas em cada tubo"
-    : "+ Segure para gotejar";
+  rotularDose(
+    $("drop-btn"),
+    t.group ? "Segure: gotas em cada tubo" : "Segure para gotejar",
+    "drop",
+  );
   $("drop-btn").disabled = cheio;
   $("drop5-btn").disabled = cheio;
   $("drop1ml-btn").disabled = cheio;
@@ -143,7 +153,7 @@ SIAB.render = (syncForm = false) => {
   const [atalho1, atalho2] = escala.atalhos;
   const rotuloMl = (ml) => `+${SIAB.format(ml, 0)} mL`;
   $("drop1ml-btn").dataset.ml = atalho1;
-  $("drop1ml-btn").textContent = rotuloMl(atalho1);
+  rotularDose($("drop1ml-btn"), rotuloMl(atalho1), "drops");
   $("poe-btn").disabled = cheio;
   $("dose-shortcuts").hidden = !pode("atalhos") && !pode("poe");
   $("drop5-btn").hidden = !pode("atalhos");
@@ -158,7 +168,7 @@ SIAB.render = (syncForm = false) => {
   $("drop5ml-btn").disabled = cheio;
   if (atalho2) {
     $("drop5ml-btn").dataset.ml = atalho2;
-    $("drop5ml-btn").textContent = rotuloMl(atalho2);
+    rotularDose($("drop5ml-btn"), rotuloMl(atalho2), "drops");
   }
   $("poe-btn").hidden = !pode("poe");
   const ultima = s.history.at(-1);
