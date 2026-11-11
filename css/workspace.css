@@ -1310,8 +1310,9 @@
     overflow: hidden;
   }
   :root[data-workspace="rc3"] .workspace
-    .dock-right[data-presentation="fullscreen"]
-    :is([data-tool="grafico"], [data-tool="derivada"]) #ver-conteudo > .grafico-medido {
+    :is(.dock-right[data-presentation="fullscreen"][data-tool="grafico"],
+        .dock-right[data-presentation="fullscreen"][data-tool="derivada"])
+    #ver-conteudo > .grafico-medido {
     display: block;
     width: 100%;
     height: 100%;
@@ -1322,8 +1323,9 @@
     object-fit: contain;
   }
   :root[data-workspace="rc3"] .workspace
-    .dock-right[data-presentation="fullscreen"]
-    :is([data-tool="grafico"], [data-tool="derivada"]) #ver-conteudo > .field-hint {
+    :is(.dock-right[data-presentation="fullscreen"][data-tool="grafico"],
+        .dock-right[data-presentation="fullscreen"][data-tool="derivada"])
+    #ver-conteudo > .field-hint {
     margin: 0;
   }
   :root[data-workspace="rc3"] .workspace
