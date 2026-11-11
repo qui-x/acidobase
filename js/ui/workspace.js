@@ -674,8 +674,8 @@ SIAB.workspace = (() => {
     actions.setAttribute("role", "group");
     actions.setAttribute("aria-label", "Ações experimentais");
     actions.append($("agitar-btn"));
+    $("undo-btn").innerHTML = icon("undo") + "<span>Desfazer</span>";
     for (const [id, glyph] of [
-      ["undo-btn", "undo"],
       ["meia-gota-btn", "drop"],
       ["drop5-btn", "drops"],
       ["poe-btn", "predict"],
