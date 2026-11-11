@@ -90,9 +90,19 @@ for (const viewport of [
       const page = await setup(browser, viewport);
       try {
         await page.locator("#workspace-ver").click();
+        // Dois registros em volumes distintos obrigam a desenhar SVGs reais,
+        // em vez de apenas conferir o aviso "faltam medições".
+        const readings = await page.evaluate(() => {
+          const S = window.SIAB, t = S.current();
+          S.instrumentos.medir(t, "fita", "pontual");
+          S.bancada.gotejar(1);
+          S.instrumentos.medir(t, "fita", "pontual");
+          return S.instrumentos.raw(t).filter((m) => m.tecnica === "fita").length;
+        });
+        assert.ok(readings >= 2, "O teste precisa de duas medições de pH reais");
         await select(page, "particulas");
         await page.locator("#dock-expand").click();
-        for (const view of ["particulas", "equacao", "ph", "grafico", "distribuicao", "especies", "tabela"]) {
+        for (const view of ["particulas", "equacao", "ph", "grafico", "derivada", "distribuicao", "especies", "tabela"]) {
           await select(page, view);
           const panel = await metrics(page, "#ver-panel");
           assert.ok(panel.x >= 0 && panel.x + panel.width <= viewport.width + 1,
@@ -112,6 +122,13 @@ for (const viewport of [
               "Legenda inacessível: " + JSON.stringify(info));
             assert.ok(content.scrollHeight <= content.clientHeight + 5,
               "Lupa criou rolagem na área principal expandida");
+          }
+          if (view === "grafico" || view === "derivada") {
+            assert.equal(await page.locator("#ver-conteudo .grafico-medido").count(), 1,
+              "Gráfico não foi desenhado: " + view);
+            const svg = await metrics(page, ".grafico-medido");
+            assert.ok(svg.width > 220 && svg.height > 120 && svg.height <= content.height + 4,
+              "Gráfico não coube na altura disponível: " + view + " " + JSON.stringify(svg));
           }
           if (view === "equacao")
             assert.ok(content.scrollHeight <= content.clientHeight + 4 ||
