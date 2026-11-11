@@ -92,6 +92,95 @@ dialog.fixed {
   transform: translate(0, -50%);
 }
 </style>
+    <script>
+/* Plataforma de execução do SIAB: aplicativo empacotado (Android, Windows, Linux,
+   macOS) ou navegador. Carregado ANTES de tudo, sem depender do restante.
+   - Android (Capacitor): window.Capacitor.isNativePlatform()
+   - Windows/Linux/macOS (Electron): "Electron/" no agente de usuário
+   Marca <html data-empacotado="true|false" data-plataforma="..."> para o CSS. */
+(function () {
+  "use strict";
+  var NOMES = {
+    android: "Android",
+    ios: "iOS",
+    windows: "Windows",
+    macos: "macOS",
+    linux: "Linux",
+    web: "Navegador",
+  };
+  var api = { empacotado: false, tipo: "web", nome: NOMES.web };
+
+  function detectar() {
+    var ua = navigator.userAgent || "";
+    var cap = window.Capacitor;
+    var tipo = "web";
+    var empacotado = false;
+    if (cap && typeof cap.isNativePlatform === "function" && cap.isNativePlatform()) {
+      var p = typeof cap.getPlatform === "function" ? cap.getPlatform() : "android";
+      tipo = p === "ios" ? "ios" : "android";
+      empacotado = true;
+    } else if (/Electron\//.test(ua)) {
+      empacotado = true;
+      tipo = /Windows/.test(ua)
+        ? "windows"
+        : /Mac OS X|Macintosh/.test(ua)
+          ? "macos"
+          : "linux";
+    }
+    api.empacotado = empacotado;
+    api.tipo = tipo;
+    api.nome = NOMES[tipo];
+    var raiz = document.documentElement;
+    raiz.setAttribute("data-empacotado", String(empacotado));
+    raiz.setAttribute("data-plataforma", tipo);
+  }
+
+  api.local = function () {
+    return api.empacotado ? "neste aplicativo" : "neste navegador";
+  };
+  api.deste = function () {
+    return api.empacotado ? "deste aplicativo" : "deste navegador";
+  };
+  api.descricao = function () {
+    return api.empacotado
+      ? "Aplicativo para " + api.nome
+      : "Versão para navegador";
+  };
+
+  function preencher() {
+    try {
+      if (!api.empacotado) detectar(); // a ponte nativa pode chegar um pouco depois
+      var texto = api.descricao();
+      var selo = document.getElementById("selo-app");
+      var gaveta = document.getElementById("drawer-modo");
+      var sobre = document.getElementById("about-modo");
+      if (selo) {
+        selo.textContent = api.empacotado ? "App · " + api.nome : "";
+        selo.hidden = !api.empacotado;
+      }
+      if (gaveta) {
+        gaveta.textContent = texto;
+        gaveta.hidden = false;
+      }
+      if (sobre) {
+        sobre.textContent = "Executando como: " + texto + ".";
+        sobre.hidden = false;
+      }
+      var locais = document.querySelectorAll("[data-local]");
+      for (var i = 0; i < locais.length; i++) locais[i].textContent = api.local();
+    } catch (e) {
+      /* só informação visual: nunca interrompe a abertura */
+    }
+  }
+
+  detectar();
+  window.SIABPlataforma = api;
+  if (document.readyState === "loading")
+    document.addEventListener("DOMContentLoaded", preencher);
+  else preencher();
+})();
+
+</script>
     <style>
 /* =====================================================================
    SIAB — A química das cores · estilos da versão 0.3
@@ -1355,10 +1444,10 @@ kbd { font-family: Consolas, monospace; font-size: .8rem; padding: 2px 7px; bord
   .overview-grid[data-layout] .overview-tube {
     flex: 1 1 calc((100% - (var(--overview-columns) - 1) * 12px) / var(--overview-columns));
     height: var(--overview-card-height); padding: 16px 12px 12px;
-    display: flex; flex-direction: column; gap: 10px;
+    display: flex; flex-direction: column; align-items: stretch; gap: 10px;
   }
   .overview-grid[data-layout].selecting .overview-tube[aria-pressed=true] { padding: 15px 11px 11px; }
-  .overview-grid[data-layout] .overview-visual { flex: 1 1 0; min-height: 88px; height: auto; }
+  .overview-grid[data-layout] .overview-visual { flex: 1 1 0; min-height: 88px; height: auto; align-self: stretch; width: 100%; }
   .overview-grid[data-layout] .overview-visual .tube-svg {
     position: absolute; top: 0; right: 0; bottom: 0; left: 0; inset: 0; width: 100%; height: 100%; max-height: none;
   }
@@ -1784,6 +1873,7 @@ dialog.tour + .backdrop { background: transparent; }
 
   var concluido = false;
   var falhou = false;
+  var detalhes = [];
   function mostrarFalha() {
     if (!document.body || document.getElementById("falha-abertura")) return;
     var abertura = document.getElementById("abertura");
@@ -1792,13 +1882,24 @@ dialog.tour + .backdrop { background: transparent; }
     aviso.id = "falha-abertura";
     aviso.className = "falha-abertura";
     aviso.setAttribute("role", "alert");
+    var noApp = window.SIABPlataforma && window.SIABPlataforma.empacotado;
     aviso.innerHTML =
       "<strong>Não foi possível concluir a abertura do SIAB.</strong>" +
-      "<p>Recarregue a página com internet. Se continuar, abra o endereço publicado no Safari, Chrome, Firefox ou Edge atualizado. No iPhone e iPad, atualize também o sistema e evite a prévia de arquivos ou de aplicativos de mensagens.</p>" +
+      (noApp
+        ? "<p>Feche o aplicativo e abra de novo. Se continuar, reinstale a versão mais recente do SIAB neste dispositivo.</p>"
+        : "<p>Recarregue a página com internet. Se continuar, abra o endereço publicado no Safari, Chrome, Firefox ou Edge atualizado. No iPhone e iPad, atualize também o sistema e evite a prévia de arquivos ou de aplicativos de mensagens.</p>") +
       '<button type="button" class="secondary-btn">Recarregar página</button>';
     aviso.querySelector("button").addEventListener("click", function () {
       window.location.reload();
     });
+    var motivo = document.createElement("p");
+    motivo.className = "falha-detalhe";
+    motivo.textContent =
+      "Detalhes técnicos: " +
+      (detalhes.length
+        ? detalhes.slice(0, 3).join(" | ")
+        : "o aplicativo não chegou a iniciar a rota inicial.");
+    aviso.insertBefore(motivo, aviso.querySelector("button"));
     document.body.appendChild(aviso);
   }
   window.addEventListener(
@@ -1809,8 +1910,22 @@ dialog.tour + .backdrop { background: transparent; }
       if (
         evento.target === window ||
         (evento.target && evento.target.tagName === "SCRIPT")
-      )
+      ) {
         falhou = true;
+        if (evento.target && evento.target.tagName === "SCRIPT")
+          detalhes.push("script não carregou: " + evento.target.src);
+        else
+          detalhes.push(
+            (evento.message || "erro") +
+              (evento.filename
+                ? " (" +
+                  String(evento.filename).split("/").pop() +
+                  ":" +
+                  evento.lineno +
+                  ")"
+                : ""),
+          );
+      }
     },
     true,
   );
@@ -5017,6 +5132,24 @@ button:disabled {
   }
 }
 
+/* Controles semânticos: fechar com X, alvo de toque acessível. */
+:root[data-workspace="rc3"] .workspace .dock-header .dock-icon-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 44px;
+  width: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+}
+:root[data-workspace="rc3"] .workspace .dock-header .dock-icon-close .siab-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+
 </style>
     <style>
 /* RC.4 — consulta integrada aos tokens e controles do SIAB. */
@@ -6793,6 +6926,71 @@ details[open] > summary > .disclosure-icon,
 }
 
 </style>
+    <style>
+/* Modo aplicativo (APK, .exe, AppImage): remove o que é próprio de navegador
+   e dá comportamento de programa. Só vale com <html data-empacotado="true">. */
+html[data-empacotado="true"] #install-btn,
+html[data-empacotado="true"] #drawer-install {
+  display: none !important;
+}
+html[data-empacotado="true"] {
+  overscroll-behavior: none; /* sem "puxar para recarregar" nem efeito elástico */
+}
+html[data-empacotado="true"] body {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+html[data-empacotado="true"] button,
+html[data-empacotado="true"] nav a,
+html[data-empacotado="true"] .drawer-link {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Selo que confirma a forma de execução */
+.selo-app {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+  color: var(--brand, #c084fc);
+}
+.selo-app[hidden] { display: none; }
+.drawer-modo { margin: 4px 10px 0; font-size: 0.75rem; color: var(--muted); }
+@media (max-width: 900px) {
+  #selo-app { display: none; }
+}
+
+/* Abrir atividade por link, código ou aplicativo */
+.abrir-no-app {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 6px;
+  margin: 0 0 16px;
+  padding: 12px;
+  border: 1px solid currentColor;
+  border-radius: 12px;
+  background: var(--panel, #0c1520);
+  font-size: 0.9rem;
+  text-align: center;
+  color: var(--muted);
+}
+.abrir-no-app .primary-btn { display: block; text-align: center; }
+.abrir-no-app[hidden] { display: none; }
+#abrir-atividade-estado:empty { display: none; }
+#abrir-atividade-estado { color: var(--muted); font-size: 0.9rem; }
+#abrir-atividade-campo { width: 100%; }
+
+</style>
   </head>
   <body>
     <noscript
@@ -6880,6 +7078,7 @@ details[open] > summary > .disclosure-icon,
         ><a href="#/manual" data-nav="manual">Manual</a>
       </nav>
       <div class="header-actions">
+        <span id="selo-app" class="selo-app" hidden></span>
         <button id="install-btn" class="text-btn" type="button" hidden>
           Instalar app
         </button>
@@ -7004,6 +7203,9 @@ details[open] > summary > .disclosure-icon,
             <a href="#/manual">Manual de uso</a>
             <a href="#/professor">Área do Professor</a>
           </nav>
+          <button class="quiet-btn" data-abrir-atividade>
+            <span data-app-icon="professor"></span>Abrir atividade
+          </button>
           <button class="quiet-btn" data-startup-settings>
             <span data-app-icon="professor"></span>Configurações de inicialização
           </button>
@@ -7044,6 +7246,10 @@ details[open] > summary > .disclosure-icon,
         <div id="roteiro-conteudo" class="reading-column"></div>
       </section>
       <section data-tela="atividade" class="tela" hidden>
+        <p id="abrir-no-app" class="abrir-no-app" hidden>
+          <a class="primary-btn" href="#">Abrir no aplicativo SIAB</a>
+          <span>Já tem o aplicativo? Toque no botão. Se não tiver, continue aqui.</span>
+        </p>
         <div id="atividade-conteudo" class="reading-column"></div>
       </section>
       <section data-tela="professor" class="tela" hidden>
@@ -7162,7 +7368,7 @@ details[open] > summary > .disclosure-icon,
         </section>
         <h2>Atividades criadas</h2>
         <p class="field-hint">
-          Atividades ficam neste navegador. Editar ou excluir não altera links
+          Atividades ficam <span data-local>neste navegador</span>. Editar ou excluir não altera links
           de aluno já enviados: cada link guarda a sua própria configuração.
         </p>
         <div id="atividades-recentes"></div>
@@ -8718,11 +8924,51 @@ details[open] > summary > .disclosure-icon,
           <h3 class="drawer-section-title" id="drawer-app">Aplicativo</h3>
           <button class="drawer-link quiet-btn" id="drawer-install" hidden>
             <span data-app-icon="install"></span>Instalar app</button
+          ><button class="drawer-link quiet-btn" data-abrir-atividade>
+            <span data-app-icon="professor"></span>Abrir atividade</button
           ><button class="drawer-link quiet-btn" id="about-btn">
             <span data-app-icon="about"></span>Sobre o SIAB
           </button>
           <p class="drawer-versao">Versão <span id="drawer-versao"></span></p>
+          <p class="drawer-modo" id="drawer-modo" hidden></p>
         </section>
+      </div>
+    </dialog>
+
+    <dialog
+      id="abrir-atividade-dialog"
+      class="siab-dialog dialog-about"
+      aria-labelledby="abrir-atividade-titulo"
+    >
+      <div class="dialog-heading">
+        <h2 id="abrir-atividade-titulo">Abrir atividade</h2>
+        <button
+          type="button"
+          class="icon-btn"
+          data-close="abrir-atividade-dialog"
+          aria-label="Fechar"
+        >
+          ×
+        </button>
+      </div>
+      <p>Cole o link ou o código que o professor enviou.</p>
+      <label class="field"
+        >Link ou código<textarea
+          id="abrir-atividade-campo"
+          rows="4"
+          spellcheck="false"
+          autocomplete="off"
+          autocapitalize="off"
+        ></textarea
+      ></label>
+      <p id="abrir-atividade-estado" role="status"></p>
+      <div class="dialog-actions">
+        <button type="button" class="secondary-btn" id="abrir-atividade-colar">
+          Colar
+        </button>
+        <button type="button" class="primary-btn" id="abrir-atividade-confirmar">
+          Abrir
+        </button>
       </div>
     </dialog>
 
@@ -8748,6 +8994,7 @@ details[open] > summary > .disclosure-icon,
         interpretar evidências.
       </p>
       <p>Versão <span id="about-version"></span></p>
+      <p id="about-modo" hidden></p>
       <p>
         SIAB · GNU GPL v3. Interface de diálogos com dialog-polyfill,
         BSD-3-Clause.
@@ -14615,6 +14862,7 @@ SIAB.rotear = () => {
       "Este endereço foi atualizado para a organização atual do SIAB.",
     );
   }
+  if (nome === "a") nome = "atividade"; // endereço curto: #/a/<nome da atividade>
   if (nome === "missao" && SIAB.missaoAlias?.[parametro])
     parametro = SIAB.missaoAlias[parametro];
   if (nome === "manual" && SIAB.manualRegistry?.aliases[parametro])
@@ -16573,7 +16821,11 @@ SIAB.experimentos = (() => {
 </script>
     <script>
 "use strict";
+
 /* RC.4: registro central do Manual. Texto de uso, sem dados privados de atividades. */
+const SIAB_EMPACOTADO = Boolean(
+  window.SIABPlataforma && window.SIABPlataforma.empacotado,
+);
 SIAB.manualContent = {
   categories: [
     {
@@ -17719,7 +17971,9 @@ SIAB.manualContent = {
         },
         {
           title: "Imprimir ou salvar PDF",
-          text: "A impressão usa um formato próprio para papel. Na janela de impressão do navegador, escolha uma impressora ou Salvar como PDF, se essa opção estiver disponível.",
+          text: SIAB_EMPACOTADO
+            ? "A impressão usa um formato próprio para papel. Na tela de impressão do sistema, escolha uma impressora ou Salvar como PDF, se essa opção estiver disponível."
+            : "A impressão usa um formato próprio para papel. Na janela de impressão do navegador, escolha uma impressora ou Salvar como PDF, se essa opção estiver disponível.",
         },
       ],
       diagram: "report",
@@ -17969,20 +18223,34 @@ SIAB.manualContent = {
     },
     {
       id: "app",
-      title: "Instalação e uso offline",
+      title: SIAB_EMPACOTADO ? "Aplicativo e uso offline" : "Instalação e uso offline",
       category: "comecar",
-      summary:
-        "O Manual essencial acompanha o aplicativo e pode ser consultado sem conexão após o preparo do acesso offline.",
-      purpose:
-        "Use a versão instalada ou o arquivo HTML independente conforme a forma de acesso disponível.",
-      steps: [
-        "Na versão oferecida por um endereço compatível, abra o aplicativo uma vez conectado.",
-        "Use Instalar quando o navegador oferecer essa opção.",
-        "Teste a abertura sem conexão antes da aula.",
-        "O HTML independente pode ser aberto diretamente no navegador e também inclui este Manual.",
-        "Link para download de arquivos instalavéis: https://drive.google.com/drive/u/1/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK",
-      ],
+      summary: SIAB_EMPACOTADO
+        ? "O SIAB está instalado neste dispositivo e funciona sem conexão."
+        : "O Manual essencial acompanha o aplicativo e pode ser consultado sem conexão após o preparo do acesso offline.",
+      purpose: SIAB_EMPACOTADO
+        ? "Você está usando a versão em aplicativo (Android, Windows ou Linux). Ela não depende de navegador."
+        : "Use a versão instalada ou o arquivo HTML independente conforme a forma de acesso disponível.",
+      steps: SIAB_EMPACOTADO
+        ? [
+            "Abra o SIAB pelo ícone, como qualquer outro programa do dispositivo.",
+            "Tudo funciona sem internet, exceto o tradutor VLibras e a consulta de temperatura por cidade.",
+            "Para atualizar, instale a versão mais nova do aplicativo por cima da atual.",
+            "Os registros ficam guardados no aplicativo: exporte o que precisar conservar.",
+          ]
+        : [
+            "Na versão oferecida por um endereço compatível, abra o aplicativo uma vez conectado.",
+            "Use Instalar quando o navegador oferecer essa opção.",
+            "Teste a abertura sem conexão antes da aula.",
+            "O HTML independente pode ser aberto diretamente no navegador e também inclui este Manual.",
+          ],
       example: "",
+      actions: SIAB_EMPACOTADO ? [] : [
+        {
+          label: "Acessar arquivos instaláveis",
+          url: "https://drive.google.com/drive/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK",
+        },
+      ],
       related: ["persistencia", "acessibilidade"],
       keywords: [
         "offline",
@@ -17998,8 +18266,10 @@ SIAB.manualContent = {
           text: "A consulta meteorológica e o VLibras dependem da internet. Não são necessários para ler o Manual ou executar a bancada.",
         },
         {
-          title: "Instalação disponível",
-          text: "A opção de instalar depende do navegador e da forma como o aplicativo foi disponibilizado. Abrir o HTML como arquivo local não instala a PWA.",
+          title: SIAB_EMPACOTADO ? "Sem botão Instalar" : "Instalação disponível",
+          text: SIAB_EMPACOTADO
+            ? "O botão Instalar app só aparece na versão para navegador. Neste aplicativo, ele não é necessário."
+            : "A opção de instalar depende do navegador e da forma como o aplicativo foi disponibilizado. Abrir o HTML como arquivo local não instala a PWA.",
         },
       ],
     },
@@ -18007,8 +18277,9 @@ SIAB.manualContent = {
       id: "persistencia",
       title: "Guardar e recuperar registros",
       category: "comecar",
-      summary:
-        "O SIAB guarda preferências, Caderno e relatórios no navegador utilizado.",
+      summary: SIAB_EMPACOTADO
+        ? "O SIAB guarda preferências, Caderno e relatórios no aplicativo."
+        : "O SIAB guarda preferências, Caderno e relatórios no navegador utilizado.",
       purpose: "Mantenha cópias exportadas do que precisa conservar ou enviar.",
       steps: [
         "Confira os registros no Caderno e os textos no relatório.",
@@ -18027,8 +18298,10 @@ SIAB.manualContent = {
       ],
       details: [
         {
-          title: "Mesmo navegador",
-          text: "Limpar os dados do site ou usar outro navegador pode impedir a retomada dos registros locais. Uma exportação é a forma de manter uma cópia independente.",
+          title: SIAB_EMPACOTADO ? "Mesmo aplicativo" : "Mesmo navegador",
+          text: SIAB_EMPACOTADO
+            ? "Desinstalar o aplicativo ou limpar os dados dele pode apagar os registros locais. Uma exportação é a forma de manter uma cópia independente."
+            : "Limpar os dados do site ou usar outro navegador pode impedir a retomada dos registros locais. Uma exportação é a forma de manter uma cópia independente.",
         },
       ],
     },
@@ -23516,7 +23789,10 @@ SIAB.workspace = (() => {
       null;
     if (state.activeTool !== selected?.id) {
       state.activeTool = selected?.id || null;
-      state.presentation = presentations[state.activeTool] || "standard";
+      // A expansão é uma escolha do usuário, independente da visualização.
+      // As dimensões automáticas só se aplicam quando não está expandido.
+      if (state.presentation !== "fullscreen")
+        state.presentation = presentations[state.activeTool] || "standard";
     }
     if (!groups.length && state.source !== "dados") state.right = "collapsed";
     const dataAllowed =
@@ -23847,8 +24123,9 @@ SIAB.workspace = (() => {
       inner.classList.add("dock-scroll");
       inner.id = `dock-${side}-content`;
     }
-    $("close-controls").className = "secondary-btn dock-close";
-    $("close-controls").textContent = "Fechar";
+    $("close-controls").className = "secondary-btn dock-close dock-icon-close";
+    $("close-controls").innerHTML = icon("close");
+    $("close-controls").setAttribute("title", "Fechar Montagem (Esc)");
     $("close-controls").setAttribute("aria-label", "Fechar Montagem");
     $("close-controls").setAttribute("aria-controls", "controls");
     const header = $("ver-panel").querySelector(".dock-header");
@@ -23869,10 +24146,11 @@ SIAB.workspace = (() => {
       ) +
         button(
           "dock-close-right",
-          "Fechar",
-          'aria-label="Fechar investigação" aria-controls="ver-panel"',
+          icon("close"),
+          'aria-label="Fechar painel Ver" title="Fechar painel Ver (Esc)" aria-controls="ver-panel"',
         ),
     );
+    $("dock-close-right").classList.add("dock-icon-close");
     nodes.expand = $("dock-expand");
     nodes.leftTabs = create("nav", "dock-left-tabs", "dock-tabs");
     nodes.leftTabs.setAttribute("aria-label", "Preparação da bancada");
@@ -24462,9 +24740,57 @@ SIAB.impressao = (() => {
     inserido = null;
   }
 
+  /* window.print() não faz nada no WebView do Android (aplicativo APK).
+     Lá, a impressão passa pelo plugin nativo SIABPrint, que abre a tela de
+     impressão do sistema (imprimir ou Salvar como PDF). A função devolve uma
+     Promise: no navegador resolve na hora; no Android, quando o trabalho termina. */
+  function imprimirPagina() {
+    const cap = window.Capacitor;
+    const nativo = Boolean(
+      cap && cap.isNativePlatform && cap.isNativePlatform(),
+    );
+    if (!nativo) {
+      window.print();
+      return Promise.resolve();
+    }
+    window.dispatchEvent(new Event("beforeprint"));
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const fim = () => {
+          window.dispatchEvent(new Event("afterprint"));
+          resolve();
+        };
+        const falha = (erro) => {
+          fim();
+          const msg =
+            "Não foi possível abrir a impressão: " +
+            ((erro && erro.message) || erro);
+          if (SIAB.notice) SIAB.notice(msg);
+          else alert(msg);
+        };
+        try {
+          const opcoes = { title: document.title || "SIAB" };
+          let chamada;
+          // O Capacitor do Android (native-bridge.js) oferece nativePromise;
+          // registerPlugin só existe quando o Capacitor vem empacotado.
+          if (typeof cap.nativePromise === "function")
+            chamada = cap.nativePromise("SIABPrint", "print", opcoes);
+          else if (cap.Plugins && cap.Plugins.SIABPrint)
+            chamada = cap.Plugins.SIABPrint.print(opcoes);
+          else if (typeof cap.registerPlugin === "function")
+            chamada = cap.registerPlugin("SIABPrint").print(opcoes);
+          else throw new Error("a ponte nativa do aplicativo não está disponível");
+          chamada.then(fim, falha);
+        } catch (erro) {
+          falha(erro);
+        }
+      }, 200);
+    });
+  }
+
   function imprimir() {
     preparar();
-    window.print();
+    return imprimirPagina();
   }
 
   function ligar() {
@@ -24478,7 +24804,7 @@ SIAB.impressao = (() => {
     );
   }
 
-  return { ligar, imprimir, preparar, limpar, cabecalho };
+  return { ligar, imprimir, imprimirPagina, preparar, limpar, cabecalho };
 })();
 
 </script>
@@ -26445,7 +26771,7 @@ SIAB.relatorios = (() => {
   function dadosHTML(id) {
     const r = lerTodos()[id];
     if (!r)
-      return "<p>Os dados desta prática não estão disponíveis neste navegador.</p>";
+      return `<p>Os dados desta prática não estão disponíveis ${SIABPlataforma.local()}.</p>`;
     return r.recipientes
       .map(
         (t) =>
@@ -26787,7 +27113,7 @@ SIAB.relatorios = (() => {
     arquivoAberto = !!id && id !== SIAB.state.reportId;
     if (id) {
       atual = lerTodos()[id] || null;
-      if (!atual) SIAB.notice("Relatório não encontrado neste navegador.");
+      if (!atual) SIAB.notice(`Relatório não encontrado ${SIABPlataforma.local()}.`);
     } else capturar();
     SIAB.$("relatorio-atualizar").hidden = Boolean(
       id && id !== SIAB.state.reportId,
@@ -26806,7 +27132,7 @@ SIAB.relatorios = (() => {
       render();
     }
     preparar();
-    window.print();
+    SIAB.impressao.imprimirPagina();
   }
   function ligar() {
     const box = SIAB.$("relatorio-conteudo"),
@@ -26929,6 +27255,354 @@ SIAB.telas.relatorio = {
 </script>
     <script>
 "use strict";
+/* Formato curto (v2) dos links de atividade: "2.<base64url>".
+   Empacota a configuração em bits, sem cifra (a chave do formato v1 já viajava
+   dentro do link e não dava sigilo). Os campos são identificados por tabelas fixas
+   de crescimento apenas por acréscimo; o item do catálogo é identificado por um
+   hash de 32 bits do seu id. Um CRC-16 detecta link cortado ou digitado errado.
+   paraToken() só devolve um link quando a ida e a volta reproduzem exatamente a
+   configuração; qualquer coisa fora do formato volta ao v1 (mais longo, completo). */
+SIAB.atividadeV2 = (() => {
+  const TIPOS = ["roteiro", "missao", "montagem"];
+  const MODOS = [null, "referencia", "local"];
+  const VISTAS = [
+    null, "particulas", "especies", "equacao", "proton", "ph", "temperatura",
+    "condutividade", "grafico", "derivada", "distribuicao", "historico", "tabela",
+  ];
+  const INSTRUMENTOS = [
+    "indicador", "fita", "phmetro", "condutividade", "temperatura", "particulas",
+    "equacoes", "graficos", "especies", "proton", "grafico", "derivada",
+    "distribuicao", "historico", "tabela",
+  ];
+  const PERMISSOES = [
+    "measurements.indicator", "measurements.phStrip", "measurements.phMeter",
+    "measurements.conductivity", "measurements.temperature",
+    "representations.particles", "representations.species",
+    "representations.equations", "representations.protonTransfer",
+    "analysis.graph", "analysis.derivative", "analysis.distribution",
+    "analysis.history", "analysis.table",
+    "bench.changeInitialSolution", "bench.changeTitrant", "bench.changeGlassware",
+    "bench.changeInitialVolume", "bench.changeConcentration", "bench.changeIndicator",
+    "bench.changeTemperature", "bench.changePreparation",
+    "vessels.add", "vessels.remove", "vessels.rename", "vessels.changeContent",
+    "vessels.changeGlassware", "vessels.changeVolume",
+  ];
+  const IDENTIFICACAO = ["nome", "turma", "data", "professor", "grupo"];
+
+  const catalogo = (tipo) =>
+    tipo === "roteiro" ? SIAB.experimentos : tipo === "missao" ? SIAB.missoes : SIAB.montagens;
+
+  function hash32(texto) {
+    let h = 0x811c9dc5;
+    for (const b of new TextEncoder().encode(texto)) {
+      h ^= b;
+      h = Math.imul(h, 0x01000193) >>> 0;
+    }
+    return h >>> 0;
+  }
+  function crc16(bytes) {
+    let crc = 0xffff;
+    for (const b of bytes) {
+      crc ^= b << 8;
+      for (let i = 0; i < 8; i++) crc = crc & 0x8000 ? ((crc << 1) ^ 0x1021) & 0xffff : (crc << 1) & 0xffff;
+    }
+    return crc;
+  }
+  const paraBase64 = (a) =>
+    btoa(String.fromCharCode(...a)).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+  const deBase64 = (s) =>
+    Uint8Array.from(atob(s.replace(/-/g, "+").replace(/_/g, "/")), (c) => c.charCodeAt(0));
+
+  function escritor() {
+    const bits = [];
+    const api = {
+      put(valor, n) {
+        for (let i = n - 1; i >= 0; i--) bits.push((valor >>> i) & 1);
+      },
+      texto(t) {
+        const b = new TextEncoder().encode(t);
+        if (b.length > 255) throw new Error("texto longo");
+        api.put(b.length, 8);
+        for (const x of b) api.put(x, 8);
+      },
+      bytes() {
+        while (bits.length % 8) bits.push(0);
+        const saida = new Uint8Array(bits.length / 8);
+        bits.forEach((b, i) => { saida[i >> 3] |= b << (7 - (i & 7)); });
+        return saida;
+      },
+    };
+    return api;
+  }
+  function leitor(bytes) {
+    let pos = 0;
+    const api = {
+      get(n) {
+        let v = 0;
+        for (let i = 0; i < n; i++) {
+          if (pos >= bytes.length * 8) throw new Error("fim");
+          v = (v * 2) + ((bytes[pos >> 3] >> (7 - (pos & 7))) & 1);
+          pos++;
+        }
+        return v;
+      },
+      texto() {
+        const n = api.get(8), b = new Uint8Array(n);
+        for (let i = 0; i < n; i++) b[i] = api.get(8);
+        return new TextDecoder("utf-8", { fatal: true }).decode(b);
+      },
+    };
+    return api;
+  }
+
+  function canonico(c) {
+    const limpo = {};
+    for (const k of Object.keys(c).sort()) {
+      if (k === "id" || c[k] === null || c[k] === undefined) continue;
+      limpo[k] = k === "instrumentos" ? [...c[k]].sort() : c[k];
+    }
+    return JSON.stringify(limpo, (_, v) =>
+      v && typeof v === "object" && !Array.isArray(v)
+        ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : 1)))
+        : v);
+  }
+
+  function escreverResto(w, c, entry) {
+    const decimos = Math.round(c.temperatura * 10);
+    if (decimos / 10 === c.temperatura && decimos >= 0 && decimos <= 1000) {
+      w.put(1, 1);
+      w.put(decimos, 10);
+    } else {
+      w.put(0, 1);
+      const dv = new DataView(new ArrayBuffer(8));
+      dv.setFloat64(0, c.temperatura);
+      w.put(dv.getUint32(0), 32);
+      w.put(dv.getUint32(4), 32);
+    }
+    const modo = MODOS.indexOf(c.temperaturaModo == null ? null : c.temperaturaModo);
+    const vista = VISTAS.indexOf(c.initialView == null ? null : c.initialView);
+    if (modo < 0 || vista < 0) throw new Error("modo ou vista fora do formato");
+    w.put(modo, 2);
+    w.put(vista, 4);
+    let mascara = 0;
+    for (const i of c.instrumentos) {
+      const idx = INSTRUMENTOS.indexOf(i);
+      if (idx < 0) throw new Error("instrumento fora da tabela");
+      mascara |= 1 << idx;
+    }
+    w.put(mascara, 15);
+    if (c.permissions) {
+      w.put(1, 1);
+      for (const caminho of PERMISSOES) {
+        const [g, k] = caminho.split(".");
+        w.put(c.permissions[g] && c.permissions[g][k] === true ? 1 : 0, 1);
+      }
+    } else w.put(0, 1);
+    if (c.titulo && c.titulo !== entry.titulo) {
+      w.put(1, 1);
+      w.texto(c.titulo);
+    } else w.put(0, 1);
+    const ident = c.identificacao || {};
+    for (const k of IDENTIFICACAO) {
+      const v = String(ident[k] || "");
+      if (v) { w.put(1, 1); w.texto(v); } else w.put(0, 1);
+    }
+  }
+
+  function lerResto(r, entry) {
+    let temperatura;
+    if (r.get(1)) temperatura = r.get(10) / 10;
+    else {
+      const dv = new DataView(new ArrayBuffer(8));
+      dv.setUint32(0, r.get(32));
+      dv.setUint32(4, r.get(32));
+      temperatura = dv.getFloat64(0);
+    }
+    const temperaturaModo = MODOS[r.get(2)];
+    const initialView = VISTAS[r.get(4)];
+    const mascara = r.get(15);
+    const instrumentos = INSTRUMENTOS.filter((_, i) => (mascara >> i) & 1);
+    let permissions;
+    if (r.get(1)) {
+      permissions = {};
+      for (const caminho of PERMISSOES) {
+        const [g, k] = caminho.split(".");
+        (permissions[g] = permissions[g] || {})[k] = r.get(1) === 1;
+      }
+    }
+    const titulo = r.get(1) ? r.texto() : entry.titulo;
+    const identificacao = {};
+    for (const k of IDENTIFICACAO) identificacao[k] = r.get(1) ? r.texto() : "";
+    return { temperatura, temperaturaModo, initialView, instrumentos, permissions, titulo, identificacao };
+  }
+
+  function montar(schema, tipo, navegacao, relatorio, entry, x) {
+    const c = {
+      schema, tipo, item: entry.id, titulo: x.titulo,
+      modulo: entry.modulo || (entry.bancada && entry.bancada.nivel) || entry.nivel || "explorar",
+      temperatura: x.temperatura, instrumentos: x.instrumentos, navegacao, identificacao: x.identificacao,
+    };
+    // Mesmo formato que o professor gera (campos vazios como null)
+    if (x.temperaturaModo) c.temperaturaModo = x.temperaturaModo;
+    if (x.permissions) c.permissions = x.permissions;
+    c.initialView = x.initialView || null;
+    c.relatorio = relatorio || null;
+    return c;
+  }
+
+  function empacotar(c) {
+    const tipo = TIPOS.indexOf(c.tipo);
+    const lista = catalogo(c.tipo) || [];
+    const entry = lista.find((x) => x.id === c.item);
+    const h = entry ? hash32(entry.id) : -1;
+    if (tipo < 0 || !entry || ![1, 2].includes(c.schema)) throw new Error("fora do formato");
+    if (lista.filter((x) => hash32(x.id) === h).length !== 1) throw new Error("hash repetido");
+    const w = escritor();
+    w.put(c.schema === 2 ? 1 : 0, 1);
+    w.put(tipo, 2);
+    w.put(c.navegacao === "restrita" ? 1 : 0, 1);
+    const rel = [null, "digital", "impresso"].indexOf(c.relatorio == null ? null : c.relatorio);
+    if (rel < 0) throw new Error("relatório fora do formato");
+    w.put(rel, 2);
+    w.put(h, 32);
+    escreverResto(w, c, entry);
+    const corpo = w.bytes();
+    const crc = crc16(corpo);
+    const tudo = new Uint8Array(corpo.length + 2);
+    tudo.set(corpo);
+    tudo[corpo.length] = crc >> 8;
+    tudo[corpo.length + 1] = crc & 255;
+    return "2." + paraBase64(tudo);
+  }
+
+  function bytesValidos(token) {
+    if (typeof token !== "string" || !/^2\.[A-Za-z0-9_-]{12,}$/.test(token) || token.length > 2000)
+      throw new Error("Link de atividade inválido ou incompleto.");
+    const tudo = deBase64(token.slice(2));
+    const corpo = tudo.slice(0, -2);
+    if (tudo.length < 8 || crc16(corpo) !== ((tudo[tudo.length - 2] << 8) | tudo[tudo.length - 1]))
+      throw new Error("Link de atividade inválido ou incompleto.");
+    return corpo;
+  }
+  const valido = (token) => {
+    try { bytesValidos(token); return true; } catch (_) { return false; }
+  };
+
+  function ler(token) {
+    const r = leitor(bytesValidos(token));
+    const schema = r.get(1) ? 2 : 1;
+    const tipo = TIPOS[r.get(2)];
+    if (!tipo) throw new Error("Link de atividade inválido.");
+    const navegacao = r.get(1) ? "restrita" : "livre";
+    const relatorio = [null, "digital", "impresso"][r.get(2)];
+    const h = r.get(32);
+    const entry = (catalogo(tipo) || []).find((x) => hash32(x.id) === h);
+    if (!entry) throw new Error("Atividade incompatível com este catálogo.");
+    return montar(schema, tipo, navegacao, relatorio, entry, lerResto(r, entry));
+  }
+
+  // Devolve o link curto, ou null se esta configuração precisar do formato v1.
+  function paraToken(config) {
+    try {
+      const token = empacotar(config);
+      return canonico(ler(token)) === canonico(config) ? token : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  // ---- Link por nome: <nome>[~<ajustes>] -------------------------------------
+  // roteiro: "tres-indicadores"; missão: "missao-<id>"; montagem: "montagem-<id>".
+  // Sem "~ajustes" vale a configuração padrão (navegação livre, todos os recursos).
+  const PREFIXOS = { roteiro: "", missao: "missao-", montagem: "montagem-" };
+  const NOME_OK = /^[A-Za-z0-9]+(-[A-Za-z0-9]+)*$/; // ids do catálogo, com maiúsculas e minúsculas
+
+  function acharPorNome(nome) {
+    for (const tipo of ["montagem", "missao"]) {
+      const pre = PREFIXOS[tipo];
+      if (nome.startsWith(pre)) {
+        const entry = (catalogo(tipo) || []).find((x) => x.id === nome.slice(pre.length));
+        if (entry) return { tipo, entry };
+      }
+    }
+    const entry = (catalogo("roteiro") || []).find((x) => x.id === nome);
+    return entry ? { tipo: "roteiro", entry } : null;
+  }
+  function padrao(tipo, entry) {
+    return {
+      schema: 2, tipo, item: entry.id, titulo: entry.titulo,
+      modulo: entry.modulo || (entry.bancada && entry.bancada.nivel) || entry.nivel || "explorar",
+      temperatura: 25, temperaturaModo: "referencia", instrumentos: INSTRUMENTOS.slice(),
+      navegacao: "livre",
+      identificacao: { nome: "", turma: "", data: "", professor: "", grupo: "" },
+      initialView: null, relatorio: null,
+    };
+  }
+  function bytesNome(nome, corpo) {
+    const b = new TextEncoder().encode(nome);
+    const t = new Uint8Array(b.length + corpo.length);
+    t.set(b);
+    t.set(corpo, b.length);
+    return t;
+  }
+
+  function lerNome(ref) {
+    if (typeof ref !== "string" || ref.length > 2000) throw new Error("Link de atividade inválido.");
+    const corte = ref.indexOf("~");
+    const nome = corte < 0 ? ref : ref.slice(0, corte);
+    const achado = NOME_OK.test(nome) ? acharPorNome(nome) : null;
+    if (!achado) throw new Error("Atividade não encontrada neste catálogo.");
+    if (corte < 0) return padrao(achado.tipo, achado.entry);
+    const sufixo = ref.slice(corte + 1);
+    if (!/^[A-Za-z0-9_-]{8,}$/.test(sufixo)) throw new Error("Link de atividade inválido ou incompleto.");
+    const tudo = deBase64(sufixo);
+    const corpo = tudo.slice(0, -2);
+    if (crc16(bytesNome(nome, corpo)) !== ((tudo[tudo.length - 2] << 8) | tudo[tudo.length - 1]))
+      throw new Error("Link de atividade inválido ou incompleto.");
+    const r = leitor(corpo);
+    const schema = r.get(1) ? 2 : 1;
+    const navegacao = r.get(1) ? "restrita" : "livre";
+    const relatorio = [null, "digital", "impresso"][r.get(2)];
+    return montar(schema, achado.tipo, navegacao, relatorio, achado.entry, lerResto(r, achado.entry));
+  }
+  const validoNome = (ref) => {
+    try { lerNome(ref); return true; } catch (_) { return false; }
+  };
+
+  function paraNome(config) {
+    try {
+      const nome = PREFIXOS[config.tipo] + config.item;
+      const achado = acharPorNome(nome);
+      if (!achado || achado.tipo !== config.tipo || achado.entry.id !== config.item) return null;
+      let ref = nome;
+      if (canonico(padrao(achado.tipo, achado.entry)) !== canonico(config)) {
+        const w = escritor();
+        w.put(config.schema === 2 ? 1 : 0, 1);
+        w.put(config.navegacao === "restrita" ? 1 : 0, 1);
+        const rel = [null, "digital", "impresso"].indexOf(config.relatorio == null ? null : config.relatorio);
+        if (rel < 0) return null;
+        w.put(rel, 2);
+        escreverResto(w, config, achado.entry);
+        const corpo = w.bytes();
+        const crc = crc16(bytesNome(nome, corpo));
+        const tudo = new Uint8Array(corpo.length + 2);
+        tudo.set(corpo);
+        tudo[corpo.length] = crc >> 8;
+        tudo[corpo.length + 1] = crc & 255;
+        ref = nome + "~" + paraBase64(tudo);
+      }
+      return canonico(lerNome(ref)) === canonico(config) ? ref : null;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  return { paraToken, ler, valido, paraNome, lerNome, validoNome };
+})();
+
+</script>
+    <script>
+"use strict";
 SIAB.atividades = (() => {
   let ativa = null,
     loading = 0,
@@ -26999,6 +27673,12 @@ SIAB.atividades = (() => {
     };
   }
   async function codificar(config) {
+    // Preferência: link por nome (#/a/<nome>[~ajustes]); depois o código v2; por fim o v1 completo.
+    const valida = validar(config);
+    const porNome = SIAB.atividadeV2 && SIAB.atividadeV2.paraNome(valida);
+    if (porNome) return porNome;
+    const curto = SIAB.atividadeV2 && SIAB.atividadeV2.paraToken(valida);
+    if (curto) return curto;
     if (!crypto?.subtle)
       throw new Error(
         "Geração de links requer contexto seguro (HTTPS, localhost ou arquivo local compatível).",
@@ -27020,6 +27700,8 @@ SIAB.atividades = (() => {
   async function decodificar(token) {
     if (typeof token !== "string" || token.length > 18000)
       throw new Error("Link inválido.");
+    if (token.startsWith("2.")) return validar(SIAB.atividadeV2.ler(token));
+    if (!token.startsWith("v1.")) return validar(SIAB.atividadeV2.lerNome(token));
     const [v, k, i, c, ...extra] = token.split(".");
     if (v !== "v1" || extra.length || !k || !i || !c)
       throw new Error("Link incompleto.");
@@ -27037,7 +27719,7 @@ SIAB.atividades = (() => {
     );
     return validar(JSON.parse(new TextDecoder().decode(json)));
   }
-  const chave = (token) => "siab_atividade_" + token.split(".")[1];
+  const chave = (token) => "siab_atividade_" + (token.split(".")[1] || token);
   const rotaAtividade = () => `#/atividade/${ativa.token}`;
   const uuid = () =>
     globalThis.crypto?.randomUUID?.() ||
@@ -27436,7 +28118,17 @@ SIAB.atividades = (() => {
     pedirEncerramento,
     atualizarCabecalho,
     ligar,
-    link: (token) => `${location.href.split("#")[0]}#/atividade/${token}`,
+    // Dentro de aplicativo (APK, .exe, AppImage) o endereço da página não é
+    // compartilhável (https://localhost/ ou app://siab/): o link usa o site público.
+    urlPublica: "https://qui-x.github.io/acidobase/",
+    link: (token) => {
+      const base =
+        window.SIABPlataforma && window.SIABPlataforma.empacotado
+          ? SIAB.atividades.urlPublica
+          : location.href.split("#")[0];
+      return `${base}#/a/${token}`;
+    },
+    linkApp: (token) => `siab://atividade/${token}`,
     get ativa() {
       return ativa;
     },
@@ -27553,7 +28245,7 @@ SIAB.professor = (() => {
           (r) =>
             `<article class="recent-activity" data-activity-id="${esc(r.id)}"><strong>${esc(r.config.titulo)}</strong><div class="actions"><a class="secondary-btn" href="${esc(SIAB.atividades.link(r.token))}">Abrir</a><button class="quiet-btn" data-copy-activity="${esc(r.id)}">Copiar link</button><button class="quiet-btn" data-edit-activity="${esc(r.id)}">Editar</button><button class="quiet-btn" data-duplicate-activity="${esc(r.id)}">Duplicar</button><button class="danger-btn" data-delete-activity="${esc(r.id)}">Excluir</button></div></article>`,
         )
-        .join("") || "<p>Nenhuma atividade criada neste navegador.</p>";
+        .join("") || `<p>Nenhuma atividade criada ${SIABPlataforma.local()}.</p>`;
   }
   async function copiar(token) {
     const link = SIAB.atividades.link(token);
@@ -27581,7 +28273,10 @@ SIAB.professor = (() => {
     );
     $("prof-resumo").textContent =
       `${c.titulo} · ${c.tipo} · ${SIAB.MODULOS[c.modulo].nome} · ${SIAB.format(c.temperatura, 1)} °C · Navegação ${c.navegacao} · Recursos: ${resources.join(", ")}`;
-    $("prof-abrir").href = SIAB.atividades.link(token);
+    $("prof-abrir").href =
+      window.SIABPlataforma && window.SIABPlataforma.empacotado
+        ? `#/atividade/${token}`
+        : SIAB.atividades.link(token);
   }
   async function criar(c, id = null) {
     if (SIAB.ActivityContext.restricted())
@@ -27607,8 +28302,12 @@ SIAB.professor = (() => {
     guia();
     SIAB.$("folha-impressao").innerHTML = $("teacher-guide").outerHTML;
     document.body.classList.add("imprimindo-roteiro", "imprimindo-folha");
-    window.print();
-    document.body.classList.remove("imprimindo-roteiro", "imprimindo-folha");
+    SIAB.impressao.imprimirPagina().then(() => {
+      document.body.classList.remove(
+        "imprimindo-roteiro",
+        "imprimindo-folha",
+      );
+    });
   }
   function ligar() {
     $("prof-tipo").onchange = opcoes;
@@ -27687,7 +28386,7 @@ SIAB.professor = (() => {
               $("prof-resultado").hidden = true;
             }
             renderRecentes();
-            SIAB.notice("Atividade excluída deste navegador.");
+            SIAB.notice(`Atividade excluída ${SIABPlataforma.deste()}.`);
           },
           "Excluir atividade",
           "danger",
@@ -27980,7 +28679,8 @@ SIAB.telas.caderno = {
     };
     SIAB.$("caderno-csv").onclick = () =>
       SIAB.baixarArquivo("SIAB-caderno.csv", SIAB.cadernoCSV());
-    SIAB.$("caderno-imprimir").onclick = () => window.print();
+    SIAB.$("caderno-imprimir").onclick = () =>
+      SIAB.impressao.imprimirPagina();
     SIAB.$("caderno-limpar").onclick = () =>
       SIAB.confirmar(
         "Apagar Caderno?",
@@ -28052,11 +28752,15 @@ SIAB.manualTela = (() => {
   }
   function actions(topic) {
     return (topic.actions || [])
-      .map((a) =>
-        a.route
+      .map((a) => {
+        if (a.url) {
+          if (!/^https:\/\//i.test(a.url)) return "";
+          return `<a class="secondary-btn" href="${esc(a.url)}" target="_blank" rel="noopener noreferrer">${esc(a.label)} ${icon("arrow")}</a>`;
+        }
+        return a.route
           ? `<a class="secondary-btn" href="${esc(a.route)}">${esc(a.label)} ${icon("arrow")}</a>`
-          : `<button type="button" class="secondary-btn" data-manual-command="${esc(a.command)}">${esc(a.label)}</button>`,
-      )
+          : `<button type="button" class="secondary-btn" data-manual-command="${esc(a.command)}">${esc(a.label)}</button>`;
+      })
       .join("");
   }
   function topicLink(t, compact = false) {
@@ -28163,7 +28867,7 @@ SIAB.manualTela = (() => {
         t.id === cat.id
           ? R.topics.filter((x) => x.category === cat.id && x.id !== t.id)
           : [];
-    return `${!print ? `<nav class="manual-breadcrumb" aria-label="Caminho do Manual"><a href="#/manual">Manual</a>${t.id !== cat.id ? `<span aria-hidden="true">/</span><a href="${href(cat.id)}">${esc(cat.title)}</a>` : ""}<span aria-hidden="true">/</span><span aria-current="page">${esc(t.title)}</span></nav>` : ""}<article class="manual-article" data-manual-topic="${t.id}"><header><p class="eyebrow">${esc(cat.title)}</p><h1 ${!print ? 'id="manual-titulo" data-foco tabindex="-1"' : ""}>${esc(t.title)}</h1><p class="manual-lead">${rich(t.summary)}</p></header><section class="manual-purpose"><h2>Para que serve</h2><p>${rich(t.purpose)}</p></section>${t.diagram ? diagram(t.diagram) : ""}<section class="manual-how"><h2>Como usar</h2><ol class="manual-steps">${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></section>${t.example ? `<aside class="manual-example" aria-label="Exemplo"><strong>Exemplo</strong><p>${rich(t.example)}</p></aside>` : ""}${!print && t.actions?.length ? `<div class="manual-actions"><p>Use a função no programa</p>${actions(t)}</div>` : ""}${t.generated ? generated(t.generated) : ""}${t.details.length ? `<section class="manual-details"><h2>Detalhes importantes</h2>${accordion(t, print)}</section>` : ""}${!print && children.length ? `<section class="manual-more"><h2>Nesta categoria</h2><div class="manual-topic-list">${children.map((x) => topicLink(x, true)).join("")}</div></section>` : ""}${
+    return `${!print ? `<nav class="manual-breadcrumb" aria-label="Caminho do Manual"><a href="#/manual">Manual</a>${t.id !== cat.id ? `<span aria-hidden="true">/</span><a href="${href(cat.id)}">${esc(cat.title)}</a>` : ""}<span aria-hidden="true">/</span><span aria-current="page">${esc(t.title)}</span></nav>` : ""}<article class="manual-article" data-manual-topic="${t.id}"><header><p class="eyebrow">${esc(cat.title)}</p><h1 ${!print ? 'id="manual-titulo" data-foco tabindex="-1"' : ""}>${esc(t.title)}</h1><p class="manual-lead">${rich(t.summary)}</p></header><section class="manual-purpose"><h2>Para que serve</h2><p>${rich(t.purpose)}</p></section>${t.diagram ? diagram(t.diagram) : ""}<section class="manual-how"><h2>Como usar</h2><ol class="manual-steps">${t.steps.map((s) => `<li>${rich(s)}</li>`).join("")}</ol></section>${t.example ? `<aside class="manual-example" aria-label="Exemplo"><strong>Exemplo</strong><p>${rich(t.example)}</p></aside>` : ""}${!print && t.actions?.length ? `<div class="manual-actions"><p>${t.id === "app" ? "Arquivos para instalação" : "Use a função no programa"}</p>${actions(t)}</div>` : ""}${t.generated ? generated(t.generated) : ""}${t.details.length ? `<section class="manual-details"><h2>Detalhes importantes</h2>${accordion(t, print)}</section>` : ""}${!print && children.length ? `<section class="manual-more"><h2>Nesta categoria</h2><div class="manual-topic-list">${children.map((x) => topicLink(x, true)).join("")}</div></section>` : ""}${
       t.related.length
         ? `<nav class="manual-related" aria-label="Veja também"><h2>Veja também</h2><div>${t.related
             .map((id) => {
@@ -28331,7 +29035,7 @@ SIAB.manualTela = (() => {
     });
     $("manual-imprimir").addEventListener("click", () => {
       preparePrint();
-      window.print();
+      window.SIAB.impressao.imprimirPagina();
     });
     window.addEventListener("beforeprint", preparePrint);
     window.addEventListener("afterprint", () => {
@@ -28645,6 +29349,31 @@ SIAB.pwa = (() => {
   function iniciar() {
     // Dois botões: no cabeçalho (computador) e no menu ☰ → Aplicativo.
     const botoes = [SIAB.$("install-btn"), SIAB.$("drawer-install")];
+    // Aplicativo empacotado (APK, .exe, AppImage): os arquivos já estão no
+    // programa. Não há "Instalar app" nem service worker; os que ficaram de
+    // versões anteriores são removidos para nunca servir arquivos antigos.
+    if (window.SIABPlataforma && window.SIABPlataforma.empacotado) {
+      botoes.forEach((botao) => botao && (botao.hidden = true));
+      try {
+        if ("serviceWorker" in navigator)
+          navigator.serviceWorker
+            .getRegistrations()
+            .then((lista) => lista.forEach((r) => r.unregister()))
+            .catch(() => {});
+        if (window.caches)
+          caches
+            .keys()
+            .then((chaves) =>
+              chaves
+                .filter((c) => c.indexOf("siab@") === 0)
+                .forEach((c) => caches.delete(c)),
+            )
+            .catch(() => {});
+      } catch (erro) {
+        /* limpeza opcional */
+      }
+      return;
+    }
     // O HTML único não publica manifesto nem service worker.
     const publicavel =
       Boolean(document.querySelector('link[rel="manifest"]')) &&
@@ -28964,6 +29693,148 @@ SIAB.activityUI = (() => {
     );
   }
   return { render, bind, dialog };
+})();
+
+</script>
+    <script>
+"use strict";
+/* Entrada de atividades por link, código ou aplicativo.
+   - Aceita o link completo (qualquer endereço), siab://atividade/<código> ou só o código.
+   - window.SIABAbrirLink(texto) é o ponto de entrada usado pelo Android e pelo
+     Electron quando o sistema entrega um link siab:// ao aplicativo. */
+SIAB.abrirLink = (() => {
+  // v1.<chave 32 bytes>.<iv 12 bytes>.<conteúdo cifrado>, em base64url
+  const PADRAO = /v1\.[A-Za-z0-9_-]{43}\.[A-Za-z0-9_-]{16}\.[A-Za-z0-9_-]{22,}/;
+
+  // v2 (curto): 2.<base64url>, confirmado pelo CRC embutido
+  const PADRAO_V2 = /(^|[^A-Za-z0-9_.-])(2\.[A-Za-z0-9_-]{12,})/g;
+
+  const CAMINHO = /(?:#\/|siab:\/\/)(?:a|atividade)\/([A-Za-z0-9_.~-]+)/g;
+  const EXATO_V1 = new RegExp("^" + PADRAO.source + "$");
+
+  // Confere se o texto é uma referência de atividade completa e válida
+  function referenciaValida(c) {
+    if (!c) return false;
+    if (c.indexOf("v1.") === 0) return EXATO_V1.test(c);
+    if (c.indexOf("2.") === 0) return SIAB.atividadeV2 && SIAB.atividadeV2.valido(c);
+    return Boolean(SIAB.atividadeV2 && SIAB.atividadeV2.validoNome(c));
+  }
+
+  function extrairToken(texto) {
+    const t = String(texto || "").trim();
+    // 1) endereços conhecidos: .../#/a/<nome>, .../#/atividade/<código>, siab://...
+    const caminhos = new RegExp(CAMINHO.source, "g");
+    let m;
+    while ((m = caminhos.exec(t)) !== null) {
+      const c = m[1].replace(/\.+$/, "");
+      if (referenciaValida(c)) return c;
+    }
+    // 2) o texto inteiro é só o nome da atividade ou o código
+    if (/^[A-Za-z0-9_.~-]+$/.test(t) && referenciaValida(t.replace(/\.+$/, "")))
+      return t.replace(/\.+$/, "");
+    // 3) código solto no meio de uma frase
+    let achado;
+    PADRAO_V2.lastIndex = 0;
+    while ((achado = PADRAO_V2.exec(t)) !== null)
+      if (SIAB.atividadeV2 && SIAB.atividadeV2.valido(achado[2])) return achado[2];
+    const v1 = PADRAO.exec(t);
+    return v1 ? v1[0] : null;
+  }
+
+  function abrir(texto, silencioso) {
+    const token = extrairToken(texto);
+    if (!token) {
+      if (!silencioso)
+        SIAB.notice("Não encontrei uma atividade nesse link ou código.");
+      return false;
+    }
+    SIAB.irPara(`#/a/${token}`);
+    return true;
+  }
+
+  function ligarDialogo() {
+    const dialogo = SIAB.$("abrir-atividade-dialog");
+    const campo = SIAB.$("abrir-atividade-campo");
+    const estado = SIAB.$("abrir-atividade-estado");
+    if (!dialogo || !campo || !estado) return;
+    document.addEventListener("click", (evento) => {
+      if (!evento.target.closest("[data-abrir-atividade]")) return;
+      if (SIAB.gaveta && SIAB.gaveta.fechar) SIAB.gaveta.fechar();
+      campo.value = "";
+      estado.textContent = "";
+      dialogo.showModal();
+      campo.focus();
+    });
+    SIAB.$("abrir-atividade-confirmar").onclick = () => {
+      if (extrairToken(campo.value)) {
+        dialogo.close();
+        abrir(campo.value);
+      } else {
+        estado.textContent =
+          "Não encontrei uma atividade nesse texto. Confira se o link ou o código está completo.";
+        campo.focus();
+      }
+    };
+    SIAB.$("abrir-atividade-colar").onclick = async () => {
+      try {
+        campo.value = await navigator.clipboard.readText();
+        estado.textContent = "";
+      } catch (_) {
+        estado.textContent =
+          "Não foi possível colar automaticamente. Toque no campo e use Colar.";
+        campo.focus();
+      }
+    };
+  }
+
+  // Navegador no Android: oferece abrir a mesma atividade no aplicativo, se instalado.
+  // O endereço intent:// volta para esta página quando o aplicativo não existe.
+  function ligarAtalhoDoApp() {
+    const bloco = SIAB.$("abrir-no-app");
+    if (!bloco) return;
+    const atualizar = () => {
+      const empacotado = window.SIABPlataforma && window.SIABPlataforma.empacotado;
+      const token = extrairToken(location.hash);
+      if (empacotado || !token || !/Android/i.test(navigator.userAgent)) {
+        bloco.hidden = true;
+        return;
+      }
+      bloco.querySelector("a").href =
+        `intent://atividade/${token}#Intent;scheme=siab;` +
+        `S.browser_fallback_url=${encodeURIComponent(location.href)};end`;
+      bloco.hidden = false;
+    };
+    window.addEventListener("hashchange", atualizar);
+    atualizar();
+  }
+
+  // Android empacotado: pega o link que abriu o aplicativo a frio.
+  function lerLinkInicialDoAndroid() {
+    const cap = window.Capacitor;
+    if (!cap || typeof cap.nativePromise !== "function") return;
+    if (!(window.SIABPlataforma && window.SIABPlataforma.empacotado)) return;
+    cap
+      .nativePromise("SIABLink", "getLaunchLink", {})
+      .then((resposta) => {
+        if (resposta && resposta.url) abrir(resposta.url, true);
+      })
+      .catch(() => {});
+  }
+
+  function ligar() {
+    try {
+      ligarDialogo();
+      ligarAtalhoDoApp();
+    } catch (erro) {
+      /* a entrada por link nunca deve impedir a abertura do SIAB */
+    }
+    window.addEventListener("load", () => setTimeout(lerLinkInicialDoAndroid, 400));
+  }
+
+  // Chamado pelo sistema (Android e Electron): link do site sem atividade só abre o app.
+  window.SIABAbrirLink = (texto) => abrir(texto, true);
+  ligar();
+  return { extrairToken, abrir };
 })();
 
 </script>
