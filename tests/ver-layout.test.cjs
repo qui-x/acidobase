@@ -18,6 +18,12 @@ async function setup(browser, viewport) {
     if (!window.SIAB.current()) window.SIAB.bancada.adicionarTubo();
   });
   await page.waitForFunction(() => !!window.SIAB.current());
+  // Ao criar o primeiro tubo no celular, o SIAB abre Montagem por design.
+  // Feche esse bottom sheet antes de interagir com Doses na bancada.
+  await page.evaluate(() => {
+    if (window.SIAB.workspace.state.left !== "collapsed")
+      window.SIAB.workspace.close("left", false);
+  });
   return page;
 }
 async function select(page, id) {
