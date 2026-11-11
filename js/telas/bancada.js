@@ -765,6 +765,21 @@ SIAB.bancada = (() => {
      enquanto o laboratório estiver aberto, sem repetir o gotejamento. */
   const previsoesPendentes = new Map();
   const previsaoDoTubo = () => previsoesPendentes.get(SIAB.current()?.id);
+  function atualizarBotaoPrevisao() {
+    const botao = $("poe-btn");
+    const pendente = Boolean(previsaoDoTubo());
+    const rotulo = pendente ? "Retomar previsão" : "Prever e gotejar";
+    if (botao.dataset.previsaoPendente === String(pendente)) return;
+    botao.dataset.previsaoPendente = String(pendente);
+    botao.innerHTML = SIAB.icons.svg("predict") +
+      (pendente
+        ? "<span>Retomar previsão</span>"
+        : 'Prever<span class="poe-longo">&nbsp;e gotejar</span>');
+    botao.setAttribute("aria-label", rotulo);
+    botao.title = pendente
+      ? "Retomar previsão, conferir dados e registrar explicação"
+      : "Prever o resultado antes de adicionar as gotas";
+  }
   function formularioPrevisao() {
     $("poe-form").reset();
     $("poe-form").hidden = false;
@@ -839,6 +854,7 @@ SIAB.bancada = (() => {
       registrar: false,
     };
     previsoesPendentes.set(t.id, pendente);
+    atualizarBotaoPrevisao();
     resultadoPrevisao(pendente, t);
     $("poe-observar").focus();
   }
@@ -860,12 +876,14 @@ SIAB.bancada = (() => {
         SIAB.notice("Investigação registrada no Caderno.");
       }
       previsoesPendentes.delete(t.id);
+      atualizarBotaoPrevisao();
     }
     $("poe-dialog").close();
   }
   function novaPrevisao() {
     const t = SIAB.current();
     if (t) previsoesPendentes.delete(t.id);
+    atualizarBotaoPrevisao();
     formularioPrevisao();
     $("poe-form").querySelector("select")?.focus();
   }
@@ -1156,6 +1174,8 @@ SIAB.bancada = (() => {
     });
     mobile.addEventListener("change", responsive);
     SIAB.loja.assinar(() => SIAB.render());
+    SIAB.loja.assinar(atualizarBotaoPrevisao);
+    atualizarBotaoPrevisao();
     responsive();
   }
 
