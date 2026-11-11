@@ -29,6 +29,7 @@ test("salva dezenas de sequências, recarrega resultados e mantém Desfazer", as
         t.capacidade = 125;
         t.initialVolume = 25;
         const countStart = t.additions.length;
+        const historyStart = S.state.history.length;
         for (let i = 0; i < 12; i++) {
           const n = S.bancada.gotejar(20);
           if (n !== 20) throw Error("Gotejamento inesperadamente interrompido: " + n);
@@ -44,11 +45,11 @@ test("salva dezenas de sequências, recarrega resultados e mantém Desfazer", as
           storedBytes: serialized.length,
           compactHistory: serialized.includes("__siabHistoricoDeltaV1"),
           packedAdditions: serialized.includes("__siabGotasRleV1"),
-          countStart,
+          countStart, historyStart,
         };
       });
       assert.equal(before.count - before.countStart, 240);
-      assert.equal(before.history, 12);
+      assert.equal(before.history - before.historyStart, 12);
       assert.equal(before.compactHistory, true, "Não usou histórico delta");
       assert.equal(before.packedAdditions, true, "Não agrupou gotas repetidas");
       await page.reload({ waitUntil: "load" });
