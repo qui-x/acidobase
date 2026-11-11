@@ -1,6 +1,6 @@
 /* Documentos derivados do registro, sem depender de DOM ou de bibliotecas. */
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm');
-const root=__dirname,ctx={SIAB:{}};
+const root=__dirname,ctx={SIAB:{},window:{}}; // Manual usa window.SIABPlataforma no navegador; aqui é a variante web.
 vm.runInNewContext(fs.readFileSync(path.join(root,'js/data/manual.js'),'utf8'),ctx);
 const {topics,categories,aliases}=ctx.SIAB.manualContent,R=ctx.SIAB.manualRegistry;
 const version=JSON.parse(fs.readFileSync(path.join(root,'package.json'),'utf8')).version;
