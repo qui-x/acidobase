@@ -159,3 +159,20 @@ test("nunca comprime nem altera chaves alheias ao armazenamento experimental", (
   assert.equal(h.storage.getItem("siab_investigacao_v2"), JSON.stringify(obj));
   assert.deepEqual(plain(h.p.ler("siab_investigacao_v2", null)), obj);
 });
+
+
+test("quota ocupada por atividade antiga é recuperada com migração reversível", () => {
+  const legacy = { token: "antigo", schema: 2, bench: scenario(400) };
+  const legacyText = JSON.stringify(legacy);
+  const h = harness(legacyText.length + 200);
+  h.storage.setItem("siab_atividade_legada", legacyText);
+  const current = scenario(40);
+  assert.equal(h.p.salvar("siab_bancada_v2", current), true,
+    "Deveria compactar sessão antiga antes de repetir gravação");
+  assert.ok(h.storage.getItem("siab_atividade_legada").length < legacyText.length / 2,
+    "Sessão antiga permaneceu integralmente duplicada");
+  assert.deepEqual(plain(h.p.ler("siab_atividade_legada", null)), legacy,
+    "A migração mudou dados da sessão antiga");
+  assert.deepEqual(plain(h.p.ler("siab_bancada_v2", null)), current);
+  assert.equal(h.avisos.length, 0, "Não deveria avisar quando a recuperação obteve sucesso");
+});
