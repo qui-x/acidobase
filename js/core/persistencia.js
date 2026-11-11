@@ -274,6 +274,10 @@ SIAB.persistencia = (() => {
         backend = "localStorage";
         banco?.close();
         banco = null;
+        // Descarta apenas a memória parcialmente hidratada; não altera o disco.
+        registros.clear();
+        erros.clear();
+        corrompidos.clear();
         // Fallback explícito: pode continuar limitado pelo localStorage.
         aviso("indexedDB", "IndexedDB indisponível neste navegador. O SIAB usará armazenamento local limitado; exporte suas investigações.");
       }
@@ -353,7 +357,9 @@ SIAB.persistencia = (() => {
   }
   function agendarGravacao() {
     if (processamento) return;
-    processamento = Promise.resolve().then(gravarPendentes).finally(() => {
+    // Inicia a transação imediatamente, inclusive durante pagehide.
+    // A confirmação continua assíncrona e verificável por quandoSalvar().
+    processamento = gravarPendentes().finally(() => {
       processamento = null;
       if (gravacoes.size) agendarGravacao();
     });
