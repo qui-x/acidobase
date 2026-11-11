@@ -162,3 +162,96 @@ test("mobile: controles de toque e Doses continuam funcionando", async () => {
     } finally { await page.close(); }
   } finally { await browser.close(); }
 });
+
+
+test("centralização dos controles em breakpoints desktop e módulos", async () => {
+  const browser = await launcher.launch();
+  try {
+    const page = await setup(browser, { width: 1648, height: 900 });
+    try {
+      const viewports = [
+        [901, 768], [1024, 768], [1199, 800], [1280, 800],
+        [1366, 768], [1399, 800], [1400, 800], [1499, 800],
+        [1500, 900], [1512, 900], [1648, 900], [1920, 1080], [2560, 1080],
+      ];
+      async function check(width, height, mode) {
+        await page.setViewportSize({ width, height });
+        const layout = await page.evaluate(() => {
+          const rect = (el) => {
+            const b = el.getBoundingClientRect();
+            return { x: b.left, y: b.top, right: b.right, bottom: b.bottom, width: b.width, height: b.height };
+          };
+          const area = document.querySelector("#dose-area"), a = rect(area);
+          const cs = getComputedStyle(area);
+          const center = (a.x + Number.parseFloat(cs.paddingLeft) + a.right - Number.parseFloat(cs.paddingRight)) / 2;
+          const ids = [
+            "undo-btn", "drop-btn", "meia-gota-btn", "drop5-btn",
+            "drop1ml-btn", "drop5ml-btn", "poe-btn", "agitar-btn",
+            "workspace-quick-measure",
+          ];
+          const buttons = ids.flatMap(id => {
+            const el = document.getElementById(id);
+            if (!el || !el.getClientRects().length || getComputedStyle(el).visibility !== "visible") return [];
+            return [{ id, ...rect(el) }];
+          });
+          const min = Math.min(...buttons.map(b => b.x));
+          const max = Math.max(...buttons.map(b => b.right));
+          const strip = rect(document.querySelector(".tube-strip"));
+          return {
+            center, actual: (min + max) / 2, area: a, buttons, strip,
+            doseToggle: getComputedStyle(document.querySelector("#mobile-doses-toggle")).display,
+          };
+        });
+        assert.equal(layout.doseToggle, "none", "Doses apareceu no desktop " + width);
+        assert.ok(layout.buttons.length >= 5, "Poucos botões em " + width + " modo " + mode);
+        assert.ok(Math.abs(layout.actual - layout.center) <= 18,
+          "Controles deslocados: " + width + " modo " + mode + " " + JSON.stringify(layout));
+        for (let i = 0; i < layout.buttons.length; i++) {
+          const a = layout.buttons[i];
+          assert.ok(a.x >= -1 && a.right <= width + 1, "Botão horizontalmente cortado em " + width + ": " + a.id);
+          assert.ok(a.height >= 43 && a.height <= 53, "Altura incorreta em " + width + ": " + a.id + "=" + a.height);
+          for (let j = i + 1; j < layout.buttons.length; j++) {
+            const b = layout.buttons[j];
+            const dx = Math.min(a.right, b.right) - Math.max(a.x, b.x);
+            const dy = Math.min(a.bottom, b.bottom) - Math.max(a.y, b.y);
+            assert.ok(dx < 2 || dy < 2, "Botões sobrepostos em " + width + ": " + a.id + " e " + b.id);
+          }
+        }
+        assert.ok(layout.area.bottom <= layout.strip.y + 2, "Ações invadiram faixa de tubos em " + width);
+        const limit = width >= 1500 ? 125 : width >= 1100 ? 180 : 240;
+        assert.ok(layout.area.height <= limit, "Barra muito alta em " + width + ": " + layout.area.height);
+      }
+      for (const [width, height] of viewports) await check(width, height, "explorar");
+      for (const mod of ["medir", "calcular", "explorar"]) {
+        await page.evaluate(id => window.SIAB.modulos.ativar(id), mod);
+        for (const width of [1024, 1366, 1648]) await check(width, 900, mod);
+      }
+    } finally { await page.close(); }
+  } finally { await browser.close(); }
+});
+
+test("controles permanecem acessíveis durante a mudança mobile-desktop e orientação", async () => {
+  const browser = await launcher.launch();
+  try {
+    const page = await setup(browser, { width: 390, height: 844 });
+    try {
+      for (const [width, height] of [[360, 780], [390, 844], [768, 900], [900, 700], [844, 390], [901, 700]]) {
+        await page.setViewportSize({ width, height });
+        const state = await page.evaluate(() => ({
+          isMobile: matchMedia("(max-width:900px)").matches,
+          doses: getComputedStyle(document.querySelector("#mobile-doses-toggle")).display,
+          buttons: ["undo-btn", "drop-btn"].map(id => {
+            const r = document.getElementById(id).getBoundingClientRect();
+            return { id, x: r.left, right: r.right, height: r.height };
+          }),
+        }));
+        assert.equal(state.isMobile, width <= 900);
+        assert.equal(state.doses === "none", width > 900, "Visibilidade de Doses incorreta: " + width);
+        for (const b of state.buttons) {
+          assert.ok(b.height >= 43 && b.right <= width + 2 && b.x >= -2,
+            "Botão cortado em " + width + "x" + height + ": " + JSON.stringify(b));
+        }
+      }
+    } finally { await page.close(); }
+  } finally { await browser.close(); }
+});
