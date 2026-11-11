@@ -144,7 +144,7 @@ test("mensagens diferenciam quota cheia de bloqueio e não repetem alertas", () 
   assert.equal(h.p.salvar(key, current), false);
   assert.equal(h.p.salvar(key, current), false);
   assert.equal(h.avisos.length, 1);
-  assert.match(h.avisos[0], /atingiu seu limite/i);
+  assert.match(h.avisos[0], /atingiu a quota real disponível/i);
   assert.equal(h.p.ler(key, null), current, "Falha não deveria descartar estado em memória");
 
   const blocked = harness(Infinity, "blocked");
