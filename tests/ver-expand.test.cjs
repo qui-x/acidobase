@@ -113,7 +113,13 @@ test("responsividade preserva conteúdo ao alternar desktop/mobile, sem alterar 
         assert.ok(rect && rect.width > 200, "Painel mobile invisível: " + view);
         assert.ok(rect.x >= -1 && rect.x + rect.width <= 391, "Painel vazou lateralmente: " + view);
       }
-      // A tabela continua com região rolável própria, sem cortar dados.
+      // Registra uma medição real: sem dados, a interface corretamente mostra
+      // apenas uma mensagem, e não deve criar uma tabela vazia.
+      const registered = await page.evaluate(() => {
+        const S = window.SIAB;
+        return Boolean(S.instrumentos.medir(S.current(), "fita", "pontual"));
+      });
+      assert.equal(registered, true, "Não foi possível medir com a fita");
       await select(page, "tabela");
       assert.equal(await page.locator("#ver-conteudo .table-scroll").count() > 0, true);
       await page.setViewportSize({ width: 1440, height: 900 });
