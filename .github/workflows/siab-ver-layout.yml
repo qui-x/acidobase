@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - fix/siab-desktop-actions-fullscreen-layout-20261111
+      - fix/siab-acoes-centralizadas-breakpoints-20261111
       - acidosebases1.0.0
       - main
     paths:
