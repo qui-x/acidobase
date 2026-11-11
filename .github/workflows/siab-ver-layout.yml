@@ -16,6 +16,7 @@ on:
       - js/ui/lupa.js
       - tests/ver-layout.test.cjs
       - tests/ver-expand.test.cjs
+      - tests/prever-gotejar.test.cjs
   pull_request:
     branches: [acidosebases1.0.0, main]
   workflow_dispatch:
@@ -51,6 +52,8 @@ jobs:
           node --check js/ui/render.js
           node --check js/ui/lupa.js
           node --check tests/ver-layout.test.cjs
+          node --check tests/prever-gotejar.test.cjs
+          node --check js/telas/bancada.js
       - name: Local server
         run: |
           python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/siab-http.log 2>&1 &
@@ -64,4 +67,4 @@ jobs:
         env:
           SIAB_BROWSER: ${{ matrix.browser }}
           SIAB_TEST_URL: http://127.0.0.1:8765
-        run: node --test tests/ver-expand.test.cjs tests/ver-layout.test.cjs
+        run: node --test tests/ver-expand.test.cjs tests/ver-layout.test.cjs tests/prever-gotejar.test.cjs
