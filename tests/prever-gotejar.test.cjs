@@ -20,6 +20,7 @@ async function setup(browser, viewport={width:1440,height:900}) {
       window.SIAB.workspace.close("left", false);
   });
   await page.waitForFunction(() => !!window.SIAB.current());
+  page.setDefaultTimeout(10000);
   if (viewport.width <= 900) await page.locator("#mobile-doses-toggle").click();
   return page;
 }
@@ -27,7 +28,9 @@ async function setup(browser, viewport={width:1440,height:900}) {
 async function prever(page, gotas=2) {
   await page.locator("#poe-btn").click();
   assert.equal(await page.locator("#poe-dialog").evaluate(el=>el.open), true);
-  await page.locator('#poe-form select[name="direcao"]').selectOption({label:"Aumenta"});
+  // O seletor semântico é mantido oculto pela interface personalizada do SIAB.
+  // A escolha inicial visível já corresponde a "Aumenta".
+  assert.equal(await page.locator('#poe-form select[name="direcao"]').inputValue(), "Aumenta");
   await page.locator('#poe-form textarea[name="aberta"]').fill("O indicador pode mudar de cor ao adicionar a base.");
   await page.locator('#poe-form input[name="gotas"]').fill(String(gotas));
   await page.locator('#poe-form button[type="submit"]').click();
