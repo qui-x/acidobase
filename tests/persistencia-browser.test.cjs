@@ -9,7 +9,10 @@ const origin = process.env.SIAB_TEST_URL || "http://127.0.0.1:8765";
 
 async function abrir(page) {
   await page.goto(origin + "/#/laboratorio", { waitUntil: "load" });
-  await page.waitForFunction(() => window.SIAB?.workspace?.ready && window.SIAB?.persistencia?.iniciar);
+  await page.waitForFunction(() => window.SIAB?.workspace?.ready &&
+    document.documentElement.dataset.appPronto === "true", null, { timeout: 45000 });
+  assert.equal(await page.locator("#falha-abertura").count(),0,
+    "A compatibilidade mostrou erro antes da hidratação do IndexedDB");
 }
 async function registroBanco(page, chave) {
   return page.evaluate(chave => new Promise((resolve,reject) => {
@@ -187,7 +190,9 @@ if(process.env.SIAB_TEST_STRESS_100MIB === "1") {
         const rec=await registroBanco(page,"siab_relatorios_v1");
         assert.ok(rec && rec.conteudo.length>100*1024*1024);
         await page.reload({waitUntil:"load"});
-        await page.waitForFunction(()=>window.SIAB?.workspace?.ready,{},{timeout:120000});
+        await page.waitForFunction(()=>window.SIAB?.workspace?.ready &&
+          document.documentElement.dataset.appPronto === "true",{},{timeout:120000});
+        assert.equal(await page.locator("#falha-abertura").count(),0);
         const recovered=await page.evaluate(()=>{
           const p=window.SIAB.persistencia.ler("siab_relatorios_v1",{});
           return {length:p.teste100MiB?.payload.length,
