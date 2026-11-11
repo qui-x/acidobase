@@ -29,7 +29,7 @@
     <script src="js/core/plataforma.js?v=1.0.0+20261012"></script>
     <link rel="stylesheet" href="css/stylesiab.css?v=1.0.0+20261012" />
     <link rel="stylesheet" href="css/mobile-study.css?v=1.0.0+20261012" />
-    <script src="js/core/compatibilidade.js?v=1.0.0+20261012"></script>
+    <script src="js/core/compatibilidade.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="a11y.js?v=1.0.0+20261012"></script>
     <!-- Animação de abertura desligada pelo usuário: esconde antes de desenhar (ver js/ui/abertura.js). -->
     <script>
@@ -2452,8 +2452,6 @@
     <script src="js/init/integracao.js?v=1.0.0+20261012"></script>
     <script src="js/init/app.js?v=1.0.0+20261111-indexeddb100"></script>
     <script src="js/ui/mobile-study.js?v=1.0.0+20261012"></script>
-    <script>
-      if (window.SIABCompat) window.SIABCompat.concluir();
-    </script>
+    <!-- O verificador de abertura é concluído pelo bootstrap assíncrono. -->
   </body>
 </html>
