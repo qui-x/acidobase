@@ -141,6 +141,7 @@ SIAB.persistencia = (() => {
   const registros = new Map();
   const gravacoes = new Map();
   const erros = new Map();
+  const corrompidos = new Set();
   let banco = null, inicializacao = null, processamento = null;
   let backend = "localStorage";
 
@@ -240,6 +241,7 @@ SIAB.persistencia = (() => {
             registros.set(item.chave, decodificar(item.chave, JSON.parse(item.conteudo)));
           } catch (erro) {
             erros.set(item.chave, erro);
+            corrompidos.add(item.chave);
             aviso(item.chave,
               "Há dados do SIAB que não puderam ser interpretados. A cópia não será sobrescrita; exporte seus registros.");
           }
@@ -264,6 +266,7 @@ SIAB.persistencia = (() => {
             registros.set(chave, valor);
           } catch (erro) {
             erros.set(chave, erro);
+            corrompidos.add(chave);
             aviso(chave, "A migração de um registro não foi confirmada. Sua cópia original foi mantida no navegador.");
           }
         }
@@ -359,7 +362,7 @@ SIAB.persistencia = (() => {
     if (!experimental(chave) || backend !== "indexedDB")
       return salvarLocal(chave, valor);
     // Registro recebido em memória sem apagar o IDB anterior em caso de erro.
-    if (erros.has(chave)) {
+    if (corrompidos.has(chave)) {
       registros.set(chave, valor);
       aviso(chave, "Este registro requer recuperação manual antes de poder substituir o banco.");
       return false;
