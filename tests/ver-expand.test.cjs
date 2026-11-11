@@ -52,6 +52,9 @@ test("expandir persiste entre ferramentas, famílias e módulos; restaurar usa t
       for (const view of ["equacao", "especies", "proton", "ph", "temperatura", "condutividade", "grafico", "derivada", "distribuicao", "historico", "tabela", "particulas"]) {
         await select(page, view);
         assert.equal(await presentation(page), "fullscreen", "Expansão perdida ao abrir: " + view);
+        const panel = await page.locator("#ver-panel").boundingBox();
+        assert.ok(panel && panel.width > 1150 && panel.height > 530,
+          "Dimensão do painel expandido foi reduzida em: " + view + " (" + JSON.stringify(panel) + ")");
       }
 
       // Troca de conteúdo pelas próprias abas da interface (não somente API).
@@ -68,6 +71,8 @@ test("expandir persiste entre ferramentas, famílias e módulos; restaurar usa t
 
       await page.locator("#dock-expand").click(); // Restaurar
       assert.equal(await presentation(page), "wide", "Gráfico deveria restaurar para wide");
+      const restored = await page.locator("#ver-panel").boundingBox();
+      assert.ok(restored && restored.width <= 770, "Restaurar não reduziu o painel: " + JSON.stringify(restored));
       assert.equal(await page.locator("#dock-expand").getAttribute("aria-expanded"), "false");
 
       await select(page, "particulas");
