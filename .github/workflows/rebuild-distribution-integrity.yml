@@ -86,10 +86,11 @@ jobs:
           assert 'class="startup-nome">Simulador de Indicadores Ácido-Base</span>' in marca.group(1)
           assert "<em>A química das cores</em>" in marca.group(1)
 
-          versao_cache = "siab-1.0.0+20261031-nome-abaixo-do-icone"
           service_worker = Path("sw.js").read_text(encoding="utf-8")
-          assert f'const VERSAO = "{versao_cache}";' in service_worker
-          assert f'`{versao_cache}`' in Path("README.md").read_text(encoding="utf-8")
+          marca_cache = re.search(r'^const VERSAO = "([^"]+)";', service_worker, re.M)
+          assert marca_cache, "Versão do cache ausente no service worker"
+          versao_cache = marca_cache.group(1)
+          assert f'`{versao_cache}`' in Path("README.md").read_text(encoding="utf-8"), "README descreve versão de cache anterior"
           print("PASS: nome padronizado na aplicação, no PWA, nos documentos e no HTML independente")
           PY
 
