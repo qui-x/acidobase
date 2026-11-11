@@ -9,6 +9,7 @@ on:
     paths:
       - js/core/persistencia.js
       - js/core/progresso.js
+      - js/core/compatibilidade.js
       - js/init/app.js
       - js/ui/gaveta.js
       - index.html
@@ -38,6 +39,7 @@ jobs:
           node --check js/core/persistencia.js
           node --check tests/persistencia-compacta.test.cjs
           node --check js/core/progresso.js
+          node --check js/core/compatibilidade.js
           node --check js/init/app.js
           node --check js/ui/gaveta.js
           node --check tests/persistencia-browser.test.cjs
