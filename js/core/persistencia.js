@@ -134,6 +134,22 @@ SIAB.persistencia = (() => {
     resultado.history = empacotarHistorico(resultado.history);
     return empacotarValor(resultado);
   }
+  // Meta operacional (não é uma quota imposta ao IndexedDB).
+  const META_BYTES = 100 * 1024 * 1024;
+  const BANCO = "SIAB-Dados-Cientificos";
+  const STORE = "registros";
+  const registros = new Map();
+  const gravacoes = new Map();
+  const erros = new Map();
+  let banco = null, inicializacao = null, processamento = null;
+  let backend = "localStorage";
+
+  function experimental(chave) {
+    return chave === "siab_bancada_v2" ||
+      chave === "siab_investigacao_v2" ||
+      chave === "siab_relatorios_v1" ||
+      chave.startsWith("siab_atividade_");
+  }
   function chaveBancada(chave) {
     return chave === "siab_bancada_v2" || chave.startsWith("siab_atividade_");
   }
@@ -147,28 +163,138 @@ SIAB.persistencia = (() => {
     if (chave === "siab_bancada_v2") return expandirValor(valor);
     return { ...valor, bench: expandirValor(valor.bench) };
   }
+
+  function abrirBanco() {
+    return new Promise((resolve, reject) => {
+      if (typeof indexedDB === "undefined") {
+        reject(new Error("IndexedDB indisponível"));
+        return;
+      }
+      const req = indexedDB.open(BANCO, 1);
+      req.onupgradeneeded = () => {
+        if (!req.result.objectStoreNames.contains(STORE))
+          req.result.createObjectStore(STORE, { keyPath: "chave" });
+      };
+      req.onsuccess = () => {
+        const db = req.result;
+        db.onversionchange = () => db.close();
+        resolve(db);
+      };
+      req.onerror = () => reject(req.error || new Error("IndexedDB indisponível"));
+      req.onblocked = () => reject(new Error("Banco bloqueado por outra aba"));
+    });
+  }
+  function consultar(chave) {
+    return new Promise((resolve, reject) => {
+      const tx = banco.transaction(STORE, "readonly");
+      const req = tx.objectStore(STORE).get(chave);
+      req.onsuccess = () => resolve(req.result || null);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  function listar() {
+    return new Promise((resolve, reject) => {
+      const tx = banco.transaction(STORE, "readonly");
+      const req = tx.objectStore(STORE).getAll();
+      req.onsuccess = () => resolve(req.result || []);
+      req.onerror = () => reject(req.error);
+    });
+  }
+  function escrever(chave, conteudo) {
+    return new Promise((resolve, reject) => {
+      const tx = banco.transaction(STORE, "readwrite");
+      tx.objectStore(STORE).put({ chave, conteudo, atualizadoEm: Date.now() });
+      tx.oncomplete = () => resolve(true);
+      tx.onerror = () => reject(tx.error || new Error("Falha no IndexedDB"));
+      tx.onabort = () => reject(tx.error || new Error("Gravação interrompida"));
+    });
+  }
+  function aviso(chave, mensagem) {
+    if (avisos.has(chave)) return;
+    avisos.add(chave);
+    SIAB.notice(mensagem);
+  }
+  function avisarFalha(chave, erro) {
+    const quota = erro?.name === "QuotaExceededError" ||
+      erro?.code === 22 || erro?.code === 1014;
+    const bloqueado = erro?.name === "SecurityError";
+    aviso(chave, quota
+      ? "O navegador atingiu a quota real disponível para os dados científicos. Exporte seus registros; o SIAB não excluirá experimentos automaticamente."
+      : bloqueado
+        ? "O armazenamento do navegador está bloqueado. Seus resultados desta sessão ainda estão na memória; exporte antes de fechar."
+        : "Não foi possível confirmar o salvamento. Preserve seus dados por exportação antes de fechar.");
+  }
+
+  // Carrega a base ANTES do início do laboratório. O simulador pode continuar
+  // usando leituras síncronas do Map já hidratado durante a investigação.
+  async function iniciar() {
+    if (inicializacao) return inicializacao;
+    inicializacao = (async () => {
+      try {
+        banco = await abrirBanco();
+        const existentes = await listar();
+        backend = "indexedDB";
+        for (const item of existentes) {
+          if (!experimental(item.chave)) continue;
+          try {
+            registros.set(item.chave, decodificar(item.chave, JSON.parse(item.conteudo)));
+          } catch (erro) {
+            erros.set(item.chave, erro);
+            aviso(item.chave,
+              "Há dados do SIAB que não puderam ser interpretados. A cópia não será sobrescrita; exporte seus registros.");
+          }
+        }
+        // Migração não destrutiva e idempotente. Uma cópia antiga permanece
+        // em localStorage para recuperação; todos os novos salvamentos usam IDB.
+        let antigas = [];
+        try {
+          antigas = Array.from({ length: localStorage.length },
+            (_, i) => localStorage.key(i)).filter(k => k && experimental(k));
+        } catch (_) { /* O IndexedDB continua funcional. */ }
+        for (const chave of antigas) {
+          if (registros.has(chave) || erros.has(chave)) continue;
+          try {
+            const original = localStorage.getItem(chave);
+            if (original === null) continue;
+            const valor = decodificar(chave, JSON.parse(original));
+            await escrever(chave, original);
+            const verificado = await consultar(chave);
+            if (!verificado || verificado.conteudo !== original)
+              throw new Error("Cópia migrada não coincide com a origem");
+            registros.set(chave, valor);
+          } catch (erro) {
+            erros.set(chave, erro);
+            aviso(chave, "A migração de um registro não foi confirmada. Sua cópia original foi mantida no navegador.");
+          }
+        }
+      } catch (erro) {
+        backend = "localStorage";
+        banco?.close();
+        banco = null;
+        // Fallback explícito: pode continuar limitado pelo localStorage.
+        aviso("indexedDB", "IndexedDB indisponível neste navegador. O SIAB usará armazenamento local limitado; exporte suas investigações.");
+      }
+      return backend;
+    })();
+    return inicializacao;
+  }
+
   function ler(chave, padrao) {
+    if (registros.has(chave)) return registros.get(chave) ?? padrao;
     if (pendentes.has(chave)) return memoria.get(chave) ?? padrao;
+    if (erros.has(chave)) return memoria.get(chave) ?? padrao;
     try {
-      const v = localStorage.getItem(chave);
-      return v === null
-        ? (memoria.get(chave) ?? padrao)
-        : decodificar(chave, JSON.parse(v));
+      const valor = localStorage.getItem(chave);
+      return valor === null ? (memoria.get(chave) ?? padrao)
+        : decodificar(chave, JSON.parse(valor));
     } catch (_) {
-      // Não descarta o registro antigo: evita sobrescrevê-lo nesta leitura.
       return memoria.get(chave) ?? padrao;
     }
   }
-  // Recupera espaço de sessões antigas quando uma gravação encontra a quota.
-  // Cada setItem substitui atomicamente APENAS a chave existente por uma
-  // representação reversível menor. Falhas individuais não apagam registros.
   function otimizarLegados(excluir) {
-    let liberados = 0;
-    let keys;
-    try {
-      keys = Array.from({ length: localStorage.length },
-        (_, i) => localStorage.key(i));
-    } catch (_) { return 0; }
+    let liberados = 0, keys;
+    try { keys = Array.from({ length: localStorage.length }, (_, i) => localStorage.key(i)); }
+    catch (_) { return 0; }
     for (const chave of keys) {
       if (!chave || chave === excluir || !chaveBancada(chave)) continue;
       try {
@@ -180,15 +306,14 @@ SIAB.persistencia = (() => {
           localStorage.setItem(chave, menor);
           liberados += antiga.length - menor.length;
         }
-      } catch (_) {
-        // Preserva a chave antiga, inclusive dados legados não reconhecidos.
-      }
+      } catch (_) { /* Preserva os legados ilegíveis. */ }
     }
     return liberados;
   }
-  const ehQuota = (erro) => erro?.name === "QuotaExceededError" ||
+  const ehQuota = erro => erro?.name === "QuotaExceededError" ||
     erro?.code === 22 || erro?.code === 1014;
-  function salvar(chave, valor) {
+
+  function salvarLocal(chave, valor) {
     memoria.set(chave, valor);
     try {
       const conteudo = JSON.stringify(codificar(chave, valor));
@@ -196,7 +321,6 @@ SIAB.persistencia = (() => {
         localStorage.setItem(chave, conteudo);
       } catch (erro) {
         if (!ehQuota(erro) || otimizarLegados(chave) <= 0) throw erro;
-        // Repetir uma única vez, depois da migração não destrutiva.
         localStorage.setItem(chave, conteudo);
       }
       pendentes.delete(chave);
@@ -204,21 +328,84 @@ SIAB.persistencia = (() => {
       return true;
     } catch (erro) {
       pendentes.add(chave);
-      if (!avisos.has(chave)) {
-        avisos.add(chave);
-        const quota = ehQuota(erro);
-        const bloqueado = erro?.name === "SecurityError";
-        SIAB.notice(quota
-          ? "O armazenamento local atingiu seu limite. Exporte seus registros antes de fechar; nada será apagado automaticamente."
-          : bloqueado
-            ? "Este navegador bloqueou o armazenamento local. Habilite os dados do site ou exporte seus registros antes de fechar."
-            : "Não foi possível salvar os dados no navegador. Exporte seus registros antes de fechar.");
-      }
+      avisarFalha(chave, erro);
       return false;
     }
   }
-  // Diagnóstico apenas de tamanhos, sem revelar o conteúdo das investigações.
+  async function gravarPendentes() {
+    while (gravacoes.size) {
+      const lote = [...gravacoes.entries()];
+      gravacoes.clear();
+      for (const [chave, conteudo] of lote) {
+        try {
+          await escrever(chave, conteudo);
+          erros.delete(chave);
+          avisos.delete(chave);
+        } catch (erro) {
+          erros.set(chave, erro);
+          avisarFalha(chave, erro);
+        }
+      }
+    }
+  }
+  function agendarGravacao() {
+    if (processamento) return;
+    processamento = Promise.resolve().then(gravarPendentes).finally(() => {
+      processamento = null;
+      if (gravacoes.size) agendarGravacao();
+    });
+  }
+  function salvar(chave, valor) {
+    if (!experimental(chave) || backend !== "indexedDB")
+      return salvarLocal(chave, valor);
+    // Registro recebido em memória sem apagar o IDB anterior em caso de erro.
+    if (erros.has(chave)) {
+      registros.set(chave, valor);
+      aviso(chave, "Este registro requer recuperação manual antes de poder substituir o banco.");
+      return false;
+    }
+    registros.set(chave, valor);
+    try {
+      gravacoes.set(chave, JSON.stringify(codificar(chave, valor)));
+      agendarGravacao();
+      return true; // Enfileirado; aguarde quandoSalvar() para confirmar.
+    } catch (erro) {
+      erros.set(chave, erro);
+      avisarFalha(chave, erro);
+      return false;
+    }
+  }
+  async function quandoSalvar() {
+    // Contrato para exportação/testes: resolve apenas após o último commit.
+    while (processamento || gravacoes.size) {
+      if (processamento) await processamento;
+      else agendarGravacao();
+    }
+    if (erros.size) throw new Error("Alguns registros não foram confirmados pelo armazenamento");
+    return true;
+  }
+  async function situacao() {
+    const estimate = await navigator.storage?.estimate?.().catch(() => null);
+    const persisted = await navigator.storage?.persisted?.().catch(() => false);
+    return {
+      tecnologia: backend,
+      metaBytes: META_BYTES,
+      usadosOrigem: estimate?.usage ?? null,
+      quotaOrigem: estimate?.quota ?? null,
+      protegido: Boolean(persisted),
+      pendentes: gravacoes.size + (processamento ? 1 : 0),
+      falhas: [...erros.keys()],
+    };
+  }
+  async function proteger() {
+    if (typeof navigator.storage?.persist !== "function") return false;
+    return Boolean(await navigator.storage.persist());
+  }
   function diagnostico() {
+    if (backend === "indexedDB") return {
+      tecnologia: backend, chaves: [...registros.keys()].filter(experimental),
+      metaBytes: META_BYTES, falhas: [...erros.keys()],
+    };
     try {
       const chaves = [];
       for (let i = 0; i < localStorage.length; i++) {
@@ -226,8 +413,8 @@ SIAB.persistencia = (() => {
         if (chave?.startsWith("siab_"))
           chaves.push({ chave, caracteres: localStorage.getItem(chave)?.length || 0 });
       }
-      return chaves.sort((a, b) => b.caracteres - a.caracteres);
+      return chaves.sort((a,b) => b.caracteres - a.caracteres);
     } catch (_) { return null; }
   }
-  return { ler, salvar, diagnostico };
+  return { iniciar, ler, salvar, quandoSalvar, situacao, proteger, diagnostico, META_BYTES };
 })();
