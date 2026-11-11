@@ -1,0 +1,66 @@
+name: SIAB - regressao do painel Ver
+
+on:
+  push:
+    branches:
+      - fix/siab-ver-expansao-persistente-20261110
+      - acidosebases1.0.0
+      - main
+    paths:
+      - js/ui/workspace.js
+      - css/workspace.css
+      - tests/ver-expand.test.cjs
+      - .github/workflows/siab-ver-regression.yml
+  pull_request:
+    branches:
+      - acidosebases1.0.0
+      - main
+    paths:
+      - js/ui/workspace.js
+      - css/workspace.css
+      - tests/ver-expand.test.cjs
+      - .github/workflows/siab-ver-regression.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  teste-ver:
+    name: Ver / ${{ matrix.browser }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+    steps:
+      - name: Obter o codigo
+        uses: actions/checkout@v4
+      - name: Preparar Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - name: Instalar dependencias
+        run: npm ci
+      - name: Instalar navegador
+        run: npx playwright install --with-deps ${{ matrix.browser }}
+      - name: Verificar sintaxe dos testes
+        run: |
+          node --check js/ui/workspace.js
+          node --check tests/ver-expand.test.cjs
+      - name: Servir SIAB localmente
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 > /tmp/siab-http.log 2>&1 &
+          for i in 1 2 3 4 5 6 7 8 9 10; do
+            if curl --fail --silent http://127.0.0.1:8765/index.html > /dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/siab-http.log
+          exit 1
+      - name: Validar expansao e transicoes em navegador real
+        env:
+          SIAB_BROWSER: ${{ matrix.browser }}
+          SIAB_TEST_URL: http://127.0.0.1:8765
+        run: node --test tests/ver-expand.test.cjs
