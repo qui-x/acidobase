@@ -12,6 +12,10 @@ on:
       - js/core/compatibilidade.js
       - js/init/app.js
       - js/ui/gaveta.js
+      - js/init/pwa.js
+      - js/core/plataforma.js
+      - css/aplicativo.css
+      - tests/instalacao-interface.test.cjs
       - index.html
       - sw.js
       - tests/persistencia-compacta.test.cjs
@@ -47,6 +51,9 @@ jobs:
           node --check js/init/app.js
           node --check js/ui/gaveta.js
           node --check tests/persistencia-browser.test.cjs
+          node --check js/init/pwa.js
+          node --check js/core/plataforma.js
+          node --check tests/instalacao-interface.test.cjs
       - name: Validar restauracao, crescimento e falhas de quota
         run: node --test tests/persistencia-compacta.test.cjs
 
@@ -79,7 +86,7 @@ jobs:
         env:
           SIAB_BROWSER: ${{ matrix.browser }}
           SIAB_TEST_URL: http://127.0.0.1:8765
-        run: node --test tests/persistencia-browser.test.cjs
+        run: node --test tests/persistencia-browser.test.cjs tests/instalacao-interface.test.cjs
 
   stress-100mib:
     name: Capacidade experimental / 100 MiB (Chromium)
