@@ -21,7 +21,7 @@
 
 <br>
 
-<img src="midia/inicio-atual.png" width="800" alt="Captura da tela inicial atual do SIAB com o título A química das cores, navegação e cartões de acesso à investigação">
+<img src="midia/inicio-atual.png" width="800" alt="Captura real da tela inicial atual do SIAB: A química das cores, navegação e cartões de acesso à investigação">
 
 <sub>Capturas da versão publicada em 12/11/2026 · Chromium desktop e visualização mobile</sub>
 
@@ -64,31 +64,31 @@ O SIAB traduz esse conteúdo para o mundo digital **sem abrir mão da ciência**
 
 ### Pingue e veja a cor virar
 
-<img src="midia/titulacao.gif" width="800" alt="Titulação de ácido clorídrico com hidróxido de sódio usando azul de bromotimol: o tubo passa de amarelo a verde e a azul, enquanto o gráfico de pH por volume desenha uma curva em S com um salto perto de 1 mL">
+<img src="midia/titulacao-atual.gif" width="800" alt="Titulação de ácido clorídrico com hidróxido de sódio usando azul de bromotimol: o tubo passa de amarelo a verde e a azul, enquanto o gráfico de pH por volume desenha uma curva em S com um salto perto de 1 mL">
 
-Ácido clorídrico (HCl, 0,0100 mol/L) recebe hidróxido de sódio (NaOH) com **azul de bromotimol**: amarelo, verde no ponto de equivalência, azul depois dele. O pHmetro registra cada leitura e o gráfico desenha a famosa **curva em S**.
+Nesta montagem pronta, ácido clorídrico (HCl, 0,0100 mol/L) recebe hidróxido de sódio (NaOH) com **azul de bromotimol**. A cor e as leituras do pHmetro acompanham as sucessivas doses, enquanto o gráfico conecta as medições realizadas.
 
-Repare na estratégia: **+5 gotas** enquanto o pH quase não muda e **gota a gota perto da equivalência**, como numa titulação de verdade. Entre a 19ª e a 21ª gota o pH salta de cerca de 3,6 para 10,4!
+O experimento foi executado diretamente no SIAB: doses maiores na região inicial e incrementos de uma gota próximos da equivalência, sem inserir valores fictícios. O gráfico mostra os pontos efetivamente registrados.
 
 ### Cada gota cai em um lugar
 
 <div align="center">
-<img src="midia/agitar.gif" width="530" alt="Gotas de hidróxido de sódio caem no tubo amarelo e formam uma mancha azul onde caem; ao tocar em Agitar a cor se espalha, e o tubo fica verde e depois azul">
+<img src="midia/agitar-atual.gif" width="530" alt="Gotas de hidróxido de sódio caem no tubo amarelo e formam uma mancha azul onde caem; ao tocar em Agitar a cor se espalha, e o tubo fica verde e depois azul">
 </div>
 
-A gota não muda o tubo inteiro de uma vez: ela colore **só onde cai**. Toque em **Agitar** e a mistura fica homogênea, com a cor que corresponde ao pH da solução toda. É o mesmo que acontece no béquer quando você esquece de mexer!
+As regiões coloridas das gotas são representadas localmente antes da agitação. Ao usar **Agitar**, o SIAB representa a homogeneização, exibindo a cor correspondente ao pH global calculado.
 
 ### Veja o invisível
 
 <div align="center">
-<img src="midia/particulas.gif" width="623" alt="Ao lado do tubo, uma caixa de partículas mostra íons H3O+ vermelhos sendo consumidos pelos OH- que chegam, com o aviso H3O+ + OH- formam 2 H2O; depois da equivalência sobram Na+, Cl- e OH-">
+<img src="midia/particulas-atual.gif" width="623" alt="Ao lado do tubo, uma caixa de partículas mostra íons H3O+ vermelhos sendo consumidos pelos OH- que chegam, com o aviso H3O+ + OH- formam 2 H2O; depois da equivalência sobram Na+, Cl- e OH-">
 </div>
 
-Em **Ver → Observar → Partículas**, cada OH⁻ que chega encontra um H₃O⁺ e os dois viram água: **H₃O⁺ + OH⁻ → 2 H₂O**. O Cl⁻ e o Na⁺ só assistem: são **íons espectadores**. Depois da equivalência, os OH⁻ começam a sobrar, e é por isso que o pH dispara.
+Em **Ver → Observar → Partículas**, a visualização do motor atual mostra a presença relativa das espécies e a neutralização **H₃O⁺ + OH⁻ → 2 H₂O**. O Cl⁻ e o Na⁺ são íons espectadores; após a equivalência, há excesso de OH⁻.
 
 ### O arco-íris do pH
 
-<img src="midia/arco-iris.gif" width="800" alt="Sete tubos com indicador universal aparecem na bancada, do vermelho ao roxo; cada um é mostrado em foco e depois todos juntos na visão geral">
+<img src="midia/arco-iris-atual.gif" width="800" alt="Sete tubos com indicador universal aparecem na bancada, do vermelho ao roxo; cada um é mostrado em foco e depois todos juntos na visão geral">
 
 Sete soluções, um indicador universal, todas as cores da escala: ácido clorídrico, ácido clorídrico diluído, cloreto de amônio, água pura, acetato de sódio, amônia e hidróxido de sódio. De **vermelho** a **roxo**, passando pelo verde da água pura. Sais também mudam o pH!
 
@@ -96,7 +96,7 @@ Sete soluções, um indicador universal, todas as cores da escala: ácido clorí
 
 <table>
 <tr>
-<td width="300"><img src="midia/celular-atual.png" width="280" alt="Captura real da bancada do SIAB em dispositivo móvel, com controles e área de investigação responsivos"></td>
+<td width="300"><img src="midia/celular-atual.gif" width="280" alt="Demonstração animada da bancada móvel do SIAB atual, com gotejamento de NaOH durante titulação e controles de toque"></td>
 <td>
 
 O SIAB foi pensado para **caber na palma da mão**:
