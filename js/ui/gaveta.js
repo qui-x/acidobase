@@ -57,24 +57,8 @@ SIAB.gaveta = (() => {
     $("drawer-activity-context").textContent = c
       ? `${c.activity.title} · ${SIAB.MODULOS[c.activity.module].nome}`
       : "";
-    atualizarArmazenamento();
-
   }
 
-  async function atualizarArmazenamento() {
-    const el = $("drawer-storage-status");
-    const fmt = (bytes) => bytes == null
-      ? "indisponível" : (bytes / (1024 * 1024)).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " MiB";
-    try {
-      const s = await SIAB.persistencia.situacao();
-      el.textContent = (s.tecnologia === "indexedDB" ? "IndexedDB" : "Armazenamento local limitado") +
-        " · Meta: 100 MiB · Uso desta origem: " + fmt(s.usadosOrigem) +
-        " · Quota estimada: " + fmt(s.quotaOrigem) +
-        (s.protegido ? " · Proteção concedida." : " · Proteção não confirmada.");
-    } catch (_) {
-      el.textContent = "Não foi possível consultar a quota do navegador.";
-    }
-  }
 
   function projetor(on) {
     if (SIAB.ActivityContext.restricted()) return false;
@@ -146,7 +130,6 @@ SIAB.gaveta = (() => {
       SIAB.notice(granted
         ? "Proteção de armazenamento autorizada pelo navegador."
         : "O navegador não concedeu proteção permanente; mantenha cópias exportadas.");
-      await atualizarArmazenamento();
     });
   }
 

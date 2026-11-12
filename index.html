@@ -131,7 +131,6 @@
         ><a href="#/manual" data-nav="manual">Manual</a>
       </nav>
       <div class="header-actions">
-        <span id="selo-app" class="selo-app" hidden></span>
         <button id="install-btn" class="text-btn" type="button" hidden>
           Instalar app
         </button>
@@ -1989,17 +1988,52 @@
           ><button class="drawer-link quiet-btn" id="about-btn">
             <span data-app-icon="about"></span>Sobre o SIAB
           </button>
-          <button class="drawer-link quiet-btn" type="button" id="drawer-storage-protect" aria-describedby="drawer-storage-status">
+          <button class="drawer-link quiet-btn" type="button" id="drawer-storage-protect">
             <span data-app-icon="data"></span>Proteger dados offline
           </button>
-          <p class="drawer-versao" id="drawer-storage-status" role="status">
-            Dados experimentais: meta de 100 MiB, conforme a quota do navegador.
-          </p>
           <p class="drawer-versao">Versão <span id="drawer-versao"></span></p>
-          <p class="drawer-modo" id="drawer-modo" hidden></p>
         </section>
       </div>
     </dialog>
+
+      <dialog id="install-choice-dialog" class="siab-dialog install-choice-dialog" aria-labelledby="install-choice-title">
+        <div class="dialog-heading">
+          <h2 id="install-choice-title">Instalar o SIAB</h2>
+          <button class="icon-btn" type="button" data-close="install-choice-dialog" aria-label="Fechar opções de instalação">×</button>
+        </div>
+        <p class="install-choice-intro">Escolha como deseja utilizar o SIAB neste dispositivo.</p>
+        <div class="install-choice-options">
+          <button id="install-choice-pwa" class="install-choice-option" type="button" data-install-system="pwa">
+            <span class="install-choice-name">Aplicativo pelo navegador (PWA)</span>
+            <span class="install-choice-desc">Instale na tela inicial e utilize os recursos disponíveis offline.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </button>
+          <a class="install-choice-option" data-install-system="android" href="https://drive.google.com/file/d/1PwGSJlUi4-zkJZBFYI2IipEWjlQOMpjN/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Android · APK</span>
+            <span class="install-choice-desc">Instalador para celulares e tablets Android.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </a>
+          <a class="install-choice-option" data-install-system="windows" href="https://drive.google.com/file/d/19I0BwaUnd9Dx-zmQCNXJmcH_fEfcOCKz/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Windows · EXE</span>
+            <span class="install-choice-desc">Instalador para computadores Windows.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </a>
+          <a class="install-choice-option" data-install-system="windows-extra" href="https://drive.google.com/file/d/1DJL-XAwi7Ppp4b6PuIAS7rnE_l4HPFEG/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Windows · EXE portátil</span>
+            <span class="install-choice-desc">Execute sem instalação tradicional.</span>
+          </a>
+          <a class="install-choice-option" data-install-system="windows-extra" href="https://drive.google.com/file/d/1qwIDNjbvMOf3GopsjocwD6RcIjb2DDuC/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Windows · MSI</span>
+            <span class="install-choice-desc">Alternativa de instalador para Windows.</span>
+          </a>
+          <a class="install-choice-option" data-install-system="linux" href="https://drive.google.com/file/d/1CL9x_FfaVLiKODP6nbgm2DQSBP8wm5za/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Linux · AppImage</span>
+            <span class="install-choice-desc">Aplicativo executável para Linux.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </a>
+        </div>
+        <p class="install-choice-note">Os instaladores são distribuídos pelo Google Drive. Registros salvos no navegador não são transferidos automaticamente para o aplicativo instalado.</p>
+      </dialog>
 
     <dialog
       id="abrir-atividade-dialog"
@@ -2060,7 +2094,6 @@
         interpretar evidências.
       </p>
       <p>Versão <span id="about-version"></span></p>
-      <p id="about-modo" hidden></p>
       <p>
         SIAB · GNU GPL v3. Interface de diálogos com dialog-polyfill,
         BSD-3-Clause.

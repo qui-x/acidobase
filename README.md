@@ -11,11 +11,13 @@ Versão estável oficial, com a correção da bancada mobile encontrada nos test
 
 Requisitos: navegador moderno com JavaScript. Node, npm e ferramentas de teste não são exigidos para usar o programa. Python é somente uma opção para servir a versão modular localmente.
 
+A opção **Instalar app** apresenta PWA e downloads para Android (APK), Windows (EXE, portátil e MSI) e Linux (AppImage). Os downloads são publicados em uma pasta do Google Drive; a seleção destaca o formato correspondente ao dispositivo, sem apresentar indicadores internos de armazenamento no menu. O navegador continua oferecendo instalação PWA quando compatível.
+
 ## Offline e atualização
 
 Laboratório, Manual, Montagens, Relatório e Caderno são locais. Open-Meteo e VLibras são opcionais e precisam de internet. As fontes são do sistema.
 
-Ao substituir os arquivos da versão anterior no mesmo endereço, o service worker prepara o cache `siab-1.0.0+20261111-indexeddb-100mib` e oferece **Recarregar**. O sufixo identifica esta revisão da 1.0.0, que centraliza os controles de ação em diferentes tamanhos de tela e permite retornar à bancada após gotejar, retomando posteriormente a previsão sem repetir doses. Os arquivos offline acompanham as mudanças. A limpeza afeta apenas caches antigos desta publicação. Caderno, sessões, práticas, relatórios e preferências permanecem armazenados no navegador.
+Ao substituir os arquivos da versão anterior no mesmo endereço, o service worker prepara o cache `siab-1.0.0+20261112-instalar-visual-limpo` e oferece **Recarregar**. O sufixo identifica esta revisão da 1.0.0, que centraliza os controles de ação em diferentes tamanhos de tela e permite retornar à bancada após gotejar, retomando posteriormente a previsão sem repetir doses. Os arquivos offline acompanham as mudanças. A limpeza afeta apenas caches antigos desta publicação. Caderno, sessões, práticas, relatórios e preferências permanecem armazenados no navegador.
 
 Mantenha a mesma origem, caminho e perfil para conservar os dados. Trocar domínio, aparelho ou perfil não transfere registros automaticamente. Exporte o Caderno e salve os relatórios antes de limpar dados do navegador.
 

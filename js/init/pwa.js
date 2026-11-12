@@ -25,14 +25,25 @@ SIAB.pwa = (() => {
     SIAB.$("pwa-recarregar").addEventListener("click", () => location.reload());
   }
 
+  function sistemaDoNavegador() {
+    // navigator.platform pode indicar Linux mesmo em Android: priorizar userAgent.
+    const ua = (navigator.userAgent || "") + " " +
+      (navigator.userAgentData?.platform || "");
+    if (/Android/i.test(ua)) return "android";
+    if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
+    if (/Windows|Win32|Win64|WinNT/i.test(ua)) return "windows";
+    if (/Linux|X11/i.test(ua)) return "linux";
+    return "pwa";
+  }
+
   function iniciar() {
-    // Dois botões: no cabeçalho (computador) e no menu ☰ → Aplicativo.
-    const botoes = [SIAB.$("install-btn"), SIAB.$("drawer-install")];
-    // Aplicativo empacotado (APK, .exe, AppImage): os arquivos já estão no
-    // programa. Não há "Instalar app" nem service worker; os que ficaram de
-    // versões anteriores são removidos para nunca servir arquivos antigos.
-    if (window.SIABPlataforma && window.SIABPlataforma.empacotado) {
-      botoes.forEach((botao) => botao && (botao.hidden = true));
+    const botoes = [SIAB.$("install-btn"), SIAB.$("drawer-install")].filter(Boolean);
+    const modal = SIAB.$("install-choice-dialog");
+    const escolhaPwa = SIAB.$("install-choice-pwa");
+
+    // Instaladores nativos já foram instalados; não mostrar escolha ou prompt.
+    if (window.SIABPlataforma?.empacotado) {
+      botoes.forEach((botao) => { botao.hidden = true; });
       try {
         if ("serviceWorker" in navigator)
           navigator.serviceWorker
@@ -53,17 +64,57 @@ SIAB.pwa = (() => {
       }
       return;
     }
-    // O HTML único não publica manifesto nem service worker.
+
     const publicavel =
       Boolean(document.querySelector('link[rel="manifest"]')) &&
       podeUsarServiceWorker();
     const modoApp = matchMedia("(display-mode: standalone)");
     let instalado = modoApp.matches || navigator.standalone === true;
     const atualizarBotoes = () => {
-      botoes[0].hidden = !publicavel || instalado || !pedidoInstalacao;
-      // Safari/iOS não oferece beforeinstallprompt: o menu abre as instruções.
-      botoes[1].hidden = !publicavel || instalado;
+      // O menu de escolha também serve para baixar EXE/APK/AppImage.
+      // Não depende de beforeinstallprompt (indisponível em alguns navegadores).
+      botoes.forEach((botao) => { botao.hidden = instalado; });
+      if (escolhaPwa) escolhaPwa.hidden = !publicavel || instalado;
     };
+    const abrirEscolha = () => {
+      SIAB.gaveta.fechar();
+      const sistema = sistemaDoNavegador();
+      const recomendado = ["android", "windows", "linux"].includes(sistema)
+        ? sistema : "pwa";
+      modal.querySelectorAll("[data-install-system]").forEach((opcao) => {
+        const sugerir = opcao.dataset.installSystem === recomendado;
+        opcao.classList.toggle("recomendado", sugerir);
+        const indicador = opcao.querySelector(".install-choice-recommendation");
+        if (indicador) indicador.hidden = !sugerir;
+      });
+      if (!modal.open) modal.showModal();
+    };
+
+    botoes.forEach((botao) => botao.addEventListener("click", abrirEscolha));
+    modal.querySelectorAll("a[href]").forEach((link) =>
+      link.addEventListener("click", () => modal.close()),
+    );
+    escolhaPwa.addEventListener("click", async () => {
+      modal.close();
+      if (!pedidoInstalacao) {
+        SIAB.irPara("#/manual/app");
+        return;
+      }
+      try {
+        await pedidoInstalacao.prompt();
+        const escolha = await pedidoInstalacao.userChoice;
+        instalado = escolha.outcome === "accepted";
+        if (instalado)
+          SIAB.notice(
+            "SIAB instalado. Abra uma vez com internet antes de usar offline.",
+          );
+      } catch (erro) {
+        SIAB.irPara("#/manual/app");
+      } finally {
+        pedidoInstalacao = null;
+        atualizarBotoes();
+      }
+    });
     atualizarBotoes();
     modoApp.addEventListener("change", (evento) => {
       instalado = evento.matches || navigator.standalone === true;
@@ -74,36 +125,13 @@ SIAB.pwa = (() => {
       pedidoInstalacao = evento;
       atualizarBotoes();
     });
-    botoes.forEach((botao) =>
-      botao.addEventListener("click", async () => {
-        SIAB.gaveta.fechar();
-        if (!pedidoInstalacao) {
-          SIAB.irPara("#/manual/app");
-          return;
-        }
-        try {
-          await pedidoInstalacao.prompt();
-          const escolha = await pedidoInstalacao.userChoice;
-          instalado = escolha.outcome === "accepted";
-          if (instalado)
-            SIAB.notice(
-              "SIAB instalado. Abra uma vez com internet antes de usar offline.",
-            );
-        } catch (erro) {
-          SIAB.irPara("#/manual/app");
-        } finally {
-          pedidoInstalacao = null;
-          atualizarBotoes();
-        }
-      }),
-    );
     window.addEventListener("appinstalled", () => {
       instalado = true;
       pedidoInstalacao = null;
       atualizarBotoes();
     });
+
     if (!publicavel) return;
-    // Na primeira visita não há controlador: a instalação não precisa de aviso.
     const tinhaVersaoAnterior = Boolean(navigator.serviceWorker.controller);
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (tinhaVersaoAnterior) avisarAtualizacao();
