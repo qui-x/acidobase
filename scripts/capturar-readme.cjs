@@ -29,6 +29,20 @@ async function carregar(page, rota) {
   await page.waitForTimeout(200);
 }
 
+async function deixarBancadaEmFoco(page) {
+  // A primeira adição abre o painel Preparo no celular e mostra o tour inicial.
+  // Reproduzir a ação de fechar o aviso e recolher os painéis antes da foto.
+  const dispensar = page.locator("#boas-vindas-fechar");
+  if (await dispensar.isVisible()) await dispensar.click();
+  await page.evaluate(() => {
+    window.SIAB.workspace.close("left", false);
+    window.SIAB.workspace.close("right", false);
+    const aviso = document.getElementById("toast");
+    if (aviso) aviso.hidden = true;
+  });
+  await page.waitForTimeout(350);
+}
+
 async function fotografar(page, nome, larguraMinima = 350) {
   const arquivo = path.join(destino, nome);
   await page.screenshot({ path: arquivo, type: "png", fullPage: false,
@@ -55,6 +69,7 @@ async function main() {
     if (!await desktop.evaluate(() => Boolean(window.SIAB.current?.())))
       await desktop.evaluate(() => window.SIAB.bancada.adicionarTubo());
     await desktop.locator('main [data-tela]:not([hidden])').waitFor({ state:"visible" });
+    await deixarBancadaEmFoco(desktop);
     await fotografar(desktop, "bancada-atual.png", 1400);
 
     await carregar(desktop, "missoes");
@@ -96,6 +111,7 @@ async function main() {
     await carregar(celular, "laboratorio");
     if (!await celular.evaluate(() => Boolean(window.SIAB.current?.())))
       await celular.evaluate(() => window.SIAB.bancada.adicionarTubo());
+    await deixarBancadaEmFoco(celular);
     await fotografar(celular, "celular-atual.png", 390);
 
     await carregar(celular, "inicio");
