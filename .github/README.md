@@ -21,7 +21,7 @@
 
 <br>
 
-<img src="midia/abertura-atual.gif" width="800" alt="Captura animada real da abertura atual do SIAB e da tela inicial A química das cores">
+<img src="midia/inicio-atual.png" width="800" alt="Captura real da tela inicial atual do SIAB: A química das cores, navegação e cartões de acesso à investigação">
 
 <sub>Capturas da versão publicada em 12/11/2026 · Chromium desktop e visualização mobile</sub>
 
