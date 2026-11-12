@@ -55,22 +55,8 @@
   function preencher() {
     try {
       if (!api.empacotado) detectar(); // a ponte nativa pode chegar um pouco depois
-      var texto = api.descricao();
-      var selo = document.getElementById("selo-app");
-      var gaveta = document.getElementById("drawer-modo");
-      var sobre = document.getElementById("about-modo");
-      if (selo) {
-        selo.textContent = api.empacotado ? "App · " + api.nome : "";
-        selo.hidden = !api.empacotado;
-      }
-      if (gaveta) {
-        gaveta.textContent = texto;
-        gaveta.hidden = false;
-      }
-      if (sobre) {
-        sobre.textContent = "Executando como: " + texto + ".";
-        sobre.hidden = false;
-      }
+      // A plataforma é usada somente para comportamento/adaptação interna.
+      // Não exibir diagnóstico técnico no cabeçalho, menu ou Sobre o SIAB.
       var locais = document.querySelectorAll("[data-local]");
       for (var i = 0; i < locais.length; i++) locais[i].textContent = api.local();
     } catch (e) {
