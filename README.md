@@ -20,6 +20,17 @@ As imagens abaixo são capturas reais da aplicação **SIAB 1.0.0**, realizadas 
 
 Veja também as capturas de **Missões, Roteiros Experimentais, Manual, Área do Professor e Acessibilidade** no [README ilustrado](.github/README.md).
 
+### Demonstrações atualizadas
+
+Estas animações foram regravadas no SIAB com interações e medidas reais, para acompanhar os novos controles e painéis.
+
+| Titulação e gráfico de pH | Arco-íris do pH |
+|---|---|
+| <img src=".github/midia/titulacao-atual.gif" width="420" alt="Titulação real no SIAB, com gotas e leituras sucessivas de pH"> | <img src=".github/midia/arco-iris-atual.gif" width="420" alt="Exploração da montagem de sete cores do indicador universal"> |
+
+[Confira as demais animações (abertura, agitação, partículas e mobile) no README ilustrado](.github/README.md).
+
+
 ## Abrir e instalar
 
 - **Distribuição modular completa:** extraia `SIAB-1.0.0.zip` e sirva a pasta `SIAB/` em um servidor web. Para uso local, nela execute `python3 -m http.server 8080` e abra `http://localhost:8080`.
