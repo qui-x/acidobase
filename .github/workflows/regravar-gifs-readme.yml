@@ -1,0 +1,58 @@
+name: Regravar GIFs de demonstração do README
+on:
+  push:
+    branches:
+      - docs/siab-animacoes-readme-20261112
+    paths:
+      - scripts/regravar-gifs-readme.cjs
+      - scripts/montar-gifs-readme.py
+      - .github/workflows/regravar-gifs-readme.yml
+      - .github/README.md
+      - README.md
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  animacoes:
+    name: Captura de ações reais do SIAB no Chromium
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: docs/siab-animacoes-readme-20261112
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Instalar navegador e dependências
+        run: npx playwright install --with-deps chromium
+      - name: Instalar conversor GIF isoladamente
+        run: |
+          python3 -m venv /tmp/siab-gif-env
+          /tmp/siab-gif-env/bin/pip install Pillow==11.3.0
+      - name: Servir SIAB
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/siab-gif-http.log 2>&1 &
+          for i in $(seq 1 20); do
+            if curl --silent --fail http://127.0.0.1:8765/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/siab-gif-http.log
+          exit 1
+      - name: Capturar procedimentos com o motor do SIAB
+        env:
+          SIAB_TEST_URL: http://127.0.0.1:8765
+        run: node scripts/regravar-gifs-readme.cjs
+      - name: Converter e conferir os seis GIFs
+        run: /tmp/siab-gif-env/bin/python scripts/montar-gifs-readme.py
+      - name: Publicar GIFs desta revisão no repositório
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/midia/*-atual.gif
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(siab): regravar 6 demonstracoes com a UI e o motor atuais"
+            git push origin HEAD:refs/heads/docs/siab-animacoes-readme-20261112
+          fi
