@@ -150,22 +150,8 @@ dialog.fixed {
   function preencher() {
     try {
       if (!api.empacotado) detectar(); // a ponte nativa pode chegar um pouco depois
-      var texto = api.descricao();
-      var selo = document.getElementById("selo-app");
-      var gaveta = document.getElementById("drawer-modo");
-      var sobre = document.getElementById("about-modo");
-      if (selo) {
-        selo.textContent = api.empacotado ? "App · " + api.nome : "";
-        selo.hidden = !api.empacotado;
-      }
-      if (gaveta) {
-        gaveta.textContent = texto;
-        gaveta.hidden = false;
-      }
-      if (sobre) {
-        sobre.textContent = "Executando como: " + texto + ".";
-        sobre.hidden = false;
-      }
+      // A plataforma é usada somente para comportamento/adaptação interna.
+      // Não exibir diagnóstico técnico no cabeçalho, menu ou Sobre o SIAB.
       var locais = document.querySelectorAll("[data-local]");
       for (var i = 0; i < locais.length; i++) locais[i].textContent = api.local();
     } catch (e) {
@@ -7273,23 +7259,69 @@ html[data-empacotado="true"] .drawer-link {
   user-select: none;
 }
 
-/* Selo que confirma a forma de execução */
-.selo-app {
-  display: inline-flex;
-  align-items: center;
-  padding: 3px 10px;
-  border: 1px solid currentColor;
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  white-space: nowrap;
-  color: var(--brand, #c084fc);
+/* Escolha de instalação: exibida apenas sob demanda no navegador. */
+.install-choice-dialog {
+  width: min(94vw, 680px);
+  max-height: min(90dvh, 840px);
+  overflow: auto;
 }
-.selo-app[hidden] { display: none; }
-.drawer-modo { margin: 4px 10px 0; font-size: 0.75rem; color: var(--muted); }
+.install-choice-intro {
+  margin: 0 0 14px;
+  color: var(--muted, inherit);
+}
+.install-choice-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+.install-choice-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+  min-width: 0;
+  min-height: 92px;
+  padding: 12px 14px;
+  border: 1px solid var(--border, #9baebe);
+  border-radius: 12px;
+  background: var(--panel, transparent);
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  font: inherit;
+}
+.install-choice-option:hover,
+.install-choice-option:focus-visible {
+  border-color: var(--brand, #5865a0);
+  outline-offset: 2px;
+}
+.install-choice-option.recomendado {
+  border: 2px solid var(--brand, #5865a0);
+}
+.install-choice-name {
+  font-weight: 700;
+}
+.install-choice-desc,
+.install-choice-note {
+  font-size: 0.86rem;
+  line-height: 1.45;
+  color: var(--muted, inherit);
+}
+.install-choice-recommendation {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.install-choice-note {
+  margin-top: 14px;
+}
+@media (max-width: 600px) {
+  .install-choice-options { grid-template-columns: 1fr; }
+  .install-choice-option { min-height: 68px; }
+}
 @media (max-width: 900px) {
-  #selo-app { display: none; }
+  /* No celular, a instalação é acessada pelo menu, sem ocupar o cabeçalho. */
+  #install-btn { display: none !important; }
 }
 
 /* Abrir atividade por link, código ou aplicativo */
@@ -7404,7 +7436,6 @@ html[data-empacotado="true"] .drawer-link {
         ><a href="#/manual" data-nav="manual">Manual</a>
       </nav>
       <div class="header-actions">
-        <span id="selo-app" class="selo-app" hidden></span>
         <button id="install-btn" class="text-btn" type="button" hidden>
           Instalar app
         </button>
@@ -9262,17 +9293,52 @@ html[data-empacotado="true"] .drawer-link {
           ><button class="drawer-link quiet-btn" id="about-btn">
             <span data-app-icon="about"></span>Sobre o SIAB
           </button>
-          <button class="drawer-link quiet-btn" type="button" id="drawer-storage-protect" aria-describedby="drawer-storage-status">
+          <button class="drawer-link quiet-btn" type="button" id="drawer-storage-protect">
             <span data-app-icon="data"></span>Proteger dados offline
           </button>
-          <p class="drawer-versao" id="drawer-storage-status" role="status">
-            Dados experimentais: meta de 100 MiB, conforme a quota do navegador.
-          </p>
           <p class="drawer-versao">Versão <span id="drawer-versao"></span></p>
-          <p class="drawer-modo" id="drawer-modo" hidden></p>
         </section>
       </div>
     </dialog>
+
+      <dialog id="install-choice-dialog" class="siab-dialog install-choice-dialog" aria-labelledby="install-choice-title">
+        <div class="dialog-heading">
+          <h2 id="install-choice-title">Instalar o SIAB</h2>
+          <button class="icon-btn" type="button" data-close="install-choice-dialog" aria-label="Fechar opções de instalação">×</button>
+        </div>
+        <p class="install-choice-intro">Escolha como deseja utilizar o SIAB neste dispositivo.</p>
+        <div class="install-choice-options">
+          <button id="install-choice-pwa" class="install-choice-option" type="button" data-install-system="pwa">
+            <span class="install-choice-name">Aplicativo pelo navegador (PWA)</span>
+            <span class="install-choice-desc">Instale na tela inicial e utilize os recursos disponíveis offline.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </button>
+          <a class="install-choice-option" data-install-system="android" href="https://drive.google.com/file/d/1PwGSJlUi4-zkJZBFYI2IipEWjlQOMpjN/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Android · APK</span>
+            <span class="install-choice-desc">Instalador para celulares e tablets Android.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </a>
+          <a class="install-choice-option" data-install-system="windows" href="https://drive.google.com/file/d/19I0BwaUnd9Dx-zmQCNXJmcH_fEfcOCKz/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Windows · EXE</span>
+            <span class="install-choice-desc">Instalador para computadores Windows.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </a>
+          <a class="install-choice-option" data-install-system="windows-extra" href="https://drive.google.com/file/d/1DJL-XAwi7Ppp4b6PuIAS7rnE_l4HPFEG/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Windows · EXE portátil</span>
+            <span class="install-choice-desc">Execute sem instalação tradicional.</span>
+          </a>
+          <a class="install-choice-option" data-install-system="windows-extra" href="https://drive.google.com/file/d/1qwIDNjbvMOf3GopsjocwD6RcIjb2DDuC/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Windows · MSI</span>
+            <span class="install-choice-desc">Alternativa de instalador para Windows.</span>
+          </a>
+          <a class="install-choice-option" data-install-system="linux" href="https://drive.google.com/file/d/1CL9x_FfaVLiKODP6nbgm2DQSBP8wm5za/view" target="_blank" rel="noopener noreferrer">
+            <span class="install-choice-name">Linux · AppImage</span>
+            <span class="install-choice-desc">Aplicativo executável para Linux.</span>
+            <span class="install-choice-recommendation" hidden>Indicado para este dispositivo</span>
+          </a>
+        </div>
+        <p class="install-choice-note">Os instaladores são distribuídos pelo Google Drive. Registros salvos no navegador não são transferidos automaticamente para o aplicativo instalado.</p>
+      </dialog>
 
     <dialog
       id="abrir-atividade-dialog"
@@ -9333,7 +9399,6 @@ html[data-empacotado="true"] .drawer-link {
         interpretar evidências.
       </p>
       <p>Versão <span id="about-version"></span></p>
-      <p id="about-modo" hidden></p>
       <p>
         SIAB · GNU GPL v3. Interface de diálogos com dialog-polyfill,
         BSD-3-Clause.
@@ -24228,24 +24293,8 @@ SIAB.gaveta = (() => {
     $("drawer-activity-context").textContent = c
       ? `${c.activity.title} · ${SIAB.MODULOS[c.activity.module].nome}`
       : "";
-    atualizarArmazenamento();
-
   }
 
-  async function atualizarArmazenamento() {
-    const el = $("drawer-storage-status");
-    const fmt = (bytes) => bytes == null
-      ? "indisponível" : (bytes / (1024 * 1024)).toLocaleString("pt-BR", { maximumFractionDigits: 1 }) + " MiB";
-    try {
-      const s = await SIAB.persistencia.situacao();
-      el.textContent = (s.tecnologia === "indexedDB" ? "IndexedDB" : "Armazenamento local limitado") +
-        " · Meta: 100 MiB · Uso desta origem: " + fmt(s.usadosOrigem) +
-        " · Quota estimada: " + fmt(s.quotaOrigem) +
-        (s.protegido ? " · Proteção concedida." : " · Proteção não confirmada.");
-    } catch (_) {
-      el.textContent = "Não foi possível consultar a quota do navegador.";
-    }
-  }
 
   function projetor(on) {
     if (SIAB.ActivityContext.restricted()) return false;
@@ -24317,7 +24366,6 @@ SIAB.gaveta = (() => {
       SIAB.notice(granted
         ? "Proteção de armazenamento autorizada pelo navegador."
         : "O navegador não concedeu proteção permanente; mantenha cópias exportadas.");
-      await atualizarArmazenamento();
     });
   }
 
@@ -30205,14 +30253,25 @@ SIAB.pwa = (() => {
     SIAB.$("pwa-recarregar").addEventListener("click", () => location.reload());
   }
 
+  function sistemaDoNavegador() {
+    // navigator.platform pode indicar Linux mesmo em Android: priorizar userAgent.
+    const ua = (navigator.userAgent || "") + " " +
+      (navigator.userAgentData?.platform || "");
+    if (/Android/i.test(ua)) return "android";
+    if (/iPhone|iPad|iPod/i.test(ua)) return "ios";
+    if (/Windows|Win32|Win64|WinNT/i.test(ua)) return "windows";
+    if (/Linux|X11/i.test(ua)) return "linux";
+    return "pwa";
+  }
+
   function iniciar() {
-    // Dois botões: no cabeçalho (computador) e no menu ☰ → Aplicativo.
-    const botoes = [SIAB.$("install-btn"), SIAB.$("drawer-install")];
-    // Aplicativo empacotado (APK, .exe, AppImage): os arquivos já estão no
-    // programa. Não há "Instalar app" nem service worker; os que ficaram de
-    // versões anteriores são removidos para nunca servir arquivos antigos.
-    if (window.SIABPlataforma && window.SIABPlataforma.empacotado) {
-      botoes.forEach((botao) => botao && (botao.hidden = true));
+    const botoes = [SIAB.$("install-btn"), SIAB.$("drawer-install")].filter(Boolean);
+    const modal = SIAB.$("install-choice-dialog");
+    const escolhaPwa = SIAB.$("install-choice-pwa");
+
+    // Instaladores nativos já foram instalados; não mostrar escolha ou prompt.
+    if (window.SIABPlataforma?.empacotado) {
+      botoes.forEach((botao) => { botao.hidden = true; });
       try {
         if ("serviceWorker" in navigator)
           navigator.serviceWorker
@@ -30233,17 +30292,57 @@ SIAB.pwa = (() => {
       }
       return;
     }
-    // O HTML único não publica manifesto nem service worker.
+
     const publicavel =
       Boolean(document.querySelector('link[rel="manifest"]')) &&
       podeUsarServiceWorker();
     const modoApp = matchMedia("(display-mode: standalone)");
     let instalado = modoApp.matches || navigator.standalone === true;
     const atualizarBotoes = () => {
-      botoes[0].hidden = !publicavel || instalado || !pedidoInstalacao;
-      // Safari/iOS não oferece beforeinstallprompt: o menu abre as instruções.
-      botoes[1].hidden = !publicavel || instalado;
+      // O menu de escolha também serve para baixar EXE/APK/AppImage.
+      // Não depende de beforeinstallprompt (indisponível em alguns navegadores).
+      botoes.forEach((botao) => { botao.hidden = instalado; });
+      if (escolhaPwa) escolhaPwa.hidden = !publicavel || instalado;
     };
+    const abrirEscolha = () => {
+      SIAB.gaveta.fechar();
+      const sistema = sistemaDoNavegador();
+      const recomendado = ["android", "windows", "linux"].includes(sistema)
+        ? sistema : "pwa";
+      modal.querySelectorAll("[data-install-system]").forEach((opcao) => {
+        const sugerir = opcao.dataset.installSystem === recomendado;
+        opcao.classList.toggle("recomendado", sugerir);
+        const indicador = opcao.querySelector(".install-choice-recommendation");
+        if (indicador) indicador.hidden = !sugerir;
+      });
+      if (!modal.open) modal.showModal();
+    };
+
+    botoes.forEach((botao) => botao.addEventListener("click", abrirEscolha));
+    modal.querySelectorAll("a[href]").forEach((link) =>
+      link.addEventListener("click", () => modal.close()),
+    );
+    escolhaPwa.addEventListener("click", async () => {
+      modal.close();
+      if (!pedidoInstalacao) {
+        SIAB.irPara("#/manual/app");
+        return;
+      }
+      try {
+        await pedidoInstalacao.prompt();
+        const escolha = await pedidoInstalacao.userChoice;
+        instalado = escolha.outcome === "accepted";
+        if (instalado)
+          SIAB.notice(
+            "SIAB instalado. Abra uma vez com internet antes de usar offline.",
+          );
+      } catch (erro) {
+        SIAB.irPara("#/manual/app");
+      } finally {
+        pedidoInstalacao = null;
+        atualizarBotoes();
+      }
+    });
     atualizarBotoes();
     modoApp.addEventListener("change", (evento) => {
       instalado = evento.matches || navigator.standalone === true;
@@ -30254,36 +30353,13 @@ SIAB.pwa = (() => {
       pedidoInstalacao = evento;
       atualizarBotoes();
     });
-    botoes.forEach((botao) =>
-      botao.addEventListener("click", async () => {
-        SIAB.gaveta.fechar();
-        if (!pedidoInstalacao) {
-          SIAB.irPara("#/manual/app");
-          return;
-        }
-        try {
-          await pedidoInstalacao.prompt();
-          const escolha = await pedidoInstalacao.userChoice;
-          instalado = escolha.outcome === "accepted";
-          if (instalado)
-            SIAB.notice(
-              "SIAB instalado. Abra uma vez com internet antes de usar offline.",
-            );
-        } catch (erro) {
-          SIAB.irPara("#/manual/app");
-        } finally {
-          pedidoInstalacao = null;
-          atualizarBotoes();
-        }
-      }),
-    );
     window.addEventListener("appinstalled", () => {
       instalado = true;
       pedidoInstalacao = null;
       atualizarBotoes();
     });
+
     if (!publicavel) return;
-    // Na primeira visita não há controlador: a instalação não precisa de aviso.
     const tinhaVersaoAnterior = Boolean(navigator.serviceWorker.controller);
     navigator.serviceWorker.addEventListener("controllerchange", () => {
       if (tinhaVersaoAnterior) avisarAtualizacao();
