@@ -151,7 +151,7 @@ test("migração do localStorage preserva Caderno, relatórios e cópia anterior
   } finally { await browser.close(); }
 });
 
-test("controles de armazenamento exibem a quota real e meta de 100 MiB",async()=>{
+test("armazenamento preserva quota e meta internamente sem informativos na interface",async()=>{
   const browser=await launcher.launch();
   try {
     const page=await browser.newPage();
@@ -162,10 +162,7 @@ test("controles de armazenamento exibem a quota real e meta de 100 MiB",async()=
       assert.equal(s.tecnologia,"indexedDB");
       assert.ok(s.quotaOrigem === null || s.quotaOrigem > 0);
       await page.locator("#menu-btn").click();
-      await page.locator("#drawer-storage-status").waitFor();
-      await page.waitForFunction(()=>document.querySelector("#drawer-storage-status")
-        .textContent.includes("IndexedDB"));
-      assert.match(await page.locator("#drawer-storage-status").innerText(),/Meta: 100 MiB/);
+      assert.equal(await page.locator("#drawer-storage-status").count(),0);
       assert.equal(await page.locator("#drawer-storage-protect").count(),1);
     } finally {await page.close();}
   } finally {await browser.close();}
