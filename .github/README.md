@@ -21,7 +21,9 @@
 
 <br>
 
-<img src="midia/abertura.gif" width="800" alt="Animação de abertura do SIAB: cinco tubos de ensaio com fenolftaleína, azul de bromotimol, repolho roxo, alaranjado de metila e indicador universal mudam de cor de ácido para básico; depois aparece a tela inicial com o título A química das cores">
+<img src="midia/inicio-atual.png" width="800" alt="Captura da tela inicial atual do SIAB com o título A química das cores, navegação e cartões de acesso à investigação">
+
+<sub>Capturas da versão publicada em 12/11/2026 · Chromium desktop e visualização mobile</sub>
 
 </div>
 
@@ -94,7 +96,7 @@ Sete soluções, um indicador universal, todas as cores da escala: ácido clorí
 
 <table>
 <tr>
-<td width="300"><img src="midia/celular.gif" width="280" alt="SIAB no celular: segurando o botão de gotejar, o tubo com ácido clorídrico e fenolftaleína fica rosa; aparece o aviso de volume adicionado e depois o pH medido com fita, cerca de 10"></td>
+<td width="300"><img src="midia/celular-atual.png" width="280" alt="Captura real da bancada do SIAB em dispositivo móvel, com controles e área de investigação responsivos"></td>
 <td>
 
 O SIAB foi pensado para **caber na palma da mão**:
@@ -104,13 +106,17 @@ O SIAB foi pensado para **caber na palma da mão**:
 - a fita de pH mostra a leitura logo abaixo do tubo;
 - Montagem, Ver e Dados abrem como painéis que sobem da parte de baixo da tela.
 
-Aqui, ácido clorídrico com **fenolftaleína**: incolor no ácido, rosa assim que passa da equivalência.
+A imagem mostra a **interface mobile atual**, com a bancada ocupando a área central e controles reorganizados para toque.
 
 </td>
 </tr>
 </table>
 
 ---
+
+### A interface atual da bancada
+
+<img src="midia/bancada-atual.png" width="800" alt="Captura atual do laboratório SIAB em tela desktop: área de investigação central e controles de ação">
 
 ## <img src="midia/icones/mount.svg" width="22" height="22" alt=""> Tem muito mais
 
@@ -122,6 +128,10 @@ Aqui, ácido clorídrico com **fenolftaleína**: incolor no ácido, rosa assim q
 <tr>
 <td><img src="midia/professor.png" alt="Área do professor para preparar uma atividade em três passos"><br><b>Área do Professor:</b> monte a atividade, escolha os instrumentos e gere um link para a turma.</td>
 <td><img src="midia/acessibilidade.png" alt="Painel de acessibilidade com modo escuro, alto contraste, tamanho do texto, simulação de daltonismo e som do pH"><br><b>Acessibilidade:</b> contraste, tamanho do texto, daltonismo, som do pH e mais.</td>
+</tr>
+<tr>
+<td width="50%"><img src="midia/roteiros-atual.png" alt="Tela atual de Roteiros Experimentais do SIAB"><br><b>Roteiros:</b> percursos de investigação para realizar e registrar.</td>
+<td width="50%"><img src="midia/menu-mobile-atual.png" alt="Menu mobile atual do SIAB sem informativos técnicos de armazenamento"><br><b>Navegação móvel:</b> acesso direto às ferramentas e à instalação, com controles adaptados.</td>
 </tr>
 </table>
 
@@ -165,9 +175,21 @@ E os limites são assumidos às claras. É um modelo didático: solução ideal,
 
 Modo escuro e claro, **alto contraste**, tamanho do texto, espaçamento de letras, **reduzir animações**, leitura simples e **simulação de daltonismo**. A cor de cada tubo também é descrita em texto. O **som do pH** fica mais agudo quanto maior o pH, e o celular pode **vibrar na viragem**. O VLibras é opcional e precisa de internet.
 
-## <img src="midia/icones/install.svg" width="22" height="22" alt=""> Funciona sem internet
+## <img src="midia/icones/install.svg" width="22" height="22" alt=""> Instalação e uso offline
 
-- **Como aplicativo:** abra o SIAB conectado uma vez e use **Instalar** no navegador. Depois ele abre mesmo offline.
+Na versão para navegador, **Instalar app** permite escolher entre PWA, APK para Android, EXE (instalador ou portátil) e MSI para Windows, e AppImage para Linux, com sugestão baseada no dispositivo.
+
+<table>
+<tr>
+<td width="65%"><img src="midia/instalacao-desktop.png" alt="Diálogo de instalação atual do SIAB no desktop, com opções PWA, Android, Windows e Linux"></td>
+<td width="35%"><img src="midia/instalacao-mobile.png" alt="Seleção de instalação do SIAB em navegador Android, com indicação de APK"></td>
+</tr>
+</table>
+
+### Funciona sem internet
+
+- **Como PWA:** abra o SIAB conectado uma vez e escolha **Instalar app → Aplicativo pelo navegador (PWA)**; após a instalação e o carregamento inicial, seus recursos locais continuam disponíveis offline.
+- **Como aplicativo de sistema:** escolha APK (Android), EXE/MSI (Windows) ou AppImage (Linux), em [Pacotes de Instalação](https://drive.google.com/drive/u/1/folders/1RN7ACQXWp_Ho-LZKXxt03sdt0mKZDaWK).
 - **Arquivo único:** baixe o [`SIAB-1.0.0-standalone.html`](../SIAB-1.0.0-standalone.html) (botão de download na página do arquivo) e abra direto no navegador, sem servidor e sem instalar nada.
 - **Seus dados ficam com você:** não há conta. Caderno, sessões e relatórios ficam guardados no próprio navegador. Só os extras opcionais (clima da sua cidade e VLibras) usam a internet.
 
