@@ -78,6 +78,10 @@ html[data-empacotado="true"] .drawer-link {
   .install-choice-options { grid-template-columns: 1fr; }
   .install-choice-option { min-height: 68px; }
 }
+@media (max-width: 900px) {
+  /* No celular, a instalação é acessada pelo menu, sem ocupar o cabeçalho. */
+  #install-btn { display: none !important; }
+}
 
 /* Abrir atividade por link, código ou aplicativo */
 .abrir-no-app {
