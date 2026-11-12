@@ -40,8 +40,10 @@ async function arrumarBancada(page) {
 
 async function montar(page, id, ferramenta) {
   await entrar(page);
-  await page.evaluate(({ id, ferramenta }) => {
-    window.SIAB.montarMontagem(id);
+  await page.evaluate(id => window.SIAB.montarMontagem(id), id);
+  await page.waitForFunction(() => location.hash === "#/laboratorio" &&
+    !document.querySelector("#workspace").hidden, null, { timeout: 10000 });
+  await page.evaluate(ferramenta => {
     window.SIAB.workspace.close("left", false);
     window.SIAB.workspace.close("right", false);
     if (ferramenta) window.SIAB.workspace.open("right", ferramenta);
@@ -49,7 +51,7 @@ async function montar(page, id, ferramenta) {
     if (toast) toast.hidden = true;
     const boas = document.querySelector("#boas-vindas");
     if (boas) boas.hidden = true;
-  }, { id, ferramenta });
+  }, ferramenta);
   await delay(400);
   assert.ok(await page.evaluate(() => window.SIAB.current()?.solution));
 }
