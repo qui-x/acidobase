@@ -32,11 +32,13 @@ async function carregar(page, rota) {
 async function deixarBancadaEmFoco(page) {
   // A primeira adição abre o painel Preparo no celular e mostra o tour inicial.
   // Reproduzir a ação de fechar o aviso e recolher os painéis antes da foto.
-  const dispensar = page.locator("#boas-vindas-fechar");
-  if (await dispensar.isVisible()) await dispensar.click();
   await page.evaluate(() => {
     window.SIAB.workspace.close("left", false);
     window.SIAB.workspace.close("right", false);
+  });
+  const dispensar = page.locator("#boas-vindas-fechar");
+  if (await dispensar.isVisible()) await dispensar.click({ timeout: 5000 });
+  await page.evaluate(() => {
     const aviso = document.getElementById("toast");
     if (aviso) aviso.hidden = true;
   });
