@@ -45,7 +45,7 @@ jobs:
         env:
           SIAB_TEST_URL: http://127.0.0.1:8765
         run: node scripts/regravar-gifs-readme.cjs
-      - name: Converter e conferir os seis GIFs
+      - name: Converter e conferir os cinco GIFs
         run: /tmp/siab-gif-env/bin/python scripts/montar-gifs-readme.py
       - name: Publicar GIFs desta revisão no repositório
         run: |
@@ -53,6 +53,6 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add .github/midia/*-atual.gif
           if ! git diff --cached --quiet; then
-            git commit -m "docs(siab): regravar 6 demonstracoes com a UI e o motor atuais"
+            git commit -m "docs(siab): regravar 5 demonstracoes com a UI e o motor atuais"
             git push origin HEAD:refs/heads/docs/siab-animacoes-readme-20261112
           fi
