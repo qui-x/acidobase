@@ -189,26 +189,10 @@ async function celular(browser) {
   } finally {await context.close();}
 }
 
-async function abertura(browser) {
-  const page=await browser.newPage({viewport:{width:1280,height:780},colorScheme:"dark"});
-  try {
-    await page.goto(URL+"/#/inicio",{waitUntil:"domcontentloaded"});
-    for(let i=0;i<8;i++){
-      await delay(500);
-      await snap(page,"abertura-atual",650);
-    }
-    await page.evaluate(() => {
-      window.SIAB?.abertura?.encerrar?.();
-      document.querySelectorAll("dialog[open]").forEach(d=>d.close());
-    });
-    await snap(page,"abertura-atual",1600);
-  }finally{await page.close();}
-}
 
 (async()=>{
  const browser=await chromium.launch();
  try{
-   await abertura(browser);
    await titracao(browser);
    await agitar(browser);
    await particulas(browser);
