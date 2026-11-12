@@ -4,6 +4,22 @@ Simulador de Indicadores Ácido-Base. Aplicação educacional estática com 140 
 
 Versão estável oficial, com a correção da bancada mobile encontrada nos testes finais: vidraria estável, identificação compacta e avisos contextuais de adição e de medição concluída. O motor científico e os módulos existentes foram preservados.
 
+## Capturas da interface atual
+
+As imagens abaixo são capturas reais da aplicação **SIAB 1.0.0**, realizadas na revisão de 12 de novembro de 2026, em visualizações desktop e mobile.
+
+<p align="center"><img src=".github/midia/inicio-atual.png" alt="Tela inicial atual do SIAB — A química das cores, com cartões de navegação" width="860"></p>
+
+| Bancada de investigação no computador | Bancada de investigação no celular |
+|---|---|
+| <img src=".github/midia/bancada-atual.png" alt="Área do laboratório do SIAB em tela de computador" width="500"> | <img src=".github/midia/celular-atual.png" alt="Laboratório do SIAB adaptado para tela de celular" width="240"> |
+
+| Escolha de instalação no computador | Escolha de instalação no Android |
+|---|---|
+| <img src=".github/midia/instalacao-desktop.png" alt="Opções de instalação PWA, APK, EXE e AppImage no navegador do computador" width="500"> | <img src=".github/midia/instalacao-mobile.png" alt="Janela responsiva com opções de instalação do SIAB e APK recomendado no Android" width="240"> |
+
+Veja também as capturas de **Missões, Roteiros Experimentais, Manual, Área do Professor e Acessibilidade** no [README ilustrado](.github/README.md).
+
 ## Abrir e instalar
 
 - **Distribuição modular completa:** extraia `SIAB-1.0.0.zip` e sirva a pasta `SIAB/` em um servidor web. Para uso local, nela execute `python3 -m http.server 8080` e abra `http://localhost:8080`.

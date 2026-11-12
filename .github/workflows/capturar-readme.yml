@@ -1,0 +1,75 @@
+name: Capturar telas do README do SIAB
+
+on:
+  push:
+    branches:
+      - docs/siab-capturas-readme-20261112
+    paths:
+      - scripts/capturar-readme.cjs
+      - .github/workflows/capturar-readme.yml
+      - README.md
+      - .github/README.md
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  screenshots:
+    name: Capturas reais em Chromium
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout do ramo de documentação
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}
+      - name: Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - name: Instalar Chromium e dependências
+        run: npx playwright install --with-deps chromium
+      - name: Servir SIAB da própria revisão
+        run: |
+          python3 -m http.server 8765 --bind 127.0.0.1 >/tmp/siab-readme-http.log 2>&1 &
+          for i in $(seq 1 25); do
+            if curl --fail --silent http://127.0.0.1:8765/index.html >/dev/null; then exit 0; fi
+            sleep 1
+          done
+          cat /tmp/siab-readme-http.log
+          exit 1
+      - name: Fotografar interface real desktop e mobile
+        env:
+          SIAB_TEST_URL: http://127.0.0.1:8765
+        run: node scripts/capturar-readme.cjs
+      - name: Conferir dimensões e arquivos
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import struct
+          imgs = [
+            "inicio-atual.png", "bancada-atual.png", "missoes.png", "manual.png",
+            "professor.png", "roteiros-atual.png", "acessibilidade.png",
+            "instalacao-desktop.png", "celular-atual.png", "menu-mobile-atual.png",
+            "instalacao-mobile.png"
+          ]
+          for nome in imgs:
+            path = Path(".github/midia") / nome
+            data = path.read_bytes()
+            assert data[:8] == b"\x89PNG\r\n\x1a\n", nome
+            width, height = struct.unpack(">II", data[16:24])
+            assert width > 300 and height > 300 and len(data) > 15000, (nome, width, height)
+            print(f"{nome}: {width}x{height}, {len(data)} bytes")
+          PY
+      - name: Registrar capturas no ramo de documentação
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .github/midia/*.png
+          if ! git diff --cached --quiet; then
+            git commit -m "docs(siab): atualizar capturas reais para a interface 1.0.0"
+            git push origin "HEAD:refs/heads/$GITHUB_REF_NAME"
+          fi
