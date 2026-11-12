@@ -28,7 +28,7 @@ Estas animações foram regravadas no SIAB com interações e medidas reais, par
 |---|---|
 | <img src=".github/midia/titulacao-atual.gif" width="420" alt="Titulação real no SIAB, com gotas e leituras sucessivas de pH"> | <img src=".github/midia/arco-iris-atual.gif" width="420" alt="Exploração da montagem de sete cores do indicador universal"> |
 
-[Confira as demais animações (abertura, agitação, partículas e mobile) no README ilustrado](.github/README.md).
+[Confira as demais animações (agitação, partículas e mobile) no README ilustrado](.github/README.md).
 
 
 ## Abrir e instalar
